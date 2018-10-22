@@ -9,6 +9,7 @@
       - gcc
       - make
       - jq
+    velum_automation_environmentjson: "{{ playbook_dir }}/../environment.json"
   tasks:
     - name: Creating velum automation folder
       file:
@@ -17,7 +18,7 @@
 
     - name: Copying environment.json
       copy:
-        src: "{{ playbook_dir }}/../environment.json"
+        src: "{{ velum_automation_environmentjson }}"
         dest: /opt/ccp/environment.json
 
     - name: Install the necessary packages

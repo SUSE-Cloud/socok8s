@@ -8,7 +8,13 @@
       - ceph_user_keyring_b64key is defined
       - ceph_monitors_ips is defined
 
-- name: Set monitors data
+- name: Load standard variables
+  include_vars: "{{ playbook_dir }}/../common-vars.yml"
+
+- name: Ensure the SES config file can be loaded
+  include_vars: "{{ suse_osh_deploy_ses_config_path }}"
+
+- name: Set monitors data from publicly reachable IPs (not using IPs from ses_config as they can be internal)
   set_fact:
     suse_osh_deploy_ceph_mons:  "{% for ip in  ceph_monitors_ips %}{{ ip }}:6789{% if not loop.last %},{% endif %}{% endfor %}"
   tags:
@@ -61,7 +67,7 @@
   tags:
     - install
 
-# TODO(evrardjp): Use mechanism like glance to re-use component-install.yml code and allow any override.
+# TODO(evrardjp): Use mechanism like in deploy glance to re-use component-install.yml code and allow any override.
 - name: Setup openstack CLIs
   shell: ./tools/deployment/multinode/010-setup-client.sh
   args:
@@ -70,7 +76,7 @@
   tags:
     - run
 
-# TODO(evrardjp): Use mechanism like glance to re-use component-install.yml code and allow any override.
+# TODO(evrardjp): Use mechanism like in deploy glance to re-use component-install.yml code and allow any override.
 - name: Setup Basic ingress and namespace
   shell: ./tools/deployment/multinode/020-ingress.sh
   args:
@@ -85,7 +91,7 @@
   tags:
     - run
 
-# TODO(evrardjp): Use mechanism like glance to re-use component-install.yml code and allow any override.
+# TODO(evrardjp): Use mechanism like in deploy glance to re-use component-install.yml code and allow any override.
 - name: Deploy infrastructure charts
   shell: "{{ item }}"
   with_items:
@@ -101,15 +107,15 @@
 # Keystone should be kept separate as its one failing.
 - name: Deploy keystone, ignore errors due to SCRD-4677. #https://jira.suse.de/browse/SCRD-4677.
   shell: ./tools/deployment/multinode/080-keystone.sh
-  failed_when: false # terrible idea.
+  failed_when: false # terrible idea but needed until problem above is solved.
   args:
     executable: /bin/bash
     chdir: /opt/openstack-helm
   tags:
     - run
 
-  #TODO(evrardjp): Remove the next two tasks by an appropriate include in tasks/main
-  #when https://review.openstack.org/#/c/586992 is merged
+#TODO(evrardjp): Remove the next two tasks by an appropriate include in tasks/main
+#when https://review.openstack.org/#/c/586992 is merged
 - name: Copy ceph provisioner
   template:
     src: 046-ceph-deploy-with-existing-ceph.sh.j2

@@ -1,9 +1,10 @@
 ---
 - hosts: localhost
   gather_facts: no
-  vars:
-    ses_config_file_path: "~/suse-osh-deploy/ses_config.yml"
   tasks:
+    - name: Include standard vars
+      include_vars: ../common-vars.yml
+
     - name: Ensuring ses config is available
       stat:
         path: "{{ ses_config_file_path }}"
@@ -14,24 +15,23 @@
         msg: "ses config not found"
       when:
         - not _sesconfigfile.stat.exists | bool
-    # Uncomment this when ses_config is decided to be the source of truth for OSD pools
-    #
-    #- name: Loading the ses variables
-    #  include_vars: "{{ ses_config_file_path }}"
 
-    #- name: Ensuring data of the ses_config_file_path contains the right information
-    #  debug:
-    #    var: item
-    #  with_items:
-    #    - "{{ ses_cluster_configuration['conf_options']['ses_mon_host'] }}"
-    #    - "{{ ses_cluster_configuration['cinder']['rbd_store_pool'] }}"
-    #    - "{{ ses_cluster_configuration['nova']['rbd_store_pool'] }}"
+    - name: Loading the ses variables
+      include_vars: "{{ ses_config_file_path }}"
+
+    - name: Ensuring data of the ses_config_file_path contains the right information
+      debug:
+        var: item
+      with_items:
+        - "{{ ses_cluster_configuration['conf_options']['ses_mon_host'] }}"
+        - "{{ ses_cluster_configuration['cinder']['rbd_store_pool'] }}"
+        - "{{ ses_cluster_configuration['nova']['rbd_store_pool'] }}"
 
     - name: Get info of osds pools from the ceph-mon node
       command: ceph -k /etc/ceph/ceph.client.admin.keyring osd pool ls
       changed_when: false
       remote_user: root
-      delegate_to: "{{ lookup('file','../.ses_ip')}}"
+      delegate_to: "{{ ceph_monitors_ips[0] }}"
       register: _ceph_pools
 
     # TODO(evrardjp): Update this list with the content of ses_cluster_configuration when
