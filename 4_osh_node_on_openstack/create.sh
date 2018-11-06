@@ -43,9 +43,9 @@ zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-
 zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-Updates/ SDK-Updates;
 zypper ar -f -G http://download.suse.de/ibs/SUSE:/CA/SLE_12_SP3/ SUSE-CA;
 zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-OpenStack-Cloud-8-Pool/ SUSE-OpenStack-Cloud-8-Pool;
-zypper ar -f -G https://download.opensuse.org/repositories/utilities/SLE_12/ SLE12-utilities;
-zypper ar -f -G https://download.opensuse.org/repositories/devel:/tools/SLE_12_SP3/devel:tools.repo;
-zypper ar -f -G https://download.opensuse.org/repositories/Virtualization:/containers/SLE_12_SP3/Virtualization:containers.repo && echo "Repos configured";
+zypper ar -f -G https://provo-mirror.opensuse.org/repositories/utilities/SLE_12/ SLE12-utilities;
+zypper ar -f -G https://provo-mirror.opensuse.org/repositories/devel:/tools/SLE_12_SP3/ SLE12-SP3-Devel_tools;
+zypper ar -f -G https://provo-mirror.opensuse.org/repositories/Virtualization:/containers/SLE_12_SP3/ Virtualization_containers && echo "Repos configured";
 zypper refresh && zypper up -y ;
 systemctl disable SuSEfirewall2_setup.service;
 systemctl disable SuSEfirewall2_init.service;
