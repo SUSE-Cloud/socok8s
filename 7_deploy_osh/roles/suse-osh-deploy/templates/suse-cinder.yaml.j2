@@ -6,13 +6,13 @@ conf:
     DEFAULT:
       debug: true
       backup_driver: cinder.backup.drivers.ceph
-      backup_ceph_user: {{ suse_osh_deploy_storage.cinder_backup.user }}
-      backup_ceph_pool: {{ suse_osh_deploy_storage.cinder_backup.pool }}
+      backup_ceph_user: {{ cinder_backup.rbd_store_user }}
+      backup_ceph_pool: {{ cinder_backup.rbd_store_pool }}
   backends:
     rbd1:
       volume_driver: cinder.volume.drivers.rbd.RBDDriver
       volume_backend_name: rbd1
       rbd_ceph_conf: "/etc/ceph/ceph.conf"
-      rbd_user: {{ suse_osh_deploy_storage.cinder.user }}
-      rbd_pool: {{ suse_osh_deploy_storage.cinder.pool }}
-      rbd_secret_uuid: {{ suse_osh_deploy_libvirt_secret_uuid }}
+      rbd_user: {{ cinder.rbd_store_user }}
+      rbd_pool: {{ cinder.rbd_store_pool }}
+      rbd_secret_uuid: {{ cinder_client_key_secret_uuid }}
