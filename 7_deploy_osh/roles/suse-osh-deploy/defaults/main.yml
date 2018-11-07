@@ -59,6 +59,14 @@ suse_osh_deploy_privileged_cluster_role: suse:caasp:psp:privileged
 
 # Set this to false if you want to speed up your builds or do partial upgrades
 suse_osh_deploy_always_redeploy: True
-suse_osh_deploy_glance_yaml_overrides: {}
+
+# Default overrides
 suse_osh_deploy_cinder_yaml_overrides: {}
+suse_osh_deploy_glance_yaml_overrides: {}
+suse_osh_deploy_keystone_yaml_overrides: {}
 suse_osh_deploy_libvirt_yaml_overrides: {}
+suse_osh_deploy_mariadb_yaml_overrides: {}
+suse_osh_deploy_memcached_yaml_overrides: {}
+suse_osh_deploy_nova_yaml_overrides: {}
+suse_osh_deploy_ovs_yaml_overrides: {}
+suse_osh_deploy_rabbitmq_yaml_overrides: {}
