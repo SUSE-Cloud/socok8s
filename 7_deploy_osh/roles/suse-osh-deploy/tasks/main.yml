@@ -164,7 +164,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_cinder_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/110-cinder.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_CINDER`: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_CINDER') | default('', True) }} -f /tmp/suse-cinder.yaml"
+    OSH_EXTRA_HELM_ARGS_CINDER: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_CINDER') | default('', True) }} -f /tmp/suse-cinder.yaml"
   tags:
     - cinder
     - run
@@ -186,7 +186,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_libvirt_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/130-libvirt.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_LIBVIRT`: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_LIBVIRT') | default('', True) }} -f /tmp/suse-libvirt.yaml"
+    OSH_EXTRA_HELM_ARGS_LIBVIRT: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_LIBVIRT') | default('', True) }} -f /tmp/suse-libvirt.yaml"
   tags:
     - libvirt
     - run
@@ -201,7 +201,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_nova_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/140-compute-kit.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_NOVA`: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NOVA') | default('', True) }} -f /tmp/suse-nova.yaml"
+    OSH_EXTRA_HELM_ARGS_NOVA: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NOVA') | default('', True) }} -f /tmp/suse-nova.yaml"
   tags:
     - nova
     - neutron
