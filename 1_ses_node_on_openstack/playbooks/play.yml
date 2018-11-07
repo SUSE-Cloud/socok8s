@@ -1,0 +1,78 @@
+---
+- hosts: all:!localhost
+  gather_facts: no
+  vars:
+    ses_packages:
+      - python-setuptools
+      - python-virtualenv
+      - python-devel
+      - autoconf
+      - git
+      - gcc
+      - make
+      - jq
+      - ca-certificates-suse
+      - rng-tools
+    # Domain name to use in the deployment. Default assumes properly configured dns name.
+    domainname: "{{ ansible_domain | default('openstack.local', True) }}"
+  tasks:
+    - name: Configure host repositories
+      raw: |
+        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Pool/ product;
+        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Updates/ SLES12-SP3-Updates;
+        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-Pool/ SDK-Pool;
+        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-Updates/ SDK-Updates;
+        zypper ar -f -G http://download.suse.de/ibs/SUSE:/CA/SLE_12_SP3/ SUSE-CA;
+        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-OpenStack-Cloud-8-Pool/ SUSE-OpenStack-Cloud-8-Pool;
+        zypper ar -f -G https://provo-mirror.opensuse.org/repositories/utilities/SLE_12/ SLE12-utilities;
+        zypper ar -f -G https://provo-mirror.opensuse.org/repositories/devel:/tools/SLE_12_SP3/ SLE12-SP3-Devel_tools;
+        zypper ar -f -G https://provo-mirror.opensuse.org/repositories/Virtualization:/containers/SLE_12_SP3/ Virtualization_containers;
+        zypper refresh
+      when:
+        - "(run_in_lab | default(True)) | bool"
+
+    - name: Upgrade host
+      zypper:
+        state: dist-upgrade
+        name: '*'
+
+    #On some images this service is not defined and the systemctl command fails.
+    #The failed_when false is temporary until I find out proper conditional on this task.
+    - name: Disable firewall
+      systemd:
+        enabled: no
+        name: "{{ item }}"
+      failed_when: false
+      with_items:
+        - SuSEfirewall2_setup.service
+        - SuSEfirewall2_init.service
+
+    - name: Prepare keys
+      shell: |
+        if [ ! -f ~/.ssh/id_rsa ]; then
+          ssh-keygen -t rsa -f ~/.ssh/id_rsa -N ""
+          cat .ssh/id_rsa.pub >> .ssh/authorized_keys
+        fi
+        ssh-keyscan -H  127.0.0.1 >> ~/.ssh/known_hosts
+      args:
+        executable: /bin/bash
+
+    - name: Reboot host
+      reboot:
+        reboot_timeout: 900
+
+    - name: Install extra software
+      zypper:
+        name: "{{ ses_packages }}"
+        state: latest
+
+    - name: Store facts
+      setup:
+
+    - name: Configure /etc/hosts
+      lineinfile:
+        name: /etc/hosts
+        line: "{{ item }}"
+      with_items:
+        - "{{ (ansible_all_ipv6_addresses|default(['::1']))[0] }} {{ inventory_hostname }}.{{ domainname }} {{ inventory_hostname }} {{ ansible_hostname }}.{{ domainname }} {{ ansible_hostname }}"
+        - "{{ (ansible_all_ipv4_addresses|default(['127.0.0.1']))[0] }} {{ inventory_hostname }}.{{ domainname }} {{ inventory_hostname }} {{ ansible_hostname }}.{{ domainname }} {{ ansible_hostname }}"

@@ -2,7 +2,7 @@
 - name: Create privileged ClusterRoleBinding
   template:
     src: "privileged-cluster-role-binding.yml.j2"
-    dst: "/tmp/privileged-cluster-role-binding.yml"
+    dest: "/tmp/privileged-cluster-role-binding.yml"
     mode: "0600"
 
 - name: Apply privileged ClusterRoleBinding

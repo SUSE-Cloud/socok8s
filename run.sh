@@ -24,10 +24,13 @@ function deploy_on_openstack(){
     echo "Step 3 success"
     ./4_osh_node_on_openstack/create.sh
     echo "Step 4 success"
+    source script_library/detect-ansible.sh
     $ansible_playbook ./5_automate_caasp_enroll/play.yml -i inventory-osh.ini
     echo "Step 5 success"
+    source script_library/detect-ansible.sh
     $ansible_playbook ./6_preflight_checks/checks.yml -i inventory-osh.ini
     echo "Step 6 success"
+    source script_library/detect-ansible.sh
     $ansible_playbook ./7_deploy_osh/play.yml -i inventory-osh.ini
     echo "Step 7 success"
     exit 0

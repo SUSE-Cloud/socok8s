@@ -3,10 +3,19 @@
   vars:
     ses_config_file_path: "~/suse-osh-deploy/ses_config.yml"
   tasks:
+    - name: Ensure the OSH config folder exists
+      file:
+        state: directory
+        name: "{{ ses_config_file_path | dirname }}"
+      delegate_to: localhost
+
+    # The AIO ses creates /tmp/ses_config/ on localhost,
+    # but that can disappear anytime. So we'll store
+    # The ses config in our userspace.
     - name: Copy SES config in userspace
       copy:
         src: "/tmp/ses_config/ses_config.yml"
-        dest: "{{ ses_config_file_path }}"
+        dest: "{{ ses_config_file_path | dirname }}"
         remote_src: yes
       delegate_to: localhost
 

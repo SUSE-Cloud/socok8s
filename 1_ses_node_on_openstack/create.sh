@@ -33,10 +33,5 @@ pushd ${MAIN_FOLDER}
 popd
 
 pushd ${CURRENT_FOLDER}/playbooks
-    #TODO(evrardjp) These 3 can be merged into a single playbook when bumping
-    #ansible version to 2.7.  In ansible 2.7 a 'reboot' action plugin will prevent
-    #the failures dues to disconnections.
-    ansible-playbook firstboot.yml -i ${MAIN_FOLDER}/inventory-ses.ini || true
-    ansible-playbook wait-for-host.yml -i ${MAIN_FOLDER}/inventory-ses.ini
-    ansible-playbook add-minimum-software.yml -i ${MAIN_FOLDER}/inventory-ses.ini
+    ansible-playbook play.yml -i ${MAIN_FOLDER}/inventory-ses.ini
 popd

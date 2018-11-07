@@ -90,27 +90,53 @@
   tags:
     - run
 
-# TODO(evrardjp): Use mechanism like glance to re-use component-install.yml code and allow any override.
-- name: Deploy infrastructure charts
-  shell: "{{ item }}"
-  with_items:
-    - "./tools/deployment/multinode/050-mariadb.sh"
-    - "./tools/deployment/multinode/060-rabbitmq.sh"
-    - "./tools/deployment/multinode/070-memcached.sh"
-  args:
-    executable: /bin/bash
-    chdir: /opt/openstack-helm
+- name: Deploy mariadb
+  import_tasks: component-install.yml
+  vars:
+    _cmpnt_template: suse-mariadb.yaml
+    _cmpnt_overrides: "{{ suse_osh_deploy_mariadb_yaml_overrides }}"
+    _cmpnt_runcommand: "./tools/deployment/multinode/050-mariadb.sh"
+  environment:
+    OSH_EXTRA_HELM_ARGS_MARIADB: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_MARIADB') | default('', True) }} -f /tmp/suse-mariadb.yaml"
   tags:
+    - mariadb
+    - run
+
+- name: Deploy rabbitmq
+  import_tasks: component-install.yml
+  vars:
+    _cmpnt_template: suse-rabbitmq.yaml
+    _cmpnt_overrides: "{{ suse_osh_deploy_rabbitmq_yaml_overrides }}"
+    _cmpnt_runcommand: "./tools/deployment/multinode/060-rabbitmq.sh"
+  environment:
+    OSH_EXTRA_HELM_ARGS_RABBITMQ: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_RABBITMQ') | default('', True) }} -f /tmp/suse-rabbitmq.yaml"
+  tags:
+    - rabbitmq
+    - run
+
+- name: Deploy memcached
+  import_tasks: component-install.yml
+  vars:
+    _cmpnt_template: suse-memcached.yaml
+    _cmpnt_overrides: "{{ suse_osh_deploy_memcached_yaml_overrides }}"
+    _cmpnt_runcommand: "./tools/deployment/multinode/070-memcached.sh"
+  environment:
+    OSH_EXTRA_HELM_ARGS_MEMCACHED: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_MEMCACHED') | default('', True) }} -f /tmp/suse-memcached.yaml"
+  tags:
+    - memcached
     - run
 
 # Keystone should be kept separate as its one failing.
 - name: Deploy keystone, ignore errors due to SCRD-4677. #https://jira.suse.de/browse/SCRD-4677.
-  shell: ./tools/deployment/multinode/080-keystone.sh
-  failed_when: false # terrible idea.
-  args:
-    executable: /bin/bash
-    chdir: /opt/openstack-helm
+  import_tasks: component-install.yml
+  vars:
+    _cmpnt_template: suse-keystone.yaml
+    _cmpnt_overrides: "{{ suse_osh_deploy_keystone_yaml_overrides }}"
+    _cmpnt_runcommand: "./tools/deployment/multinode/080-keystone.sh"
+  environment:
+    OSH_EXTRA_HELM_ARGS_KEYSTONE: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_KEYSTONE') | default('', True) }} -f /tmp/suse-keystone.yaml"
   tags:
+    - keystone
     - run
 
   #TODO(evrardjp): Remove the next two tasks by an appropriate include in tasks/main
@@ -164,17 +190,19 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_cinder_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/110-cinder.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_CINDER`: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_CINDER') | default('', True) }} -f /tmp/suse-cinder.yaml"
+    OSH_EXTRA_HELM_ARGS_CINDER: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_CINDER') | default('', True) }} -f /tmp/suse-cinder.yaml"
   tags:
     - cinder
     - run
 
-# TODO(evrardjp): Check if need to have our own dummy overrides
 - name: Deploy OVS
-  shell: "./tools/deployment/multinode/120-openvswitch.sh"
-  args:
-    executable: /bin/bash
-    chdir: /opt/openstack-helm
+  import_tasks: component-install.yml
+  vars:
+    _cmpnt_template: suse-ovs.yaml
+    _cmpnt_overrides: "{{ suse_osh_deploy_ovs_yaml_overrides }}"
+    _cmpnt_runcommand: "./tools/deployment/multinode/120-openvswitch.sh"
+  environment:
+    OSH_EXTRA_HELM_ARGS_OPENVSWITCH: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_OPENVSWITCH') | default('', True) }} -f /tmp/suse-ovs.yaml"
   tags:
     - ovs
     - run
@@ -186,7 +214,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_libvirt_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/130-libvirt.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_LIBVIRT`: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_LIBVIRT') | default('', True) }} -f /tmp/suse-libvirt.yaml"
+    OSH_EXTRA_HELM_ARGS_LIBVIRT: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_LIBVIRT') | default('', True) }} -f /tmp/suse-libvirt.yaml"
   tags:
     - libvirt
     - run
@@ -201,7 +229,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_nova_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/140-compute-kit.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_NOVA`: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NOVA') | default('', True) }} -f /tmp/suse-nova.yaml"
+    OSH_EXTRA_HELM_ARGS_NOVA: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NOVA') | default('', True) }} -f /tmp/suse-nova.yaml"
   tags:
     - nova
     - neutron
