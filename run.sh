@@ -2,18 +2,18 @@
 
 set -o errexit
 
-action=${1:-deploy}
+action=${1:-full_deploy}
 deploy_mechanism=${2:-openstack}
-
-if [ ! -f ~/suse-osh-deploy/user_variables.yml ]; then
-    ansible_playbook="ansible-playbook "
-else
-    ansible_playbook="ansible-playbook -e @~/suse-osh-deploy/user_variables.yml "
-fi
 
 source script_library/pre-flight-checks.sh general
 
-function deploy_on_openstack(){
+function deploy_osh(){
+    source script_library/detect-ansible.sh
+    $ansible_playbook ./7_deploy_osh/play.yml -i inventory-osh.ini
+    echo "SUSE OSH deployed"
+}
+
+function pre_deploy_on_openstack(){
     source script_library/pre-flight-checks.sh openstack_early_tests
     echo "Deploying on OpenStack"
     ./1_ses_node_on_openstack/create.sh
@@ -30,13 +30,9 @@ function deploy_on_openstack(){
     source script_library/detect-ansible.sh
     $ansible_playbook ./6_preflight_checks/checks.yml -i inventory-osh.ini
     echo "Step 6 success"
-    source script_library/detect-ansible.sh
-    $ansible_playbook ./7_deploy_osh/play.yml -i inventory-osh.ini
-    echo "Step 7 success"
-    exit 0
 }
 
-function deploy_on_kvm(){
+function pre_deploy_on_kvm(){
     echo "Deploying on KVM"
     echo "NOT IMPLEMENTED"
     exit 1
@@ -66,8 +62,12 @@ function delete_user_files(){
 }
 
 case "$action" in
-    "deploy")
-        deploy_on_$deploy_mechanism
+    "full_deploy")
+        pre_deploy_on_$deploy_mechanism
+        deploy_osh
+        ;;
+    "deploy_osh")
+        deploy_osh
         ;;
     "delete")
         delete_on_$deploy_mechanism
@@ -76,6 +76,6 @@ case "$action" in
         delete_user_files
         ;;
     *)
-        echo "Usage: ${0} deploy|delete|delete_userspace"
+        echo "Usage: ${0} full_deploy|deploy_osh|delete|delete_userspace"
         ;;
 esac
