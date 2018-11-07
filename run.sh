@@ -55,6 +55,11 @@ function delete_on_kvm(){
     exit 1
 }
 
+function clean_k8s(){
+    echo "DANGER ZONE"
+    read -p "Press Enter or Ctrl-C. Enter will remove all the deployed components on your kubernetes cluster"
+    ansible -m script -a "script_library/cleanup-k8s.sh" all -i inventory-osh.ini
+}
 function delete_user_files(){
     echo "DANGER ZONE"
     read -p "Press Enter or Ctrl-C. Enter will delete userspace files in ~/suse-osh-deploy/"
@@ -69,13 +74,17 @@ case "$action" in
     "deploy_osh")
         deploy_osh
         ;;
-    "delete")
+    "teardown")
         delete_on_$deploy_mechanism
-        ;;
-    "delete_userspace")
         delete_user_files
         ;;
+    "clean_k8s")
+        clean_k8s
+        ;;
     *)
-        echo "Usage: ${0} full_deploy|deploy_osh|delete|delete_userspace"
+        echo "Usage: ${0} full_deploy|deploy_osh|teardown|clean_k8s"
+        echo "full_deploy ensures the requirements are setup and then does the deploy_osh step"
+        echo "teardown removes all nodes used for deployment"
+        echo "clean_k8s cleans up the kubernetes cluster of all evidence of an OSH deployment"
         ;;
 esac
