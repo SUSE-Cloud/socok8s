@@ -25,14 +25,14 @@ suse_osh_deploy_packages:
 # Keep this until helm is packaged as rpm
 helm_download_url: "https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"
 
-# OpenStack-Helm repos, frozen on 26th september 2018
+# OpenStack-Helm repos, frozen on 9th November 2018
 osh_repos:
   openstack-helm-infra:
     src: https://git.openstack.org/openstack/openstack-helm-infra.git
-    version: ff116a26fde308c05a8947c62fdf4f94a9650099
+    version: b55e9b10a72ce5531ae22f15f953b2eb71e6f623
   openstack-helm:
     src: https://git.openstack.org/openstack/openstack-helm.git
-    version: c2459fe4e2aa8f051ab088ed2ed7696fb491ddf4
+    version: 4f94593e870ac879b2d01300cb02485ace58b3ac
 
 suse_osh_deploy_require_ha: True
 
