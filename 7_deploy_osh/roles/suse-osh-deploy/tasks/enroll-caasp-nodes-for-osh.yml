@@ -12,15 +12,42 @@
     - _all_casp_nodenames.stdout_lines | length < 3
 
 # TODO(evrardjp): Make this conditional if a previous enrollment was already done
-- name: Enroll node for OSH
+- name: Enroll node for OSH control plane
   shell: "kubectl label nodes {{ item }} openstack-control-plane=enabled"
   register: _enrollforopenstack
   changed_when:
     - _enrollforopenstack.rc == 0
   failed_when:
     - _enrollforopenstack.rc != 0
-    - _enrollforopenstack.stderr.find("'openstack-control-plane' already has a value (enabled)") == -1
-  with_items: "{{ _all_casp_nodenames.stdout_lines }}"
+    - _enrollforopenstack.stderr.find("already has a value (enabled)") == -1
+  with_items:
+    - "{{ _all_casp_nodenames.stdout_lines }}"
+  tags:
+    - skip_ansible_lint
+
+- name: Enroll node for OSH compute node
+  shell: "kubectl label nodes {{ item }} openstack-compute-node=enabled"
+  register: _enrollforopenstack
+  changed_when:
+    - _enrollforopenstack.rc == 0
+  failed_when:
+    - _enrollforopenstack.rc != 0
+    - _enrollforopenstack.stderr.find("already has a value (enabled)") == -1
+  with_items:
+    - "{{ _all_casp_nodenames.stdout_lines }}"
+  tags:
+    - skip_ansible_lint
+
+- name: Enroll node for OSH as ovs node
+  shell: "kubectl label nodes {{ item }} openvswitch=enabled"
+  register: _enrollforopenstack
+  changed_when:
+    - _enrollforopenstack.rc == 0
+  failed_when:
+    - _enrollforopenstack.rc != 0
+    - _enrollforopenstack.stderr.find("already has a value (enabled)") == -1
+  with_items:
+    - "{{ _all_casp_nodenames.stdout_lines }}"
   tags:
     - skip_ansible_lint
 
@@ -29,22 +56,32 @@
   changed_when: false
   register: _nodes
 
-# TODO(evrardjp): Be more selective in taint node selection
-- name: Find tainted master master if ha is asked and only 3 nodes
+- name: Find master node
   set_fact:
     master_node: "{{ _nodes.stdout_lines | join('') | from_json | json_query(query)}}"
   vars:
     query: 'items[].spec.{node: externalID, taints: taints} | [?taints].node'
-  when:
-    - suse_osh_deploy_require_ha | bool
-    - (_all_casp_nodenames.stdout_lines | length) == 3
 
-- debug:
-    var: master_node
- 
+# Select the first non-master node for single-node labels
+- name: Apply labels to a single non-master node
+  vars:
+    primary_node: "{{ _all_casp_nodenames.stdout_lines | difference(master_node) | first }}"
+  shell: "kubectl label nodes {{ primary_node }} {{ item }} --overwrite=true"
+  register: _enrollforopenstack
+  changed_when:
+    - _enrollforopenstack.rc == 0
+  failed_when:
+    - _enrollforopenstack.rc != 0
+  with_items:
+    - 'openstack-helm-node-class=primary'
+    - 'ceph-mon=enabled'
+  when:
+    - "(master_node | default('')) | length > 0"
+
 - name: Remove taints when only 3 nodes and ha is required
   shell: "kubectl taint nodes {{ item }} node-role.kubernetes.io/master:NoSchedule-"
   with_items: "{{ master_node }}"
   when:
-    - master_node is defined
-    - master_node | length > 0
+    - "(master_node | default('')) | length > 0"
+    - suse_osh_deploy_require_ha | bool
+    - (_all_casp_nodenames.stdout_lines | length) == 3
