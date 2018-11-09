@@ -12,6 +12,4 @@
   args:
     executable: /bin/bash
     chdir: "{{ _cmpnt_chdir | default('/opt/openstack-helm') }}"
-  when:
-    - _usertemplatedata is changed or (suse_osh_deploy_always_redeploy | bool)
   failed_when: false #terrible idea, but no ingress yet
