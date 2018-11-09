@@ -1,12 +1,17 @@
 ---
 # tasks file for suse-osh-deploy
+- name: Load user variables (ceph b64 keyrings)
+  include_vars: "{{ suse_osh_deploy_user_vars_path }}"
+
+- name: Ensure the SES config file can be loaded
+  include_vars: "{{ suse_osh_deploy_ses_config_path }}"
 
 - name: Pre-fligt checks for the role
   assert:
     that:
       - ceph_admin_keyring_b64key is defined
       - ceph_user_keyring_b64key is defined
-      - ceph_monitors_ips is defined
+#      - ceph_monitors_ips is defined
 
 - name: Set monitors data
   set_fact:
