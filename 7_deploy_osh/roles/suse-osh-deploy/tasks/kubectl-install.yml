@@ -17,17 +17,51 @@
     path: "{{ ansible_user_dir }}/.kube"
     mode: "0700"
 
-- name: Find kubeconfig location
-  shell: jq -r '.kubeConfig.admin' /opt/ccp/environment.json
-  changed_when: false
-  register: _kubeconfiglocation
+- name: Check if automation tooling files are present
+  stat:
+    path: /opt/ccp/environment.json
+  register: automation_environment_json
 
-- name: Copy kubeconfig file
-  copy:
-    remote_src: yes
-    src: "{{ _kubeconfiglocation.stdout_lines[0] }}"
-    dest: "{{ ansible_user_dir }}/.kube/config"
-    mode: "0600"
+- name: Use automation tooling if possible
+  when: automation_environment_json.stat.readable
+  block:
+  - name: Find kubeconfig location
+    shell: jq -r '.kubeConfig.admin' /opt/ccp/environment.json
+    changed_when: false
+    register: _kubeconfiglocation
+
+  - name: Ensure kubeconfig is recent
+    stat:
+      path: "{{ _kubeconfiglocation.stdout_lines[0] }}"
+    register: _kubeconfigfromautomation
+
+  - name: Re-run automation if file is old
+    when: ansible_date_time.epoch|float - _kubeconfigfromautomation.stat.mtime > 86400
+    shell: ./velum-interactions -k -e /opt/ccp/environment.json
+    args:
+      chdir: /opt/ccp/automation/velum-bootstrap
+      executable: /bin/bash
+
+  - name: Copy kubeconfig file
+    copy:
+      remote_src: yes
+      src: "{{ _kubeconfiglocation.stdout_lines[0] }}"
+      dest: "{{ ansible_user_dir }}/.kube/config"
+      mode: "0600"
+
+- name: Else use files from runner
+  when: not automation_environment_json.stat.readable
+  block:
+    - name: Find if runner has a kubeconfig file
+      stat:
+        path: "{{ kubeconfig_file_path }}"
+      delegate_to: localhost
+
+    - name: Copy local runner kubeconfig file to deploy node
+      copy:
+        src: "{{ kubeconfig_file_path }}"
+        dest: "{{ ansible_user_dir }}/.kube/config"
+        mode: "0600"
 
 - name: Test kubectl
   command: kubectl cluster-info
