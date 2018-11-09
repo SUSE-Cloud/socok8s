@@ -2,18 +2,18 @@
 
 set -o errexit
 
-action=${1:-deploy}
+action=${1:-full_deploy}
 deploy_mechanism=${2:-openstack}
-
-if [ ! -f ~/suse-osh-deploy/user_variables.yml ]; then
-    ansible_playbook="ansible-playbook "
-else
-    ansible_playbook="ansible-playbook -e @~/suse-osh-deploy/user_variables.yml "
-fi
 
 source script_library/pre-flight-checks.sh general
 
-function deploy_on_openstack(){
+function deploy_osh(){
+    source script_library/detect-ansible.sh
+    $ansible_playbook ./7_deploy_osh/play.yml -i inventory-osh.ini
+    echo "SUSE OSH deployed"
+}
+
+function pre_deploy_on_openstack(){
     source script_library/pre-flight-checks.sh openstack_early_tests
     echo "Deploying on OpenStack"
     ./1_ses_node_on_openstack/create.sh
@@ -30,13 +30,9 @@ function deploy_on_openstack(){
     source script_library/detect-ansible.sh
     $ansible_playbook ./6_preflight_checks/checks.yml -i inventory-osh.ini
     echo "Step 6 success"
-    source script_library/detect-ansible.sh
-    $ansible_playbook ./7_deploy_osh/play.yml -i inventory-osh.ini
-    echo "Step 7 success"
-    exit 0
 }
 
-function deploy_on_kvm(){
+function pre_deploy_on_kvm(){
     echo "Deploying on KVM"
     echo "NOT IMPLEMENTED"
     exit 1
@@ -59,6 +55,11 @@ function delete_on_kvm(){
     exit 1
 }
 
+function clean_k8s(){
+    echo "DANGER ZONE"
+    read -p "Press Enter or Ctrl-C. Enter will remove all the deployed components on your kubernetes cluster"
+    ansible -m script -a "script_library/cleanup-k8s.sh" all -i inventory-osh.ini
+}
 function delete_user_files(){
     echo "DANGER ZONE"
     read -p "Press Enter or Ctrl-C. Enter will delete userspace files in ~/suse-osh-deploy/"
@@ -66,16 +67,24 @@ function delete_user_files(){
 }
 
 case "$action" in
-    "deploy")
-        deploy_on_$deploy_mechanism
+    "full_deploy")
+        pre_deploy_on_$deploy_mechanism
+        deploy_osh
         ;;
-    "delete")
+    "deploy_osh")
+        deploy_osh
+        ;;
+    "teardown")
         delete_on_$deploy_mechanism
-        ;;
-    "delete_userspace")
         delete_user_files
         ;;
+    "clean_k8s")
+        clean_k8s
+        ;;
     *)
-        echo "Usage: ${0} deploy|delete|delete_userspace"
+        echo "Usage: ${0} full_deploy|deploy_osh|teardown|clean_k8s"
+        echo "full_deploy ensures the requirements are setup and then does the deploy_osh step"
+        echo "teardown removes all nodes used for deployment"
+        echo "clean_k8s cleans up the kubernetes cluster of all evidence of an OSH deployment"
         ;;
 esac
