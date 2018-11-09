@@ -52,12 +52,13 @@
   tags:
     - install
 
-# TODO(evrardjp): Ensure this task doesn't run if the expected files are already there!
+# NOTE: This task should stay close to code-install, so that no race condition
+# happens between the git-cloning, an eventual failure, and the building of the charts.
 - name: Build infra charts
   make:
     chdir: /opt/openstack-helm-infra
     target: all
-  when: _gitclone is changed or (suse_osh_deploy_always_redeploy | bool)
+  when: _gitclone is changed
   tags:
     - install
 
