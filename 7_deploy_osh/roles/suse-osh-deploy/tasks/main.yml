@@ -15,7 +15,7 @@
 
 - name: Set monitors data
   set_fact:
-    suse_osh_deploy_ceph_mons:  "{% for ip in ceph_conf.mon_host.split(",") %}{{ ip }}:6789{% if not loop.last %},{% endif %}{% endfor %}"
+    suse_osh_deploy_ceph_mons:  "{% for ip in ceph_conf.mon_host.split(',') %}{{ ip }}:6789{% if not loop.last %},{% endif %}{% endfor %}"
   tags:
     - always
     - run
