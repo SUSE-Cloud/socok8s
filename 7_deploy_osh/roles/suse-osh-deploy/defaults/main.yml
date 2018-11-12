@@ -14,7 +14,7 @@ suse_osh_deploy_packages:
   - gcc
   - make
   - jq
-  - ca-certificates-suse
+#  - ca-certificates-suse
   - rng-tools
   - curl #after this line these are the packages required for osh deploy itself
   - python-selinux
@@ -57,15 +57,22 @@ suse_osh_deploy_storage:
 # ClusterRole to allow privileged containers
 suse_osh_deploy_privileged_cluster_role: suse:caasp:psp:privileged
 
+# Set this to false if you want to speed up your builds or do partial upgrades
+suse_osh_deploy_always_redeploy: True
+
+suse_osh_openstack_release: queens
+
+suse_osh_openstack_override_images: "{{ lookup('file', 'files/image_overrides/queens/loci.yaml') | from_yaml }}"
+
 # Default overrides
-suse_osh_deploy_cinder_yaml_overrides: {}
-suse_osh_deploy_glance_yaml_overrides: {}
-suse_osh_deploy_ingress_kube_system_yaml_overrides: {}
-suse_osh_deploy_ingress_namespace_yaml_overrides: {}
-suse_osh_deploy_keystone_yaml_overrides: {}
-suse_osh_deploy_libvirt_yaml_overrides: {}
-suse_osh_deploy_mariadb_yaml_overrides: {}
-suse_osh_deploy_memcached_yaml_overrides: {}
-suse_osh_deploy_nova_yaml_overrides: {}
-suse_osh_deploy_ovs_yaml_overrides: {}
-suse_osh_deploy_rabbitmq_yaml_overrides: {}
+suse_osh_deploy_cinder_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
+suse_osh_deploy_glance_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
+suse_osh_deploy_ingress_kube_system_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
+suse_osh_deploy_ingress_namespace_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
+suse_osh_deploy_keystone_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
+suse_osh_deploy_libvirt_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
+suse_osh_deploy_mariadb_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
+suse_osh_deploy_memcached_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
+suse_osh_deploy_nova_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
+suse_osh_deploy_ovs_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
+suse_osh_deploy_rabbitmq_yaml_overrides: "{{ suse_osh_openstack_override_images }}"

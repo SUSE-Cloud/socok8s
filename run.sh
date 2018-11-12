@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -o errexit
+set -x
 
 action=${1:-full_deploy}
 deploy_mechanism=${2:-openstack}
@@ -9,7 +10,8 @@ source script_library/pre-flight-checks.sh general
 
 function deploy_osh(){
     source script_library/detect-ansible.sh
-    $ansible_playbook ./7_deploy_osh/play.yml -i inventory-osh.ini
+    export ANSIBLE_STDOUT_CALLBACK=debug
+    $ansible_playbook ./7_deploy_osh/play.yml -vvvv -i inventory-osh.ini
     echo "SUSE OSH deployed"
 }
 

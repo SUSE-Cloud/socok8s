@@ -31,12 +31,12 @@
     state: started
     enabled: yes
 
-- name: Ensure SES repos present
-  zypper_repository:
-    name: "{{ item.name }}"
-    repo: "{{ item.repo }}"
-  with_items:
-    - name: "SUSE-Enterprise-Storage-{{ ses_version }}-Pool"
-      repo: "{{ ses_repo_server }}/repos/x86_64/SUSE-Enterprise-Storage-{{ ses_version }}-Pool/"
-    - name: "SUSE-Enterprise-Storage-{{ ses_version }}-Updates"
-      repo: "{{ ses_repo_server }}/repos/x86_64/SUSE-Enterprise-Storage-{{ ses_version }}-Updates/"
+#- name: Ensure SES repos present
+#  zypper_repository:
+#    name: "{{ item.name }}"
+#    repo: "{{ item.repo }}"
+#  with_items:
+#    - name: "SUSE-Enterprise-Storage-{{ ses_version }}-Pool"
+#      repo: "{{ ses_repo_server }}/repos/x86_64/SUSE-Enterprise-Storage-{{ ses_version }}-Pool/"
+#    - name: "SUSE-Enterprise-Storage-{{ ses_version }}-Updates"
+#      repo: "{{ ses_repo_server }}/repos/x86_64/SUSE-Enterprise-Storage-{{ ses_version }}-Updates/"

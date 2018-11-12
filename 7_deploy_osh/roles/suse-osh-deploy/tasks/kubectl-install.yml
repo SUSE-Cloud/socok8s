@@ -23,7 +23,7 @@
   register: automation_environment_json
 
 - name: Use automation tooling if possible
-  when: automation_environment_json.stat.readable
+  when: automation_environment_json.stat.exists
   block:
   - name: Find kubeconfig location
     shell: jq -r '.kubeConfig.admin' /opt/ccp/environment.json
@@ -50,7 +50,7 @@
       mode: "0600"
 
 - name: Else use files from runner
-  when: not automation_environment_json.stat.readable
+  when: not automation_environment_json.stat.exists
   block:
     - name: Find if runner has a kubeconfig file
       stat:

@@ -1,7 +1,7 @@
 ---
 # tasks file for suse-osh-deploy
 
-- name: Pre-fligt checks for the role
+- name: Pre-flight checks for the role
   assert:
     that:
       - ceph_admin_keyring_b64key is defined
@@ -92,7 +92,7 @@
 - name: Use a different ingress script as long as upstream does not support overrides
   copy:
     src: 020-ingress.sh
-    dest: /opt/ccp/020-ingress.sh
+    dest: /opt/openstack-helm/tools/deployment/multinode/020-ingress.sh
     mode: '0755'
   tags:
     - ingress
@@ -110,7 +110,7 @@
   vars:
     _cmpnt_template: suse-ingress-kube-system.yaml
     _cmpnt_overrides: "{{ suse_osh_deploy_ingress_kube_system_yaml_overrides }}"
-    _cmpnt_runcommand: /opt/ccp/020-ingress.sh
+    _cmpnt_runcommand: ./tools/deployment/multinode/020-ingress.sh
   environment:
     OSH_EXTRA_HELM_ARGS_INGRESS_KUBE_SYSTEM: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_KUBE_SYSTEM') | default('', True) }} -f /tmp/suse-ingress-kube-system.yaml"
     OSH_EXTRA_HELM_ARGS_INGRESS_OPENSTACK: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_OPENSTACK') | default('', True) }} -f /tmp/suse-ingress-namespace.yaml"
