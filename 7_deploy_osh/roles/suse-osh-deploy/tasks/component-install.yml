@@ -12,4 +12,3 @@
   args:
     executable: /bin/bash
     chdir: "{{ _cmpnt_chdir | default('/opt/openstack-helm') }}"
-  failed_when: false #terrible idea, but no ingress yet
