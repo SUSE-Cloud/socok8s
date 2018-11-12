@@ -36,9 +36,6 @@ osh_repos:
 
 suse_osh_deploy_require_ha: True
 
-suse_osh_deploy_ses_config_path: "~/suse-osh-deploy/ses_config.yml"
-suse_osh_deploy_user_vars_path: "~/suse-osh-deploy/user_variables.yml"
-
 suse_osh_deploy_storage:
   adminId: admin
   adminSecretName: pvc-ceph-conf-combined-storageclass
