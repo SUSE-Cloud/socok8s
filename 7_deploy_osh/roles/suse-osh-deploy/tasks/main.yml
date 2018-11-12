@@ -1,7 +1,15 @@
 ---
 # tasks file for suse-osh-deploy
+- name: Load standard variables
+  include_vars: "{{ playbook_dir }}/../common-vars.yml"
 
-- name: Pre-flight checks for the role
+- name: Ensure the SES config file can be loaded
+  include_vars: "{{ suse_osh_deploy_ses_config_path }}"
+
+- name: Load admin keyring from user_variables (required for now)
+  include_vars: "{{ suse_osh_deploy_user_variables }}"
+
+- name: Pre-fligt checks for the role
   assert:
     that:
       - ceph_admin_keyring_b64key is defined
