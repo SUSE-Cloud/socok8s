@@ -7,6 +7,7 @@
       - ceph_admin_keyring_b64key is defined
       - ceph_user_keyring_b64key is defined
       - ceph_monitors_ips is defined
+      - suse_osh_deploy_vip_with_cidr is defined
 
 - name: Set monitors data
   set_fact:
@@ -47,6 +48,17 @@
   tags:
     - run
 
+- name: Ensure VIP is present in /etc/hosts for the services to deploy
+  blockinfile:
+    path: /etc/hosts
+    block: |
+      {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} keystone keystone.openstack.svc.cluster.local
+      {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} glance glance.openstack.svc.cluster.local
+      {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} cinder cinder.openstack.svc.cluster.local
+      {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} nova nova.openstack.svc.cluster.local
+      {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} neutron neutron.openstack.svc.cluster.local
+      {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} horizon horizon.openstack.svc.cluster.local
+
 - name: Fetch OSH code
   include: code-install.yml
   tags:
@@ -62,6 +74,11 @@
   tags:
     - install
 
+- name: Create privileged ClusterRoleBinding for ServiceAccounts
+  include: privileged-cluster-role-binding.yml
+  tags:
+    - run
+
 # TODO(evrardjp): Use mechanism like glance to re-use component-install.yml code and allow any override.
 - name: Setup openstack CLIs
   shell: ./tools/deployment/multinode/010-setup-client.sh
@@ -71,23 +88,40 @@
   tags:
     - run
 
-# TODO(evrardjp): Use mechanism like glance to re-use component-install.yml code and allow any override.
-- name: Setup Basic ingress and namespace
-  shell: ./tools/deployment/multinode/020-ingress.sh
-  args:
-    executable: /bin/bash
-    chdir: /opt/openstack-helm
+# TODO(evrardjp): Follow on https://review.openstack.org/#/c/605005/
+- name: Use a different ingress script as long as upstream does not support overrides
+  copy:
+    src: 020-ingress.sh
+    dest: /opt/ccp/020-ingress.sh
+    mode: '0755'
   tags:
+    - ingress
+    - run
+
+- name: Template file for the namespaces ingress
+  config_template:
+    src: suse-ingress-namespace.yaml.j2
+    dest: /tmp/suse-ingress-namespace.yaml
+    config_overrides: "{{ suse_osh_deploy_ingress_namespace_yaml_overrides }}"
+    config_type: yaml
+
+- name: Setup Basic ingress and namespace
+  import_tasks: component-install.yml
+  vars:
+    _cmpnt_template: suse-ingress-kube-system.yaml
+    _cmpnt_overrides: "{{ suse_osh_deploy_ingress_kube_system_yaml_overrides }}"
+    _cmpnt_runcommand: /opt/ccp/020-ingress.sh
+  environment:
+    OSH_EXTRA_HELM_ARGS_INGRESS_KUBE_SYSTEM: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_KUBE_SYSTEM') | default('', True) }} -f /tmp/suse-ingress-kube-system.yaml"
+    OSH_EXTRA_HELM_ARGS_INGRESS_OPENSTACK: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_OPENSTACK') | default('', True) }} -f /tmp/suse-ingress-namespace.yaml"
+    OSH_EXTRA_HELM_ARGS_INGRESS_CEPH: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_CEPH') | default('', True) }} -f /tmp/suse-ingress-namespace.yaml"
+  tags:
+    - ingress
     - run
 
 # TODO(evrardjp): Improve idempotency
 - name: Add ceph secrets to k8s
   include: ceph-secrets.yml
-  tags:
-    - run
-
-- name: Create privileged ClusterRoleBinding for ServiceAccounts
-  include: privileged-cluster-role-binding.yml
   tags:
     - run
 

@@ -38,6 +38,9 @@ subjects:
 - kind: ServiceAccount
   name: openvswitch-db
   namespace: openstack
+- kind: ServiceAccount
+  name: ingress-kube-system-ingress
+  namespace: kube-system
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1

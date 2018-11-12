@@ -28,6 +28,6 @@ done
 
 echo "Removing suse socok8s files in /tmp"
 
-for filename in suse-mariadb.yaml suse-rabbitmq.yaml suse-memcached.yaml suse-glance.yaml suse-cinder.yaml suse-ovs.yaml suse-libvirt.yaml suse-nova.yaml; do
+for filename in suse-mariadb.yaml suse-rabbitmq.yaml suse-memcached.yaml suse-glance.yaml suse-cinder.yaml suse-ovs.yaml suse-libvirt.yaml suse-nova.yaml suse-ingress-kube-system.yaml suse-ingress-namespace.yaml; do
     rm -f /tmp/$filename;
 done

@@ -1,0 +1,17 @@
+---
+pod:
+  replicas:
+    error_page: 2
+deployment:
+  mode: cluster
+  type: DaemonSet
+network:
+  host_namespace: true
+  vip:
+    manage: true
+    # what type of vip manage machanism will be used
+    # possible options: routed, keepalived
+    mode: routed
+    interface: ingress-vip
+    addr: {{ suse_osh_deploy_vip_with_cidr }}
+    external_policy_local: true

@@ -60,6 +60,8 @@ suse_osh_deploy_privileged_cluster_role: suse:caasp:psp:privileged
 # Default overrides
 suse_osh_deploy_cinder_yaml_overrides: {}
 suse_osh_deploy_glance_yaml_overrides: {}
+suse_osh_deploy_ingress_kube_system_yaml_overrides: {}
+suse_osh_deploy_ingress_namespace_yaml_overrides: {}
 suse_osh_deploy_keystone_yaml_overrides: {}
 suse_osh_deploy_libvirt_yaml_overrides: {}
 suse_osh_deploy_mariadb_yaml_overrides: {}
