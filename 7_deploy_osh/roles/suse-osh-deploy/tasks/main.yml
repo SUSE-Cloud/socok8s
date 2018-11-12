@@ -1,10 +1,13 @@
 ---
 # tasks file for suse-osh-deploy
-- name: Load user variables (ceph b64 keyrings)
-  include_vars: "{{ suse_osh_deploy_user_vars_path }}"
+- name: Load standard variables
+  include_vars: "{{ playbook_dir }}/../common-vars.yml"
 
 - name: Ensure the SES config file can be loaded
   include_vars: "{{ suse_osh_deploy_ses_config_path }}"
+
+- name: Load admin keyring from user_variables (required for now)
+  include_vars: "{{ suse_osh_deploy_user_variables }}"
 
 - name: Pre-fligt checks for the role
   assert:
@@ -15,7 +18,7 @@
 
 - name: Set monitors data
   set_fact:
-    suse_osh_deploy_ceph_mons:  "{% for ip in ceph_conf.mon_host.split(",") %}{{ ip }}:6789{% if not loop.last %},{% endif %}{% endfor %}"
+    suse_osh_deploy_ceph_mons:  "{% for ip in ceph_conf.mon_host.split(',') %}{{ ip }}:6789{% if not loop.last %},{% endif %}{% endfor %}"
   tags:
     - always
     - run
