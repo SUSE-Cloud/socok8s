@@ -1,0 +1,7 @@
+---
+# defaults file for suse-osh-setup
+
+# Location of the kubeconfig file, fetched from velum UI.
+kubeconfig_file_path: "~/suse-osh-deploy/kubeconfig"
+
+suse_cp_node_create_subvolume: false

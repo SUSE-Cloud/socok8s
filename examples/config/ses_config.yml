@@ -1,0 +1,30 @@
+ses_cluster_configuration:
+  ses_cluster_name: ceph
+
+  conf_options:
+      ses_fsid: 93aca50f-55bd-3d5e-acf8-827deb39b777
+      ses_mon_initial_members:
+      ses_mon_host: 192.168.86.205
+      ses_public_network: 192.168.86.0/24
+      ses_cluster_network: 192.168.86.0/24
+  cinder:
+      rbd_store_pool: cinder
+      rbd_store_pool_user: cinder
+      keyring_file_name: ceph.client.cinder.keyring
+  cinder-backup:
+      rbd_store_pool: backups
+      rbd_store_pool_user: cinder_backup
+      keyring_file_name: ceph.client.cinder_backup.keyring
+ # Nova uses the cinder user to access the nova pool, cinder pool
+ # So all we need here is the nova pool name.
+  nova:
+      rbd_store_pool: nova
+  glance:
+      rbd_store_pool: glance
+      rbd_store_pool_user: glance
+      keyring_file_name: ceph.client.glance.keyring
+# BEGIN ANSIBLE MANAGED BLOCK
+ceph_admin_keyring_b64key: QVFCMzNlUmJBQUFBQUJBQVdqZGFHN2VxUXdhRlBzQ1NuanQvc3c9PQ==
+ceph_user_keyring_b64key: QVFCMzNlUmJBQUFBQUJBQVdqZGFHN2VxUXdhRlBzQ1NuanQvc3c9PQ==
+ceph_monitors_ips: ['192.168.86.205'] #list containing all ips of the host (which should be an AIO containing the mons).
+# END ANSIBLE MANAGED BLOCK

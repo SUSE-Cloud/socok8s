@@ -1,0 +1,19 @@
+---
+
+# Better to have another ansible role for running code against all worker nodes
+
+- name: Subvolumes setup on control plane worker nodes
+  include: subvolumes-setup.yml
+  when: ('osh-deploy-workers' in group_names)
+  tags:
+    - preinstall
+
+- name: stop the execution
+  fail:
+    msg: "Stopping the execution here"
+
+#- name: Generate and read kubeconfig from one caasp node
+#  include: get-kubeconfig.yml
+#  run_once: true
+#  tags:
+#    - preinstall

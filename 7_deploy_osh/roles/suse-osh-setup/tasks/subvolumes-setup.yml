@@ -1,0 +1,39 @@
+---
+- name: Check subvolume directory already exists
+  stat:
+    path: /var/lib/nova
+  register: _subvolume_check
+
+- name: Check if subvolumes need to be created
+  set_fact:
+    suse_cp_node_create_subvolume: true
+  when:
+    - not _subvolume_check.stat.exists
+
+- name: Add subvolume setup script
+  template:
+    src: caasp_cp_node_set_subvolumes.sh.j2
+    dest: /tmp/caasp_cp_node_set_subvolumes.sh
+    mode: "0755"
+  when: suse_cp_node_create_subvolume
+
+
+- name: Execute subvolume setup script
+  shell: /tmp/caasp_cp_node_set_subvolumes.sh
+  register: _cmd_out
+  failed_when: _cmd_out.rc !=0
+  when: suse_cp_node_create_subvolume
+
+- name: Reboot node after successful subvolumes creation
+  command: shutdown -r now
+  async: 0
+  poll: 0
+  when: suse_cp_node_create_subvolume
+
+- name: Pause for reboot to start
+  pause: seconds=15
+  when: suse_cp_node_create_subvolume
+
+- name: Wait for cp worker node to come back after subvolumes setup
+  local_action: wait_for host={{ inventory_hostname }} state=started delay=30 timeout=300 connect_timeout=15
+  when: suse_cp_node_create_subvolume

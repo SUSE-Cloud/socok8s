@@ -12,3 +12,6 @@
   args:
     executable: /bin/bash
     chdir: "{{ _cmpnt_chdir | default('/opt/openstack-helm') }}"
+  environment:
+    OSH_INFRA_PATH: /opt/openstack-helm-infra
+  failed_when: false

@@ -1,5 +1,11 @@
 ---
-- hosts: osh-deploy
+- hosts: osh-deploy-cp
+  gather_facts: yes
+  any_errors_fatal: true
+  roles:
+    - suse-osh-setup
+
+- hosts: osh-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:

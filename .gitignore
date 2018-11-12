@@ -1,5 +1,7 @@
 **.retry
 inventory*.ini
+ses_config.yml
+user_variables.yml
 .*_ip
 .stackname
 environment.json
