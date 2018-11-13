@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 for line in $(helm ls -a | awk 'NR > 1 {print $1 }'); do
     helm delete $line --purge;
 done
@@ -10,7 +12,7 @@ done
 
 rm -rf /var/lib/openstack-helm/*
 rm -rf /var/lib/nova/*
-rm -rf /var/lib/libvirt/*
+#rm -rf /var/lib/libvirt/*
 rm -rf /etc/libvirt/qemu/*
 findmnt --raw | awk '/^\/var\/lib\/kubelet\/pods/ { print $1 }' | xargs -r -L1 -P16 sudo umount -f -l
 
