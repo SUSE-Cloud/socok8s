@@ -1,8 +1,0 @@
----
-# Example user_variables.yml file
-# This file should be place in ~/suse-osh-deploy on the deployer node
-# ceph admin keyring value is currently required for storage init in helm charts
-# The playbook currently expects the admin keyring to be b64 encoded, and we're using
-# the same value for both admin and user 
-ceph_admin_keyring_b64key: QVFEWE5zNWJBQUFBQUJBQXhIc2hZRU5HTzgyRVBML05mUm5EQVE9PQo=
-ceph_user_keyring_b64key: QVFEWE5zNWJBQUFBQUJBQXhIc2hZRU5HTzgyRVBML05mUm5EQVE9PQo=
