@@ -14,8 +14,8 @@
     that:
       - ceph_admin_keyring_b64key is defined
       - ceph_user_keyring_b64key is defined
-      - ceph_monitors_ips is defined
       - suse_osh_deploy_vip_with_cidr is defined
+#     - ceph_monitors_ips is defined
 
 - name: Set monitors data
   set_fact:
@@ -141,6 +141,7 @@
     _cmpnt_runcommand: "./tools/deployment/multinode/050-mariadb.sh"
   environment:
     OSH_EXTRA_HELM_ARGS_MARIADB: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_MARIADB') | default('', True) }} -f /tmp/suse-mariadb.yaml"
+
 - name: Register secret UUID for cinder client
   shell: "kubectl get secret cinder-client-key -n openstack -o json | jq -r .metadata.uid"
   register: cinder_client_key_secret_uuid
