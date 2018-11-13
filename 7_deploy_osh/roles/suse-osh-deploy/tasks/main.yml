@@ -15,11 +15,10 @@
       - ceph_admin_keyring_b64key is defined
       - ceph_user_keyring_b64key is defined
       - suse_osh_deploy_vip_with_cidr is defined
-#     - ceph_monitors_ips is defined
 
 - name: Set monitors data
   set_fact:
-    suse_osh_deploy_ceph_mons:  "{% for ip in ceph_conf.mon_host.split(',') %}{{ ip }}:6789{% if not loop.last %},{% endif %}{% endfor %}"
+    suse_osh_deploy_ceph_mons:  "{% for ip in ses_cluster_configuration.ceph_conf.mon_host.split(',') %}{{ ip }}:6789{% if not loop.last %},{% endif %}{% endfor %}"
   tags:
     - always
     - run

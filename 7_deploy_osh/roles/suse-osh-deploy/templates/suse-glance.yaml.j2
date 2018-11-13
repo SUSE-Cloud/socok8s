@@ -6,5 +6,5 @@ conf:
     admin_keyring: {{ ceph_admin_keyring_b64key | b64decode }}
   glance:
     glance_store:
-      rbd_store_user: "{{ glance.rbd_store_user }}"
-      rbd_store_pool: "{{ glance.rbd_store_pool }}"
+      rbd_store_user: "{{ ses_cluster_configuration.glance.rbd_store_user }}"
+      rbd_store_pool: "{{ ses_cluster_configuration.glance.rbd_store_pool }}"

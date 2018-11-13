@@ -2,6 +2,6 @@ ceph:
   enabled: true
   admin_keyring: {{ ceph_admin_keyring_b64key | b64decode }}
   cinder:
-    user: {{ cinder.rbd_store_user }}
-    keyring: {{ cinder.key }}
+    user: {{ ses_cluster_configuration.cinder.rbd_store_user }}
+    keyring: {{ ses_cluster_configuration.cinder.key }}
     secret_uuid: {{ cinder_client_key_secret_uuid.stdout }}
