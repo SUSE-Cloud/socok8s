@@ -11,7 +11,7 @@ source script_library/pre-flight-checks.sh general
 function deploy_osh(){
     source script_library/detect-ansible.sh
     export ANSIBLE_STDOUT_CALLBACK=debug
-    $ansible_playbook ./7_deploy_osh/play.yml -vvvv -i inventory-osh.ini
+    $ansible_playbook ./7_deploy_osh/play.yml -i inventory-osh.ini
     echo "SUSE OSH deployed"
 }
 

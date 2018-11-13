@@ -8,10 +8,6 @@
   tags:
     - preinstall
 
-- name: stop the execution
-  fail:
-    msg: "Stopping the execution here"
-
 #- name: Generate and read kubeconfig from one caasp node
 #  include: get-kubeconfig.yml
 #  run_once: true
