@@ -15,6 +15,7 @@
       - ceph_admin_keyring_b64key is defined
       - ceph_user_keyring_b64key is defined
       - suse_osh_deploy_vip_with_cidr is defined
+#     - ceph_monitors_ips is defined
 
 - name: Set monitors data
   set_fact:
