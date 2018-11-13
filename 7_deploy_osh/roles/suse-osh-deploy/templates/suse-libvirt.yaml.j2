@@ -4,4 +4,4 @@ ceph:
   cinder:
     user: {{ cinder.rbd_store_user }}
     keyring: {{ cinder.key }}
-    secret_uuid: {{ cinder_client_key_secret_uuid }}
+    secret_uuid: {{ cinder_client_key_secret_uuid.stdout }}

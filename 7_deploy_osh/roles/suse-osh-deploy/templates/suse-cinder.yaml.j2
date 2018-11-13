@@ -15,4 +15,4 @@ conf:
       rbd_ceph_conf: "/etc/ceph/ceph.conf"
       rbd_user: {{ cinder.rbd_store_user }}
       rbd_pool: {{ cinder.rbd_store_pool }}
-      rbd_secret_uuid: {{ cinder_client_key_secret_uuid }}
+      rbd_secret_uuid: {{ cinder_client_key_secret_uuid.stdout }}
