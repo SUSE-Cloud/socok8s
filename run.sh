@@ -8,6 +8,12 @@ deploy_mechanism=${2:-openstack}
 
 source script_library/pre-flight-checks.sh general
 
+# check if git installed and in project root
+if hash git 2>/dev/null && [ -d .git ]; then
+    # initialize and download submodules locally for new setup
+    git submodule update --init
+fi
+
 function deploy_osh(){
     source script_library/detect-ansible.sh
     export ANSIBLE_STDOUT_CALLBACK=debug
@@ -60,7 +66,7 @@ function delete_on_kvm(){
 function clean_k8s(){
     echo "DANGER ZONE"
     read -p "Press Enter or Ctrl-C. Enter will remove all the deployed components on your kubernetes cluster"
-    ansible -m script -a "script_library/cleanup-k8s.sh" all -i inventory-osh.ini
+    ansible -m script -a "script_library/cleanup-k8s.sh" localhost
 }
 function delete_user_files(){
     echo "DANGER ZONE"

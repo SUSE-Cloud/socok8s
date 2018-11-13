@@ -79,6 +79,16 @@
   tags:
     - run
 
+- name: Updated wait for pods logic to account for stuck k8s jobs
+  copy:
+    src: wait-for-pods.sh
+    dest: /opt/openstack-helm/tools/deployment/common/wait-for-pods.sh
+    mode: '0755'
+  tags:
+    - horizon
+    - run
+
+
 # TODO(evrardjp): Use mechanism like glance to re-use component-install.yml code and allow any override.
 - name: Setup openstack CLIs
   shell: ./tools/deployment/multinode/010-setup-client.sh
@@ -172,6 +182,27 @@
     OSH_EXTRA_HELM_ARGS_KEYSTONE: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_KEYSTONE') | default('', True) }} -f /tmp/suse-keystone.yaml"
   tags:
     - keystone
+    - run
+
+- name: Use a different horizon script as missing a multinode version without node port requirement
+  copy:
+    src: 085-horizon.sh
+    dest: /opt/openstack-helm/tools/deployment/multinode/085-horizon.sh
+    mode: '0755'
+  tags:
+    - horizon
+    - run
+
+- name: Deploy horizon
+  import_tasks: component-install.yml
+  vars:
+    _cmpnt_template: suse-horizon.yaml
+    _cmpnt_overrides: "{{ suse_osh_deploy_horizon_yaml_overrides }}"
+    _cmpnt_runcommand: "./tools/deployment/multinode/085-horizon.sh"
+  environment:
+    OSH_EXTRA_HELM_ARGS_HORIZON: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_HORIZON') | default('', True) }} -f /tmp/suse-horizon.yaml"
+  tags:
+    - horizon
     - run
 
   #TODO(evrardjp): Remove the next two tasks by an appropriate include in tasks/main

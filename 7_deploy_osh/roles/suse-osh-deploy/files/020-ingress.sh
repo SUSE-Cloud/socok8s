@@ -29,7 +29,7 @@ network:
   host_namespace: true
 EOF
 helm upgrade --install ingress-kube-system ${OSH_INFRA_PATH}/ingress \
-  --namespace=kube-system --debug \
+  --namespace=kube-system \
   --values=/tmp/ingress-kube-system.yaml \
   ${OSH_EXTRA_HELM_ARGS} \
   ${OSH_EXTRA_HELM_ARGS_INGRESS_KUBE_SYSTEM}
@@ -52,7 +52,7 @@ pod:
     error_page: 2
 EOF
   helm upgrade --install ingress-${NAMESPACE} ${OSH_INFRA_PATH}/ingress \
-    --namespace=${NAMESPACE} --debug \
+    --namespace=${NAMESPACE} \
     --values=/tmp/ingress-${NAMESPACE}.yaml \
   ${OSH_EXTRA_HELM_ARGS} \
   ${!OSH_EXTRA_HELM_ARGS_INGRESS_NAMESPACE}
