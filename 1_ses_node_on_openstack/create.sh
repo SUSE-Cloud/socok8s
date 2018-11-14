@@ -33,5 +33,5 @@ pushd ${MAIN_FOLDER}
 popd
 
 pushd ${CURRENT_FOLDER}/playbooks
-    ansible-playbook play.yml -i ${MAIN_FOLDER}/inventory-ses.ini
+    ansible-playbook ${VERBOSITY} play.yml -i ${MAIN_FOLDER}/inventory-ses.ini
 popd

@@ -3,23 +3,35 @@
 set -o errexit
 set -x
 
-action=${1:-full_deploy}
-deploy_mechanism=${2:-openstack}
+while getopts "v" flag; do
+    case "$flag" in
+	v) VERBOSITY="-vvv";;
+    esac
+done
+
+ARG1=${@:$OPTIND:1}
+ARG2=${@:$OPTIND+1:1}
+
+action=${ARG1:-full_deploy}
+deploy_mechanism=${ARG2:-openstack}
+
+export VERBOSITY
 
 source script_library/pre-flight-checks.sh general
 
 function deploy_osh(){
     source script_library/detect-ansible.sh
     export ANSIBLE_STDOUT_CALLBACK=debug
-    $ansible_playbook ./7_deploy_osh/play.yml -i inventory-osh.ini
+    $ansible_playbook ${VERBOSITY} ./7_deploy_osh/play.yml -i inventory-osh.ini
     echo "SUSE OSH deployed"
 }
 
 function pre_deploy_on_openstack(){
-    source script_library/pre-flight-checks.sh openstack_early_tests
+    #source script_library/pre-flight-checks.sh openstack_early_tests
     echo "Deploying on OpenStack"
     ./1_ses_node_on_openstack/create.sh
     echo "Step 1 success"
+    exit 0
     ./2_deploy_ses_aio/run.sh
     echo "Step 2 success"
     ./3_caasp_nodes_on_openstack_heat/create.sh
@@ -27,10 +39,12 @@ function pre_deploy_on_openstack(){
     ./4_osh_node_on_openstack/create.sh
     echo "Step 4 success"
     source script_library/detect-ansible.sh
-    $ansible_playbook ./5_automate_caasp_enroll/play.yml -i inventory-osh.ini
+    $ansible_playbook ${VERBOSITY} ./5_automate_caasp_enroll/play.yml \
+		      -i inventory-osh.ini
     echo "Step 5 success"
     source script_library/detect-ansible.sh
-    $ansible_playbook ./6_preflight_checks/checks.yml -i inventory-osh.ini
+    $ansible_playbook ${VERBOSITY} ./6_preflight_checks/checks.yml \
+		      -i inventory-osh.ini
     echo "Step 6 success"
 }
 
