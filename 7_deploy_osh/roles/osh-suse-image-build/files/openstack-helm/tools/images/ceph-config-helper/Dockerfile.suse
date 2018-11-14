@@ -1,0 +1,35 @@
+FROM docker.io/opensuse/leap:42.3
+MAINTAINER pete.birley@att.com
+
+ARG KUBE_VERSION=v1.10.3
+ARG CEPH_RELEASE=luminous
+
+RUN set -ex ;\
+    TMP_DIR=$(mktemp --directory) ;\
+    cd ${TMP_DIR} ;\
+    zypper refresh ;\
+    zypper up -y ;\
+    zypper install -y \
+        ca-certificates-cacert \
+        ceph \
+        curl \
+        gcc \
+        python \
+        python-devel \
+	tar \
+        jq ;\
+    curl -sSL https://bootstrap.pypa.io/get-pip.py | python ;\
+    pip --no-cache-dir install --upgrade \
+      crush \
+      rgwadmin \
+      six \
+      python-openstackclient \
+      python-swiftclient ;\
+    curl -sSL https://dl.k8s.io/${KUBE_VERSION}/kubernetes-client-linux-amd64.tar.gz | tar -zxv --strip-components=1 ;\
+    mv ${TMP_DIR}/client/bin/kubectl /usr/bin/kubectl ;\
+    chmod +x /usr/bin/kubectl ;\
+    rm -rf ${TMP_DIR} ;\
+    zypper rm -y --clean-deps \
+        python-devel \
+        gcc ;\
+    zypper clean -a

@@ -1,0 +1,50 @@
+FROM docker.io/opensuse/leap:42.3
+MAINTAINER pete.birley@att.com
+
+ARG OVS_VERSION=2.8.1
+# TODO
+RUN set -ex ;\
+    zypper refresh ;\
+    zypper up -y ;\
+    zypper install -y bash ;\
+    zypper install -y -t pattern devel_basis ;\
+    zypper install -y \
+        curl \
+        libatomic1 \
+        libopenssl1_0_0 \
+        openssl \
+        uuidd \
+        graphviz \
+        autoconf \
+        automake \
+        bzip2 \
+	iproute2 \
+        libopenssl-devel \
+        libtool \
+        python-devel \
+	python-xml \
+        python-six \
+        python-twisted \
+        python-zope.interface ;\
+    TMP_DIR=$(mktemp -d) ;\
+    curl -sSL http://openvswitch.org/releases/openvswitch-${OVS_VERSION}.tar.gz | tar xz -C ${TMP_DIR} --strip-components=1 ;\
+    cd ${TMP_DIR} ;\
+      ./boot.sh ;\
+      ./configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc ;\
+      make ;\
+      make install ;\
+      cd / ;\
+    rm -rf ${TMP_DIR} ;\
+    zypper rm -y -t pattern devel_basis ;\
+    zypper rm -y \
+        curl \
+        graphviz \
+        autoconf \
+        automake \
+        libopenssl-devel \
+        libtool \
+        python-devel \
+        python-six \
+        python-twisted \
+        python-zope.interface  ;\
+

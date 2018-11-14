@@ -1,0 +1,3 @@
+FROM docker.io/opensuse/leap:42.3
+
+RUN zypper install -y ipcalc
