@@ -15,4 +15,4 @@ conf:
       rbd_ceph_conf: "/etc/ceph/ceph.conf"
       rbd_user: {{ ses_cluster_configuration.cinder.rbd_store_user }}
       rbd_pool: {{ ses_cluster_configuration.cinder.rbd_store_pool }}
-      rbd_secret_uuid: {{ cinder_client_key_secret_uuid.stdout }}
+      rbd_secret_uuid: {{ libvirt_ceph_cinder_secret_uuid.stdout }}

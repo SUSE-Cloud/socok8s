@@ -18,7 +18,7 @@
 
 - name: Set monitors data
   set_fact:
-    suse_osh_deploy_ceph_mons:  "{% for ip in ses_cluster_configuration.ceph_conf.mon_host.split(',') %}{{ ip }}:6789{% if not loop.last %},{% endif %}{% endfor %}"
+    suse_osh_deploy_ceph_mons:  "{% for ip in ses_cluster_configuration.conf_options.ses_mon_host.split(',') %}{{ ip }}:6789{% if not loop.last %},{% endif %}{% endfor %}"
   tags:
     - always
     - run
@@ -151,18 +151,6 @@
   environment:
     OSH_EXTRA_HELM_ARGS_MARIADB: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_MARIADB') | default('', True) }} -f /tmp/suse-mariadb.yaml"
 
-- name: Register secret UUID for cinder client
-  shell: "kubectl get secret cinder-client-key -n openstack -o json | jq -r .metadata.uid"
-  register: cinder_client_key_secret_uuid
-
-- name: Register secret UUID for cinder-backup client
-  shell: "kubectl get secret cinder-backup-client-key -n openstack -o json | jq -r .metadata.uid"
-  register: cinder_backup_client_key_secret_uuid
-
-- name: Register secret UUID for glance client
-  shell: "kubectl get secret glance-client-key -n openstack -o json | jq -r .metadata.uid"
-  register: glance_client_key_secret_uuid
-
 - name: Create privileged ClusterRoleBinding for ServiceAccounts
   include: privileged-cluster-role-binding.yml
   tags:
@@ -257,19 +245,10 @@
     - glance
     - run
 
-- name: Find libvirt secret
-  shell: |
-    kubectl get secrets -n {{ suse_osh_deploy_storage.adminSecretNamespace }} {{ suse_osh_deploy_storage.adminSecretName }} -o json | jq -r .metadata.uid
-  changed_when: false
-  register: rbd_secret_uuid
-  tags:
-    - always
-
-- name: Set libvirt secret uuid
-  set_fact:
-    suse_osh_deploy_libvirt_secret_uuid: "{{ rbd_secret_uuid.stdout_lines[0] }}"
-  tags:
-    - always
+# This is an arbitrary UUID value that's passed to the libvirt daemonset setup job for configuring a libvirt secret XML file
+- name: Create Libvirt ceph cinder secret uuid
+  shell: uuidgen
+  register: libvirt_ceph_cinder_secret_uuid
 
 - name: Deploy cinder
   import_tasks: component-install.yml
