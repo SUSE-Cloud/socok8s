@@ -71,6 +71,61 @@ To begin a deployment from scratch, go to the root of your socok8s
 clone and run "./run.sh". This will run each of the seven top-level
 sections of the script in order.
 
+## Reference archiecture and inventories
+
+By default, it is expected these playbooks and scripts would run
+on a CI/developer machine.
+
+In order to not pollute the developer/CI machine (called further
+'localhost'), all the data relevant for a deployment (like any
+eventual override) will be stored in user-space, unpriviledged
+access. Any hardware and software distribution can be used,
+as long as 'localhost' is able to run git, and ansible
+(see requirements). This also helps the story of running behind
+a corporate firewall: the 'developer' can be (connecting to)
+a bastion host, while the real actions happen behind the firewall.
+
+This SoCok8s deployment mechanism requires therefore another
+entity, another machine, to orchestrate kubernetes commands.
+This machine is named the `deployer` node.
+The `deployer` node will be in charge of running the OSH code,
+and manage the kubernetes configuration.
+
+The `deployer` node is expected to run SLE.
+
+The deployer node can be the same as the `localhost`
+(developer/CI machine), but it is not a requirement.
+
+The deployer node (currently) needs access to the SES machines
+through SSH to fetch the keys. In the future, this SSH connection
+might be skipped if the `localhost` have knowledge of these keys.
+
+### Example inventories and conventions
+
+In order for a deployer to bring its own inventory, we have
+defined a set of convention about inventory groupnames.
+
+* All nodes belonging to the SES deployment should be listed
+  under the `ses_nodes` group. First node in this group must
+  be a monitor node with the appropriate ceph keyrings in
+  `/etc/ceph/`.
+
+* The inventory for SES nodes is stored in `inventory-ses.ini`
+  by default.
+
+* The CI/developer machine is always named `localhost`.
+
+* The `deployer` node is listed in a group `osh-deployer`.
+  In order to not extend the length of the deployment,
+  the `osh-deployer` group should contain only one node.
+  We might support multiple `osh-deployer` nodes for
+  muliple k8s deployments later.
+
+* The inventory for the `deployer` node is stored in
+  `inventory-osh.ini` by default.
+
+* Example inventories and user variables can be found
+  in the `examples/` directory.
 
 # Deployment using KVM
 

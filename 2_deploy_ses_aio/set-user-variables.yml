@@ -3,7 +3,7 @@
 # This can probably be removed in the future, should we decide to ALWAYS use ses_config.yml, and
 # load ses_config.yml in the OSH play
 
-- hosts: all:!localhost
+- hosts: ses_nodes[0]
   gather_facts: yes
   vars:
     suse_osh_deploy_user_variables: "~/suse-osh-deploy/user_variables.yml"

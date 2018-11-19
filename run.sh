@@ -66,7 +66,7 @@ function delete_on_kvm(){
 function clean_k8s(){
     echo "DANGER ZONE"
     read -p "Press Enter or Ctrl-C. Enter will remove all the deployed components on your kubernetes cluster"
-    ansible -m script -a "script_library/cleanup-k8s.sh" localhost
+    ansible -m script -a "script_library/cleanup-k8s.sh" osh-deployer -i inventory-osh.ini
 }
 function delete_user_files(){
     echo "DANGER ZONE"
