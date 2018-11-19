@@ -21,4 +21,4 @@
         block: |
           ceph_admin_keyring_b64key: {{ _clientadminkey.stdout_lines[0] }}
           ceph_user_keyring_b64key: {{ _clientadminkey.stdout_lines[0]  }}
-          ceph_monitors_ips: {{ ansible_all_ipv4_addresses }} #list containing all ips of the host (which should be an AIO containing the mons).
+          suse_osh_deploy_ceph_mons: "[{% for ip in ansible_all_ipv4_addresses %}'{{ ip }}:6789'{% if not loop.last %},{% endif %}{% endfor %}]" #list containing all ips of the host (which should be an AIO containing the mons).
