@@ -1,3 +1,4 @@
+---
 storage: rbd
 conf:
   ceph:
@@ -8,3 +9,4 @@ conf:
     glance_store:
       rbd_store_user: "{{ ses_cluster_configuration.glance.rbd_store_user }}"
       rbd_store_pool: "{{ ses_cluster_configuration.glance.rbd_store_pool }}"
+{{ lookup('template','files/common-images-overrides.yml') | from_yaml | to_nice_yaml(indent=2) }}
