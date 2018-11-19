@@ -1,29 +1,59 @@
-# fictional-octo-doodle
-fictional-octo-doodle
+# Intro
 
-This project automates the deployment of OpenStack Helm on CAASP and
+This project automates the deployment of OpenStack-Helm on CaaSP and
 SES via a series of shell scripts and Ansible playbooks.
+
+# General requirements
+
+## Ansible
+
+You need to install Ansible 2.7 or later to run these playbooks.
+
+## Cloning this repository
+
+To get started, you need to clone this repository. This repository
+uses submodules, so you need to get all the code to make sure
+the playbooks work.
+
+
+```
+git clone --recursive https://github.com/SUSE-Cloud/socok8s.git
+```
+
+Alternatively, one can fetch/update the tree of the submodules by
+running:
+
+```
+git submodule update --init --recursive
+```
 
 # Deployment on SUSE engcloud
 
+## Installing base software on your local machine
+
 On the system you plan to deploy OSH from, you'll need to install some
-software and create local configuration. Install Ansible 2.7 or
-later. Install the OpenStack and Heat CLI. Install the jq utility.
+software and create local configuration.
 
-In your clone of this repository, run "git submodule update --init
---recursive" to fetch the git submodules required for the CAASP
-deployment.
+You need to have the following software installed:
+* ansible>=2.7.0
+* python-openstackclient
+* jq
+* git
 
-Set up access to engcloud. You can access the engcloud web UI at
-https://engcloud.prv.suse.net/. For more information, see
-https://wiki.microfocus.net/index.php/SUSE/ECP. You'll need to create
-the ~/.config/openstack/clouds.yaml. The contents of the file should
-look like the following, plus the substitution of your username and
-password. If you don't have the SUSE root certificate installed, check
-http://ca.suse.de/.
+## Configure engcloud
 
+You can access the engcloud web UI at https://engcloud.prv.suse.net/.
+For more information, see https://wiki.microfocus.net/index.php/SUSE/ECP.
+
+Make sure your environment have an openstack client configuration file.
+For that, you can create the `~/.config/openstack/clouds.yaml`.
+
+Replace the username and password with your appropriate credentials
+in the following example:
+
+```
 clouds:
-  engcloud-me:
+  engcloud:
     region_name: CustomRegion
     auth:
       auth_url: https://engcloud.prv.suse.net:5000/v3
@@ -34,25 +64,36 @@ clouds:
       user_domain_name: ldap_users
     identity_api_version: 3
     cacert: /usr/share/pki/trust/anchors/SUSE_Trust_Root.crt.pem
+ansible:
+  use_hostnames: True
+  expand_hostvars: False
+  fail_on_errors: True
+```
+
+If you don't have the SUSE root certificate installed, check
+http://ca.suse.de/.
 
 You'll also need to pre-create some configuration in engcloud. It's
 convention here to use your username as part of the name of objects you create.
 
-Using the engcloud web interface or OpenStack CLI (i.e. "openstack
-keypair create..."), create a keypair
+Create a keypair on engcloud (using either the engcloud web interface or
+OpenStack CLI's `openstack keypair create`)
 for accessing the instances created. Remember the name of this
-keypair.
+keypair (named further `foctodoodle-key`)
 
-Using the engcloud web interface, create a network with a subnet. Take
-note of the network name you used. Then
-create a router with the 'floating' external network.  Then open the
+Create a network with a subnet. Take
+note of the network name you used (`foctodoodle-net`), and the subnet
+name (`foctodoodle-subnet`).
+
+Create a router with the `floating` external network.  Then open the
 router and add an interface to the network you created.
 
 Define the following environment variables prior to running the
 socok8s scripts:
 
+```
 # assuming you followed the example
-export OS_CLOUD=engcloud-me
+export OS_CLOUD=engcloud
 # the name of the keypair you created
 export KEYNAME=foctodoodle-key
 # your username plus whatever else you'd like, will be used for naming
@@ -60,6 +101,7 @@ export KEYNAME=foctodoodle-key
 export PREFIX=foctodoodle
 # the name of the subnet you created
 export INTERNAL_SUBNET=foctodoodle-subnet
+```
 
 Prior to executing scripts, be aware that you may need to do some
 cleanup prior to retrying scripts or playbooks should they fail. In
@@ -67,10 +109,25 @@ some steps a delete.sh script is provided to clean up any created
 resources. Reconfirming that you've done all the previous steps to set
 up now will save you some time later.
 
+## Deploying
+
 To begin a deployment from scratch, go to the root of your socok8s
-clone and run "./run.sh". This will run each of the seven top-level
+clone and run `./run.sh` or `./run.sh full-deploy`. This will run each of the seven top-level
 sections of the script in order.
 
+## Re-deploying OSH
+
+If you only want to redeploy the last step, openstack-helm, you can run the following:
+
+```
+# (Optional): Cleanup k8s from all previous deployment code
+./run.sh clean_k8s
+```
+
+```
+# Re-deploy OpenStack-Helm
+./run.sh deploy_osh
+```
 
 # Deployment using KVM
 
