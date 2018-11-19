@@ -6,6 +6,8 @@
     ses_ansible_folder: "{{ playbook_dir }}/../ses-ansible/"
     ses_ip: "{{ lookup('file', playbook_dir + '/../.ses_ip') }}"
   tasks:
+    # The role and play expect the hostname to be 'ses' in the
+    # 'all' group.
     - name: Prepare inventory
       copy:
         content: |

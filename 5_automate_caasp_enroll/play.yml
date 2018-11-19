@@ -1,5 +1,5 @@
 ---
-- hosts: all:!localhost
+- hosts: osh-deployer
   gather_facts: no
   vars:
     velum_automation_src: https://github.com/kubic-project/automation.git

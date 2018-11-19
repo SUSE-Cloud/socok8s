@@ -28,7 +28,7 @@ openstack server add floating ip ${SERVER_NAME} $IP_CREATE
 pushd ${MAIN_FOLDER}
     echo ${IP_CREATE} > .osh_ip
     if [ ! -f inventory-osh.ini ]; then
-        echo '[osh-deploy]' > inventory-osh.ini
+        echo '[osh-deployer]' > inventory-osh.ini
     fi
     echo "${SERVER_NAME} ansible_ssh_host=${IP_CREATE} ansible_host=${IP_CREATE} ansible_user=root ansible_ssh_user=root" >> inventory-osh.ini
 
