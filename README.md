@@ -79,7 +79,7 @@ convention here to use your username as part of the name of objects you create.
 Create a keypair on engcloud (using either the engcloud web interface or
 OpenStack CLI's `openstack keypair create`)
 for accessing the instances created. Remember the name of this
-keypair (named further `foctodoodle-key`)
+keypair (which appears as `foctodoodle-key` in the example below)
 
 Create a network with a subnet. Take
 note of the network name you used (`foctodoodle-net`), and the subnet
@@ -112,12 +112,20 @@ up now will save you some time later.
 ## Deploying
 
 To begin a deployment from scratch, go to the root of your socok8s
-clone and run `./run.sh` or `./run.sh full-deploy`. This will run each of the seven top-level
+clone and run:
+
+```
+./run.sh
+```
+
+The default action for `run.sh` is to do a `full-deploy` on openstack.
+This means the `runi.sh` script will run each of the seven top-level
 sections of the script in order.
 
 ## Re-deploying OSH
 
-If you only want to redeploy the last step, openstack-helm, you can run the following:
+If you only want to redeploy the last step, openstack-helm,
+you can run the following:
 
 ```
 # (Optional): Cleanup k8s from all previous deployment code
@@ -132,3 +140,32 @@ If you only want to redeploy the last step, openstack-helm, you can run the foll
 # Deployment using KVM
 
 This is not currently supported, but is a planned future addition.
+
+
+# run.sh
+
+The `run.sh` script accepts two arguments in the form:
+
+```
+./run.sh <subcommand> <deploy_mechanism>
+```
+
+The `<subcommand>` can be one of the following:
+* `full_deploy`: This is the default subcommand. It deploys all the
+  necessary requirements on `$deploy_mechanism`, and then deploys
+  OpenStack-Helm by calling `deploy_osh` subcommand.
+
+* `deploy_osh`: This subcommand runs the 'step 7' plays, deploying
+  OpenStack-Helm.
+
+* `teardown`: This subcommand deletes all evidences of the deployment
+  on the `$deploy_mechanism`, and then removes all user files from
+  localhost. Destructive operation.
+
+* `clean_k8s`: This subcommand removes all known openstack-helm
+  deployment artifacts from the k8s cluster. It removes user content,
+  namespaces, persistent volumes, etc.  This is a destructive operation.
+
+The `<deploy_mechanism>` is by default "openstack".
+No alternative option is implemented yet, but we might implement a
+KVM based deployment mechanism.
