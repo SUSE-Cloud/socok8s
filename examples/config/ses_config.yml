@@ -23,8 +23,3 @@ ses_cluster_configuration:
       rbd_store_pool: glance
       rbd_store_pool_user: glance
       keyring_file_name: ceph.client.glance.keyring
-# BEGIN ANSIBLE MANAGED BLOCK
-ceph_admin_keyring_b64key: QVFCMzNlUmJBQUFBQUJBQVdqZGFHN2VxUXdhRlBzQ1NuanQvc3c9PQ==
-ceph_user_keyring_b64key: QVFCMzNlUmJBQUFBQUJBQVdqZGFHN2VxUXdhRlBzQ1NuanQvc3c9PQ==
-ceph_monitors_ips: ['192.168.86.205'] #list containing all ips of the host (which should be an AIO containing the mons).
-# END ANSIBLE MANAGED BLOCK

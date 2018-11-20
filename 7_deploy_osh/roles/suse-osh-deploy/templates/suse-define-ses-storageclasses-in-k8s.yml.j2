@@ -5,7 +5,7 @@ metadata:
   name: general
 provisioner: kubernetes.io/rbd
 parameters:
-  monitors: {{ suse_osh_deploy_ceph_mons }}
+  monitors: {{ ','.join(suse_osh_deploy_ceph_mons) }}
   adminId: {{ suse_osh_deploy_storage.adminId }}
   adminSecretName: {{ suse_osh_deploy_storage.adminSecretName }}
   adminSecretNamespace: {{ suse_osh_deploy_storage.adminSecretNamespace }}

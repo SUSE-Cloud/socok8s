@@ -33,7 +33,7 @@ storageclass:
 conf:
   ceph:
     global:
-      mon_host: {{ suse_osh_deploy_ceph_mons }}
+      mon_host: {{ ','.join(suse_osh_deploy_ceph_mons) }}
 manifests:
   configmap_bin: false
   configmap_bin_common: false
