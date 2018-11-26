@@ -60,20 +60,27 @@ suse_osh_deploy_privileged_cluster_role: suse:caasp:psp:privileged
 # Set this to false if you want to speed up your builds or do partial upgrades
 suse_osh_deploy_always_redeploy: True
 
-suse_osh_openstack_release: queens
-
-suse_osh_openstack_override_images: "{{ lookup('file', 'files/image_overrides/queens/loci.yaml') | from_yaml }}"
+# These variables were created to provide a way for deployers to
+# override the default registry, for example to point to a local
+# registry. This change will apply to all the charts value files by
+# default, as all our own value files are including a common file
+# (files/common-images-overrides.yml) making use of those variables.
+# Local registry should still have the same groups as upstream registry
+# (kolla, openstackhelm), and the same images. Version can be overriden
+# with suse_osh_image_version for a global change.
+suse_osh_registry_location: "docker.io"
+suse_osh_image_version: "queens"
 
 # Default overrides
-suse_osh_deploy_cinder_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
-suse_osh_deploy_glance_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
-suse_osh_deploy_ingress_kube_system_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
-suse_osh_deploy_ingress_namespace_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
-suse_osh_deploy_keystone_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
-suse_osh_deploy_horizon_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
-suse_osh_deploy_libvirt_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
-suse_osh_deploy_mariadb_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
-suse_osh_deploy_memcached_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
-suse_osh_deploy_nova_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
-suse_osh_deploy_ovs_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
-suse_osh_deploy_rabbitmq_yaml_overrides: "{{ suse_osh_openstack_override_images }}"
+suse_osh_deploy_cinder_yaml_overrides: {}
+suse_osh_deploy_glance_yaml_overrides: {}
+suse_osh_deploy_ingress_kube_system_yaml_overrides: {}
+suse_osh_deploy_ingress_namespace_yaml_overrides: {}
+suse_osh_deploy_keystone_yaml_overrides: {}
+suse_osh_deploy_horizon_yaml_overrides: {}
+suse_osh_deploy_libvirt_yaml_overrides: {}
+suse_osh_deploy_mariadb_yaml_overrides: {}
+suse_osh_deploy_memcached_yaml_overrides: {}
+suse_osh_deploy_nova_yaml_overrides: {}
+suse_osh_deploy_ovs_yaml_overrides: {}
+suse_osh_deploy_rabbitmq_yaml_overrides: {}

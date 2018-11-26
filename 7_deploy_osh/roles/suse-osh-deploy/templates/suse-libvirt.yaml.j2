@@ -6,3 +6,4 @@ conf:
       user: {{ ses_cluster_configuration.cinder.rbd_store_user }}
       keyring: {{ ses_cluster_configuration.cinder.key }}
       secret_uuid: {{ libvirt_ceph_cinder_secret_uuid.stdout }}
+{{ lookup('template','files/common-images-overrides.yml') | from_yaml | to_nice_yaml(indent=2) }}

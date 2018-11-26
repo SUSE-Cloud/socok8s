@@ -1,4 +1,2 @@
-# Dummy non-matching override to circumvent config_template empty file related bug
-# Can be removed once upstream openstack ansible module fixes the issue
 ---
-duMMyKey: duMMyValue
+{{ lookup('template','files/common-images-overrides.yml') | from_yaml | to_nice_yaml(indent=2) }}

@@ -1,7 +1,6 @@
 # BEGIN ANSIBLE MANAGED BLOCK
 ceph_admin_keyring_b64key: QVFCMzNlUmJBQUFBQUJBQVdqZGFHN2VxUXdhRlBzQ1NuanQvc3c9PQ==
 ceph_user_keyring_b64key: QVFCMzNlUmJBQUFBQUJBQVdqZGFHN2VxUXdhRlBzQ1NuanQvc3c9PQ==
-ceph_monitors_ips: ['192.168.86.205'] #list containing all ips of the host (which should be an AIO containing the mons).
 # END ANSIBLE MANAGED BLOCK
 
 caasp_cluster_master_nodes: [192.168.86.200]
