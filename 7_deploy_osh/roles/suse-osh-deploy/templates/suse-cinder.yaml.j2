@@ -6,8 +6,8 @@ conf:
     DEFAULT:
       debug: true
       backup_driver: cinder.backup.drivers.ceph
-      backup_ceph_user: {{ ses_cluster_configuration.cinder_backup.rbd_store_user }}
-      backup_ceph_pool: {{ ses_cluster_configuration.cinder_backup.rbd_store_pool }}
+      backup_ceph_user: {{ ses_cluster_configuration['cinder-backup']['rbd_store_user'] }}
+      backup_ceph_pool: {{ ses_cluster_configuration['cinder-backup']['rbd_store_pool'] }}
   backends:
     rbd1:
       volume_driver: cinder.volume.drivers.rbd.RBDDriver
