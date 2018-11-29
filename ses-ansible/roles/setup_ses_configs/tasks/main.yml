@@ -16,6 +16,13 @@
   when:
     - ses_openstack_config
 
+- name: Get key values for ses-config.yml
+  set_fact:
+    "ceph_{{ item.name | regex_replace('[\\.\\-]', '_') }}_key":
+       "{{lookup('ini', 'key section={{ item.name }} file={{ ses_config_path }}/ceph.{{ item.name }}.keyring') }}"
+  with_items:
+    - "{{ ses_openstack_keys }}"
+
 - name: Generate ses-config.yml
   template:
     src: ses-config.yml.j2
