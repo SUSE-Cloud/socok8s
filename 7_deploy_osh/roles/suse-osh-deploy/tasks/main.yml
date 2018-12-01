@@ -3,8 +3,9 @@
 - name: Load standard variables
   include_vars: "{{ playbook_dir }}/../common-vars.yml"
 
-- name: Ensure the SES config file can be loaded
-  include_vars: "{{ suse_osh_deploy_ses_config_path }}"
+- name: Create ses_cluster_configuration
+  set_fact:
+    ses_cluster_configuration: "{{ lookup('file', suse_osh_deploy_ses_config_path) | from_yaml }}"
 
 - name: Load admin keyring from user_variables (required for now)
   include_vars: "{{ suse_osh_deploy_user_variables }}"
