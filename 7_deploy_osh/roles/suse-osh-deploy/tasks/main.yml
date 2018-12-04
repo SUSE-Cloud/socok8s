@@ -303,3 +303,15 @@
     - nova
     - neutron
     - run
+
+- name: Deploy Heat
+  import_tasks: component-install.yml
+  vars:
+    _cmpnt_template: suse-heat.yaml
+    _cmpnt_overrides: "{{ suse_osh_deploy_heat_yaml_overrides }}"
+    _cmpnt_runcommand: "./tools/deployment/multinode/150-heat.sh"
+  environment:
+    OSH_EXTRA_HELM_ARGS_HEAT: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_HEAT') | default('', True) }} -f /tmp/suse-heat.yaml"
+  tags:
+    - heat
+    - run
