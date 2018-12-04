@@ -6,10 +6,6 @@ Storage (SES) via a series of shell scripts and Ansible playbooks.
 
 # General requirements
 
-## Ansible
-
-You need to install Ansible 2.7 or later to run these playbooks.
-
 ## Cloning this repository
 
 To get started, you need to clone this repository. This repository
