@@ -78,12 +78,16 @@ OpenStack CLI's `openstack keypair create`)
 for accessing the instances created. Remember the name of this
 keypair (which appears as `foctodoodle-key` in the example below)
 
-Create a network with a subnet. Take
-note of the network name you used (`foctodoodle-net`), and the subnet
-name (`foctodoodle-subnet`).
+Now create a network, a subnet, a router and a connection to the floating network:
 
-Create a router with the `floating` external network.  Then open the
-router and add an interface to the network you created.
+```
+export PREFIX=foctodoodle
+openstack network create ${PREFIX}-net
+openstack subnet create --network ${PREFIX}-net --subnet-range 192.168.100.0/24 ${PREFIX}-subnet
+openstack router create ${PREFIX}-router
+openstack router set --external-gateway floating ${PREFIX}-router
+openstack router add subnet ${PREFIX}-router ${PREFIX}-subnet
+```
 
 Define the following environment variables prior to running the
 socok8s scripts:
