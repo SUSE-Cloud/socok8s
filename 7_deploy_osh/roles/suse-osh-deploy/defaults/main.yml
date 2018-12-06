@@ -78,6 +78,7 @@ suse_osh_deploy_ingress_kube_system_yaml_overrides: {}
 suse_osh_deploy_ingress_namespace_yaml_overrides: {}
 suse_osh_deploy_keystone_yaml_overrides: {}
 suse_osh_deploy_horizon_yaml_overrides: {}
+suse_osh_deploy_heat_yaml_overrides: {}
 suse_osh_deploy_libvirt_yaml_overrides: {}
 suse_osh_deploy_mariadb_yaml_overrides: {}
 suse_osh_deploy_memcached_yaml_overrides: {}
