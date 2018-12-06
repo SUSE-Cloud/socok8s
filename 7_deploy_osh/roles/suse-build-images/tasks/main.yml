@@ -1,0 +1,88 @@
+---
+
+- name: Install system packages for build images
+  package:
+    name: "{{ suse_build_images_packages }}"
+    state: present
+  register: install_packages
+  until: install_packages is success
+  retries: 5
+  delay: 2
+  tags:
+    - install
+
+- name: Check if local docker registry server is running
+  shell: |
+    docker ps | grep {{ local_registry_name }}
+  register: registry_running_cmd_status
+  failed_when: false
+  tags:
+    - run
+
+- name: Start local docker registry if not running
+  shell: |
+    docker run -d -p {{ local_registry_port }}:{{ local_registry_port }} --name {{ local_registry_name }} --restart always registry:2
+  when:
+    - registry_running_cmd_status.rc != 0
+
+- name: Ensure local-registry DNS resolution is set in /etc/hosts
+  blockinfile:
+    path: /etc/hosts
+    block: |
+      {{ ansible_default_ipv4.address | ipaddr('address') }} {{ local_registry_name }}
+
+- name: Check docker daemon file is present on host
+  stat:
+    path: "/etc/docker/daemon.json"
+  register: _docker_daemon_conf_check
+
+- name: Make sure docker daemon file is present on host
+  file:
+    path: "/etc/docker/daemon.json"
+    state: touch
+    mode: 0644
+
+- name: Check if local-registry is already added in docker daemon conf file
+  shell: |
+    grep "{{local_registry_name}}:{{ local_registry_port }}" /etc/docker/daemon.json
+  when: _docker_daemon_conf_check.stat.exists
+  register: _registry_lookup_result
+  failed_when: false
+
+- name: Add missing insecure registries setting when deamon conf file has other settings
+  lineinfile:
+    path: /etc/docker/daemon.json
+    insertafter: "{"
+    line: "\"insecure-registries\": [\"{{ local_registry_name }}:{{ local_registry_port }}\"], "
+    state: present
+  when:
+    - _registry_lookup_result.rc != 0
+    - _docker_daemon_conf_check.stat.exists
+  register: _insecure_registry_check1
+
+- name: Add missing insecure registries setting when deamon conf file is empty
+  lineinfile:
+    path: /etc/docker/daemon.json
+    line: "{ \"insecure-registries\": [\"{{ local_registry_name }}:{{ local_registry_port }}\"] }"
+    state: present
+  when:
+    - _registry_lookup_result.rc != 0
+    - not _docker_daemon_conf_check.stat.exists
+  register: _insecure_registry_check2
+
+- name: Restart docker if needed
+  service:
+    name: docker
+    state: restarted
+  when: _insecure_registry_check1 is changed or _insecure_registry_check2 is changed
+
+- name: Build Openstack Services images via loci
+  shell: |
+    export LOCI_SRC_DIR={{ devenv_root }}/loci
+    export REGISTRY_URI={{ local_registry_name }}:{{ local_registry_port }}/openstackhelm/
+    export BASE_IMAGE=leap15
+    export OPENSTACK_VERSION="{{ openstack_svcs_build_image_version }}"
+    export PUSH_TO_REGISTRY=yes
+    ./openstack/loci/build.sh
+  args:
+      chdir: "{{ devenv_root }}/openstack-helm-images"
