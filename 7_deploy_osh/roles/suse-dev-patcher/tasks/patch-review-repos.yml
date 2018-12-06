@@ -1,0 +1,16 @@
+---
+
+- name: Apply changesets in flight for review site {{ review_site }}
+  shell: |
+    set -e
+    status=$(curl -sb -H "Accept: application/json" "{{ review_site.review_api_base_URL }}/?q={{ item.1 }}&o=CURRENT_REVISION" | awk 'NR>1' | jq -r ".[0].status")
+    if [[ $status != "MERGED" ]]; then
+      ref=$(curl -sb -H "Accept: application/json" "{{ review_site.review_api_base_URL }}/?q={{ item.1 }}&o=CURRENT_REVISION" | awk 'NR>1' | jq -r ".[0].revisions[.[0].current_revision].ref")
+      git fetch {{ osh_repos[item.0.repo_ref].src }} $ref
+      git cherry-pick FETCH_HEAD
+    fi
+  args:
+      chdir: "{{ devenv_root }}/{{ item.0.repo_ref }}"
+  with_subelements:
+    - "{{ review_site.repo_refs | default({}) }}"
+    - review_numbers

@@ -139,6 +139,9 @@ The `<subcommand>` can be one of the following:
 * `deploy_osh`: This subcommand runs the 'step 7' plays, deploying
   OpenStack-Helm.
 
+* `build_deploy_osh`: This subcommand runs the 'step 7' plays, which includes
+  building Openstack-Helm images locally and deploying OpenStack-Helm.
+
 * `teardown`: This subcommand deletes all evidences of the deployment
   on the `$deploy_mechanism`, and then removes all user files from
   localhost. Destructive operation.

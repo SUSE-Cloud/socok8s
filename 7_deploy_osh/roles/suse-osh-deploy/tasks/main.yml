@@ -68,11 +68,6 @@
       {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} neutron neutron.openstack.svc.cluster.local
       {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} horizon horizon.openstack.svc.cluster.local
 
-- name: Fetch OSH code
-  include: code-install.yml
-  tags:
-    - install
-
 # NOTE: This task should stay close to code-install, so that no race condition
 # happens between the git-cloning, an eventual failure, and the building of the charts.
 - name: Build infra charts
