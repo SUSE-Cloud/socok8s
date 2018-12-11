@@ -5,11 +5,6 @@
   changed_when: false
   failed_when: false
 
-- name: Associate openstack pool(s) to application rbd
-  command: "ceph osd pool application enable {{ item.name }} rbd"
-  with_items: "{{ ses_openstack_pools | unique }}"
-  changed_when: false
-
 - name: Create openstack key(s)
   shell: "ceph-authtool -C /etc/ceph/ceph.{{ item.name }}.keyring --name {{ item.name }} --add-key {{ item.key }} --cap mon \"{{ item.mon_cap|default('') }}\" --cap osd \"{{ item.osd_cap|default('') }}\" --cap mds \"{{ item.mds_cap|default('') }}\""
   args:
