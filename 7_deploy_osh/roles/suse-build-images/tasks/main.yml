@@ -1,0 +1,80 @@
+---
+
+- name: Install system packages for build images
+  package:
+    name: "{{ suse_build_images_packages }}"
+    state: present
+  register: install_packages
+  until: install_packages is success
+  retries: 5
+  delay: 2
+  tags:
+    - install
+
+- name: Ensure docker is running on host
+  service:
+    name: docker
+    state: started
+
+- name: Check if local docker registry server is running
+  shell: |
+    docker ps | grep {{ local_registry_name }}
+  register: registry_running_cmd_status
+  failed_when: false
+  tags:
+    - run
+
+- name: Start local docker registry if not running
+  shell: |
+    docker run -d -p {{ local_registry_port }}:{{ local_registry_port }} --name {{ local_registry_name }} --restart always registry:2
+  when:
+    - registry_running_cmd_status.rc != 0
+
+- name: Ensure local-registry DNS resolution is set in /etc/hosts
+  blockinfile:
+    path: /etc/hosts
+    block: |
+      {{ ansible_default_ipv4.address | ipaddr('address') }} {{ local_registry_name }}
+
+- name: Make sure docker daemon file is present on host
+  copy:
+    dest: "/etc/docker/daemon.json"
+    content: "{}"
+    force: no
+    mode: 0644
+
+- name: Read existing docker daemon conf file
+  set_fact:
+    _docker_daemon_conf: "{{ lookup('file', '/etc/docker/daemon.json') | default({}) | from_json }}"
+
+- name: Set registry entry in docker daemon conf if not defined
+  set_fact:
+    _upd_docker_daemon_conf: "{{ _docker_daemon_conf | combine({ item.key: item.value }) }}"
+  with_items:
+    - { key: "insecure-registries", value: "[\"{{local_registry_name}}:{{local_registry_port}}\"]" }
+  when:
+    - _docker_daemon_conf | json_query('"insecure-registries"') | default("", true) == ""
+
+- name: Write back updated docker daemon file
+  copy:
+    content: "{{ _upd_docker_daemon_conf | to_nice_json }}"
+    dest: "/etc/docker/daemon.json"
+  when:
+    - _upd_docker_daemon_conf is defined
+
+- name: Restart docker if needed
+  service:
+    name: docker
+    state: restarted
+  when: _upd_docker_daemon_conf is defined
+
+- name: Build Openstack Services images via loci
+  shell: |
+    export LOCI_SRC_DIR={{ devenv_root }}/loci
+    export REGISTRY_URI={{ local_registry_name }}:{{ local_registry_port }}/openstackhelm/
+    export BASE_IMAGE=leap15
+    export OPENSTACK_VERSION="{{ openstack_svcs_build_image_version }}"
+    export PUSH_TO_REGISTRY=yes
+    ./openstack/loci/build.sh
+  args:
+    chdir: "{{ devenv_root }}/openstack-helm-images"

@@ -21,6 +21,13 @@ function deploy_osh(){
     echo "SUSE OSH deployed"
 }
 
+function build_osh_images_and_deploy(){
+    source script_library/detect-ansible.sh
+    export ANSIBLE_STDOUT_CALLBACK=debug
+    $ansible_playbook ./7_deploy_osh/play.yml -i inventory-osh.ini -e "build_osh_images=yes"
+    echo "SUSE OSH images built locally and SUSE OSH deployed"
+}
+
 function pre_deploy_on_openstack(){
     source script_library/pre-flight-checks.sh openstack_early_tests
     echo "Deploying on OpenStack"
@@ -82,6 +89,9 @@ case "$action" in
     "deploy_osh")
         deploy_osh
         ;;
+    "build_deploy_osh")
+        build_osh_images_and_deploy
+        ;;
     "teardown")
         delete_on_$deploy_mechanism
         delete_user_files
@@ -92,6 +102,8 @@ case "$action" in
     *)
         echo "Usage: ${0} full_deploy|deploy_osh|teardown|clean_k8s"
         echo "full_deploy ensures the requirements are setup and then does the deploy_osh step"
+        echo "osh_deploy deploys OSH infra and services helm charts on caasp cluster"
+        echo "build_deploy_osh first builds OSH images locally and then runs osh_deploy steps mentioned above"
         echo "teardown removes all nodes used for deployment"
         echo "clean_k8s cleans up the kubernetes cluster of all evidence of an OSH deployment"
         ;;
