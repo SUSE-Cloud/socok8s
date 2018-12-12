@@ -37,9 +37,10 @@
       {{ ansible_default_ipv4.address | ipaddr('address') }} {{ local_registry_name }}
 
 - name: Make sure docker daemon file is present on host
-  file:
-    path: "/etc/docker/daemon.json"
-    state: touch
+  copy:
+    dest: "/etc/docker/daemon.json"
+    content: "{}"
+    force: no
     mode: 0644
 
 - name: Read existing docker daemon conf file

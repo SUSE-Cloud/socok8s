@@ -10,13 +10,20 @@
   tags:
     - install
 
+# TODO(arunkant): Remove this pip package install in SCRD-6151 when a venv for bootstrap is provided
+- name: Install pip packages needed for ansible filters usage later
+  pip:
+    name:
+      - netaddr
+      - jmespath
+
 - name: Clone OSH related repos
   import_tasks: clone-repos.yml
   tags:
     - run
 
 - name: Apply upstream reviews in flight to OSH related repos
-  include: patch-review-repos.yml
+  include_tasks: patch-review-repos.yml
   with_items: "{{ osh_patchsets | default({}) }}"
   loop_control:
     loop_var: review_site
