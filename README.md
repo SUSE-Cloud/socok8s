@@ -34,6 +34,7 @@ software and create local configuration.
 You need to have the following software installed:
 * ansible>=2.7.0
 * python-openstackclient
+* python-requests
 * jq
 * git
 
