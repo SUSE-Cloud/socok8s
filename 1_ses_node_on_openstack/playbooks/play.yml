@@ -28,7 +28,6 @@
         zypper ar -f -G https://provo-mirror.opensuse.org/repositories/Virtualization:/containers/SLE_12_SP3/ Virtualization_containers;
         zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Pool/ SUSE-Enterprise-Storage-5-Pool;
         zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Updates/ SUSE-Enterprise-Storage-5-Updates;
-
         zypper refresh
       when:
         - "(run_in_lab | default(True)) | bool"
