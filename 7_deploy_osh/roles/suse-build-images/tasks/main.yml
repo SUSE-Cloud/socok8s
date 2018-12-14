@@ -68,6 +68,12 @@
     state: restarted
   when: _upd_docker_daemon_conf is defined
 
+- name: Build infra components
+  include_tasks: build-infra-component.yml
+  with_items: "{{ build_infra_components_list }}"
+  loop_control:
+    loop_var: component
+
 - name: Build Openstack Services images via loci
   shell: |
     export LOCI_SRC_DIR={{ devenv_root }}/loci

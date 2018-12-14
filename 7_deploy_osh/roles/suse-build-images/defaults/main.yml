@@ -7,5 +7,17 @@ local_registry_name: local-registry
 local_registry_port: 5000
 openstack_svcs_build_image_version: stable/queens
 
+libvirt_distro: suse_15
+libvirt_binary_version: 4.4.0
+libvirt_image_version: latest
+
+openvswitch_distro: suse_15
+openvswitch_image_version: latest
+
+build_infra_components_list:
+  - libvirt
+  - openvswitch
+
 suse_build_images_packages:
   - docker
+  - gnu_parallel
