@@ -35,6 +35,8 @@ You need to have the following software installed:
 * ansible>=2.7.0
 * python-openstackclient
 * python-requests
+* python2-jmespath
+* ipcalc
 * jq
 * git
 
