@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+export DISTRO={{ libvirt_distro }}
+export REGISTRY_URI={{ local_registry_name }}:{{ local_registry_port }}/openstackhelm/
+export LIBVIRT_VERSION={{ libvirt_binary_version }}
+export VERSION={{ libvirt_image_version }}
+export EXTRA_TAG_INFO="-{{ libvirt_binary_version }}"
+./libvirt/build.sh
+
+docker push ${REGISTRY_URI}libvirt:${VERSION}-${DISTRO}${EXTRA_TAG_INFO}
