@@ -6,8 +6,9 @@ set -x
 action=${1:-full_deploy}
 deploy_mechanism=${2:-openstack}
 
+source script_library/bootstrap-ansible-if-necessary.sh
 source script_library/pre-flight-checks.sh check_ansible_requirements
-source script_library/pre-flight-checks.sh git_submodules_are_present
+source script_library/pre-flight-checks.sh check_git_submodules_are_present
 
 function deploy_osh(){
     source script_library/detect-ansible.sh

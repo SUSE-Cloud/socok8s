@@ -38,10 +38,12 @@ check_ansible_requirements (){
 }
 
 # This function should probably go away when we'll package code into rpm.
-check_git_submodule_are_present (){
+check_git_submodules_are_present (){
     if hash git 2>/dev/null && [ -d .git ]; then
         # Only update submodules on first run
-        [[ $(find submodules -type f | wc -l) -eq 0 ]]  && git submodule update --init
+        if [[ $(find submodules -type f | wc -l) -eq 0 ]]; then
+            git submodule update --init
+        fi
     fi
 }
 
