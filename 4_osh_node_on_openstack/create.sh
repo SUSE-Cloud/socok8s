@@ -5,7 +5,7 @@ MAIN_FOLDER="$(readlink -f $(dirname ${0})/..)"
 CURRENT_FOLDER="$(readlink -f $(dirname ${0}))"
 
 # Ensure the necessary variables are set
-source ${MAIN_FOLDER}/script_library/pre-flight-checks.sh openstack_tests
+source ${MAIN_FOLDER}/script_library/pre-flight-checks.sh check_openstack_env_vars_set
 
 SERVER_NAME="${PREFIX}-osh"
 SERVER_IMAGE=${SERVER_IMAGE:-"SLES12-SP3"}
