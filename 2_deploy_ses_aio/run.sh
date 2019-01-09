@@ -6,7 +6,7 @@ CURRENT_FOLDER="$(readlink -f $(dirname ${0}))"
 set -o errexit
 
 # Ensure the necessary variables are set
-source ${MAIN_FOLDER}/script_library/pre-flight-checks.sh ansible_tests
+source ${MAIN_FOLDER}/script_library/pre-flight-checks.sh check_ansible_requirements
 
 pushd ${CURRENT_FOLDER} > /dev/null
     # Generates the expected inventory for ses-ansible

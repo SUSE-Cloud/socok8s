@@ -28,11 +28,11 @@ openstack_early_tests (){
     openstack subnet list | grep ${INTERNAL_SUBNET} > /dev/null || (echo "subnet not found" && exit 4)
 }
 
-ansible_tests (){
-    which ansible-playbook > /dev/null || (echo "Please install ansible in your PATH"; exit 1)
+check_ansible_requirements (){
+    which ansible-playbook > /dev/null || install_ansible
 }
 general (){
-    ansible_tests
+    check_ansible_requirements
 }
 
 if [ -z ${1+x} ]; then
