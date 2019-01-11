@@ -127,8 +127,8 @@
     _cmpnt_runcommand: ./tools/deployment/multinode/020-ingress.sh
   environment:
     OSH_EXTRA_HELM_ARGS_INGRESS_KUBE_SYSTEM: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_KUBE_SYSTEM') | default('', True) }} -f /tmp/suse-ingress-kube-system.yaml"
-    OSH_EXTRA_HELM_ARGS_INGRESS_OPENSTACK: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_OPENSTACK') | default('', True) }} -f /tmp/suse-ingress-namespace.yaml"
-    OSH_EXTRA_HELM_ARGS_INGRESS_CEPH: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_CEPH') | default('', True) }} -f /tmp/suse-ingress-namespace.yaml"
+    OSH_EXTRA_HELM_ARGS_INGRESS_openstack: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_OPENSTACK') | default('', True) }} -f /tmp/suse-ingress-namespace.yaml"
+    OSH_EXTRA_HELM_ARGS_INGRESS_ceph: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_CEPH') | default('', True) }} -f /tmp/suse-ingress-namespace.yaml"
   tags:
     - ingress
     - run

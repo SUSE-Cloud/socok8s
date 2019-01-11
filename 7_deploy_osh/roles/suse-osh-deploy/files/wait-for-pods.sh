@@ -21,7 +21,7 @@ end=$(date +%s)
 if ! [ -z $2 ]; then
  end=$((end + $2))
 else
- end=$((end + 900))
+ end=$((end + 100))
 fi
 while true; do
     kubectl get pods --namespace=$1 -o json | jq -r \

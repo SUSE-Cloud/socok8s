@@ -12,10 +12,12 @@ suse_dev_patcher_packages:
 osh_repos:
   openstack-helm-infra:
     src: https://git.openstack.org/openstack/openstack-helm-infra
-    version: 8662018a4dceb82a5d699d9e118caff9e5edb156  # frozen ref 9th January 2019
+    #version: 8662018a4dceb82a5d699d9e118caff9e5edb156  # frozen ref 9th January 2019
+    version: master
   openstack-helm:
     src: https://git.openstack.org/openstack/openstack-helm
-    version: 8935b2454414ff70388d34d6934ea54bac610353  # frozen ref 9th January 2019
+    #version: 8935b2454414ff70388d34d6934ea54bac610353  # frozen ref 9th January 2019
+    version: master
   openstack-helm-images:
     src: https://github.com/openstack/openstack-helm-images
     version: master
@@ -44,6 +46,6 @@ osh_patchsets:
       - repo_ref: openstack-helm-images
         review_numbers:
           - 629637
-      #- repo_ref: openstack-helm
-      #  review_numbers:
-      #    - 586783
+      - repo_ref: loci
+        review_numbers:
+          - 630410
