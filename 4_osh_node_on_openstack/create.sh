@@ -30,7 +30,7 @@ pushd ${MAIN_FOLDER}
     if [ ! -f inventory-osh.ini ]; then
         echo '[osh-deployer]' > inventory-osh.ini
     fi
-    echo "${SERVER_NAME} ansible_ssh_host=${IP_CREATE} ansible_host=${IP_CREATE} ansible_user=root ansible_ssh_user=root" >> inventory-osh.ini
+    echo "${SERVER_NAME} ansible_host=${IP_CREATE} ansible_user=root" >> inventory-osh.ini
 
     echo "Waiting for the node to come up before scanning ssh key" && sleep 120 # 60 seconds are not enough
     ssh-keyscan -H ${IP_CREATE} >> ~/.ssh/known_hosts

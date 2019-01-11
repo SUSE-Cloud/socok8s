@@ -11,5 +11,5 @@
     - name: Prepare inventory
       copy:
         content: |
-          ses ansible_ssh_host={{ ses_ip }} ansible_ssh_user=root
+          ses ansible_host={{ ses_ip }} ansible_user=root
         dest: "{{ ses_ansible_folder }}/inventory.ini"

@@ -35,7 +35,7 @@ pushd $CURRENT_FOLDER > /dev/null
         openstack server add floating ip ${server} $IP_CREATED > /dev/null
 
         pushd ${MAIN_FOLDER} > /dev/null
-          echo "${server} ansible_ssh_host=${IP_CREATED} ansible_host=${IP_CREATED} ansible_user=root ansible_ssh_user=root" >> inventory-caasp.ini
+          echo "${server} ansible_host=${IP_CREATED} ansible_user=root" >> inventory-caasp.ini
         popd > /dev/null
     done
 popd > /dev/null

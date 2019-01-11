@@ -262,7 +262,7 @@ submodules as above. In the top level of the repository, create a file
 named .ses_ip containing the IP address of your SES node. Also create
 a file named inventory-ses.ini with the following contents:
 
-ses ansible_ssh_host=<SES IP> ansible_user=root ansible_ssh_user=root
+ses ansible_host=<SES IP> ansible_user=root
 
 On the SES node, you will need to either configure SuSEfirewall2 to
 allow access to the SSH port, or disable SuSEfirewall2 entirely. Next,
