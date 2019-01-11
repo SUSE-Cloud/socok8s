@@ -23,6 +23,7 @@ check_openstack_environment_is_ready_for_deploy (){
     echo "Running OpenStack pre-flight checks"
     check_openstack_env_vars_set #Do not try to grep without ensuring the vars are set
     which openstack > /dev/null  || (echo "Please install openstack and heat CLI in your PATH"; exit 5)
+    openstack stack delete --help > /dev/null || (echo "Please install heat client in your PATH"; exit 6)
     openstack keypair list | grep ${KEYNAME} > /dev/null || (echo "keyname not found. export KEYNAME=" && exit 2)
     openstack network list | grep "${PREFIX}-net" > /dev/null || (echo "network not found. Make sure a network exist matching ${PREFIX}-net" && exit 3)
     openstack subnet list | grep ${INTERNAL_SUBNET} > /dev/null || (echo "subnet not found" && exit 4)
@@ -46,6 +47,10 @@ check_git_submodules_are_present (){
             git submodule update --init
         fi
     fi
+}
+
+check_jq_present (){
+    which jq > /dev/null || (echo "Please install jq"; exit 7)
 }
 
 if [ -z ${1+x} ]; then
