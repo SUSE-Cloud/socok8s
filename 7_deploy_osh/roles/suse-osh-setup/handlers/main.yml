@@ -1,0 +1,7 @@
+---
+# handlers file for suse-osh-setup
+
+- name: restart docker
+  service:
+    name: docker
+    state: restarted

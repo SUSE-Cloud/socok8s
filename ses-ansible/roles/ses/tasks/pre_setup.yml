@@ -20,16 +20,43 @@
   set_fact:
     ses_node_disks_count: "{{ ses_node_disks_count_result.stdout | int }}"
 
+- name: "Ensure required packages are installed"
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python-xml
+
 - name: "Ensure NTP installed"
   package:
     name: ntp
     state: present
+  when:
+    - ansible_distribution_major_version != "15"
 
 - name: Ensure NTP is enabled
   service:
     name: "ntpd"
     state: started
     enabled: yes
+  when:
+    - ansible_distribution_major_version != "15"
+
+- name: "Ensure ntp client installed"
+  package:
+    name: yast2-ntp-client
+    state: present
+  when:
+    - ansible_distribution_major_version == "15"
+
+- name: Ensure chronyd is enabled
+  service:
+    name: "chronyd"
+    state: started
+    enabled: yes
+  when:
+    - ansible_distribution_major_version == "15"
+
 
 #- name: Ensure SES repos present
 #  zypper_repository:

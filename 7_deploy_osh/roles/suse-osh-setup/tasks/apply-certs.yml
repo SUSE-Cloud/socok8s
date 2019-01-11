@@ -1,0 +1,18 @@
+---
+
+- name: Copy self-signed certs to expected location on nodes
+  copy:
+    src: "{{ suse_registry_certs_dir }}/domain.crt"
+    dest: "/etc/pki/trust/anchors"
+  become: yes
+  register: _copy_ssc_result
+
+- name: Update CA certificates on node
+  command: >
+    update-ca-certificates
+  become: yes
+  notify:
+    - restart docker
+  when:
+    - _copy_ssc_result.changed
+

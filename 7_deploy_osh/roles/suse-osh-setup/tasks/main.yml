@@ -8,6 +8,23 @@
   tags:
     - preinstall
 
+- name: Create self-signed cert on deployer node
+  include: create-certs.yml
+  when: ('osh-deployer' in group_names)
+  tags:
+    - install
+
+- name: Apply self-signed cert on deployer and caasp nodes
+  include: apply-certs.yml
+  tags:
+    - install
+
+- name: Local registry setup on deployer node
+  include: local-registry-setup.yml
+  when: ('osh-deployer' in group_names)
+  tags:
+    - install
+
 #- name: Generate and read kubeconfig from one caasp node
 #  include: get-kubeconfig.yml
 #  run_once: true

@@ -29,6 +29,13 @@
     msg: "Unknown helm state"
   when: _helmcheck.stdout not in ['0','1','2']
 
+- name: Stop running helm serve service fro update case
+  systemd:
+    state: stopped
+    name: helm-serve
+    enabled: yes
+  when: helm_state == 'to_update'
+
 - name: Installing helm client
   shell: "curl {{ helm_download_url }} | bash"
   args:

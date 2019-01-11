@@ -1,5 +1,11 @@
 ---
 
+- hosts: osh-deploy-cp,osh-deployer
+  gather_facts: yes
+  any_errors_fatal: true
+  roles:
+    - suse-osh-setup
+
 - hosts: osh-deployer
   gather_facts: yes
   any_errors_fatal: true
@@ -13,11 +19,6 @@
     - role: suse-build-images
       when: build_osh_images | default('False') | bool
 
-- hosts: osh-deploy-cp
-  gather_facts: yes
-  any_errors_fatal: true
-  roles:
-    - suse-osh-setup
 
 - hosts: osh-deployer
   gather_facts: yes

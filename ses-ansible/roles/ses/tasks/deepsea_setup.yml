@@ -8,6 +8,8 @@
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
+    owner: root
+    group: root
   with_items:
     - src: "master_minion.sls.j2"
       dest:  "/srv/pillar/ceph/master_minion.sls"

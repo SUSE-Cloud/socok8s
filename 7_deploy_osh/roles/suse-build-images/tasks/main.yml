@@ -11,62 +11,10 @@
   tags:
     - install
 
-- name: Ensure docker is running on host
-  service:
-    name: docker
-    state: started
-
-- name: Check if local docker registry server is running
-  shell: |
-    docker ps | grep {{ local_registry_name }}
-  register: registry_running_cmd_status
-  failed_when: false
-  tags:
-    - run
-
-- name: Start local docker registry if not running
-  shell: |
-    docker run -d -p {{ local_registry_port }}:{{ local_registry_port }} --name {{ local_registry_name }} --restart always registry:2
+- name: Setup insecure docker registry for build images if such flag is set
+  import_tasks: setup-build-registry.yml
   when:
-    - registry_running_cmd_status.rc != 0
-
-- name: Ensure local-registry DNS resolution is set in /etc/hosts
-  blockinfile:
-    path: /etc/hosts
-    block: |
-      {{ ansible_default_ipv4.address | ipaddr('address') }} {{ local_registry_name }}
-
-- name: Make sure docker daemon file is present on host
-  copy:
-    dest: "/etc/docker/daemon.json"
-    content: "{}"
-    force: no
-    mode: 0644
-
-- name: Read existing docker daemon conf file
-  set_fact:
-    _docker_daemon_conf: "{{ lookup('file', '/etc/docker/daemon.json') | default({}) | from_json }}"
-
-- name: Set registry entry in docker daemon conf if not defined
-  set_fact:
-    _upd_docker_daemon_conf: "{{ _docker_daemon_conf | combine({ item.key: item.value }) }}"
-  with_items:
-    - { key: "insecure-registries", value: "[\"{{local_registry_name}}:{{local_registry_port}}\"]" }
-  when:
-    - _docker_daemon_conf | json_query('"insecure-registries"') | default("", true) == ""
-
-- name: Write back updated docker daemon file
-  copy:
-    content: "{{ _upd_docker_daemon_conf | to_nice_json }}"
-    dest: "/etc/docker/daemon.json"
-  when:
-    - _upd_docker_daemon_conf is defined
-
-- name: Restart docker if needed
-  service:
-    name: docker
-    state: restarted
-  when: _upd_docker_daemon_conf is defined
+    - suse_setup_insecure_build_registry | bool
 
 - name: Build infra components
   include_tasks: build-infra-component.yml
@@ -84,3 +32,32 @@
     ./openstack/loci/build.sh
   args:
     chdir: "{{ devenv_root }}/openstack-helm-images"
+
+- name: Remove insecure docker registry for build images if insecure flag is set
+  import_tasks: clean-build-registry.yml
+  when:
+    - suse_setup_insecure_build_registry | bool
+
+- name: Re-setup local secure registry if insecure registry was used for image build
+  include_role:
+    name: suse-osh-setup
+    tasks_from: local-registry-setup
+  when:
+    - suse_setup_insecure_build_registry | bool
+
+- name: Get list of recently built docker images on nodes
+  shell: |
+    docker images {{ local_registry_name }}:{{ local_registry_port }}/openstackhelm/*:{{suse_image_version}}-*-{{suse_image_distro}}* | awk 'NR>1 {print $1":"$2}'
+  register: local_repo_images
+  when:
+    - suse_setup_insecure_build_registry | bool
+
+- name: Publish local images to local secure registry server
+  shell: |
+    docker push {{ item }}
+  with_items:
+    - "{{ local_repo_images.stdout_lines }}"
+  when:
+    - local_repo_images is defined
+    - local_repo_images.stdout_lines | length > 0
+

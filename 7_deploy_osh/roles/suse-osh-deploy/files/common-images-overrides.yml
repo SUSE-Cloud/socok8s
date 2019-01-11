@@ -29,6 +29,8 @@ images:
     heat_engine_cleaner: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
     horizon: "{{ suse_osh_registry_location }}/openstackhelm/horizon:{{ suse_osh_image_version }}-clients"
     horizon_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/horizon:{{ suse_osh_image_version }}-clients"
+    ingress_module_init: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
+    ingress_routed_vip:  "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
     ironic_api: "{{ suse_osh_registry_location }}/openstackhelm/ironic:{{ suse_osh_image_version }}"
     ironic_bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/ironic:{{ suse_osh_image_version }}"
     ironic_conductor: "{{ suse_osh_registry_location }}/openstackhelm/ironic:{{ suse_osh_image_version }}"
@@ -77,4 +79,6 @@ images:
     senlin_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/senlin:{{ suse_osh_image_version }}"
     senlin_engine: "{{ suse_osh_registry_location }}/openstackhelm/senlin:{{ suse_osh_image_version }}"
     tempest: "{{ suse_osh_registry_location }}/kolla/ubuntu-source-tempest:{{ suse_osh_image_version }}"
-    test: "{{ suse_osh_registry_location }}/kolla/ubuntu-source-rally:{{ suse_osh_image_version }}"
+    # test: "{{ suse_osh_registry_location }}/kolla/ubuntu-source-rally:{{ suse_osh_image_version }}"
+    test: "docker.io/xrally/xrally-openstack:1.3.0"
+

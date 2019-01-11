@@ -4,7 +4,8 @@
   shell: |
     set -e
     status=$(curl -sb -H "Accept: application/json" "{{ review_site.review_api_base_URL }}/?q={{ item.1 }}&o=CURRENT_REVISION" | awk 'NR>1' | jq -r ".[0].status")
-    if [[ $status != "MERGED" ]]; then
+    if [[ $status != "MERGED" || {{ osh_repos[item.0.repo_ref].version }} != "master" ]]; then
+      git config user.email {{ review_site.account_user_email }}
       ref=$(curl -sb -H "Accept: application/json" "{{ review_site.review_api_base_URL }}/?q={{ item.1 }}&o=CURRENT_REVISION" | awk 'NR>1' | jq -r ".[0].revisions[.[0].current_revision].ref")
       git fetch {{ osh_repos[item.0.repo_ref].src }} $ref
       git cherry-pick FETCH_HEAD

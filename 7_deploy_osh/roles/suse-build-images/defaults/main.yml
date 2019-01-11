@@ -3,9 +3,20 @@
 
 devenv_root: /opt
 
-local_registry_name: local-registry
+# As loci build image logic has issues with secre registry server
+# so we are building images on insecure registry server.
+# After successful build of infra and service components, we stop
+# insecure version and start secure registry in-place and publish images
+# to that registry server so that helm charts in caasp cluster can use
+# override images hosted on that registry server.
+suse_setup_insecure_build_registry: true
+
+local_registry_name: "{{ ansible_hostname }}"
 local_registry_port: 5000
 openstack_svcs_build_image_version: stable/queens
+
+suse_image_distro: suse_15
+suse_image_version: latest
 
 libvirt_distro: suse_15
 libvirt_binary_version: 4.4.0
@@ -19,5 +30,4 @@ build_infra_components_list:
   - openvswitch
 
 suse_build_images_packages:
-  - docker
   - gnu_parallel

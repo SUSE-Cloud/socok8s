@@ -29,3 +29,8 @@
     loop_var: review_site
   tags:
     - run
+
+- name: Copy local code changes to OSH repos
+  synchronize:
+    src: "roles/suse-dev-patcher/files/repos/"
+    dest: "{{ devenv_root }}/"
