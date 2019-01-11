@@ -10,7 +10,7 @@ check_openstack_env_vars_set (){
     fi
 
     if [ -z ${PREFIX+x} ]; then
-        echo "No PREFIX given. export PREFIX to match your network. It will be used as network and server names"
+        echo "No PREFIX given. export PREFIX to match your network. It will be used as network and server names" && exit 1
     fi
 
     if [ -z ${INTERNAL_SUBNET+x} ];
@@ -21,7 +21,8 @@ check_openstack_env_vars_set (){
 
 check_openstack_environment_is_ready_for_deploy (){
     echo "Running OpenStack pre-flight checks"
-    which openstack > /dev/null  || (echo "Please install openstack and heat CLI in your PATH"; exit 1)
+    check_openstack_env_vars_set #Do not try to grep without ensuring the vars are set
+    which openstack > /dev/null  || (echo "Please install openstack and heat CLI in your PATH"; exit 5)
     openstack keypair list | grep ${KEYNAME} > /dev/null || (echo "keyname not found. export KEYNAME=" && exit 2)
     openstack network list | grep "${PREFIX}-net" > /dev/null || (echo "network not found. Make sure a network exist matching ${PREFIX}-net" && exit 3)
     openstack subnet list | grep ${INTERNAL_SUBNET} > /dev/null || (echo "subnet not found" && exit 4)
