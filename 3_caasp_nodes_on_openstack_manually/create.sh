@@ -5,7 +5,7 @@ MAIN_FOLDER="$(readlink -f $(dirname ${0})/..)"
 CURRENT_FOLDER="$(readlink -f $(dirname ${0}))"
 
 # Ensure the necessary variables are set
-source ${MAIN_FOLDER}/script_library/pre-flight-checks.sh openstack_tests
+source ${MAIN_FOLDER}/script_library/pre-flight-checks.sh check_openstack_env_vars_set
 
 SERVER_IMAGE=${CAASP_IMAGE:-"caasp-3.0.0-GM-OpenStack-qcow"}
 SERVER_FLAVOR=${SERVER_FLAVOR:-"m1.large"}
@@ -35,7 +35,7 @@ pushd $CURRENT_FOLDER > /dev/null
         openstack server add floating ip ${server} $IP_CREATED > /dev/null
 
         pushd ${MAIN_FOLDER} > /dev/null
-          echo "${server} ansible_ssh_host=${IP_CREATED} ansible_host=${IP_CREATED} ansible_user=root ansible_ssh_user=root" >> inventory-caasp.ini
+          echo "${server} ansible_host=${IP_CREATED} ansible_user=root" >> inventory-caasp.ini
         popd > /dev/null
     done
 popd > /dev/null

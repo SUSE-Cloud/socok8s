@@ -110,7 +110,7 @@ some steps a delete.sh script is provided to clean up any created
 resources. Reconfirming that you've done all the previous steps to set
 up now will save you some time later.
 
-## Deploying
+## Run deploy on engcloud
 
 To begin a deployment from scratch, go to the root of your socok8s
 clone and run:
@@ -123,7 +123,22 @@ The default action for `run.sh` is to do a `full-deploy` on openstack.
 This means the `runi.sh` script will run each of the seven top-level
 sections of the script in order.
 
-# run.sh
+## Re-deploying OSH
+
+If you only want to redeploy the last step, openstack-helm,
+you can run the following:
+
+```
+# (Optional): Cleanup k8s from all previous deployment code
+./run.sh clean_k8s
+```
+
+```
+# Re-deploy OpenStack-Helm
+./run.sh deploy_osh
+```
+
+# Reference: run.sh
 
 The `run.sh` script accepts two arguments in the form:
 
@@ -154,20 +169,61 @@ The `<deploy_mechanism>` is by default "openstack".
 No alternative option is implemented yet, but we might implement a
 KVM based deployment mechanism.
 
-## Re-deploying OSH
+# Reference:  architecture and inventories
 
-If you only want to redeploy the last step, openstack-helm,
-you can run the following:
+By default, it is expected these playbooks and scripts would run
+on a CI/developer machine.
 
-```
-# (Optional): Cleanup k8s from all previous deployment code
-./run.sh clean_k8s
-```
+In order to not pollute the developer/CI machine (called further
+'localhost'), all the data relevant for a deployment (like any
+eventual override) will be stored in user-space, unpriviledged
+access. Any hardware and software distribution can be used,
+as long as 'localhost' is able to run git, and ansible
+(see requirements). This also helps the story of running behind
+a corporate firewall: the 'developer' can be (connecting to)
+a bastion host, while the real actions happen behind the firewall.
 
-```
-# Re-deploy OpenStack-Helm
-./run.sh deploy_osh
-```
+This SoCok8s deployment mechanism requires therefore another
+entity, another machine, to orchestrate kubernetes commands.
+This machine is named the `deployer` node.
+The `deployer` node will be in charge of running the OSH code,
+and manage the kubernetes configuration.
+
+The `deployer` node is expected to run SLE.
+
+The deployer node can be the same as the `localhost`
+(developer/CI machine), but it is not a requirement.
+
+The deployer node (currently) needs access to the SES machines
+through SSH to fetch the keys. In the future, this SSH connection
+might be skipped if the `localhost` have knowledge of these keys.
+
+## Example inventories and conventions
+
+In order for a deployer to bring its own inventory, we have
+defined a set of convention about inventory groupnames.
+
+* All nodes belonging to the SES deployment should be listed
+  under the `ses_nodes` group. First node in this group must
+  be a monitor node with the appropriate ceph keyrings in
+  `/etc/ceph/`.
+
+* The inventory for SES nodes is stored in `inventory-ses.ini`
+  by default.
+
+* The CI/developer machine is always named `localhost`.
+
+* The `deployer` node is listed in a group `osh-deployer`.
+  In order to not extend the length of the deployment,
+  the `osh-deployer` group should contain only one node.
+  We might support multiple `osh-deployer` nodes for
+  muliple k8s deployments later.
+
+* The inventory for the `deployer` node is stored in
+  `inventory-osh.ini` by default.
+
+* Example inventories and user variables can be found
+  in the `examples/` directory.
 
 # Deployment using KVM
 
@@ -206,7 +262,7 @@ submodules as above. In the top level of the repository, create a file
 named .ses_ip containing the IP address of your SES node. Also create
 a file named inventory-ses.ini with the following contents:
 
-ses ansible_ssh_host=<SES IP> ansible_user=root ansible_ssh_user=root
+ses ansible_host=<SES IP> ansible_user=root
 
 On the SES node, you will need to either configure SuSEfirewall2 to
 allow access to the SSH port, or disable SuSEfirewall2 entirely. Next,
@@ -251,4 +307,6 @@ On each CAASP node:
 
 Now you are ready to run Stage 7, as follows:
 
-ansible-playbook -vvv -e @~/suse-osh-deploy/user_variables.yml
+```
+ansible-playbook -v -e @~/suse-osh-deploy/user_variables.yml
+```
