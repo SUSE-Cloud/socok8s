@@ -1,5 +1,8 @@
 ---
 - name: Include global vars
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
+- name: Include repo vars
   include_vars: "{{ playbook_dir }}/../vars/manifest.yml"
 
 - name: Install the necessary packages on the deployer node

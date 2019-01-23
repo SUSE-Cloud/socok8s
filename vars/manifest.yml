@@ -1,5 +1,4 @@
 ---
-upstream_repos_clone_folder: ~/git/opt
 upstream_repos:
   openstack-helm-infra:
     src: https://git.openstack.org/openstack/openstack-helm-infra
