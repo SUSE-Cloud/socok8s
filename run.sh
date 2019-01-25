@@ -1,107 +1,82 @@
 #!/bin/bash
 
 set -o errexit
-set -x
 
-action=${1:-full_deploy}
-deploy_mechanism=${2:-openstack}
+if [[ ${OSH_DEVELOPER_MODE:-"False"} == "True" ]]; then
+    set -x
+fi
 
-source script_library/bootstrap-ansible-if-necessary.sh
-source script_library/pre-flight-checks.sh check_jq_present
-source script_library/pre-flight-checks.sh check_ansible_requirements
-source script_library/pre-flight-checks.sh check_git_submodules_are_present
+scripts_absolute_dir="$( cd "$(dirname "$0")/script_library" ; pwd -P )"
+socok8s_absolute_dir="$( cd "$(dirname "$0")" ; pwd -P )"
 
-function deploy_osh(){
-    source script_library/detect-ansible.sh
-    export ANSIBLE_STDOUT_CALLBACK=debug
-    $ansible_playbook ./7_deploy_osh/play.yml -i inventory-osh.ini
-    echo "SUSE OSH deployed"
-}
+# USE an env var to setup where to deploy to
+# by default, ccp will deploy on openstack for inception style fun (and CI).
+DEPLOYMENT_MECHANISM=${DEPLOYMENT_MECHANISM:-"openstack"}
 
-function build_osh_images_and_deploy(){
-    source script_library/detect-ansible.sh
-    export ANSIBLE_STDOUT_CALLBACK=debug
-    $ansible_playbook ./7_deploy_osh/play.yml -i inventory-osh.ini -e "build_osh_images=yes"
-    echo "SUSE OSH images built locally and SUSE OSH deployed"
-}
+source ${scripts_absolute_dir}/bootstrap-ansible-if-necessary.sh
+source ${scripts_absolute_dir}/pre-flight-checks.sh check_jq_present
+source ${scripts_absolute_dir}/pre-flight-checks.sh check_ansible_requirements
+source ${scripts_absolute_dir}/pre-flight-checks.sh check_git_submodules_are_present
 
-function pre_deploy_on_openstack(){
-    source script_library/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
-    echo "Deploying on OpenStack"
-    ./1_ses_node_on_openstack/create.sh
-    echo "Step 1 success"
-    ./2_deploy_ses_aio/run.sh
-    echo "Step 2 success"
-    ./3_caasp_nodes_on_openstack_heat/create.sh
-    echo "Step 3 success"
-    ./4_osh_node_on_openstack/create.sh
-    echo "Step 4 success"
-    source script_library/detect-ansible.sh
-    $ansible_playbook ./5_automate_caasp_enroll/play.yml -i inventory-osh.ini
-    echo "Step 5 success"
-    source script_library/detect-ansible.sh
-    $ansible_playbook ./6_preflight_checks/checks.yml -i inventory-osh.ini
-    echo "Step 6 success"
-}
+# Bring an ansible runner that allows a userspace environment
+source ${scripts_absolute_dir}/run-ansible.sh
 
-function pre_deploy_on_kvm(){
-    echo "Deploying on KVM"
-    echo "NOT IMPLEMENTED"
-    exit 1
-}
+pushd ${socok8s_absolute_dir}
 
-function delete_on_openstack(){
-    echo "Deleting on OpenStack"
-    ./4_osh_node_on_openstack/delete.sh
-    echo "Delete Caasp nodes"
-    ./3_caasp_nodes_on_openstack_heat/delete.sh || true
-    ./3_caasp_nodes_on_openstack_manually/delete.sh || true
-    echo "Delete SES node"
-    ./1_ses_node_on_openstack/delete.sh
-    exit 0
-}
+# All the deployment actions (deploy steps) are defined in script_library/actions-openstack.sh for example.
+source ${scripts_absolute_dir}/deployment-actions-${DEPLOYMENT_MECHANISM}.sh
 
-function delete_on_kvm(){
-    echo "Deleting on KVM"
-    echo "NOT IMPLEMENTED"
-    exit 1
-}
+# When automation is changed to introduce steps,
+# replace this line with the following line:
+# deployment_action=$1
+deployment_action=${1:-"setup_everything"}
 
-function clean_k8s(){
-    echo "DANGER ZONE"
-    read -p "Press Enter or Ctrl-C. Enter will remove all the deployed components on your kubernetes cluster"
-    ansible -m script -a "script_library/cleanup-k8s.sh" osh-deployer -i inventory-osh.ini
-}
-function delete_user_files(){
-    echo "DANGER ZONE"
-    read -p "Press Enter or Ctrl-C. Enter will delete userspace files in ~/suse-osh-deploy/"
-    rm -rf ~/suse-osh-deploy/*
-}
-
-case "$action" in
-    "full_deploy")
-        pre_deploy_on_$deploy_mechanism
-        deploy_osh
+case "$deployment_action" in
+    "deploy_ses")
+        deploy_ses
+        ;;
+    "deploy_caasp")
+        deploy_caasp
+        ;;
+    "deploy_ccp_deployer")
+        # CCP deployer is a node that will be used to control k8s cluster,
+        # as we shouldn't do it on caasp cluster (microOS and others)
+        deploy_ccp_deployer
+        ;;
+    "enroll_caasp_workers")
+        enroll_caasp_workers
+        ;;
+    "setup_hosts")
+        deploy_ses
+        deploy_caasp
+        deploy_ccp_deployer
+        enroll_caasp_workers
+        ;;
+    "patch_upstream")
+        patch_upstream
+        ;;
+    "build_images")
+        build_images
         ;;
     "deploy_osh")
         deploy_osh
         ;;
-    "build_deploy_osh")
-        build_osh_images_and_deploy
+    "setup_everything")
+        deploy_ses
+        deploy_caasp
+        deploy_ccp_deployer
+        enroll_caasp_workers
+        patch_upstream
+        build_images
+        deploy_osh
         ;;
     "teardown")
-        delete_on_$deploy_mechanism
-        delete_user_files
+        teardown
         ;;
     "clean_k8s")
         clean_k8s
         ;;
     *)
-        echo "Usage: ${0} full_deploy|deploy_osh|teardown|clean_k8s"
-        echo "full_deploy ensures the requirements are setup and then does the deploy_osh step"
-        echo "osh_deploy deploys OSH infra and services helm charts on caasp cluster"
-        echo "build_deploy_osh first builds OSH images locally and then runs osh_deploy steps mentioned above"
-        echo "teardown removes all nodes used for deployment"
-        echo "clean_k8s cleans up the kubernetes cluster of all evidence of an OSH deployment"
+        echo "Parameter unknown, read run.sh code."
         ;;
 esac

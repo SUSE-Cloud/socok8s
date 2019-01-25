@@ -3,7 +3,7 @@
 
 MAIN_FOLDER="$(readlink -f $(dirname ${0})/..)"
 CURRENT_FOLDER="$(readlink -f $(dirname ${0}))"
- 
+
 source ${MAIN_FOLDER}/script_library/pre-flight-checks.sh check_openstack_env_vars_set
 
 pushd ${MAIN_FOLDER} > /dev/null
@@ -13,6 +13,7 @@ pushd ${MAIN_FOLDER} > /dev/null
         # Do not continue the deletion of files if an error happens in the stack delete
         set -o errexit
         openstack stack delete ${STACK_NAME} -y --wait
+        openstack port delete ${STACK_NAME}-vip
     fi
 
     if [ -f environment.json ]; then

@@ -8,15 +8,23 @@
     - name: Check if developer mode should be enabled
       set_fact:
         developer_mode: "{{ (lookup('env','OSH_DEVELOPER_MODE') | default('False', true) ) | bool }}"
+      tags:
+        - always
+        - imagebuilder
+        - upstream_patching
   roles:
     - role: dev-patcher
       when: developer_mode
+      tags:
+        - upstream_patching
 
 - hosts: osh-deployer
-  gather_facts: yes
+  gather_facts: no
   any_errors_fatal: true
   roles:
     - role: suse-build-images
+      tags:
+        - imagebuilder
       when:
         - developer_mode
         - build_osh_images | default('False') | bool
@@ -25,10 +33,14 @@
   gather_facts: yes
   any_errors_fatal: true
   roles:
-    - suse-osh-setup
+    - role: suse-osh-setup
+      tags:
+        - workersetup
 
 - hosts: osh-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:
-    - suse-osh-deploy
+    - role: suse-osh-deploy
+      tags:
+        - deploy
