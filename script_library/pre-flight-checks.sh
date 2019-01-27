@@ -37,6 +37,7 @@ check_ansible_requirements (){
     # In the ansible venv, we should have jmespath and netaddr
     python -c 'import jmespath' || install_ansible
     python -c 'import netaddr' || install_ansible
+    python -c 'import openstack' || install_ansible
     # If ara is required, install it.
     if [[ ${USE_ARA:-False} == "True" ]]; then
         python -c 'import ara' || install_ansible

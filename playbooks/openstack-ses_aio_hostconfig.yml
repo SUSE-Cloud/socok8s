@@ -16,24 +16,30 @@
     # Domain name to use in the deployment. Default assumes properly configured dns name.
     domainname: "{{ ansible_domain | default('openstack.local', True) }}"
   tasks:
+    - name: Ensure all the vars are loaded
+      include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+
     - name: Configure host repositories
       raw: |
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Pool/       sle12sp3-product
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Updates/    sle12sp3-update
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-Pool/    sle12sp3-sdk-product
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-Updates/ sle12sp3-sdk-update
-        zypper ar -f -G http://download.suse.de/ibs/SUSE:/CA/SLE_12_SP3/ SUSE-CA
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-OpenStack-Cloud-8-Pool/ openstackcloud-8-product
+        zypper ar -f -G {{ deploy_on_openstack_repos_to_configure[item] }} {{ item }}
+      loop:
+        - SLE12SP3-product
+        - SLE12SP3-update
+        - SLE12SP3SDK-product
+        - SLE12SP3SDK-update
+        - SUSE-CA
+        - OpenStack-Cloud8-product
+        - SES5-product
+        - SES5-update
+        - SLE12Containers
+
+    - name: Refresh zypper. After this step, we can rely on ansible modules.
+      raw: |
         #TODO(evrardjp): Check if utilities/devel tools/virt/cloud8updates are really needed
         #zypper ar -f -G https://provo-mirror.opensuse.org/repositories/utilities/SLE_12/ SLE12-utilities;
         #zypper ar -f -G https://provo-mirror.opensuse.org/repositories/Virtualization:/containers/SLE_12_SP3/ Virtualization_containers;
         #zypper ar -f -G  http://kirk.provo.novell.com/repositories/SUSE/Products/OpenStack-Cloud/8/x86_64/product/ openstackcloud-8-update
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Pool/ SES-5-product
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Updates/ SES-5-update
-        zypper ar -f -G http://download.suse.de/ibs/SUSE/Updates/SLE-Module-Containers/12/x86_64/update/ slemodulecontainers-12-update
         zypper refresh
-      when:
-        - "(run_in_lab | default(True)) | bool"
 
     - name: Upgrade host
       zypper:

@@ -1,0 +1,22 @@
+---
+deploy_on_openstack_cloudname: "{{ lookup('env','OS_CLOUD') | default('engcloud-cloud-ci', true) }}"
+deploy_on_openstack_prefix: "{{ lookup('env','PREFIX') }}" #PREFIX is set at all times (ensured in script library)
+deploy_on_openstack_external_network: "floating"
+deploy_on_openstack_internal_network: "{{ deploy_on_openstack_prefix }}-net"
+deploy_on_openstack_internal_subnet: "{{ deploy_on_openstack_prefix }}-net"
+deploy_on_openstack_keypairname: "{{ lookup('env','KEYNAME') }}"
+deploy_on_openstack_sesnode_server_name: "{{ deploy_on_openstack_prefix }}-ses"
+deploy_on_openstack_sesnode_image: "SLES12-SP3"
+deploy_on_openstack_sesnode_flavor: "m1.large"
+deploy_on_openstack_sesnode_securitygroup: "all-incoming"
+deploy_on_openstack_sesnode_volume_name: "{{ deploy_on_openstack_prefix }}-vol"
+deploy_on_openstack_repos_to_configure:
+  SLE12SP3-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Pool/
+  SLE12SP3-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Updates/
+  SLE12SP3SDK-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-Pool/
+  SLE12SP3SDK-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-Updates/
+  SUSE-CA: http://download.suse.de/ibs/SUSE:/CA/SLE_12_SP3/
+  OpenStack-Cloud8-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-OpenStack-Cloud-8-Pool/
+  SES5-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Pool/
+  SES5-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Updates/
+  SLE12Containers: http://download.suse.de/ibs/SUSE/Updates/SLE-Module-Containers/12/x86_64/update/

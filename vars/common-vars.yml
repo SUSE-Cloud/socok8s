@@ -1,3 +1,4 @@
 ---
 upstream_repos_clone_folder: /opt
 developer_mode: "{{ (lookup('env','OSH_DEVELOPER_MODE') | default('False', true) ) | bool }}"
+socok8s_workspace: "{{ lookup('env','ANSIBLE_RUNNER_DIR') | default('suse-osh-deploy', true) }}"

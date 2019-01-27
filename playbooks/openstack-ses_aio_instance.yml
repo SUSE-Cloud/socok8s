@@ -1,0 +1,89 @@
+---
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  roles:
+    - ansible-config_template
+  post_tasks:
+    - name: Load generic vars
+      include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+    - name: Load openstack vars
+      include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+
+    - name: Handle creation
+      when:
+        - not ((ses_node_delete | default('false'))| bool)
+      block:
+        - name: Create volume
+          os_volume:
+            cloud: "{{ deploy_on_openstack_cloudname }}"
+            display_name: "{{ deploy_on_openstack_sesnode_volume_name }}"
+            size: 80
+            state: "present"
+        - name: Create server
+          os_server:
+            cloud: "{{ deploy_on_openstack_cloudname }}"
+            flavor: "{{ deploy_on_openstack_sesnode_flavor }}"
+            image: "{{ deploy_on_openstack_sesnode_image }}"
+            key_name: "{{ deploy_on_openstack_keypairname }}"
+            name: "{{ deploy_on_openstack_sesnode_server_name }}"
+            network: "{{ deploy_on_openstack_internal_network }}"
+            security_groups:
+              - "{{ deploy_on_openstack_sesnode_securitygroup }}"
+            auto_ip: True
+            state: present
+            timeout: 300
+            volumes:
+              - "{{ deploy_on_openstack_sesnode_volume_name }}"
+          register: _ses_server_create
+        - name: Show the server data
+          debug:
+            var: _ses_server_create
+        - name: Get server floating IP
+          set_fact:
+            ses_floating_ip: "{{ _ses_server_create['openstack']['accessIPv4'] }}"
+        # The run_ansible ensures the socok8s_workspace is not an empty var by
+        # exporting ANSIBLE_RUNNER_DIR
+        - name: Extend inventory in workspace with newly created SES node
+          config_template:
+            src: "{{ socok8s_workspace }}/inventory/hosts.yml"
+            dest: "{{ socok8s_workspace }}/inventory/hosts.yml"
+            config_type: yaml
+            config_overrides: "{{ ses_aio_overrides }}"
+          vars:
+            ses_aio_overrides:
+              ses_nodes:
+                hosts:
+                  ses-aio:
+                    ansible_host: "{{ ses_floating_ip }}"
+
+        - meta: refresh_inventory
+
+        # Waiting for port is not enough, as the port might be up (systemd)
+        # while ssh is not ready. Wait for connection is not good either
+        # because the key is unknown.
+        - name: Wait for a while for SSH to be properly booted up
+          wait_for:
+            timeout: 120
+
+        - name: Get pubkey, and add it to known hosts
+          shell: ssh-keyscan -H {{ ses_floating_ip | quote }} >> ${HOME}/.ssh/known_hosts
+          args:
+            executable: /bin/bash
+
+    - name: Handle deletion
+      when:
+        - (ses_node_delete | default('false')) | bool
+      block:
+        - name: Delete server
+          os_server:
+            cloud: "{{ deploy_on_openstack_cloudname }}"
+            delete_fip: yes
+            name: "{{ deploy_on_openstack_sesnode_server_name }}"
+            state: absent
+            terminate_volume: yes
+            timeout: 300
+        - name: Remove host from known hosts
+          shell: "ssh-keygen -R {{ hostvars['ses-aio']['ansible_host'] | quote }}"
+          args:
+            executable: /bin/bash

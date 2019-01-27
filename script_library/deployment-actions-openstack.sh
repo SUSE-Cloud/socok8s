@@ -13,7 +13,8 @@ source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_env_vars_set
 function deploy_ses(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Starting a SES deploy"
-    ${socok8s_absolute_dir}/1_ses_node_on_openstack/create.sh
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio_instance.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio_hostconfig.yml
     echo "ses node created on openstack successfully"
     run_ansible -i inventory-ses.ini ${socok8s_absolute_dir}/2_deploy_ses_aio/play.yml
     echo "ses-ansible deploy is successful"
@@ -71,12 +72,12 @@ function clean_openstack(){
     ${socok8s_absolute_dir}/3_caasp_nodes_on_openstack_heat/delete.sh || true
     ${socok8s_absolute_dir}/3_caasp_nodes_on_openstack_manually/delete.sh || true
     echo "Delete SES node"
-    ${socok8s_absolute_dir}/1_ses_node_on_openstack/delete.sh
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio_instance.yml -e ses_node_delete=True
 }
 function clean_userfiles(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
         echo "DELETE_ANYWAY is set, deleting user files"
-        rm -rf ~/suse-osh-deploy/*
+        rm -rf ~/suse-osh-deploy/
     fi
 }
