@@ -1,9 +1,11 @@
 ---
-- name: Include global vars
-  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
-
-- name: Include repo vars
-  include_vars: "{{ playbook_dir }}/../vars/manifest.yml"
+- name: Include variables
+  include_vars: "{{ item }}"
+  loop:
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
+    - "{{ playbook_dir }}/../vars/manifest.yml"
+  tags:
+    - always
 
 - name: Install the necessary packages on the deployer node
   package:
@@ -17,7 +19,7 @@
     update: yes
     force: yes
     version: "{{ item.value.version }}"
-  loop: "{{ upstream_repos | dict2items }}"
+  loop: "{{ (upstream_repos | default({})) | dict2items }}"
   register: _gitclone
   until: _gitclone is succeeded
 
