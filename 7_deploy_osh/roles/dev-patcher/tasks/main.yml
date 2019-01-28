@@ -1,0 +1,28 @@
+---
+- name: Include global vars
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
+- name: Include repo vars
+  include_vars: "{{ playbook_dir }}/../vars/manifest.yml"
+
+- name: Install the necessary packages on the deployer node
+  package:
+    name: "{{ dev_patcher_packages }}"
+    state: present
+
+- name: Clone upstream repositories for patching
+  git:
+    repo: "{{ item.value.src }}"
+    dest: "{{ upstream_repos_clone_folder }}/{{ item.key }}"
+    update: yes
+    force: yes
+    version: "{{ item.value.version }}"
+  loop: "{{ upstream_repos | dict2items }}"
+  register: _gitclone
+  until: _gitclone is succeeded
+
+- name: Get patch details
+  include_tasks: patch-repos.yml
+  loop: "{{ dev_patcher_patches }}"
+  loop_control:
+    loop_var: patchnumber

@@ -9,7 +9,7 @@
       set_fact:
         developer_mode: "{{ (lookup('env','OSH_DEVELOPER_MODE') | default('False', true) ) | bool }}"
   roles:
-    - role: suse-dev-patcher
+    - role: dev-patcher
       when: developer_mode
 
 - hosts: osh-deployer
