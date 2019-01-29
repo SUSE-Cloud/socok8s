@@ -6,7 +6,7 @@
 - hosts: ses_nodes[0]
   gather_facts: yes
   vars:
-    suse_osh_deploy_user_variables: "~/suse-osh-deploy/user_variables.yml"
+    suse_osh_deploy_user_variables: "~/suse-osh-deploy/env/extravars"
   tasks:
     - name: Find the admin keyring b64 value
       shell: ceph auth get-key client.admin | base64

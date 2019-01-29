@@ -58,7 +58,7 @@ clouds:
     auth:
       auth_url: https://engcloud.prv.suse.net:5000/v3
       username: foctodoodle # your username here
-      password: my-super-secret-password # your password here
+      password: my-super-secret-password # your password here or add it into secure.yaml
       project_name: cloud
       project_domain_name: default
       user_domain_name: ldap_users
@@ -71,7 +71,7 @@ ansible:
 ```
 
 If you don't have the SUSE root certificate installed, check
-http://ca.suse.de/.
+http://ca.suse.de/. Or you can set `insecure: True` (not recommended).
 
 You'll also need to pre-create some configuration in engcloud. It's
 convention here to use your username as part of the name of objects you create.
@@ -132,45 +132,60 @@ If you only want to redeploy the last step, openstack-helm,
 you can run the following:
 
 ```
-# (Optional): Cleanup k8s from all previous deployment code
+### (Optional): Cleanup k8s from all previous deployment code
 ./run.sh clean_k8s
 ```
 
 ```
-# Re-deploy OpenStack-Helm
+### Re-deploy OpenStack-Helm
 ./run.sh deploy_osh
 ```
 
 # Reference: run.sh
 
-The `run.sh` script accepts two arguments in the form:
+## Actions
+
+The `run.sh` script accepts `actions` in the form of positional arguments:
 
 ```
-./run.sh <subcommand> <deploy_mechanism>
+./run.sh <action>
 ```
 
-The `<subcommand>` can be one of the following:
-* `full_deploy`: This is the default subcommand. It deploys all the
-  necessary requirements on `$deploy_mechanism`, and then deploys
-  OpenStack-Helm by calling `deploy_osh` subcommand.
+Here are the actions available:
 
-* `deploy_osh`: This subcommand runs the 'step 7' plays, deploying
-  OpenStack-Helm.
+* deploy_ses
+* deploy_caasp
+* deploy_ccp_deployer
+* enroll_caasp_workers:
+  This makes sure the caasp workers are part of the cluster, by using kubic
+  automation. It also then ensures the security groups have been removed on
+  the ports to allow the vip to exist on those nodes
+* setup_hosts:
+  This combines all the steps to deploy the requirements of an
+  socok8s deployment. In other words, it runs: deploy_ses, deploy_caasp,
+  deploy_ccp_deployer, enroll_caasp_workers.
+* patch_upstream: This allows developers (please set developer mode!) to
+  cherry-picking upstream patches on top of upstream repos.
+* build_images: This allows developer to build images for internal consumption.
+  Used in CI.
+* deploy_osh: Self explanatory.
+* setup_everything: From A to Z.
+* teardown: Destroys all the nodes in an openstack environment.
+  Removes user files.
+* clean_k8s: Removes all k8s definitions that were introduced during deployment
+  (Experimental!)
 
-* `build_deploy_osh`: This subcommand runs the 'step 7' plays, which includes
-  building Openstack-Helm images locally and deploying OpenStack-Helm.
+## env variables
 
-* `teardown`: This subcommand deletes all evidences of the deployment
-  on the `$deploy_mechanism`, and then removes all user files from
-  localhost. Destructive operation.
+`run.sh` behaviour can be modified with environment variables.
 
-* `clean_k8s`: This subcommand removes all known openstack-helm
-  deployment artifacts from the k8s cluster. It removes user content,
-  namespaces, persistent volumes, etc.  This is a destructive operation.
+`DEPLOYMENT_MECHANISM` contains the target destination of the deploy tooling.
+Currently set to `openstack` by default, but will later include a
+`baremetal` and `kvm`.
 
-The `<deploy_mechanism>` is by default "openstack".
-No alternative option is implemented yet, but we might implement a
-KVM based deployment mechanism.
+`OSH_DEVELOPER_MODE` determines if you want to enter developer mode or not.
+This adds a step for patching upstream code, builds images and then continues
+the deployment.
 
 # Reference:  architecture and inventories
 
@@ -180,7 +195,8 @@ on a CI/developer machine.
 In order to not pollute the developer/CI machine (called further
 'localhost'), all the data relevant for a deployment (like any
 eventual override) will be stored in user-space, unpriviledged
-access. Any hardware and software distribution can be used,
+access (this means the ~/suse-osh-deploy folder).
+Any hardware and software distribution can be used,
 as long as 'localhost' is able to run git, and ansible
 (see requirements). This also helps the story of running behind
 a corporate firewall: the 'developer' can be (connecting to)
@@ -192,7 +208,7 @@ This machine is named the `deployer` node.
 The `deployer` node will be in charge of running the OSH code,
 and manage the kubernetes configuration.
 
-The `deployer` node is expected to run SLE.
+The `deployer` node is expected to run SLE15 or openSUSE Leap 15.
 
 The deployer node can be the same as the `localhost`
 (developer/CI machine), but it is not a requirement.
@@ -293,7 +309,7 @@ On the deployer:
   subject to merge of PR #29]
 
 - Add suse_osh_deploy_vip_with_cidr to
-  ~/suse-osh-deploy/user_variables.yml. This should be an IP available
+  ~/suse-osh-deploy/env/extravars. This should be an IP available
   on the network you're using which can be used as a VIP.
 
 - Download the kubeconfig from Velum on the CAASP admin node and copy
@@ -311,5 +327,5 @@ On each CAASP node:
 Now you are ready to run Stage 7, as follows:
 
 ```
-ansible-playbook -v -e @~/suse-osh-deploy/user_variables.yml
+ansible-playbook -v -e @~/suse-osh-deploy/env/extravars <play>
 ```
