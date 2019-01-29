@@ -1,2 +1,3 @@
 ---
 upstream_repos_clone_folder: /opt
+developer_mode: "{{ (lookup('env','OSH_DEVELOPER_MODE') | default('False', true) ) | bool }}"
