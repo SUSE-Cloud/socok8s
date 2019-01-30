@@ -34,6 +34,9 @@ software and create local configuration.
 You need to have the following software installed:
 * ansible>=2.7.0
 * python-openstackclient
+* python-requests
+* python2-jmespath
+* ipcalc
 * jq
 * git
 
@@ -55,7 +58,7 @@ clouds:
     auth:
       auth_url: https://engcloud.prv.suse.net:5000/v3
       username: foctodoodle # your username here
-      password: my-super-secret-password # your password here
+      password: my-super-secret-password # your password here or add it into secure.yaml
       project_name: cloud
       project_domain_name: default
       user_domain_name: ldap_users
@@ -68,7 +71,7 @@ ansible:
 ```
 
 If you don't have the SUSE root certificate installed, check
-http://ca.suse.de/.
+http://ca.suse.de/. Or you can set `insecure: True` (not recommended).
 
 You'll also need to pre-create some configuration in engcloud. It's
 convention here to use your username as part of the name of objects you create.
@@ -110,7 +113,7 @@ some steps a delete.sh script is provided to clean up any created
 resources. Reconfirming that you've done all the previous steps to set
 up now will save you some time later.
 
-## Deploying
+## Run deploy on engcloud
 
 To begin a deployment from scratch, go to the root of your socok8s
 clone and run:
@@ -123,51 +126,123 @@ The default action for `run.sh` is to do a `full-deploy` on openstack.
 This means the `runi.sh` script will run each of the seven top-level
 sections of the script in order.
 
-# run.sh
-
-The `run.sh` script accepts two arguments in the form:
-
-```
-./run.sh <subcommand> <deploy_mechanism>
-```
-
-The `<subcommand>` can be one of the following:
-* `full_deploy`: This is the default subcommand. It deploys all the
-  necessary requirements on `$deploy_mechanism`, and then deploys
-  OpenStack-Helm by calling `deploy_osh` subcommand.
-
-* `deploy_osh`: This subcommand runs the 'step 7' plays, deploying
-  OpenStack-Helm.
-
-* `build_deploy_osh`: This subcommand runs the 'step 7' plays, which includes
-  building Openstack-Helm images locally and deploying OpenStack-Helm.
-
-* `teardown`: This subcommand deletes all evidences of the deployment
-  on the `$deploy_mechanism`, and then removes all user files from
-  localhost. Destructive operation.
-
-* `clean_k8s`: This subcommand removes all known openstack-helm
-  deployment artifacts from the k8s cluster. It removes user content,
-  namespaces, persistent volumes, etc.  This is a destructive operation.
-
-The `<deploy_mechanism>` is by default "openstack".
-No alternative option is implemented yet, but we might implement a
-KVM based deployment mechanism.
-
 ## Re-deploying OSH
 
 If you only want to redeploy the last step, openstack-helm,
 you can run the following:
 
 ```
-# (Optional): Cleanup k8s from all previous deployment code
+### (Optional): Cleanup k8s from all previous deployment code
 ./run.sh clean_k8s
 ```
 
 ```
-# Re-deploy OpenStack-Helm
+### Re-deploy OpenStack-Helm
 ./run.sh deploy_osh
 ```
+
+# Reference: run.sh
+
+## Actions
+
+The `run.sh` script accepts `actions` in the form of positional arguments:
+
+```
+./run.sh <action>
+```
+
+Here are the actions available:
+
+* deploy_ses
+* deploy_caasp
+* deploy_ccp_deployer
+* enroll_caasp_workers:
+  This makes sure the caasp workers are part of the cluster, by using kubic
+  automation. It also then ensures the security groups have been removed on
+  the ports to allow the vip to exist on those nodes
+* setup_hosts:
+  This combines all the steps to deploy the requirements of an
+  socok8s deployment. In other words, it runs: deploy_ses, deploy_caasp,
+  deploy_ccp_deployer, enroll_caasp_workers.
+* patch_upstream: This allows developers (please set developer mode!) to
+  cherry-picking upstream patches on top of upstream repos.
+* build_images: This allows developer to build images for internal consumption.
+  Used in CI.
+* deploy_osh: Self explanatory.
+* setup_everything: From A to Z.
+* teardown: Destroys all the nodes in an openstack environment.
+  Removes user files.
+* clean_k8s: Removes all k8s definitions that were introduced during deployment
+  (Experimental!)
+
+## env variables
+
+`run.sh` behaviour can be modified with environment variables.
+
+`DEPLOYMENT_MECHANISM` contains the target destination of the deploy tooling.
+Currently set to `openstack` by default, but will later include a
+`baremetal` and `kvm`.
+
+`OSH_DEVELOPER_MODE` determines if you want to enter developer mode or not.
+This adds a step for patching upstream code, builds images and then continues
+the deployment.
+
+# Reference:  architecture and inventories
+
+By default, it is expected these playbooks and scripts would run
+on a CI/developer machine.
+
+In order to not pollute the developer/CI machine (called further
+'localhost'), all the data relevant for a deployment (like any
+eventual override) will be stored in user-space, unpriviledged
+access (this means the ~/suse-osh-deploy folder).
+Any hardware and software distribution can be used,
+as long as 'localhost' is able to run git, and ansible
+(see requirements). This also helps the story of running behind
+a corporate firewall: the 'developer' can be (connecting to)
+a bastion host, while the real actions happen behind the firewall.
+
+This SoCok8s deployment mechanism requires therefore another
+entity, another machine, to orchestrate kubernetes commands.
+This machine is named the `deployer` node.
+The `deployer` node will be in charge of running the OSH code,
+and manage the kubernetes configuration.
+
+The `deployer` node is expected to run SLE15 or openSUSE Leap 15.
+
+The deployer node can be the same as the `localhost`
+(developer/CI machine), but it is not a requirement.
+
+The deployer node (currently) needs access to the SES machines
+through SSH to fetch the keys. In the future, this SSH connection
+might be skipped if the `localhost` have knowledge of these keys.
+
+## Example inventories and conventions
+
+In order for a deployer to bring its own inventory, we have
+defined a set of convention about inventory groupnames.
+
+* All nodes belonging to the SES deployment should be listed
+  under the `ses_nodes` group. First node in this group must
+  be a monitor node with the appropriate ceph keyrings in
+  `/etc/ceph/`.
+
+* The inventory for SES nodes is stored in `inventory-ses.ini`
+  by default.
+
+* The CI/developer machine is always named `localhost`.
+
+* The `deployer` node is listed in a group `osh-deployer`.
+  In order to not extend the length of the deployment,
+  the `osh-deployer` group should contain only one node.
+  We might support multiple `osh-deployer` nodes for
+  muliple k8s deployments later.
+
+* The inventory for the `deployer` node is stored in
+  `inventory-osh.ini` by default.
+
+* Example inventories and user variables can be found
+  in the `examples/` directory.
 
 # Deployment using KVM
 
@@ -206,7 +281,7 @@ submodules as above. In the top level of the repository, create a file
 named .ses_ip containing the IP address of your SES node. Also create
 a file named inventory-ses.ini with the following contents:
 
-ses ansible_ssh_host=<SES IP> ansible_user=root ansible_ssh_user=root
+ses ansible_host=<SES IP> ansible_user=root
 
 On the SES node, you will need to either configure SuSEfirewall2 to
 allow access to the SSH port, or disable SuSEfirewall2 entirely. Next,
@@ -234,7 +309,7 @@ On the deployer:
   subject to merge of PR #29]
 
 - Add suse_osh_deploy_vip_with_cidr to
-  ~/suse-osh-deploy/user_variables.yml. This should be an IP available
+  ~/suse-osh-deploy/env/extravars. This should be an IP available
   on the network you're using which can be used as a VIP.
 
 - Download the kubeconfig from Velum on the CAASP admin node and copy
@@ -251,4 +326,6 @@ On each CAASP node:
 
 Now you are ready to run Stage 7, as follows:
 
-ansible-playbook -vvv -e @~/suse-osh-deploy/user_variables.yml
+```
+ansible-playbook -v -e @~/suse-osh-deploy/env/extravars <play>
+```

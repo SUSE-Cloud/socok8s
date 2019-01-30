@@ -5,7 +5,7 @@ MAIN_FOLDER="$(readlink -f $(dirname ${0})/..)"
 CURRENT_FOLDER="$(readlink -f $(dirname ${0}))"
 
 # Ensure the necessary variables are set
-source ${MAIN_FOLDER}/script_library/pre-flight-checks.sh openstack_tests
+source ${MAIN_FOLDER}/script_library/pre-flight-checks.sh check_openstack_env_vars_set
 
 SERVER_NAME="${PREFIX}-osh"
 SERVER_IMAGE=${SERVER_IMAGE:-"SLES12-SP3"}
@@ -28,9 +28,9 @@ openstack server add floating ip ${SERVER_NAME} $IP_CREATE
 pushd ${MAIN_FOLDER}
     echo ${IP_CREATE} > .osh_ip
     if [ ! -f inventory-osh.ini ]; then
-        echo '[osh-deploy]' > inventory-osh.ini
+        echo '[osh-deployer]' > inventory-osh.ini
     fi
-    echo "${SERVER_NAME} ansible_ssh_host=${IP_CREATE} ansible_host=${IP_CREATE} ansible_user=root ansible_ssh_user=root" >> inventory-osh.ini
+    echo "${SERVER_NAME} ansible_host=${IP_CREATE} ansible_user=root" >> inventory-osh.ini
 
     echo "Waiting for the node to come up before scanning ssh key" && sleep 120 # 60 seconds are not enough
     ssh-keyscan -H ${IP_CREATE} >> ~/.ssh/known_hosts

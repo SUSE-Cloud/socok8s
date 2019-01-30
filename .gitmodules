@@ -4,3 +4,6 @@
 [submodule "submodules/ansible-config_template"]
 	path = submodules/ansible-config_template
 	url = https://github.com/openstack/ansible-config_template.git
+[submodule "submodules/SUSE-Cloud/automation"]
+	path = submodules/SUSE-Cloud/automation
+	url = https://github.com/SUSE-Cloud/automation.git

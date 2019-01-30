@@ -1,5 +1,5 @@
 ---
-- hosts: all:!localhost
+- hosts: ses_nodes
   gather_facts: no
   vars:
     ses_packages:
@@ -18,16 +18,19 @@
   tasks:
     - name: Configure host repositories
       raw: |
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Pool/ product;
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Updates/ SLES12-SP3-Updates;
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-Pool/ SDK-Pool;
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-Updates/ SDK-Updates;
-        zypper ar -f -G http://download.suse.de/ibs/SUSE:/CA/SLE_12_SP3/ SUSE-CA;
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-OpenStack-Cloud-8-Pool/ SUSE-OpenStack-Cloud-8-Pool;
-        zypper ar -f -G https://provo-mirror.opensuse.org/repositories/utilities/SLE_12/ SLE12-utilities;
-        zypper ar -f -G https://provo-mirror.opensuse.org/repositories/Virtualization:/containers/SLE_12_SP3/ Virtualization_containers;
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Pool/ SUSE-Enterprise-Storage-5-Pool;
-        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Updates/ SUSE-Enterprise-Storage-5-Updates;
+        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Pool/       sle12sp3-product
+        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Updates/    sle12sp3-update
+        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-Pool/    sle12sp3-sdk-product
+        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-Updates/ sle12sp3-sdk-update
+        zypper ar -f -G http://download.suse.de/ibs/SUSE:/CA/SLE_12_SP3/ SUSE-CA
+        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-OpenStack-Cloud-8-Pool/ openstackcloud-8-product
+        #TODO(evrardjp): Check if utilities/devel tools/virt/cloud8updates are really needed
+        #zypper ar -f -G https://provo-mirror.opensuse.org/repositories/utilities/SLE_12/ SLE12-utilities;
+        #zypper ar -f -G https://provo-mirror.opensuse.org/repositories/Virtualization:/containers/SLE_12_SP3/ Virtualization_containers;
+        #zypper ar -f -G  http://kirk.provo.novell.com/repositories/SUSE/Products/OpenStack-Cloud/8/x86_64/product/ openstackcloud-8-update
+        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Pool/ SES-5-product
+        zypper ar -f -G http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Updates/ SES-5-update
+        zypper ar -f -G http://download.suse.de/ibs/SUSE/Updates/SLE-Module-Containers/12/x86_64/update/ slemodulecontainers-12-update
         zypper refresh
       when:
         - "(run_in_lab | default(True)) | bool"
