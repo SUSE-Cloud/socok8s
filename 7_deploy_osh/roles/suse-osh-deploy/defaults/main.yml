@@ -74,7 +74,7 @@ suse_osh_deploy_always_redeploy: True
 # For a more surgical per component approach, use service overrides, like
 # suse_osh_deploy_cinder_yaml_overrides for cinder for example.
 suse_osh_registry_location: "docker.io"
-suse_osh_image_version: "queens"
+suse_osh_image_version: "ocata"
 
 # Default overrides
 suse_osh_deploy_cinder_yaml_overrides: {}
