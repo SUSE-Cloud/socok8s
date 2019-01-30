@@ -34,6 +34,24 @@ for NS in openstack ceph docker-registry; do
     done
 done
 
+echo "Removing dangling k8s jobs"
+kubectl get jobs -n openstack  | awk 'NR>1 {system("kubectl delete jobs -n openstack "$1" --grace-period=0 --force --ignore-not-found=true")}'
+
+echo "Removing dangling k8s replicasets"
+kubectl get replicasets -n openstack  | awk 'NR>1 {system("kubectl delete replicasets -n openstack "$1" --grace-period=0 --force --ignore-not-found=true")}'
+
+echo "Removing dangling k8s PodDisruptionBudget"
+kubectl get pdb -n openstack  | awk 'NR>1 {system("kubectl delete pdb -n openstack "$1" --grace-period=0 --force --ignore-not-found=true")}'
+
+
+echo "Removing dangling k8s pods"
+kubectl get pods -n openstack  | awk 'NR>1 {system("kubectl delete pods -n openstack "$1" --grace-period=0 --force --ignore-not-found=true")}'
+
+echo "Removing dangling k8s daemonsets"
+kubectl get daemonsets -n openstack  | awk 'NR>1 {system("kubectl delete daemonsets -n openstack "$1" --grace-period=0 --force --ignore-not-found=true")}'
+
+echo "Removing dangling k8s replicasets"
+kubectl get deployments -n openstack  | awk 'NR>1 {system("kubectl delete deployments -n openstack "$1" --grace-period=0 --force --ignore-not-found=true")}'
 
 echo "Removing suse socok8s files in /tmp"
 

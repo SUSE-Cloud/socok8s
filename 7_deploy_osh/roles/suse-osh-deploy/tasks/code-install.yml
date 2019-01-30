@@ -2,10 +2,10 @@
 - name: Clone OpenStack-Helm code repositories
   git:
     repo: "{{ item.value.src }}"
-    dest: "/opt/{{ item.key }}"
+    dest: "{{ upstream_repos_clone_folder }}/{{ item.key }}"
     update: yes
     force: yes
     version: "{{ item.value.version }}"
-  with_dict: "{{ osh_repos }}"
+  loop: "{{ upstream_repos | default({}) | dict2items }}"
   register: _gitclone
   until: _gitclone is succeeded
