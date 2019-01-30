@@ -101,7 +101,7 @@
 - name: Apply base configuration in K8s for deployments on top of CaaSP/SES
   include_tasks: apply_on_k8s.yml
   loop:
-    - action: Create namespace
+    - action: Create openstack namespace
       template_src_file: namespace.yml.j2
       templated_location: /tmp/socok8s-namespaces.yml
     - action: Create privileged ClusterRoleBinding for ServiceAccounts

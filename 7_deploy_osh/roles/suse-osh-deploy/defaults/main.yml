@@ -65,9 +65,14 @@ suse_osh_deploy_always_redeploy: True
 # registry. This change will apply to all the charts value files by
 # default, as all our own value files are including a common file
 # (files/common-images-overrides.yml) making use of those variables.
-# Local registry should still have the same groups as upstream registry
-# (kolla, openstackhelm), and the same images. Version can be overriden
-# with suse_osh_image_version for a global change.
+# Check the variables there.
+# For the registry case, the local registry should still have the same
+# groups as upstream registry (kolla, openstackhelm), and the same image names.
+# For versions, use suse_osh_image_version for a global OpenStack version change
+# accross all images (as it is defined in common-images-overrides which is
+# included in all the places).
+# For a more surgical per component approach, use service overrides, like
+# suse_osh_deploy_cinder_yaml_overrides for cinder for example.
 suse_osh_registry_location: "docker.io"
 suse_osh_image_version: "queens"
 
