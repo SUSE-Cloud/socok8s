@@ -9,9 +9,8 @@
   tags:
     - always
 
-- name: Create ses_cluster_configuration
-  set_fact:
-    ses_cluster_configuration: "{{ lookup('file', suse_osh_deploy_ses_config_path) | from_yaml }}"
+- name: Get ses_cluster_configuration
+  include_vars: "{{ suse_osh_deploy_ses_config_path }}"
   tags:
     - always
 
