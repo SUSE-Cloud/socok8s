@@ -107,6 +107,12 @@
     - action: Create privileged ClusterRoleBinding for ServiceAccounts
       template_src_file: privileged-cluster-role-binding.yml.j2
       templated_location: /tmp/socok8s-privileged-cluster-role-binding.yml
+    - action: Create ceph secrets
+      template_src_file: suse-define-ses-secrets-in-k8s.yml.j2
+      templated_location: /tmp/socok8s-ses-secrets.yml
+    - action: Create ceph storage class
+      template_src_file: suse-define-ses-storageclasses-in-k8s.yml.j2
+      templated_location: /tmp/socok8s-ses-storage-classes.yml
   tags:
     - run
 
@@ -158,12 +164,6 @@
     OSH_EXTRA_HELM_ARGS_INGRESS_CEPH: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_CEPH') | default('', True) }} --values /tmp/suse-ingress-namespace.yaml"
   tags:
     - ingress
-    - run
-
-# TODO(evrardjp): Improve idempotency
-- name: Add ceph secrets to k8s
-  include: ceph-secrets.yml
-  tags:
     - run
 
 - name: Deploy mariadb
