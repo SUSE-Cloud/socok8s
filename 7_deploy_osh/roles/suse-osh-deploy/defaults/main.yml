@@ -54,6 +54,12 @@ suse_osh_deploy_storage:
     user: admin
     pool: backups
 
+# Example SES secrets per pool.
+# This should be appearing only in your user variables.
+#suse_ses_cinder_pool_key:
+#suse_ses_cinder_backup_pool_key:
+#suse_ses_glance_pool_key:
+
 # ClusterRole to allow privileged containers
 suse_osh_deploy_privileged_cluster_role: suse:caasp:psp:privileged
 

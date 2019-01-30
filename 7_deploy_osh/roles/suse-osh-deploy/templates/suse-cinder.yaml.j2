@@ -1,7 +1,7 @@
 conf:
   ceph:
     enabled: true
-    admin_keyring: {{ ceph_admin_keyring_b64key | b64decode }}
+    admin_keyring: {{ ceph_admin_keyring_key }}
   cinder:
     DEFAULT:
       debug: true

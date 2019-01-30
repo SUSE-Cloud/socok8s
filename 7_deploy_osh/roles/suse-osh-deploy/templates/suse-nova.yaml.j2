@@ -1,9 +1,9 @@
 conf:
   ceph:
     enabled: true
-    admin_keyring: {{ ceph_admin_keyring_b64key | b64decode }}
+    admin_keyring: {{ ceph_admin_keyring_key }}
     cinder:
       user: {{ ses_cluster_configuration['cinder']['rbd_store_pool_user'] }}
-      keyring: {{ ses_cluster_configuration['cinder']['key'] }}
+      keyring: {{ suse_ses_cinder_pool_key | default(ceph_admin_keyring_key) }}
       secret_uuid: {{ libvirt_ceph_cinder_secret_uuid.stdout }}
 {{ lookup('template','files/common-images-overrides.yml') | from_yaml | to_nice_yaml(indent=2) }}
