@@ -2,10 +2,12 @@
 upstream_repos:
   openstack-helm-infra:
     src: https://git.openstack.org/openstack/openstack-helm-infra
-    version: 5da44ee3095906d97808fe73b8d0f6617cd623c7  # commit ref 4th December 2018
+    version: master
+    #version: 8662018a4dceb82a5d699d9e118caff9e5edb156  # frozen ref 9th January 2019
   openstack-helm:
     src: https://git.openstack.org/openstack/openstack-helm
-    version: 030868aee3e14122eac1d39a1bb2d154ef9c86c9  # frozen ref 4th December 2018
+    version: master
+    #version: 8935b2454414ff70388d34d6934ea54bac610353  # frozen ref 9th January 2019
   openstack-helm-images:
     src: https://github.com/openstack/openstack-helm-images
     version: master

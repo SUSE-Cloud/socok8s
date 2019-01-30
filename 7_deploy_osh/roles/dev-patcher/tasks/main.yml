@@ -28,3 +28,8 @@
   loop: "{{ dev_patcher_patches }}"
   loop_control:
     loop_var: patchnumber
+
+- name: Copy local code changes to OSH repos
+  synchronize:
+    src: "roles/dev-patcher/files/repos/"
+    dest: "{{ upstream_repos_clone_folder }}/"
