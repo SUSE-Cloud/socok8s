@@ -1,11 +1,19 @@
 ---
 # tasks file for suse-osh-deploy
-- name: Load standard variables
-  include_vars: "{{ playbook_dir }}/../common-vars.yml"
+- name: Load variables
+  include_vars: "{{ item }}"
+  loop:
+    - "{{ playbook_dir }}/../common-vars.yml"
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
+    - "{{ playbook_dir }}/../vars/manifest.yml"
+  tags:
+    - always
 
 - name: Create ses_cluster_configuration
   set_fact:
     ses_cluster_configuration: "{{ lookup('file', suse_osh_deploy_ses_config_path) | from_yaml }}"
+  tags:
+    - always
 
 - name: Load admin keyring from user_variables (required for now)
   include_vars: "{{ suse_osh_deploy_user_variables }}"
@@ -16,6 +24,8 @@
       - ceph_admin_keyring_b64key is defined
       - ceph_user_keyring_b64key is defined
       - suse_osh_deploy_vip_with_cidr is defined
+  tags:
+    - always
 
 - name: Create a list of monitors (ip and port) if no override exists for it.
   set_fact:
@@ -68,13 +78,23 @@
       {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} neutron neutron.openstack.svc.cluster.local
       {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} horizon horizon.openstack.svc.cluster.local
 
+# Developers have patched code, and don't need fetching product sources
+- name: Fetch OSH code
+  include_tasks: code-install.yml
+  when:
+    - not developer_mode
+  tags:
+    - install
+
 # NOTE: This task should stay close to code-install, so that no race condition
 # happens between the git-cloning, an eventual failure, and the building of the charts.
 - name: Build infra charts
   make:
     chdir: /opt/openstack-helm-infra
     target: all
-  when: _gitclone is changed
+  when:
+    - not developer_mode
+    - _gitclone is changed
   tags:
     - install
 
