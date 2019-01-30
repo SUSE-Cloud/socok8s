@@ -26,6 +26,14 @@
   tags:
     - always
 
+- name: Decode the secrets
+  set_fact:
+    ceph_admin_keyring_key: "{{ ceph_admin_keyring_b64key | b64decode }}"
+    ceph_user_keyring_key: "{{ ceph_user_keyring_b64key | b64decode }}"
+  no_log: True
+  tags:
+    - always
+
 - name: Create a list of monitors (ip and port) if no override exists for it.
   set_fact:
     suse_osh_deploy_ceph_mons:  "[{% for ip in ses_cluster_configuration.ceph_conf.mon_host.split(',') %}'{{ ip }}:{{ ceph_mon_port | default(6789) }}'{% if not loop.last %},{% endif %}{% endfor %}]"
