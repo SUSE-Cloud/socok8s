@@ -108,16 +108,16 @@
 - name: Apply base configuration in K8s for deployments on top of CaaSP/SES
   include_tasks: apply_on_k8s.yml
   loop:
-    - action: Create openstack namespace
+    - action: create openstack namespace
       template_src_file: namespace.yml.j2
       templated_location: /tmp/socok8s-namespaces.yml
-    - action: Create privileged ClusterRoleBinding for ServiceAccounts
+    - action: create privileged ClusterRoleBinding for ServiceAccounts
       template_src_file: privileged-cluster-role-binding.yml.j2
       templated_location: /tmp/socok8s-privileged-cluster-role-binding.yml
-    - action: Create ceph secrets
+    - action: create ceph secrets
       template_src_file: suse-define-ses-secrets-in-k8s.yml.j2
       templated_location: /tmp/socok8s-ses-secrets.yml
-    - action: Create ceph storage class
+    - action: create ceph storage class
       template_src_file: suse-define-ses-storageclasses-in-k8s.yml.j2
       templated_location: /tmp/socok8s-ses-storage-classes.yml
   tags:
@@ -181,12 +181,6 @@
     _cmpnt_runcommand: "./tools/deployment/multinode/050-mariadb.sh"
   environment:
     OSH_EXTRA_HELM_ARGS_MARIADB: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_MARIADB') | default('', True) }} --values /tmp/suse-mariadb.yaml"
-
-- name: Create privileged ClusterRoleBinding for ServiceAccounts
-  include: privileged-cluster-role-binding.yml
-  tags:
-    - mariadb
-    - run
 
 - name: Deploy rabbitmq
   import_tasks: component-install.yml
