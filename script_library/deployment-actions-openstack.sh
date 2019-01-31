@@ -31,7 +31,7 @@ function enroll_caasp_workers() {
     echo "Enrolling caasp worker nodes into the cluster"
     run_ansible -i inventory-osh.ini ${socok8s_absolute_dir}/5_automate_caasp_enroll/play.yml
     echo "Run series of checks"
-    run_ansible -i inventory-osh.ini ${socok8s_absolute_dir}/6_preflight_checks/checks.yml
+    run_ansible -i inventory-osh.ini ${socok8s_absolute_dir}/6_preflight_checks/play.yml
     echo "Ensure CaaSP workers are ready for OSH"
     run_ansible -i inventory-osh.ini -t workersetup ${socok8s_absolute_dir}/7_deploy_osh/play.yml
 }
