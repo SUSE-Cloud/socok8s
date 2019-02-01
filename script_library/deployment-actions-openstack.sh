@@ -8,10 +8,10 @@ set -o errexit
 
 echo "Deploying on OpenStack"
 
-source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
 source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_env_vars_set
 
 function deploy_ses(){
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Starting a SES deploy"
     ${socok8s_absolute_dir}/1_ses_node_on_openstack/create.sh
     echo "ses node created on openstack successfully"
@@ -19,11 +19,13 @@ function deploy_ses(){
     echo "ses-ansible deploy is successful"
 }
 function deploy_caasp(){
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Starting caasp deploy"
     ${socok8s_absolute_dir}/3_caasp_nodes_on_openstack_heat/create.sh
     echo "CaaSP deployed successfully"
 }
 function deploy_ccp_deployer() {
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Creating CCP deploy node"
     ${socok8s_absolute_dir}/4_osh_node_on_openstack/create.sh
 }
