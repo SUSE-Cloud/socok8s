@@ -20,6 +20,10 @@ for NS in openstack ceph nfs; do
     kubectl get job -n ${NS} -o name | xargs kubectl delete -n ${NS}  --ignore-not-found=true
 done
 
+# Remove extra data
+kubectl delete clusterrolebinding PrivilegedRoleBinding
+kubectl delete clusterrolebinding NonResourceUrlRoleBinding
+kubectl delete clusterrolebinding ingress-kube-system-ingress
 
 rm -rf /var/lib/openstack-helm/*
 rm -rf /var/lib/nova/*
