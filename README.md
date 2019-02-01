@@ -179,7 +179,7 @@ Here are the actions available:
 * deploy_osh: Self explanatory.
 * setup_everything: From A to Z.
 * teardown: Destroys all the nodes in an openstack environment.
-  Removes user files.
+  Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace.
 * clean_k8s: Removes all k8s definitions that were introduced during deployment
   (Experimental!)
 

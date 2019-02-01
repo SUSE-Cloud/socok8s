@@ -58,6 +58,7 @@ function teardown(){
 function clean_k8s(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
+        echo "DELETE_ANYWAY is set, cleaning up k8s"
         ansible -m script -a "script_library/cleanup-k8s.sh" osh-deployer -i inventory-osh.ini
     fi
 }
@@ -71,8 +72,9 @@ function clean_openstack(){
     ${socok8s_absolute_dir}/1_ses_node_on_openstack/delete.sh
 }
 function clean_userfiles(){
-    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to delete everything in your userspace."
+    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
+        echo "DELETE_ANYWAY is set, deleting user files"
         rm -rf ~/suse-osh-deploy/*
     fi
 }
