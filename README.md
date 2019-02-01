@@ -84,6 +84,7 @@ keypair (which appears as `foctodoodle-key` in the example below)
 Now create a network, a subnet, a router and a connection to the floating network:
 
 ```
+export OS_CLOUD=engcloud
 export PREFIX=foctodoodle
 openstack network create ${PREFIX}-net
 openstack subnet create --network ${PREFIX}-net --subnet-range 192.168.100.0/24 ${PREFIX}-subnet
@@ -96,7 +97,7 @@ Define the following environment variables prior to running the
 socok8s scripts:
 
 ```
-# assuming you followed the example
+# assuming you followed the example for clouds.yaml
 export OS_CLOUD=engcloud
 # the name of the keypair you created
 export KEYNAME=foctodoodle-key
@@ -104,7 +105,7 @@ export KEYNAME=foctodoodle-key
 # objects you create in engcloud
 export PREFIX=foctodoodle
 # the name of the subnet you created
-export INTERNAL_SUBNET=foctodoodle-subnet
+export INTERNAL_SUBNET=${PREFIX}-subnet
 ```
 
 Prior to executing scripts, be aware that you may need to do some
