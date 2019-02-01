@@ -195,6 +195,10 @@ Currently set to `openstack` by default, but will later include a
 This adds a step for patching upstream code, builds images and then continues
 the deployment.
 
+`OSH_BUILD_LOCAL_IMAGES` determines if you want to use locally build images
+in your osh deployment step. You must make sure that build_images step
+has been executed first to populate images in local registry server.
+
 # Reference: Architecture and inventories
 
 By default, it is expected these playbooks and scripts would run

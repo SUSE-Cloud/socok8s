@@ -59,6 +59,7 @@ case "$deployment_action" in
         build_images
         ;;
     "deploy_osh")
+        patch_upstream
         deploy_osh
         ;;
     "setup_everything")

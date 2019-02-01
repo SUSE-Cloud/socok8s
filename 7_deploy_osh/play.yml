@@ -1,5 +1,13 @@
 ---
 
+- hosts: osh-deploy-cp,osh-deployer
+  gather_facts: yes
+  any_errors_fatal: true
+  roles:
+    - role: suse-osh-setup
+      tags:
+        - workersetup
+
 - hosts: osh-deployer
   gather_facts: yes
   any_errors_fatal: true
@@ -28,14 +36,6 @@
       when:
         - developer_mode
         - build_osh_images | default('False') | bool
-
-- hosts: osh-deploy-cp
-  gather_facts: yes
-  any_errors_fatal: true
-  roles:
-    - role: suse-osh-setup
-      tags:
-        - workersetup
 
 - hosts: osh-deployer
   gather_facts: yes

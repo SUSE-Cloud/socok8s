@@ -1,0 +1,16 @@
+---
+
+- name: Stop and remove local insecure docker registry
+  shell: |
+    docker stop {{ local_registry_name }}
+    docker rm {{ local_registry_name }}
+
+- name: Clean docker insecure setting in docker daemon
+  file:
+    state: absent
+    path: "/etc/docker/daemon.json"
+
+- name: Restart docker service as docker daemon conf file is updated.
+  service:
+    name: docker
+    state: restarted

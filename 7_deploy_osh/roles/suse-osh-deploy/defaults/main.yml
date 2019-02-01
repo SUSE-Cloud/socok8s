@@ -68,8 +68,18 @@ suse_osh_deploy_always_redeploy: True
 # Local registry should still have the same groups as upstream registry
 # (kolla, openstackhelm), and the same images. Version can be overriden
 # with suse_osh_image_version for a global change.
-suse_osh_registry_location: "docker.io"
-suse_osh_image_version: "queens"
+suse_osh_registry_location: "{%- (lookup('env','OSH_BUILD_LOCAL_IMAGES') | default('False', true) ) | bool -%}
+                               {{ ansible_hostname }}:5000
+                             {%- else -%}
+                               docker.io
+                             {%- endif -%}"
+suse_osh_registry_location: "{%- (lookup('env','OSH_BUILD_LOCAL_IMAGES') | default('False', true) ) | bool -%}
+                               latest-queens-suse_15
+                             {%- else -%}
+                               queens
+                             {%- endif -%}"
+upstream_osh_registry_location: "docker.io"
+upstream_osh_image_version: "queens"
 
 # Default overrides
 suse_osh_deploy_cinder_yaml_overrides: {}

@@ -5,3 +5,14 @@
 kubeconfig_file_path: "~/suse-osh-deploy/kubeconfig"
 
 suse_cp_node_create_subvolume: false
+
+local_registry_name: "{{ ansible_hostname }}"
+local_registry_port: 5000
+
+suse_setup_insecure_registry: false
+suse_registry_certs_dir: "/certs"
+suse_registry_create_certs: true
+
+suse_registry_setup_packages:
+  - docker
+  - python-pyOpenSSL
