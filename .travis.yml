@@ -1,0 +1,16 @@
+language: python
+cache: pip
+dist: xenial
+
+matrix:
+  include:
+    - name: "shell syntax"
+      script: find . -path "./submodules" -prune -o -type f -name "*.sh" -print | xargs -n1 shellcheck -x --format=gcc
+    - name: "playbook syntax"
+      script: ansible-lint */*.yml
+  allow_failures:
+    - name: "shell syntax"
+    - name: "playbook syntax"
+
+install:
+  - pip install ansible-lint
