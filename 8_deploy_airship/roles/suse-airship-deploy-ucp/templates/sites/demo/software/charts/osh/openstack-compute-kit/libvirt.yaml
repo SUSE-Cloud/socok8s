@@ -1,0 +1,32 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: libvirt-ccp
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: libvirt-global
+      component: libvirt
+    actions:
+      - method: replace
+        path: .values
+  storagePolicy: cleartext
+data:
+  values:
+    labels:
+      agent:
+        libvirt:
+          node_selector_key: openstack-compute-node
+          node_selector_value: enabled
+    conf:
+      ceph:
+        enabled: true
+        monitors: 172.16.1.17:6789
+        admin_keyring: AQC1vztcAAAAABAARJjHnbF8TZnnTO/TWPDNtw==
+        cinder:
+          user: admin
+          keyring: AQC1vztcAAAAABAARJjHnbF8TZnnTO/TWPDNtw==
+          secret_uuid: 76f12f7a-16a6-11e9-864e-52540033f343
+...

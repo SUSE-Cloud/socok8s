@@ -1,0 +1,49 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-ceph-config-ccp
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-ceph-config-global
+      component: ceph-config
+    actions:
+      - method: merge
+        path: .
+      - method: replace
+        path: .values.storageclass
+      - method: replace
+        path: .values.manifests
+  storagePolicy: cleartext
+data:
+  values:
+    deployment:
+      ceph: false
+      client_secrets: true
+      rbd_provisioner: false
+      cephfs_provisioner: false
+    storageclass:
+      rbd:
+        provision_storage_class: false
+      cephfs:
+        provision_storage_class: false
+    conf:
+      ceph:
+        global:
+          mon_host: {{ suse_airship_deploy_ceph_mons }}
+    manifests:
+      configmap_bin: false
+      configmap_bin_common: false
+      configmap_etc: true
+      deployment_rbd_provisioner: false
+      deployment_cephfs_provisioner: false
+      job_bootstrap: false
+      job_cephfs_client_key: false
+      job_image_repo_sync: false
+      job_namespace_client_key_cleaner: false
+      job_namespace_client_key: false
+      storageclass_cephfs: false
+      storageclass_rbd: false
+...

@@ -1,0 +1,34 @@
+---
+# defaults file for suse-airship-deploy
+
+# Location of the kubeconfig file, fetched from velum UI.
+kubeconfig_file_path: "~/suse-airship-deploy/kubeconfig"
+
+suse_airship_deploy_packages:
+  - ca-certificates
+  - make
+  - jq
+  - nmap
+  - uuid-runtime
+  - docker
+  - curl
+
+suse_airship_deploy_python_libs:
+  - "cmd2<=0.8.7"
+  - python-openstackclient
+  - python-heatclient
+
+# Keep this until helm is packaged as rpm
+helm_download_url: "https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"
+
+# OpenStack-Helm repos, frozen on 9th November 2018
+airship_repos:
+  openstack-helm-infra:
+    src: https://git.openstack.org/openstack/openstack-helm-infra.git
+    version: b55e9b10a72ce5531ae22f15f953b2eb71e6f623
+  openstack-helm:
+    src: https://git.openstack.org/openstack/openstack-helm.git
+    version: 4f94593e870ac879b2d01300cb02485ace58b3ac
+
+ucp_keystone_admin_password: 'password'
+openstack_keystone_admin_password: 'password123'

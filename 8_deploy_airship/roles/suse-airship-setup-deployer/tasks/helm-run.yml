@@ -1,0 +1,63 @@
+---
+# Inspired by https://github.com/openstack/openstack-helm-infra/blob/master/roles/build-helm-packages/tasks/setup-helm-serve.yaml
+- block:
+    - name: checking if local helm server is running
+      wait_for:
+        delay: 5
+        timeout: 10
+        host: 127.0.0.1
+        port: 8879
+        state: started
+        msg: "Failure to connect on helm server -- Attempting automatic recovery"
+      register: _server_running
+
+    - name: Check port 8879 is running a helm repository
+      uri:
+        url: http://127.0.0.1:8879
+        return_content: yes
+      register: this
+      failed_when: "'Helm Repository' not in this.content"
+
+  rescue:
+    - name: Fixing previous failure - moving systemd unit into place for helm server
+      template:
+        src: helm-serve.service.j2
+        dest: /etc/systemd/system/helm-serve.service
+        mode: 0640
+
+    - name: Fixing previous failure - starting helm serve service
+      systemd:
+        state: restarted
+        daemon_reload: yes
+        name: helm-serve
+        enabled: yes
+
+    - name: Check if helm server is up now
+      wait_for:
+        delay: 5
+        host: 127.0.0.1
+        port: 8879
+        state: started
+
+    - name: Check port 8879 is running a helm repository
+      uri:
+        url: http://127.0.0.1:8879
+        return_content: yes
+      register: this
+      failed_when: "'Helm Repository' not in this.content"
+
+  always:
+    - name: Checking helm repos
+      shell: helm repo list | grep 'http://localhost'
+      register: _helmrepolist
+      changed_when: false
+      failed_when: false
+      args:
+        executable: /bin/bash
+
+    - name: Adding helm repos
+      shell: helm repo add localhost http://localhost:8879/charts
+      when:
+        - _helmrepolist.rc != 0
+      args:
+        executable: /bin/bash

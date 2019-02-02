@@ -1,0 +1,28 @@
+---
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: full-site
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: full-site-global
+    actions:
+      - method: replace
+        path: .chart_groups
+  storagePolicy: cleartext
+data:
+  release_prefix: airship
+  chart_groups:
+    - openstack-ingress-controller-ccp
+    - openstack-mariadb-ccp
+    - openstack-memcached
+    - openstack-keystone-ccp
+    - openstack-ceph-config-ccp
+    - openstack-glance-ccp
+    - openstack-compute-kit-ccp
+    - openstack-heat-ccp
+    - openstack-horizon-ccp
+...

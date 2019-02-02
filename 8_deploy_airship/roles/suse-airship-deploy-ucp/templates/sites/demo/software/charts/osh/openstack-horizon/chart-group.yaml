@@ -1,0 +1,18 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-horizon-ccp
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-horizon-chart-group-global
+      component: horizon
+    actions:
+      - method: replace
+        path: .chart_group
+  storagePolicy: cleartext
+data:
+  chart_group:
+    - openstack-horizon-ccp

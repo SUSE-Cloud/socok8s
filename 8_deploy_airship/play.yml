@@ -1,0 +1,44 @@
+---
+
+- hosts: airship-deployer
+  gather_facts: yes
+  any_errors_fatal: true
+  roles:
+    - role: suse-airship-setup-deployer
+
+#- hosts: airship-deployer
+#  gather_facts: yes
+#  any_errors_fatal: true
+#  roles:
+#    - suse-dev-patcher
+
+- hosts: airship-workers
+  gather_facts: yes
+  any_errors_fatal: true
+  roles:
+    - role: suse-airship-configure-worker
+
+- hosts: airship-deployer
+  gather_facts: yes
+  any_errors_fatal: true
+  roles:
+    - role: suse-build-images
+      when: build_airship_images | default('False') | bool
+
+- hosts: airship-deployer
+  gather_facts: yes
+  any_errors_fatal: true
+  roles:
+    - role: suse-airship-configure-caasp
+
+- hosts: airship-deployer
+  gather_facts: yes
+  any_errors_fatal: true
+  roles:
+    - suse-airship-configure-ceph
+
+- hosts: airship-deployer
+  gather_facts: yes
+  any_errors_fatal: true
+  roles:
+    - suse-airship-deploy-ucp

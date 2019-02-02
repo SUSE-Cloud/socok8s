@@ -1,0 +1,33 @@
+---
+# tasks file for suse-airship-deploy
+- name: Load standard variables
+  include_vars: "{{ playbook_dir }}/../common-vars.yml"
+
+- name: Load admin keyring from user_variables (required for now)
+  include_vars: "{{ suse_airship_deploy_user_variables }}"
+
+- name: Copy namespace yaml
+  template:
+    src: "namespaces.yml.j2"
+    dest: "/tmp/namespaces.yaml"
+    mode: "0600"
+  tags:
+    - run
+
+- name: create namespaces in CaaSP
+  command: "kubectl apply -f /tmp/namespaces.yaml --overwrite=true"
+  tags:
+    - run
+
+- name: Create privileged ClusterRoleBinding yaml
+  template:
+    src: "privileged-cluster-role-binding.yml.j2"
+    dest: "/tmp/privileged-cluster-role-binding.yml"
+    mode: "0600"
+  tags:
+    - run
+
+- name: Create privileged ClusterRoleBinding in CaaSP
+  command: "kubectl apply -f /tmp/privileged-cluster-role-binding.yml --overwrite=true"
+  tags:
+    - run

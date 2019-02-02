@@ -1,0 +1,31 @@
+---
+- name: Install system packages for dev patcher
+  package:
+    name: "{{ suse_dev_patcher_packages }}"
+    state: present
+  register: install_packages
+  until: install_packages is success
+  retries: 5
+  delay: 2
+  tags:
+    - install
+
+# TODO(arunkant): Remove this pip package install in SCRD-6151 when a venv for bootstrap is provided
+- name: Install pip packages needed for ansible filters usage later
+  pip:
+    name:
+      - netaddr
+      - jmespath
+
+- name: Clone required erepos
+  import_tasks: clone-repos.yml
+  tags:
+    - run
+
+- name: Apply upstream reviews in flight to OSH related repos
+  include_tasks: patch-review-repos.yml
+  with_items: "{{ osh_patchsets | default({}) }}"
+  loop_control:
+    loop_var: review_site
+  tags:
+    - run

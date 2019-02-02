@@ -1,0 +1,52 @@
+---
+# tasks file for suse-airship-deploy
+- name: Load standard variables
+  include_vars: "{{ playbook_dir }}/../common-vars.yml"
+
+- name: Create site directory
+  file:
+    path: "{{ suse_airship_deploy_config_location }}/site"
+    state: directory
+
+- debug:
+    msg: "./sites/{{ suse_airship_deploy_site_name }}"
+
+#- name: Collect site template files
+#  find:
+#    paths: "./sites/{{ suse_airship_deploy_site_name }}"
+#    patterns: '*.*'
+#  register: site_template_files
+
+#- debug:
+#    msg: "{{ item.path }}"
+#  with_items: "{{ site_template_files.files }}"
+
+#- name: Create site manifests
+#  template:
+#    src: "{{ item.path }}"
+#    dest: "{{ suse_airship_deploy_config_location }}/site/"
+#  with_items: "{{ site_template_files.files }}"
+
+- name: Create site manifest directory
+  file:
+    path: '{{ suse_airship_deploy_config_location }}/site/{{ item.path }}'
+    state: directory
+  with_filetree: '{{ role_path }}/templates/sites/{{ suse_airship_deploy_site_name }}'
+  when: item.state == 'directory'
+
+#TODO JG only template the j2 and copy the rest - slight perf imrpovement
+- name: Create site manifest yamls
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ suse_airship_deploy_config_location }}/site/{{ item.path }}'
+  with_filetree: '{{ role_path }}/templates/sites/{{ suse_airship_deploy_site_name }}'
+  when: item.state == 'file'
+
+#- name: Build infra charts
+#  make:
+#    chdir: /opt/openstack-helm-infra
+#    target: all
+#  when: _gitclone is changed
+#  tags:
+#    - install
+

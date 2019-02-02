@@ -1,0 +1,25 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-compute-kit-ccp
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-compute-kit-chart-group-global
+    actions:
+      - method: merge
+        path: .sequenced
+      - method: replace
+        path: .chart_group
+  storagePolicy: cleartext
+data:
+  sequenced: false
+  chart_group:
+    - libvirt-ccp
+    - openvswitch
+    - neutron-rabbitmq-ccp
+    - nova-rabbitmq-ccp
+    - neutron-ccp
+    - nova

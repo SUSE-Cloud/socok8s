@@ -1,0 +1,5 @@
+---
+
+# Set this to false if you want to speed up your builds or do partial upgrades
+suse_airship_deploy_always_redeploy: True
+
