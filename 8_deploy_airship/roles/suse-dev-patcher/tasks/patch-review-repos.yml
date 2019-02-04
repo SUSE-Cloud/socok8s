@@ -10,7 +10,7 @@
       git cherry-pick FETCH_HEAD
     fi
   args:
-      chdir: "{{ devenv_root }}/{{ item.0.repo_ref }}"
+      chdir: "{{ suse_airship_deploy_repo_location }}/{{ item.0.repo_ref }}"
   with_subelements:
     - "{{ review_site.repo_refs | default({}) }}"
     - review_numbers

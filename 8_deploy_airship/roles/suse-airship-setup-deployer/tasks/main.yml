@@ -91,10 +91,10 @@
 - name: Clone Airship code repositories
   git:
     repo: "{{ item.value.src }}"
-    dest: "/opt/socok8s/{{ item.key }}"
+    dest: "{{ suse_airship_deploy_repo_location }}/{{ item.key }}"
     update: yes
     force: yes
-    version: "{{ item.value.version }}"
+    version: "{{ item.value.version | default('HEAD') }}"
   with_dict: "{{ airship_repos }}"
   register: _gitclone
   until: _gitclone is succeeded

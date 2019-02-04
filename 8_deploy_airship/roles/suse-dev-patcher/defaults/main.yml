@@ -1,8 +1,6 @@
 ---
 # defaults file for suse-dev-patcher
 
-devenv_root: /opt
-
 suse_dev_patcher_packages:
   - autoconf
   - git
@@ -10,6 +8,15 @@ suse_dev_patcher_packages:
   - curl
 
 airship_repos:
+  airship-armada:
+    src: https://git.openstack.org/openstack/airship-armada.git
+  airship-shipyard:
+    src: https://git.openstack.org/openstack/airship-shipyard.git
+  airship-deckhand:
+    src: https://git.openstack.org/openstack/airship-deckhand.git
+  airship-pegleg:
+    src: https://git.openstack.org/openstack/airship-pegleg.git
+
   openstack-helm-infra:
     src: https://git.openstack.org/openstack/openstack-helm-infra
     version: 5da44ee3095906d97808fe73b8d0f6617cd623c7  # commit ref 4th December 2018

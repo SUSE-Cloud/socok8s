@@ -58,12 +58,20 @@
       stat:
         path: "{{ kubeconfig_file_path }}"
       delegate_to: localhost
+      register: new_config
+
+    - name: Find if an existing .kube/config file
+      stat:
+        path: "{{ ansible_user_dir }}/.kube/config"
+      delegate_to: localhost
+      register: old_config
 
     - name: Copy local runner kubeconfig file to deploy node
       copy:
         src: "{{ kubeconfig_file_path }}"
         dest: "{{ ansible_user_dir }}/.kube/config"
         mode: "0600"
+      when: new_config.stat.exists and (old_config.stat.exists == False or old_config.stat.mtime < new_config.stat.mtime)
 
 - name: Test kubectl
   shell: "kubectl cluster-info"

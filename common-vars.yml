@@ -1,4 +1,6 @@
 ---
-suse_airship_deploy_config_location: "~/suse-airship-deploy"
+suse_airship_deploy_home: "/opt/suse-airship-deploy"
+suse_airship_deploy_repo_location: "{{ suse_airship_deploy_home }}/repos"
+suse_airship_deploy_config_location: "{{ suse_airship_deploy_home }}"
 suse_airship_deploy_user_variables: "{{ suse_airship_deploy_config_location }}/env/extravars"
 suse_airship_deploy_ses_config_path: "{{ suse_airship_deploy_config_location }}/ses_config.yml"
