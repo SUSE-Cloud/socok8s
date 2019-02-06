@@ -9,6 +9,9 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 subjects:
 - kind: ServiceAccount
+  name: cinder-volume
+  namespace: openstack
+- kind: ServiceAccount
   name: cinder-backup
   namespace: openstack
 - kind: ServiceAccount
