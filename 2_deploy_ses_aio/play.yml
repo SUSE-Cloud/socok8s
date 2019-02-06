@@ -24,7 +24,7 @@
     ses_openstack_config: True
 
 - name: Import SES configs
-  hosts: ses_nodes[0]
+  hosts: ses_nodes:ses
   remote_user: root
   gather_facts: false
   roles:

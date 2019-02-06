@@ -6,11 +6,11 @@
   roles:
     - role: suse-airship-setup-deployer
 
-#- hosts: airship-deployer
-#  gather_facts: yes
-#  any_errors_fatal: true
-#  roles:
-#    - suse-dev-patcher
+- hosts: airship-deployer
+  gather_facts: yes
+  any_errors_fatal: true
+  roles:
+    - dev-patcher
 
 - hosts: airship-workers
   gather_facts: yes
@@ -35,10 +35,10 @@
   gather_facts: yes
   any_errors_fatal: true
   roles:
-    - suse-airship-configure-ceph
+    - role: suse-airship-configure-ceph
 
 - hosts: airship-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:
-    - suse-airship-deploy-ucp
+    - role: suse-airship-deploy-ucp

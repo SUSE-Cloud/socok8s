@@ -12,7 +12,7 @@
     content: "{{ item.content | b64decode }}"
     mode: 0644
   with_items:
-    - "{{ hostvars[groups['ses_nodes'][0]].ceph_files.results }}"
+    - "{{ hostvars['ses'].ceph_files.results }}"
 
 - name: Generate ses-config.yml
   delegate_to: localhost

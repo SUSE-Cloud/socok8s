@@ -12,3 +12,15 @@ upstream_repos:
   loci:
     src: https://github.com/openstack/loci
     version: master
+  airship-armada:
+    src: https://git.openstack.org/openstack/airship-armada.git
+    version: master
+  airship-shipyard:
+    src: https://git.openstack.org/openstack/airship-shipyard.git
+    version: master
+  airship-deckhand:
+    src: https://git.openstack.org/openstack/airship-deckhand.git
+    version: master
+  airship-pegleg:
+    src: https://git.openstack.org/openstack/airship-pegleg.git
+    version: master

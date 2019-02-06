@@ -38,6 +38,10 @@ function deploy_osh(){
     echo "Now deploy SUSE version of OSH"
     run_ansible -i inventory-osh.ini -t deploy ${socok8s_absolute_dir}/7_deploy_osh/play.yml
 }
+function deploy_airship(){
+    echo "Now deploy SUSE version of Airship"
+    run_ansible -i inventory-airship.ini ${socok8s_absolute_dir}/8_deploy_airship/play.yml
+}
 function clean_k8s(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
