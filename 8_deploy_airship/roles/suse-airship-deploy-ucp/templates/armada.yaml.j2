@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: armada
+  namespace: {{ ucp_namespace_name }}
+  labels:
+    app: armada
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: armada
+  template:
+    metadata:
+      labels:
+        app: armada
+    spec:
+      serviceAccountName: armada
+      containers:
+      - name: armada
+        image: quay.io/airshipit/armada:latest
+        ports:
+        - containerPort: 8000
