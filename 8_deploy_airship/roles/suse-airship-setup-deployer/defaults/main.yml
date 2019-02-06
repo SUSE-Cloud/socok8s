@@ -31,6 +31,8 @@ airship_repos:
     src: https://git.openstack.org/openstack/airship-deckhand.git
   airship-pegleg:
     src: https://git.openstack.org/openstack/airship-pegleg.git
+  airship-treasuremap:
+    src: https://git.openstack.org/openstack/airship-treasuremap.git
   openstack-helm-infra:
     src: https://git.openstack.org/openstack/openstack-helm-infra.git
     version: b55e9b10a72ce5531ae22f15f953b2eb71e6f623

@@ -3,50 +3,142 @@
 - name: Load standard variables
   include_vars: "{{ playbook_dir }}/../common-vars.yml"
 
-- name: Create site directory
-  file:
-    path: "{{ suse_airship_deploy_config_location }}/site"
-    state: directory
-
-- debug:
-    msg: "./sites/{{ suse_airship_deploy_site_name }}"
-
-#- name: Collect site template files
-#  find:
-#    paths: "./sites/{{ suse_airship_deploy_site_name }}"
-#    patterns: '*.*'
-#  register: site_template_files
-
-#- debug:
-#    msg: "{{ item.path }}"
-#  with_items: "{{ site_template_files.files }}"
-
-#- name: Create site manifests
-#  template:
-#    src: "{{ item.path }}"
-#    dest: "{{ suse_airship_deploy_config_location }}/site/"
-#  with_items: "{{ site_template_files.files }}"
+- set_fact: 
+    site_path: "{{ suse_airship_deploy_home }}/sites/{{ suse_airship_deploy_site_name }}"
 
 - name: Create site manifest directory
   file:
-    path: '{{ suse_airship_deploy_config_location }}/site/{{ item.path }}'
+    path: '{{ site_path }}/{{ item.path }}'
     state: directory
   with_filetree: '{{ role_path }}/templates/sites/{{ suse_airship_deploy_site_name }}'
   when: item.state == 'directory'
+  tags:
+    - install
 
-#TODO JG only template the j2 and copy the rest - slight perf imrpovement
+#TODO JG refactor overrides
 - name: Create site manifest yamls
   template:
     src: '{{ item.src }}'
-    dest: '{{ suse_airship_deploy_config_location }}/site/{{ item.path }}'
+    dest: '{{ site_path }}/{{ item.path }}'
   with_filetree: '{{ role_path }}/templates/sites/{{ suse_airship_deploy_site_name }}'
   when: item.state == 'file'
+  tags:
+    - install
 
-#- name: Build infra charts
-#  make:
-#    chdir: /opt/openstack-helm-infra
-#    target: all
-#  when: _gitclone is changed
+- name: Build Armada image
+  make:
+    chdir: "{{ suse_airship_deploy_repo_location }}/airship-armada"
+    target: images
+  when: _gitclone is changed
+  tags:
+    - install
+
+- name: Build Shipyard and Deckhand charts
+  make:
+    chdir: "{{ suse_airship_deploy_repo_location }}/{{ item }}"
+    target: all
+  when: _gitclone is changed
+  loop:
+    - airship-shipyard
+    - airship-deckhand
+  tags:
+    - install
+
+- name: Create Armada cluster role binding yaml
+  template:
+    src: ./armada-cluster-role-binding.yaml.j2
+    dest: "{{ suse_airship_deploy_config_location }}/armada-cluster-role-binding.yaml"
+  tags:
+    - install
+
+- name: Apply Armada cluster role binding
+  shell: "kubectl apply -f {{ suse_airship_deploy_config_location }}/armada-cluster-role-binding.yaml"
+  tags:
+    - install
+
+- name: Create Armada deployment yaml
+  template:
+    src: ./armada.yaml.j2
+    dest: "{{ suse_airship_deploy_config_location }}/armada.yaml"
+  tags:
+    - install
+
+- name: Deploy Armada pod to CaaSP
+  shell: "kubectl apply -f {{ suse_airship_deploy_config_location }}//armada.yaml"
+  tags:
+    - install
+
+- name: Get Armada pod name 
+  shell: 'kubectl get pod -l app=armada -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
+  register: armada_results
+  until: armada_results.stdout.find('armada-') == 0
+  retries: 60
+  delay: 10
+  ignore_errors: yes
+
+- set_fact: armada_pod_name={{ armada_results.stdout }}
+
+- debug:
+    msg: "Armada pod found: {{ armada_pod_name }}"
+
+    #checking ready appears to be sufficient JG
+    #- name: Wait until Armada pod is running
+    #  shell: "kubectl get pod {{ armada_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.phase}'"
+    #  register: armada_pod_status
+    #  until: armada_pod_status.stdout_lines == "Running"
+    #  retries: 60
+    #  delay: 15
+    #  ignore_errors: yes
+
+- name: Wait until Armada pod is ready
+  shell: "kubectl get pod {{ armada_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
+  register: armada_pod_status
+  until: armada_pod_status.stdout == "true"
+  retries: 30
+  delay: 10
+  ignore_errors: yes
+
+- file:
+    path: "{{ suse_airship_deploy_config_location }}/manifests"
+    state: directory
+  tags:
+    - install
+
+- name: Create airship ucp manifest
+  template:
+    src: ./airship.yaml.j2
+    dest: "{{ suse_airship_deploy_config_location }}/manifests/airship.yaml"
+  tags:
+    - install
+
+- name: Copy Airship UCP content to Armada pod
+  command: "{{ item }}"
+  loop:
+    - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada
+    - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/.kube
+    - kubectl cp ~/.kube/config {{ armada_pod_name }}:/armada/.kube/config -n ucp
+    - kubectl cp  {{ suse_airship_deploy_config_location }}/manifests {{ armada_pod_name }}:/armada -n ucp
+    - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/airship-components
+    - kubectl cp {{ suse_airship_deploy_repo_location }}/airship-armada {{ armada_pod_name }}:/armada/airship-components/ -n ucp
+    - kubectl cp {{ suse_airship_deploy_repo_location }}/airship-deckhand {{ armada_pod_name }}:/armada/airship-components/ -n ucp
+    - kubectl cp {{ suse_airship_deploy_repo_location }}/airship-pegleg {{ armada_pod_name }}:/armada/airship-components/ -n ucp
+    - kubectl cp {{ suse_airship_deploy_repo_location }}/airship-shipyard {{ armada_pod_name }}:/armada/airship-components/ -n ucp
+    - kubectl cp {{ suse_airship_deploy_repo_location }}/openstack-helm {{ armada_pod_name }}:/armada/airship-components/ -n ucp
+    - kubectl cp {{ suse_airship_deploy_repo_location }}/openstack-helm-infra {{ armada_pod_name }}:/armada/airship-components/ -n ucp
+  tags:
+    - install
+
+#TODO JG check if ucp deployment is ready
+#- name: Deploy Airship UCP
+#  shell: 'kubectl exec {{ armada_pod_name }} -n ucp -- armada apply /armada/manifests/airship.yaml'
 #  tags:
 #    - install
+
+      #- name: Wait until Shipyard is ready
+      #shell: "kubectl get pod {{ armada_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
+      #register: armada_pod_status
+      #until: armada_pod_status.stdout_lines == "true"
+      #retries: 60
+      #delay: 15
+      #ignore_errors: yes
 
