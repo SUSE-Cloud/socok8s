@@ -8,22 +8,24 @@ set -o errexit
 
 echo "Deploying on OpenStack"
 
-source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
 source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_env_vars_set
 
 function deploy_ses(){
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Starting a SES deploy"
     ${socok8s_absolute_dir}/1_ses_node_on_openstack/create.sh
     echo "ses node created on openstack successfully"
-    ${socok8s_absolute_dir}/2_deploy_ses_aio/run.sh
+    run_ansible -i inventory-ses.ini ${socok8s_absolute_dir}/2_deploy_ses_aio/play.yml
     echo "ses-ansible deploy is successful"
 }
 function deploy_caasp(){
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Starting caasp deploy"
     ${socok8s_absolute_dir}/3_caasp_nodes_on_openstack_heat/create.sh
     echo "CaaSP deployed successfully"
 }
 function deploy_ccp_deployer() {
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Creating CCP deploy node"
     ${socok8s_absolute_dir}/4_osh_node_on_openstack/create.sh
 }
@@ -58,6 +60,7 @@ function teardown(){
 function clean_k8s(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
+        echo "DELETE_ANYWAY is set, cleaning up k8s"
         ansible -m script -a "script_library/cleanup-k8s.sh" osh-deployer -i inventory-osh.ini
     fi
 }
@@ -71,8 +74,9 @@ function clean_openstack(){
     ${socok8s_absolute_dir}/1_ses_node_on_openstack/delete.sh
 }
 function clean_userfiles(){
-    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to delete everything in your userspace."
+    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
+        echo "DELETE_ANYWAY is set, deleting user files"
         rm -rf ~/suse-osh-deploy/*
     fi
 }

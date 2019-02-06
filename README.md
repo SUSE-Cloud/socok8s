@@ -32,13 +32,26 @@ On the system you plan to deploy OSH from, you'll need to install some
 software and create local configuration.
 
 You need to have the following software installed:
-* ansible>=2.7.0
-* python-openstackclient
-* python-requests
-* python2-jmespath
+
 * ipcalc
 * jq
 * git
+* python-virtualenv
+
+Optionally (but recommended), you can preinstall the following:
+
+* ansible>=2.7.0
+* python-openstackclient
+* python-requests
+* python-jmespath
+* python-openstacksdk
+* python-netaddr
+
+Make sure to install the variant of the packages that matches the Python
+release that ansible is using. (E.g. on Tumbleweed ansible is using Python 3,
+so install the "python3-" variant of the packages)
+
+If those aren't installed, they will be installed in a venv in ~/.socok8svenv
 
 ## Configure engcloud
 
@@ -123,9 +136,8 @@ clone and run:
 ./run.sh
 ```
 
-The default action for `run.sh` is to do a `full-deploy` on openstack.
-This means the `runi.sh` script will run each of the seven top-level
-sections of the script in order.
+The default action for `run.sh` is to do a `setup_everything` on openstack.
+This means the `run.sh` script will run all of top level actions.
 
 ## Re-deploying OSH
 
@@ -172,7 +184,7 @@ Here are the actions available:
 * deploy_osh: Self explanatory.
 * setup_everything: From A to Z.
 * teardown: Destroys all the nodes in an openstack environment.
-  Removes user files.
+  Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace.
 * clean_k8s: Removes all k8s definitions that were introduced during deployment
   (Experimental!)
 
@@ -188,7 +200,7 @@ Currently set to `openstack` by default, but will later include a
 This adds a step for patching upstream code, builds images and then continues
 the deployment.
 
-# Reference:  architecture and inventories
+# Reference: Architecture and inventories
 
 By default, it is expected these playbooks and scripts would run
 on a CI/developer machine.
@@ -196,7 +208,7 @@ on a CI/developer machine.
 In order to not pollute the developer/CI machine (called further
 'localhost'), all the data relevant for a deployment (like any
 eventual override) will be stored in user-space, unpriviledged
-access (this means the ~/suse-osh-deploy folder).
+access (this means the ~/suse-osh-deploy folder for now).
 Any hardware and software distribution can be used,
 as long as 'localhost' is able to run git, and ansible
 (see requirements). This also helps the story of running behind
@@ -222,6 +234,10 @@ might be skipped if the `localhost` have knowledge of these keys.
 
 In order for a deployer to bring its own inventory, we have
 defined a set of convention about inventory groupnames.
+
+This is WIP and might change in the future. We want to
+move to a single inventory file, with different group
+names.
 
 * All nodes belonging to the SES deployment should be listed
   under the `ses_nodes` group. First node in this group must
@@ -249,7 +265,11 @@ defined a set of convention about inventory groupnames.
 
 This is not currently supported, but is a planned future addition.
 
-# Deployment using manually-installed SES and CAASP
+# Deployment on bare-metal
+
+This is not currently supported, but is a planned future addition.
+
+# Re-using a manually-installed SES and CAASP
 
 While a fully automated baremetal or VM based installation is not
 currently supported, selected parts of the automated install process
@@ -330,3 +350,6 @@ Now you are ready to run Stage 7, as follows:
 ```
 ansible-playbook -v -e @~/suse-osh-deploy/env/extravars <play>
 ```
+
+Please also check the etherpad for more documentation:
+https://etherpad.nue.suse.com/p/osh_on_caasp
