@@ -15,7 +15,7 @@ function deploy_ses(){
     echo "Starting a SES deploy"
     ${socok8s_absolute_dir}/1_ses_node_on_openstack/create.sh
     echo "ses node created on openstack successfully"
-    ${socok8s_absolute_dir}/2_deploy_ses_aio/run.sh
+    run_ansible -i inventory-ses.ini ${socok8s_absolute_dir}/2_deploy_ses_aio/play.yml
     echo "ses-ansible deploy is successful"
 }
 function deploy_caasp(){
