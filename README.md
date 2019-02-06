@@ -195,6 +195,9 @@ Currently set to `openstack` by default, but will later include a
 This adds a step for patching upstream code, builds images and then continues
 the deployment.
 
+`USE_ARA` determines if you want to store records in ARA. Set its value
+to 'True' for using ARA.
+
 # Reference: Architecture and inventories
 
 By default, it is expected these playbooks and scripts would run
