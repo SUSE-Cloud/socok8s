@@ -1,0 +1,5 @@
+---
+
+ses_config_path: "~/suse-osh-deploy/"
+suse_osh_deploy_user_variables: "{{ ses_config_path }}/env/extravars"
+radosgw_keystone: False
