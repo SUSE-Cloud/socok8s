@@ -43,8 +43,13 @@ Optionally (but recommended), you can preinstall the following:
 * ansible>=2.7.0
 * python-openstackclient
 * python-requests
-* python2-jmespath
-* openstacksdk
+* python-jmespath
+* python-openstacksdk
+* python-netaddr
+
+Make sure to install the variant of the packages that matches the Python
+release that ansible is using. (E.g. on Tumbleweed ansible is using Python 3,
+so install the "python3-" variant of the packages)
 
 If those aren't installed, they will be installed in a venv in ~/.socok8svenv
 
