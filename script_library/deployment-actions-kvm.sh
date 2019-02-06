@@ -10,6 +10,8 @@ echo "Deploying on KVM"
 
 function deploy_ses(){
     echo "This is not supported yet. Please create a node manually and run ses-ansible on it."
+    run_ansible -i inventory-ses.ini ${socok8s_absolute_dir}/2_deploy_ses_aio/play.yml
+    echo "ses-ansible deploy is successful"
 }
 function deploy_caasp(){
     echo "This is not supported yet. Check at kubic-automation tooling."
