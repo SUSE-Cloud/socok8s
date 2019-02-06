@@ -146,9 +146,9 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_ingress_kube_system_yaml_overrides }}"
     _cmpnt_runcommand: ./tools/deployment/multinode/020-ingress.sh
   environment:
-    OSH_EXTRA_HELM_ARGS_INGRESS_KUBE_SYSTEM: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_KUBE_SYSTEM') | default('', True) }} -f /tmp/suse-ingress-kube-system.yaml"
-    OSH_EXTRA_HELM_ARGS_INGRESS_OPENSTACK: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_OPENSTACK') | default('', True) }} -f /tmp/suse-ingress-namespace.yaml"
-    OSH_EXTRA_HELM_ARGS_INGRESS_CEPH: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_CEPH') | default('', True) }} -f /tmp/suse-ingress-namespace.yaml"
+    OSH_EXTRA_HELM_ARGS_INGRESS_KUBE_SYSTEM: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_KUBE_SYSTEM') | default('', True) }} --values /tmp/suse-ingress-kube-system.yaml"
+    OSH_EXTRA_HELM_ARGS_INGRESS_OPENSTACK: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_OPENSTACK') | default('', True) }} --values /tmp/suse-ingress-namespace.yaml"
+    OSH_EXTRA_HELM_ARGS_INGRESS_CEPH: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_CEPH') | default('', True) }} --values /tmp/suse-ingress-namespace.yaml"
   tags:
     - ingress
     - run
@@ -166,7 +166,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_mariadb_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/050-mariadb.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_MARIADB: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_MARIADB') | default('', True) }} -f /tmp/suse-mariadb.yaml"
+    OSH_EXTRA_HELM_ARGS_MARIADB: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_MARIADB') | default('', True) }} --values /tmp/suse-mariadb.yaml"
 
 - name: Create privileged ClusterRoleBinding for ServiceAccounts
   include: privileged-cluster-role-binding.yml
@@ -181,7 +181,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_rabbitmq_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/060-rabbitmq.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_RABBITMQ: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_RABBITMQ') | default('', True) }} -f /tmp/suse-rabbitmq.yaml"
+    OSH_EXTRA_HELM_ARGS_RABBITMQ: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_RABBITMQ') | default('', True) }} --values /tmp/suse-rabbitmq.yaml"
   tags:
     - rabbitmq
     - run
@@ -193,7 +193,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_memcached_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/070-memcached.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_MEMCACHED: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_MEMCACHED') | default('', True) }} -f /tmp/suse-memcached.yaml"
+    OSH_EXTRA_HELM_ARGS_MEMCACHED: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_MEMCACHED') | default('', True) }} --values /tmp/suse-memcached.yaml"
   tags:
     - memcached
     - run
@@ -206,7 +206,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_keystone_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/080-keystone.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_KEYSTONE: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_KEYSTONE') | default('', True) }} -f /tmp/suse-keystone.yaml"
+    OSH_EXTRA_HELM_ARGS_KEYSTONE: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_KEYSTONE') | default('', True) }} --values /tmp/suse-keystone.yaml"
   tags:
     - keystone
     - run
@@ -227,7 +227,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_horizon_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/085-horizon.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_HORIZON: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_HORIZON') | default('', True) }} -f /tmp/suse-horizon.yaml"
+    OSH_EXTRA_HELM_ARGS_HORIZON: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_HORIZON') | default('', True) }} --values /tmp/suse-horizon.yaml"
   tags:
     - horizon
     - run
@@ -257,7 +257,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_glance_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/100-glance.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_GLANCE: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_GLANCE') | default('', True) }} -f /tmp/suse-glance.yaml"
+    OSH_EXTRA_HELM_ARGS_GLANCE: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_GLANCE') | default('', True) }} --values /tmp/suse-glance.yaml"
   tags:
     - glance
     - run
@@ -274,7 +274,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_cinder_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/110-cinder.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_CINDER: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_CINDER') | default('', True) }} -f /tmp/suse-cinder.yaml"
+    OSH_EXTRA_HELM_ARGS_CINDER: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_CINDER') | default('', True) }} --values /tmp/suse-cinder.yaml"
   tags:
     - cinder
     - run
@@ -286,7 +286,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_ovs_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/120-openvswitch.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_OPENVSWITCH: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_OPENVSWITCH') | default('', True) }} -f /tmp/suse-ovs.yaml"
+    OSH_EXTRA_HELM_ARGS_OPENVSWITCH: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_OPENVSWITCH') | default('', True) }} --values /tmp/suse-ovs.yaml"
   tags:
     - ovs
     - run
@@ -298,7 +298,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_libvirt_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/130-libvirt.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_LIBVIRT: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_LIBVIRT') | default('', True) }} -f /tmp/suse-libvirt.yaml"
+    OSH_EXTRA_HELM_ARGS_LIBVIRT: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_LIBVIRT') | default('', True) }} --values /tmp/suse-libvirt.yaml"
   tags:
     - libvirt
     - run
@@ -313,7 +313,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_nova_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/140-compute-kit.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_NOVA: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NOVA') | default('', True) }} -f /tmp/suse-nova.yaml"
+    OSH_EXTRA_HELM_ARGS_NOVA: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NOVA') | default('', True) }} --values /tmp/suse-nova.yaml"
   tags:
     - nova
     - neutron
@@ -326,7 +326,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_heat_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/150-heat.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_HEAT: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_HEAT') | default('', True) }} -f /tmp/suse-heat.yaml"
+    OSH_EXTRA_HELM_ARGS_HEAT: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_HEAT') | default('', True) }} --values /tmp/suse-heat.yaml"
   tags:
     - heat
     - run
