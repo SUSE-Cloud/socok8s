@@ -47,3 +47,6 @@ kubectl delete configmap airship-openstack-ingress-controller-nginx -n openstack
 kubectl delete configmap airship-openstack-mariadb-airship-openstack-mariadb-mariadb-ingress -n openstack
 kubectl delete configmap airship-openstack-mariadb-mariadb-state -n openstack
 
+kubectl delete secret --all -n openstack
+kubectl delete secret --all -n ucp
+kubectl delete secret --all -n ceph

@@ -7,7 +7,7 @@
     - preinstall
 
 - name: Enroll node for Airship UCP
-  shell: "kubectl label nodes {{ inventory_hostname }} ucp=enabled"
+  shell: "kubectl label nodes {{ inventory_hostname }} ucp-control-plane=enabled"
   when: ('airship-ucp-workers' in group_names)
   register: _enrollforucp
   changed_when:
