@@ -23,52 +23,9 @@
   vars:
     ses_openstack_config: True
 
-- hosts: ses_nodes[0]
-  vars:
-    ses_config_file_path: "~/suse-osh-deploy/ses_config.yml"
-  tasks:
-    - name: Ensure the OSH config folder exists
-      file:
-        state: directory
-        name: "{{ ses_config_file_path | dirname }}"
-      delegate_to: localhost
-
-    # The AIO ses creates /tmp/ses_config/ on localhost,
-    # but that can disappear anytime. So we'll store
-    # The ses config in our userspace.
-    - name: Copy SES config in userspace
-      copy:
-        src: "/tmp/ses_config/ses_config.yml"
-        dest: "{{ ses_config_file_path | dirname }}"
-        remote_src: yes
-      delegate_to: localhost
-
-    # TODO(evrardjp): Add return code to latest call to make sure idempotency is known.
-    # This step is needed until we decide to use ses_config created pools (and have properly tested them)
-    - name: Create pools
-      shell: "ceph -k /etc/ceph/ceph.client.admin.keyring osd pool ls | grep {{ item }} || ceph -k /etc/ceph/ceph.client.admin.keyring osd pool create {{ item }} 128 128"
-      with_items:
-        - rbd
-        - volumes
-        - cinder_backup
-        - images
-        - vms
-- hosts: ses_nodes[0]
-  gather_facts: yes
-  vars:
-    suse_osh_deploy_user_variables: "~/suse-osh-deploy/env/extravars"
-  tasks:
-    - name: Find the admin keyring b64 value
-      shell: ceph auth get-key client.admin | base64
-      changed_when: false
-      register: _clientadminkey
-
-    - name: Create user_variables
-      delegate_to: localhost
-      blockinfile:
-        path: "{{ suse_osh_deploy_user_variables }}"
-        create: yes
-        block: |
-          ceph_admin_keyring_b64key: {{ _clientadminkey.stdout_lines[0] }}
-          ceph_user_keyring_b64key: {{ _clientadminkey.stdout_lines[0]  }}
-          suse_osh_deploy_ceph_mons: [{% for ip in ansible_all_ipv4_addresses %}'{{ ip }}:6789'{% if not loop.last %},{% endif %}{% endfor %}] #list containing all ips of the host (which should be an AIO containing the mons).
+- name: Import SES configs
+  hosts: ses_nodes[0]
+  remote_user: root
+  gather_facts: false
+  roles:
+    - ses-osh
