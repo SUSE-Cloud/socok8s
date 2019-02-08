@@ -84,6 +84,7 @@
       {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} nova nova.openstack.svc.cluster.local
       {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} neutron neutron.openstack.svc.cluster.local
       {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} horizon horizon.openstack.svc.cluster.local
+      {{ suse_osh_deploy_vip_with_cidr | ipaddr('address') }} heat heat.openstack.svc.cluster.local
 
 # Developers have patched code, and don't need fetching product sources
 - name: Fetch OSH code
