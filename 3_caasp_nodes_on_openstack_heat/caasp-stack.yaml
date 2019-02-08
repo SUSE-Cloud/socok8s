@@ -87,7 +87,7 @@ parameters:
   worker_count:
     type: number
     description: Number of Worker nodes to boot
-    default: 2
+    default: 3
   worker_num_volumes:
     type: number
     description: Number of volumes to create and attach to each worker
