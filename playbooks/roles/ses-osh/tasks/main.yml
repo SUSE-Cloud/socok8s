@@ -1,14 +1,11 @@
 ---
-- name: Ensure ses config directory exist
-  delegate_to: localhost
-  file:
-    path: "{{ ses_config_path }}"
-    state: directory
+- name: Include global vars
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
 
 - name: Drop ceph conf and keys
   delegate_to: localhost
   copy:
-    dest: "{{ ses_config_path }}/{{ item.item }}"
+    dest: "{{ socok8s_workspace }}/{{ item.item }}"
     content: "{{ item.content | b64decode }}"
     mode: 0644
   with_items:
@@ -18,7 +15,7 @@
   delegate_to: localhost
   template:
     src: ses-config.yml.j2
-    dest: "{{ ses_config_path }}/ses_config.yml"
+    dest: "{{ socok8s_ses_pools_details }}"
 
 - name: Find the admin keyring b64 value
   shell: ceph auth get-key client.admin | base64
@@ -28,7 +25,7 @@
 - name: Create user_variables
   delegate_to: localhost
   blockinfile:
-    path: "{{ suse_osh_deploy_user_variables }}"
+    path: "{{ socok8s_extravars }}"
     create: yes
     block: |
       ceph_admin_keyring_b64key: {{ _clientadminkey.stdout_lines[0] }}

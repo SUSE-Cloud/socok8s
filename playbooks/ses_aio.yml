@@ -1,3 +1,4 @@
+---
 #
 # (c) Copyright 2019 SUSE LLC
 #
@@ -13,9 +14,9 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 #
----
+
 - name: Install SES 5
-  hosts: ses_nodes:ses
+  hosts: ses_nodes
   remote_user: root
   gather_facts: true
   roles:

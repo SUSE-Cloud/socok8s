@@ -13,10 +13,7 @@ source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_env_vars_set
 function deploy_ses(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Starting a SES deploy"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio_instance.yml
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio_hostconfig.yml
-    echo "ses node created on openstack successfully"
-    run_ansible -i inventory-ses.ini ${socok8s_absolute_dir}/2_deploy_ses_aio/play.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio.yml
     echo "ses-ansible deploy is successful"
 }
 function deploy_caasp(){
