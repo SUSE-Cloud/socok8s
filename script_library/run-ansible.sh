@@ -35,6 +35,10 @@ function run_ansible(){
         echo "Inventory directory (${inventorydir}) exists, adding it to the ansible-playbook call."
         inventory="-i ${inventorydir}"
     fi
+    if [[ ${USE_ARA:-False} == "True" ]]; then
+        echo "Loading ARA"
+        source ${HOME}/.socok8svenv/ara.rc
+    fi
 
     pushd ${socok8s_absolute_dir}
         ansible-playbook ${extra_vars:-} ${inventory:-} $@ -v
