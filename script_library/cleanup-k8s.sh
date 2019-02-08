@@ -20,6 +20,10 @@ for NS in openstack ceph nfs; do
     kubectl get job -n ${NS} -o name | xargs kubectl delete -n ${NS}  --ignore-not-found=true
 done
 
+# DO NOT USE clusterrolebinding, else you will delete all rolebindings, even the suse: and system: ones,
+# even when scoped in the namespace.
+kubectl get -n openstack rolebinding.rbac.authorization.k8s.io -o name | xargs kubectl -n openstack delete
+
 # Remove extra data
 kubectl delete clusterrolebinding PrivilegedRoleBinding
 kubectl delete clusterrolebinding NonResourceUrlRoleBinding
