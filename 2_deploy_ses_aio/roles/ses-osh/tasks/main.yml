@@ -20,15 +20,6 @@
     src: ses-config.yml.j2
     dest: "{{ ses_config_path }}/ses_config.yml"
 
-- name: Create pools
-  shell: "ceph -k /etc/ceph/ceph.client.admin.keyring osd pool ls | grep {{ item }} || ceph -k /etc/ceph/ceph.client.admin.keyring osd pool create {{ item }} 128 128"
-  with_items:
-    - rbd
-    - volumes
-    - cinder_backup
-    - images
-    - vms
-
 - name: Find the admin keyring b64 value
   shell: ceph auth get-key client.admin | base64
   changed_when: false

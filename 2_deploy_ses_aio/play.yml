@@ -22,6 +22,27 @@
     - ses
   vars:
     ses_openstack_config: True
+    ses_openstack_glance_pool:
+      name: images
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_openstack_cinder_pool:
+      name: volumes
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_openstack_nova_pool:
+      name: vms
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_osh_rbd_pool:
+      name: rbd
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_openstack_cinder_backup_pool:
+      name: cinder_backup
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_openstack_pools:
+      - "{{ ses_openstack_glance_pool }}"
+      - "{{ ses_openstack_cinder_pool }}"
+      - "{{ ses_openstack_nova_pool }}"
+      - "{{ ses_openstack_cinder_backup_pool }}"
+      - "{{ ses_osh_rbd_pool }}"
 
 - name: Import SES configs
   hosts: ses_nodes[0]
