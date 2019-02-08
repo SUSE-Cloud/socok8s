@@ -9,6 +9,9 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 subjects:
 - kind: ServiceAccount
+  name: cinder-volume
+  namespace: openstack
+- kind: ServiceAccount
   name: cinder-backup
   namespace: openstack
 - kind: ServiceAccount
@@ -41,6 +44,12 @@ subjects:
 - kind: ServiceAccount
   name: ingress-kube-system-ingress
   namespace: kube-system
+- kind: ServiceAccount
+  name: ingress-openstack-ingress
+  namespace: openstack
+- kind: ServiceAccount
+  name: ingress-ceph-ingress
+  namespace: ceph
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1

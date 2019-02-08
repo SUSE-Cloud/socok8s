@@ -1,0 +1,11 @@
+---
+- name: "Generate file ({{ item.action }})"
+  template:
+    src: "{{ item.template_src_file }}"
+    dest: "{{ item.templated_location }}"
+    mode: "0600"
+    owner: "root"
+    group: "root"
+
+- name: "Apply generated file in k8s ({{ item.action }})"
+  command: "kubectl apply -f {{ item.templated_location }} --overwrite=true"

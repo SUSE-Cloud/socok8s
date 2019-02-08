@@ -2,7 +2,7 @@
 - name: "Prepare override file {{ _cmpnt_template }}"
   config_template:
     src: "{{ _cmpnt_template }}.j2"
-    dest: "/tmp/{{ _cmpnt_template }}"
+    dest: "/tmp/socok8s-{{ _cmpnt_template }}"
     config_overrides: "{{ _cmpnt_overrides }}"
     config_type: yaml
   register: _usertemplatedata
@@ -14,4 +14,3 @@
     chdir: "{{ _cmpnt_chdir | default('/opt/openstack-helm') }}"
   environment:
     OSH_INFRA_PATH: /opt/openstack-helm-infra
-  failed_when: false
