@@ -3,19 +3,15 @@
 - name: Load variables
   include_vars: "{{ item }}"
   loop:
-    - "{{ playbook_dir }}/../common-vars.yml"
     - "{{ playbook_dir }}/../vars/common-vars.yml"
     - "{{ playbook_dir }}/../vars/manifest.yml"
   tags:
     - always
 
 - name: Get ses_cluster_configuration
-  include_vars: "{{ suse_osh_deploy_ses_config_path }}"
+  include_vars: "{{ socok8s_ses_pools_details }}"
   tags:
     - always
-
-- name: Load admin keyring from user_variables (required for now)
-  include_vars: "{{ suse_osh_deploy_user_variables }}"
 
 - name: Pre-fligt checks for the role
   assert:
