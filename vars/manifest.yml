@@ -12,3 +12,6 @@ upstream_repos:
   loci:
     src: https://github.com/openstack/loci
     version: c94e1dfc86cae044a4582f321bb1721846419a00
+  kubic:
+    src: https://github.com/kubic-project/automation.git
+    version: master
