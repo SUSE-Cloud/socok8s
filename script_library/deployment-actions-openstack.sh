@@ -19,7 +19,7 @@ function deploy_ses(){
 function deploy_caasp(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Starting caasp deploy"
-    ${socok8s_absolute_dir}/3_caasp_nodes_on_openstack_heat/create.sh
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-caasp.yml
     echo "CaaSP deployed successfully"
 }
 function deploy_ccp_deployer() {
@@ -66,8 +66,7 @@ function clean_openstack(){
     echo "Deleting on OpenStack"
     ${socok8s_absolute_dir}/4_osh_node_on_openstack/delete.sh
     echo "Delete Caasp nodes"
-    ${socok8s_absolute_dir}/3_caasp_nodes_on_openstack_heat/delete.sh || true
-    ${socok8s_absolute_dir}/3_caasp_nodes_on_openstack_manually/delete.sh || true
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-caasp.yml -e caasp_stack_delete=True || true
     echo "Delete SES node"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio_instance.yml -e ses_node_delete=True
 }

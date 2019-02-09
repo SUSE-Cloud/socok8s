@@ -1,3 +1,2 @@
 ---
 suse_osh_deploy_config_location: "~/suse-osh-deploy"
-suse_osh_deploy_user_variables: "{{ suse_osh_deploy_config_location }}/env/extravars"

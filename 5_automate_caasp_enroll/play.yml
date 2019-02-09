@@ -10,6 +10,7 @@
       - make
       - jq
   tasks:
+    - include_vars: "{{ playbook_dir }}/../vars/common-vars.yml
     - name: Creating velum automation folder
       file:
         path: /opt/ccp
@@ -17,7 +18,7 @@
 
     - name: Copying environment.json
       copy:
-        src: "{{ playbook_dir }}/../environment.json"
+        src: "{{ socok8s_caasp_environment_details }}"
         dest: /opt/ccp/environment.json
 
     - name: Install the necessary packages
