@@ -24,3 +24,8 @@ deploy_on_openstack_caasp_image: "caasp-3.0.0-GM-OpenStack-qcow"
 deploy_on_openstack_caasp_workers: 3
 deploy_on_openstack_caasp_securitygroup: "{{ deploy_on_openstack_sesnode_securitygroup }}"
 deploy_on_openstack_caasp_stacknamefile: "{{ socok8s_workspace }}/stackname"
+deploy_on_openstack_oshnode_server_name: "{{ deploy_on_openstack_prefix }}-osh"
+deploy_on_openstack_oshnode_image: "SLES12-SP3"
+deploy_on_openstack_oshnode_flavor: "m1.large"
+deploy_on_openstack_oshnode_securitygroup: "all-incoming"
+deploy_on_openstack_oshnode_volume_name: "{{ deploy_on_openstack_oshnode_server_name }}-vol"

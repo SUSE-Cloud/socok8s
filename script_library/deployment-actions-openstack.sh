@@ -25,7 +25,7 @@ function deploy_caasp(){
 function deploy_ccp_deployer() {
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Creating CCP deploy node"
-    ${socok8s_absolute_dir}/4_osh_node_on_openstack/create.sh
+    run_ansible ${socok8s_absolute_dir}/openstack-osh.yml
 }
 function enroll_caasp_workers() {
     echo "Enrolling caasp worker nodes into the cluster"
@@ -64,7 +64,7 @@ function clean_k8s(){
 }
 function clean_openstack(){
     echo "Deleting on OpenStack"
-    ${socok8s_absolute_dir}/4_osh_node_on_openstack/delete.sh
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-osh_instance.yml -e osh_node_delete=True || true
     echo "Delete Caasp nodes"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-caasp.yml -e caasp_stack_delete=True || true
     echo "Delete SES node"
