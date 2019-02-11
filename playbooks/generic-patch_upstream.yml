@@ -12,9 +12,7 @@
         - imagebuilder
         - upstream_patching
   roles:
-    - role: suse-build-images
+    - role: dev-patcher
+      when: developer_mode
       tags:
-        - imagebuilder
-      when:
-        - developer_mode
-        - build_osh_images | default('False') | bool
+        - upstream_patching

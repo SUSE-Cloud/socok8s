@@ -34,8 +34,7 @@ function enroll_caasp_workers() {
 function patch_upstream(){
     echo "Running dev-patcher"
     echo "Nothing will happen if developer mode is not set"
-    echo "TODO: Separate this into a different playbook"
-    run_ansible -i inventory-osh.ini -t upstream_patching ${socok8s_absolute_dir}/7_deploy_osh/play.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-patch_upstream.yml
 }
 function build_images(){
     echo "Running image builder"
