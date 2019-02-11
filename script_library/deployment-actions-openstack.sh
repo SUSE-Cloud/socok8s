@@ -25,7 +25,7 @@ function deploy_caasp(){
 function deploy_ccp_deployer() {
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Creating CCP deploy node"
-    run_ansible ${socok8s_absolute_dir}/openstack-deploy_ccp_deployer.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_ccp_deployer.yml
 }
 function enroll_caasp_workers() {
     echo "Enrolling caasp worker nodes into the cluster and ensuring they are ready for openstack"
