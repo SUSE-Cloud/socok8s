@@ -205,11 +205,13 @@
             state: absent
 
         - name: Remove host from known hosts
-          command: ssh-keygen -R {{ hostvars[item]['ansible_host'] | quote }}
+          shell: ssh-keygen -R {{ hostvars[item]['ansible_host'] | quote }}
           loop: "{{ groups['caasp-admin'] + groups['caasp-masters'] + groups['caasp-workers'] }}"
           changed_when: True
           args:
             executable: /bin/bash
+          tags:
+            - skip_ansible_lint
 
         - name: Remove caasp files
           file:

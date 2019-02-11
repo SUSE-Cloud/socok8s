@@ -37,10 +37,12 @@
 
   - name: Re-run automation if file is old
     when: ansible_date_time.epoch|float - _kubeconfigfromautomation.stat.mtime > 86400
-    command: ./velum-interactions -k -e /opt/ccp/environment.json
+    shell: ./velum-interactions -k -e /opt/ccp/environment.json
     args:
       chdir: /opt/ccp/automation/velum-bootstrap
       executable: /bin/bash
+    tags:
+      - skip_ansible_lint
 
   - name: Copy kubeconfig file
     copy:

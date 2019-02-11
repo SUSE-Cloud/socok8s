@@ -86,9 +86,11 @@
           register: _oshdelete
 
         - name: Remove host from known hosts
-          command: "ssh-keygen -R {{ hostvars['osh-aio']['ansible_host'] | quote }}"
+          shell: "ssh-keygen -R {{ hostvars['osh-aio']['ansible_host'] | quote }}"
           args:
             executable: /bin/bash
             warn: False
           when:
             - _oshdelete is changed
+          tags:
+            - skip_ansible_lint

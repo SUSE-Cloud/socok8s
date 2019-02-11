@@ -40,8 +40,6 @@
 
 - name: Install tiller
   command: helm init
-  args:
-    executable: /bin/bash
   register: _helminstall
   when: helm_state == 'to_install'
   changed_when: True
@@ -50,8 +48,6 @@
 
 - name: Upgrade tiller
   command: helm init --upgrade
-  args:
-    executable: /bin/bash
   register: _helmupgrade
   when: helm_state == 'to_update' or helm_state == 'to_install'
   changed_when: True
