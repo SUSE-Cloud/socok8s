@@ -67,9 +67,15 @@
             timeout: 120
 
         - name: Get pubkey, and add it to known hosts
-          shell: ssh-keyscan -H {{ ses_floating_ip | quote }} >> ${HOME}/.ssh/known_hosts
-          args:
-            executable: /bin/bash
+          command: "ssh-keyscan -H {{ ses_floating_ip | quote }}"
+          register: _sesfloatingkey
+
+        - name: Insert known host
+          known_hosts:
+            state: present
+            name: "{{ ses_floating_ip }}"
+            key: "{{ _sesfloatingkey.stdout }}"
+
 
     - name: Handle deletion
       when:
@@ -81,13 +87,19 @@
             delete_fip: yes
             name: "{{ deploy_on_openstack_sesnode_server_name }}"
             state: absent
-            terminate_volume: yes
             timeout: 300
-          register: _sesdelete
-        - name: Remove host from known hosts
-          command: "ssh-keygen -R {{ hostvars['ses-aio']['ansible_host'] | quote }}"
-          args:
-            executable: /bin/bash
-            warn: False
-          when:
-            - _sesdelete is changed
+
+        - name: Delete volume
+          os_volume:
+            cloud: "{{ deploy_on_openstack_cloudname }}"
+            display_name: "{{ deploy_on_openstack_sesnode_volume_name }}"
+            state: "absent"
+
+        # Looping will avoid the need to create a condition if no hosts
+        # exists in the inventory.
+        - name: Remove all hosts from this group known hosts
+          known_hosts:
+            state: absent
+            name: "{{ hostvars[item]['ansible_host'] }}"
+          loop: "{{ groups['ses_nodes'] }}"
+

@@ -67,9 +67,14 @@
             timeout: 120
 
         - name: Get pubkey, and add it to known hosts
-          shell: ssh-keyscan -H {{ osh_floating_ip | quote }} >> ${HOME}/.ssh/known_hosts
-          args:
-            executable: /bin/bash
+          command: "ssh-keyscan -H {{ osh_floating_ip | quote }}"
+          register: _oshfloatingkey
+
+        - name: Insert known host
+          known_hosts:
+            state: present
+            name: "{{ osh_floating_ip }}"
+            key: "{{ _oshfloatingkey.stdout }}"
 
     - name: Handle deletion
       when:
@@ -81,16 +86,18 @@
             delete_fip: yes
             name: "{{ deploy_on_openstack_oshnode_server_name }}"
             state: absent
-            terminate_volume: yes
             timeout: 300
-          register: _oshdelete
 
-        - name: Remove host from known hosts
-          shell: "ssh-keygen -R {{ hostvars['osh-aio']['ansible_host'] | quote }}"
-          args:
-            executable: /bin/bash
-            warn: False
-          when:
-            - _oshdelete is changed
-          tags:
-            - skip_ansible_lint
+        - name: Delete volume
+          os_volume:
+            cloud: "{{ deploy_on_openstack_cloudname }}"
+            display_name: "{{ deploy_on_openstack_oshnode_volume_name }}"
+            state: "absent"
+
+        # Looping will avoid the need to create a condition if no hosts
+        # exists in the inventory.
+        - name: Remove all hosts from this group known hosts
+          known_hosts:
+            state: absent
+            name: "{{ hostvars[item]['ansible_host'] }}"
+          loop: "{{ groups['osh-deployer'] }}"
