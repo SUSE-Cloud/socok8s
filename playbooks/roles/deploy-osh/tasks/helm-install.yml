@@ -4,7 +4,9 @@
 - name: Check versions
   # the awk extracts the sha of both the helm client and server.
   # uniq means same version or not
-  shell: helm version | awk '{print $3}' | uniq | wc -l
+  shell: |
+    set -o pipefail
+    helm version | awk '{print $3}' | uniq | wc -l
   register: _helmcheck
   failed_when: false
   changed_when: false

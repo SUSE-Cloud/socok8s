@@ -1,6 +1,8 @@
 ---
 - name: List all nodes of the caasp cluster
-  shell: kubectl get nodes -o json | jq -M -r '.items[].metadata.name'
+  shell: |
+    set -o pipefail
+    kubectl get nodes -o json | jq -M -r '.items[].metadata.name'
   changed_when: false
   register: _all_casp_nodenames
 

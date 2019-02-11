@@ -18,6 +18,7 @@
 
 - name: Check if local docker registry server is running
   shell: |
+    set -o pipefail
     docker ps | grep {{ local_registry_name }}
   register: registry_running_cmd_status
   changed_when: false
