@@ -29,11 +29,11 @@
         - developer_mode
         - build_osh_images | default('False') | bool
 
-- hosts: osh-deploy-cp
+- hosts: osh-deploy-cp:caasp-workers
   gather_facts: yes
   any_errors_fatal: true
   roles:
-    - role: suse-osh-setup
+    - role: setup-caasp-workers
       tags:
         - workersetup
 
