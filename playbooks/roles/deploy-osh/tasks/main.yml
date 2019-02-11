@@ -131,13 +131,15 @@
 
 
 # TODO(evrardjp): Use mechanism like glance to re-use component-install.yml code and allow any override.
+# TODO(evrardjp): Check stdout to ensure idempotency
 - name: Setup openstack CLIs
-  shell: ./tools/deployment/multinode/010-setup-client.sh
+  command: ./tools/deployment/multinode/010-setup-client.sh
   args:
     executable: /bin/bash
     chdir: /opt/openstack-helm
   tags:
     - run
+    - skip_ansible_lint
 
 # TODO(evrardjp): Follow on https://review.openstack.org/#/c/605005/
 - name: Use a different ingress script as long as upstream does not support overrides
@@ -247,13 +249,15 @@
   tags:
     - run
 
+# TODO(evrardjp): Check stdout to ensure idempotency
 - name: Execute ceph provisioner
-  shell: ../openstack-helm/tools/deployment/developer/ceph/046-ceph-deploy-with-existing-ceph.sh
+  command: ../openstack-helm/tools/deployment/developer/ceph/046-ceph-deploy-with-existing-ceph.sh
   args:
     executable: /bin/bash
     chdir: /opt/openstack-helm-infra
   tags:
     - run
+    - skip_ansible_lint
 
 - name: Deploy glance
   import_tasks: component-install.yml
@@ -269,8 +273,15 @@
 
 # This is an arbitrary UUID value that's passed to the libvirt daemonset setup job for configuring a libvirt secret XML file
 - name: Create Libvirt ceph cinder secret uuid
-  shell: uuidgen
-  register: libvirt_ceph_cinder_secret_uuid
+  shell: "uuidgen > {{ socok8s_libvirtuuid }}"
+  args:
+    creates: "{{ socok8s_libvirtuuid }}"
+  delegate_to: localhost
+
+- name: Get libvirt secret
+  set_fact:
+    libvirt_ceph_cinder_secret_uuid: "{{ lookup('file', socok8s_libvirtuuid) }}"
+  run_once: True
 
 - name: Deploy cinder
   import_tasks: component-install.yml

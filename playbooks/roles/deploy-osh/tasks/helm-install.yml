@@ -29,25 +29,34 @@
     msg: "Unknown helm state"
   when: _helmcheck.stdout not in ['0','1','2']
 
+# TODO(evrardjp): Move this to get_url or to a package install (to be decided)
 - name: Installing helm client
   shell: "curl {{ helm_download_url }} | bash"
   args:
     executable: /bin/bash
   when: helm_state == 'to_update' or helm_state == 'to_install'
+  tags:
+    - skip_ansible_lint
 
 - name: Install tiller
-  shell: helm init
+  command: helm init
   args:
     executable: /bin/bash
   register: _helminstall
   when: helm_state == 'to_install'
+  changed_when: True
+  tags:
+    - skip_ansible_lint
 
 - name: Upgrade tiller
-  shell: helm init --upgrade
+  command: helm init --upgrade
   args:
     executable: /bin/bash
   register: _helmupgrade
   when: helm_state == 'to_update' or helm_state == 'to_install'
+  changed_when: True
+  tags:
+    - skip_ansible_lint
 
 - name: Show stdout of upgrade
   debug:

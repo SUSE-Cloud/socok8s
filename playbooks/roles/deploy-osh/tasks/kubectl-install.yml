@@ -26,7 +26,7 @@
   when: automation_environment_json.stat.exists
   block:
   - name: Find kubeconfig location
-    shell: jq -r '.kubeConfig.admin' /opt/ccp/environment.json
+    command: jq -r '.kubeConfig.admin' /opt/ccp/environment.json
     changed_when: false
     register: _kubeconfiglocation
 
@@ -37,7 +37,7 @@
 
   - name: Re-run automation if file is old
     when: ansible_date_time.epoch|float - _kubeconfigfromautomation.stat.mtime > 86400
-    shell: ./velum-interactions -k -e /opt/ccp/environment.json
+    command: ./velum-interactions -k -e /opt/ccp/environment.json
     args:
       chdir: /opt/ccp/automation/velum-bootstrap
       executable: /bin/bash

@@ -138,16 +138,25 @@
             name: "{{ stackname }}-vip"
             no_security_groups: True
             network: "{{ deploy_on_openstack_internal_network }}"
+          register: _oshclustervip
 
+        - name: Show VIP port creation results
+          debug:
+            var: _oshclustervip
+            verbosity: 1
+
+        # TODO(evrardjp): Use os_port to get that information
         - name: Display VIP ip
           shell: |
-            portdetails=$(openstack port show ${STACK_NAME}-vip -c fixed_ips -f value | cut -f 1 -d ',')
+            portdetails=$(openstack port show {{ stackname }}-vip -c fixed_ips -f value | cut -f 1 -d ',')
             vip=$(eval ${portdetails} && echo $ip_address)
             echo $vip
           args:
             executable: /bin/bash
           register: _vipip
           changed_when: false
+          tags:
+            - skip_ansible_lint
 
         - name: Extend inventory in workspace with newly created caasp nodes
           config_template:
@@ -196,8 +205,9 @@
             state: absent
 
         - name: Remove host from known hosts
-          shell: ssh-keygen -R {{ hostvars[item]['ansible_host'] | quote }}
+          command: ssh-keygen -R {{ hostvars[item]['ansible_host'] | quote }}
           loop: "{{ groups['caasp-admin'] + groups['caasp-masters'] + groups['caasp-workers'] }}"
+          changed_when: True
           args:
             executable: /bin/bash
 

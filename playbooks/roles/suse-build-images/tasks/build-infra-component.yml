@@ -6,8 +6,10 @@
     dest: "/tmp/build_component.sh"
     mode: "0755"
 
+# TODO(evrardjp): Cleanup this for idempotency
 - name: Build and push infra component - suse {{ component }} image
-  shell: |
-    /tmp/build_component.sh
+  command: /tmp/build_component.sh
   args:
     chdir: "{{ devenv_root }}/openstack-helm-images"
+  tags:
+    - skip_ansible_lint

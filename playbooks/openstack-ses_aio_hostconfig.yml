@@ -32,6 +32,8 @@
         - SES5-product
         - SES5-update
         - SLE12Containers
+      tags:
+        - skip_ansible_lint
 
     - name: Refresh zypper. After this step, we can rely on ansible modules.
       raw: |
@@ -40,11 +42,16 @@
         #zypper ar -f -G https://provo-mirror.opensuse.org/repositories/Virtualization:/containers/SLE_12_SP3/ Virtualization_containers;
         #zypper ar -f -G  http://kirk.provo.novell.com/repositories/SUSE/Products/OpenStack-Cloud/8/x86_64/product/ openstackcloud-8-update
         zypper refresh
+      tags:
+        - skip_ansible_lint
 
     - name: Upgrade host
       zypper:
         state: dist-upgrade
         name: '*'
+      register: _pkgupgrade
+      until: _pkgupgrade is success
+      retries: 5
 
     #On some images this service is not defined and the systemctl command fails.
     #The failed_when false is temporary until I find out proper conditional on this task.
@@ -66,6 +73,9 @@
         ssh-keyscan -H  127.0.0.1 >> ~/.ssh/known_hosts
       args:
         executable: /bin/bash
+        warn: False
+      tags:
+        - skip_ansible_lint
 
     - name: Reboot host
       reboot:
@@ -74,7 +84,10 @@
     - name: Install extra software
       zypper:
         name: "{{ ses_packages }}"
-        state: latest
+        state: present
+      register: _pkginstall
+      until: _pkginstall is success
+      retries: 5
 
     - name: Store facts
       setup:

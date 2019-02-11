@@ -16,6 +16,8 @@
         - SUSE-CA
         - OpenStack-Cloud8-product
         - SLE12Containers
+      tags:
+        - skip_ansible_lint
 
     - name: Refresh zypper. After this step, we can rely on ansible modules.
       raw: |
@@ -24,11 +26,16 @@
         #zypper ar -f -G https://provo-mirror.opensuse.org/repositories/Virtualization:/containers/SLE_12_SP3/ Virtualization_containers;
         #zypper ar -f -G  http://kirk.provo.novell.com/repositories/SUSE/Products/OpenStack-Cloud/8/x86_64/product/ openstackcloud-8-update
         zypper refresh
+      tags:
+        - skip_ansible_lint
 
     - name: Upgrade host
       zypper:
         state: dist-upgrade
         name: '*'
+      register: _pkgupdate
+      until: _pkgupdate is success
+      retries: 5
 
     #On some images this service is not defined and the systemctl command fails.
     #The failed_when false is temporary until I find out proper conditional on this task.
@@ -41,6 +48,7 @@
         - SuSEfirewall2_setup.service
         - SuSEfirewall2_init.service
 
+    # TODO(evrardjp): Move this to ansible native tasks
     - name: Prepare keys
       shell: |
         if [ ! -f ~/.ssh/id_rsa ]; then
@@ -50,6 +58,9 @@
         ssh-keyscan -H  127.0.0.1 >> ~/.ssh/known_hosts
       args:
         executable: /bin/bash
+        warn: False
+      tags:
+        - skip_ansible_lint
 
     - name: Reboot host
       reboot:

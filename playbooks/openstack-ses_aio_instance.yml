@@ -84,6 +84,7 @@
             terminate_volume: yes
             timeout: 300
         - name: Remove host from known hosts
-          shell: "ssh-keygen -R {{ hostvars['ses-aio']['ansible_host'] | quote }}"
+          command: "ssh-keygen -R {{ hostvars['ses-aio']['ansible_host'] | quote }}"
           args:
             executable: /bin/bash
+            warn: False

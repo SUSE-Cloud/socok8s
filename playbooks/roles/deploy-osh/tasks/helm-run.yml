@@ -56,7 +56,7 @@
         executable: /bin/bash
 
     - name: Adding helm repos
-      shell: helm repo add localhost http://localhost:8879/charts
+      command: helm repo add localhost http://localhost:8879/charts
       when:
         - _helmrepolist.rc != 0
       args:

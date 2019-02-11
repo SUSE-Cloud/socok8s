@@ -24,6 +24,9 @@
       package:
         name: "{{ velum_automation_host_packages }}"
         state: present
+      register: _pkginstall
+      until: _pkginstall is success
+      retries: 5
       vars:
         velum_automation_host_packages:
           - git
@@ -47,3 +50,5 @@
       args:
         executable: /bin/bash
         chdir: "{{ upstream_repos_clone_folder }}/ccp/automation/velum-bootstrap"
+      tags:
+        - skip_ansible_lint

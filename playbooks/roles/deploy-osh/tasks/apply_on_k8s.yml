@@ -7,5 +7,8 @@
     owner: "root"
     group: "root"
 
+# TODO(evrardjp): Add a changed_when: to help idempotency
 - name: "Apply generated file in k8s ({{ item.action }})"
   command: "kubectl apply -f {{ item.templated_location }} --overwrite=true"
+  tags:
+    - skip_ansible_lint

@@ -20,15 +20,19 @@
   shell: |
     docker ps | grep {{ local_registry_name }}
   register: registry_running_cmd_status
+  changed_when: false
   failed_when: false
   tags:
     - run
 
+# TODO(evrardjp) move this to docker module
 - name: Start local docker registry if not running
   shell: |
     docker run -d -p {{ local_registry_port }}:{{ local_registry_port }} --name {{ local_registry_name }} --restart always registry:2
   when:
     - registry_running_cmd_status.rc != 0
+  tags:
+    - skip_ansible_lint
 
 - name: Ensure local-registry DNS resolution is set in /etc/hosts
   blockinfile:
@@ -51,9 +55,9 @@
   set_fact:
     _upd_docker_daemon_conf: "{{ _docker_daemon_conf | combine({ item.key: item.value }) }}"
   with_items:
-    - { key: "insecure-registries", value: "[\"{{local_registry_name}}:{{local_registry_port}}\"]" }
+    - { key: "insecure-registries", value: "[\"{{ local_registry_name }}:{{ local_registry_port }}\"]" }
   when:
-    - _docker_daemon_conf | json_query('"insecure-registries"') | default("", true) == ""
+    - _docker_daemon_conf | json_query('"insecure-registries"') | default("undefined", true) == "undefined"
 
 - name: Write back updated docker daemon file
   copy:
@@ -74,6 +78,7 @@
   loop_control:
     loop_var: component
 
+# TODO(evrardjp): Ensure idempotency here
 - name: Build Openstack Services images via loci
   shell: |
     export LOCI_SRC_DIR={{ devenv_root }}/loci
@@ -84,3 +89,5 @@
     ./openstack/loci/build.sh
   args:
     chdir: "{{ devenv_root }}/openstack-helm-images"
+  tags:
+    - skip_ansible_lint

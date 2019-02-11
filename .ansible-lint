@@ -1,2 +1,6 @@
 exclude_paths:
   - submodules
+  - playbooks/roles/ansible-config_template
+  - playbooks/roles/ses
+skip_list:
+  - '204'

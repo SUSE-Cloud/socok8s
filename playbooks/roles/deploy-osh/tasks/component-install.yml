@@ -14,3 +14,5 @@
     chdir: "{{ _cmpnt_chdir | default('/opt/openstack-helm') }}"
   environment:
     OSH_INFRA_PATH: /opt/openstack-helm-infra
+  tags:
+    - skip_ansible_lint
