@@ -28,10 +28,8 @@ function deploy_ccp_deployer() {
     run_ansible ${socok8s_absolute_dir}/openstack-deploy_ccp_deployer.yml
 }
 function enroll_caasp_workers() {
-    echo "Enrolling caasp worker nodes into the cluster"
-    run_ansible ${socok8s_absolute_dir}/playbooks/generic-enroll_caasp_nodes_in_caasp_cluster.yml
-    echo "Ensure CaaSP workers are ready for OSH"
-    run_ansible -i inventory-osh.ini -t workersetup ${socok8s_absolute_dir}/7_deploy_osh/play.yml
+    echo "Enrolling caasp worker nodes into the cluster and ensuring they are ready for openstack"
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-enroll_caasp_workers.yml
 }
 function patch_upstream(){
     echo "Running dev-patcher"
