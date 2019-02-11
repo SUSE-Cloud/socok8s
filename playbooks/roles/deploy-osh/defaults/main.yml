@@ -1,5 +1,5 @@
 ---
-# defaults file for suse-osh-deploy
+# defaults file for deploy-osh
 
 # Location of the kubeconfig file, fetched from velum UI.
 kubeconfig_file_path: "~/suse-osh-deploy/kubeconfig"

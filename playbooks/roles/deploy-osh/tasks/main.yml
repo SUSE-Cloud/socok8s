@@ -1,5 +1,5 @@
 ---
-# tasks file for suse-osh-deploy
+# tasks file for deploy-osh
 - name: Load variables
   include_vars: "{{ item }}"
   loop:

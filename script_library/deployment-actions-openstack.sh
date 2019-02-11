@@ -47,7 +47,7 @@ function build_images(){
 }
 function deploy_osh(){
     echo "Now deploy SUSE version of OSH"
-    run_ansible -i inventory-osh.ini -t deploy ${socok8s_absolute_dir}/7_deploy_osh/play.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_osh.yml
 }
 function teardown(){
     clean_openstack
