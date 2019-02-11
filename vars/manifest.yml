@@ -14,4 +14,4 @@ upstream_repos:
     version: c94e1dfc86cae044a4582f321bb1721846419a00
   kubic:
     src: https://github.com/kubic-project/automation.git
-    version: master
+    version: 2aa5a53d30558dbdbbb8fa4c612902faea71d1ef
