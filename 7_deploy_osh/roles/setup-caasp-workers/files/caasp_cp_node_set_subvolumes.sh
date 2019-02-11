@@ -32,5 +32,3 @@ create_subvolume /var/lib/libvirt
 if [ -n "$mounted_snapshot" ]; then
   btrfs property set -ts /.snapshots/$mounted_snapshot/snapshot ro true
 fi
-
-#systemctl reboot
