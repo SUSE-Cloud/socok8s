@@ -13,23 +13,23 @@ source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_env_vars_set
 function deploy_ses(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Starting a SES deploy"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_ses.yml
     echo "ses-ansible deploy is successful"
 }
 function deploy_caasp(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Starting caasp deploy"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-caasp.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_caasp.yml
     echo "CaaSP deployed successfully"
 }
 function deploy_ccp_deployer() {
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Creating CCP deploy node"
-    run_ansible ${socok8s_absolute_dir}/openstack-osh.yml
+    run_ansible ${socok8s_absolute_dir}/openstack-deploy_ccp_deployer.yml
 }
 function enroll_caasp_workers() {
     echo "Enrolling caasp worker nodes into the cluster"
-    run_ansible ${socok8s_absolute_dir}/playbooks/caasp-enroll_nodes_in_cluster.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-enroll_caasp_nodes_in_caasp_cluster.yml
     echo "Ensure CaaSP workers are ready for OSH"
     run_ansible -i inventory-osh.ini -t workersetup ${socok8s_absolute_dir}/7_deploy_osh/play.yml
 }
@@ -47,7 +47,7 @@ function build_images(){
 }
 function deploy_osh(){
     echo "Now deploy SUSE version of OSH"
-    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_osh.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_osh.yml
 }
 function teardown(){
     clean_openstack
@@ -64,7 +64,7 @@ function clean_openstack(){
     echo "Deleting on OpenStack"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-osh_instance.yml -e osh_node_delete=True || true
     echo "Delete Caasp nodes"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-caasp.yml -e caasp_stack_delete=True || true
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_caasp.yml -e caasp_stack_delete=True || true
     echo "Delete SES node"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio_instance.yml -e ses_node_delete=True
 }

@@ -17,4 +17,4 @@
 
 - import_playbook: openstack-ses_aio_instance.yml
 - import_playbook: openstack-ses_aio_hostconfig.yml
-- import_playbook: ses_aio.yml
+- import_playbook: generic-deploy_ses_aio.yml
