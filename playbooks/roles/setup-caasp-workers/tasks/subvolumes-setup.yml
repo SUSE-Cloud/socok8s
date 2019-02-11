@@ -7,5 +7,5 @@
 
 - name: Reboot machine
   reboot:
-    timeout: "{{ caasp_reboot_timeout }}"
+    reboot_timeout: "{{ caasp_reboot_timeout }}"
   when: _subvolume_setup is changed
