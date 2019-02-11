@@ -83,8 +83,12 @@
             state: absent
             terminate_volume: yes
             timeout: 300
+          register: _oshdelete
+
         - name: Remove host from known hosts
           command: "ssh-keygen -R {{ hostvars['osh-aio']['ansible_host'] | quote }}"
           args:
             executable: /bin/bash
             warn: False
+          when:
+            - _oshdelete is changed
