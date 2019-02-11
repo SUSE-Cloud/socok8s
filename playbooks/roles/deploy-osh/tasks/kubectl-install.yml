@@ -35,6 +35,9 @@
       path: "{{ _kubeconfiglocation.stdout_lines[0] }}"
     register: _kubeconfigfromautomation
 
+  #NOTE: This task needs to run under bash, and therefore the shell module
+  #(instead of command) has to be used. Therefore, skipping of linting
+  #as to be done.
   - name: Re-run automation if file is old
     when: ansible_date_time.epoch|float - _kubeconfigfromautomation.stat.mtime > 86400
     shell: ./velum-interactions -k -e /opt/ccp/environment.json

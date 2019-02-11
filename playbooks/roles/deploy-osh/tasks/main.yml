@@ -131,7 +131,7 @@
 
 
 # TODO(evrardjp): Use mechanism like glance to re-use component-install.yml code and allow any override.
-# TODO(evrardjp): Check stdout to ensure idempotency
+# TODO(evrardjp): Check stdout to ensure idempotency. In the meantime skip_ansible_lint
 - name: Setup openstack CLIs
   command: ./tools/deployment/multinode/010-setup-client.sh
   args:
@@ -250,6 +250,7 @@
     - run
 
 # TODO(evrardjp): Check stdout to ensure idempotency
+# Skip ansible linting until idempotency checks are added (changed_when/failed_when)
 - name: Execute ceph provisioner
   command: ../openstack-helm/tools/deployment/developer/ceph/046-ceph-deploy-with-existing-ceph.sh
   args:

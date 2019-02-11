@@ -30,6 +30,7 @@
   when: _helmcheck.stdout not in ['0','1','2']
 
 # TODO(evrardjp): Move this to get_url or to a package install (to be decided)
+# error of linting: not using get_url.
 - name: Installing helm client
   shell: "curl {{ helm_download_url }} | bash"
   args:
@@ -43,16 +44,12 @@
   register: _helminstall
   when: helm_state == 'to_install'
   changed_when: True
-  tags:
-    - skip_ansible_lint
 
 - name: Upgrade tiller
   command: helm init --upgrade
   register: _helmupgrade
   when: helm_state == 'to_update' or helm_state == 'to_install'
   changed_when: True
-  tags:
-    - skip_ansible_lint
 
 - name: Show stdout of upgrade
   debug:

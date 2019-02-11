@@ -7,6 +7,7 @@
     mode: "0755"
 
 # TODO(evrardjp): Cleanup this for idempotency
+# in the meantime, skip_ansible_lint
 - name: Build and push infra component - suse {{ component }} image
   command: /tmp/build_component.sh
   args:

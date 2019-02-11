@@ -146,6 +146,8 @@
             verbosity: 1
 
         # TODO(evrardjp): Use os_port to get that information
+        # Environment variables don't work as part of command, therefore
+        # shell has to be used, which causes lint to worry too much.
         - name: Display VIP ip
           shell: |
             portdetails=$(openstack port show {{ stackname }}-vip -c fixed_ips -f value | cut -f 1 -d ',')
@@ -205,13 +207,10 @@
             state: absent
 
         - name: Remove host from known hosts
-          shell: ssh-keygen -R {{ hostvars[item]['ansible_host'] | quote }}
+          known_hosts:
+            state: absent
+            name: "{{ hostvars[item]['ansible_host'] }}"
           loop: "{{ groups['caasp-admin'] + groups['caasp-masters'] + groups['caasp-workers'] }}"
-          changed_when: True
-          args:
-            executable: /bin/bash
-          tags:
-            - skip_ansible_lint
 
         - name: Remove caasp files
           file:

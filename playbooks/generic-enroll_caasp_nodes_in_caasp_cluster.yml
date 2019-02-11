@@ -41,6 +41,10 @@
         force: yes
         version: "{{ upstream_repos['kubic']['version'] }}"
 
+    # Ansible velum needs to get given a specific shell, bash, therefore
+    # the shell module has to be used (command doesn't accept executable)
+    # Skip ansible lint is therefore used, to avoid the warning that this task
+    # should be using command instead.
     - name: Use Velum tooling
       shell: "./velum-interactions {{ item }} -e {{ upstream_repos_clone_folder }}/ccp/environment.json"
       with_items:

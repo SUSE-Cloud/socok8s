@@ -7,6 +7,9 @@
     config_type: yaml
   register: _usertemplatedata
 
+# This needs specific executable, and therefore needs shell module,
+# which causes an ansible-lint issue (no idempotency test). In the meantime
+# that idempotency tests are created, we skip_ansible_lint
 - name: Run the override file
   shell: "{{ _cmpnt_runcommand }}"
   args:

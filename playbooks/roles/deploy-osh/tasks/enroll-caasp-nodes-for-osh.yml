@@ -13,7 +13,7 @@
 
 # TODO(evrardjp): Make this conditional if a previous enrollment was already done
 - name: Enroll node for OSH control plane
-  shell: "kubectl label nodes {{ item }} openstack-control-plane=enabled"
+  command: "kubectl label nodes {{ item }} openstack-control-plane=enabled"
   register: _enrollforopenstack
   changed_when:
     - _enrollforopenstack.rc == 0
@@ -22,11 +22,9 @@
     - _enrollforopenstack.stderr.find("already has a value (enabled)") == -1
   with_items:
     - "{{ _all_casp_nodenames.stdout_lines }}"
-  tags:
-    - skip_ansible_lint
 
 - name: Enroll node for OSH compute node
-  shell: "kubectl label nodes {{ item }} openstack-compute-node=enabled"
+  command: "kubectl label nodes {{ item }} openstack-compute-node=enabled"
   register: _enrollforopenstack
   changed_when:
     - _enrollforopenstack.rc == 0
@@ -35,11 +33,9 @@
     - _enrollforopenstack.stderr.find("already has a value (enabled)") == -1
   with_items:
     - "{{ _all_casp_nodenames.stdout_lines }}"
-  tags:
-    - skip_ansible_lint
 
 - name: Enroll node for OSH as ovs node
-  shell: "kubectl label nodes {{ item }} openvswitch=enabled"
+  command: "kubectl label nodes {{ item }} openvswitch=enabled"
   register: _enrollforopenstack
   changed_when:
     - _enrollforopenstack.rc == 0
@@ -48,8 +44,6 @@
     - _enrollforopenstack.stderr.find("already has a value (enabled)") == -1
   with_items:
     - "{{ _all_casp_nodenames.stdout_lines }}"
-  tags:
-    - skip_ansible_lint
 
 - name: Store all nodes details
   command: kubectl get nodes -o json
@@ -86,5 +80,3 @@
     - "(master_node | default('')) | length > 0"
     - suse_osh_deploy_require_ha | bool
     - (_all_casp_nodenames.stdout_lines | length) == 3
-  tags:
-    - skip_ansible_lint

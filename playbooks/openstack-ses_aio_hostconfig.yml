@@ -19,6 +19,9 @@
     - name: Ensure all the vars are loaded
       include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
 
+    # TODO(evrardjp): Test if we can include this step in the creation of the node.
+    # In the meantime, we rely on raw ansible module to run task, which causes
+    # the absence of idempotency, and therefore complaining of ansible-lint (301)
     - name: Configure host repositories
       raw: |
         zypper ar -f -G {{ deploy_on_openstack_repos_to_configure[item] }} {{ item }}
@@ -57,6 +60,8 @@
         - SuSEfirewall2_setup.service
         - SuSEfirewall2_init.service
 
+    # TODO(evrardjp): Move this to native ansible module, and remove the
+    # skip_ansible_lint
     - name: Prepare keys
       shell: |
         if [ ! -f ~/.ssh/id_rsa ]; then

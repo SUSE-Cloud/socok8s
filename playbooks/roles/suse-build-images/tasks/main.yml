@@ -25,7 +25,7 @@
   tags:
     - run
 
-# TODO(evrardjp) move this to docker module
+# TODO(evrardjp) move this to docker module and remove skip_ansible_lint
 - name: Start local docker registry if not running
   shell: |
     docker run -d -p {{ local_registry_port }}:{{ local_registry_port }} --name {{ local_registry_name }} --restart always registry:2
@@ -79,6 +79,7 @@
     loop_var: component
 
 # TODO(evrardjp): Ensure idempotency here
+# In the meantime, skip_ansible_lint
 - name: Build Openstack Services images via loci
   shell: |
     export LOCI_SRC_DIR={{ devenv_root }}/loci
