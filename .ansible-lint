@@ -2,5 +2,6 @@ exclude_paths:
   - submodules
   - playbooks/roles/ansible-config_template
   - playbooks/roles/ses
+# Allow warning 204, which means we are enabling longer than 120 chars lines.
 skip_list:
   - '204'
