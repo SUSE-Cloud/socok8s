@@ -39,8 +39,7 @@ function patch_upstream(){
 function build_images(){
     echo "Running image builder"
     echo "Nothing will happen if developer mode is not set"
-    echo "TODO: Separate this into a different playbook"
-    run_ansible -i inventory-osh.ini -e "build_osh_images=yes" ${socok8s_absolute_dir}/7_deploy_osh/play.yml
+    run_ansible -e "build_osh_images=yes" ${socok8s_absolute_dir}/playbooks/openstack-build_images.yml
 }
 function deploy_osh(){
     echo "Now deploy SUSE version of OSH"
