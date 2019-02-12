@@ -25,6 +25,9 @@
     name: docker
     state: started
 
+- name: Reset ssh connection to pick up docker group
+  meta: reset_connection
+
 - name: Check if local docker registry server is running
   shell: |
     set -o pipefail
