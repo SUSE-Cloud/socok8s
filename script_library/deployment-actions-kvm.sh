@@ -25,27 +25,25 @@ function enroll_caasp_workers() {
 function patch_upstream(){
     echo "Running dev-patcher"
     echo "Nothing will happen if developer mode is not set"
-    echo "TODO: Separate this into a different playbook"
-    run_ansible -i inventory-osh.ini -t upstream_patching ${socok8s_absolute_dir}/7_deploy_osh/play.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-patch_upstream.yml
 }
 function build_images(){
     echo "Running image builder"
     echo "Nothing will happen if developer mode is not set"
-    echo "TODO: Separate this into a different playbook"
-    run_ansible -i inventory-osh.ini -e "build_osh_images=yes" ${socok8s_absolute_dir}/7_deploy_osh/play.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-build_images.yml -e "build_osh_images=yes"
 }
 function deploy_osh(){
     echo "Now deploy SUSE version of OSH"
-    run_ansible -i inventory-osh.ini -t deploy ${socok8s_absolute_dir}/7_deploy_osh/play.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_osh.yml
 }
 function deploy_airship(){
     echo "Now deploy SUSE version of Airship"
-    run_ansible -i inventory-airship.ini ${socok8s_absolute_dir}/8_deploy_airship/play.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_airship.yml
 }
 function clean_k8s(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
-        ansible -m script -a "script_library/cleanup-k8s.sh" osh-deployer -i inventory-osh.ini
+        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_k8s.yml
     fi
 }
 function clean_kvm(){
@@ -54,7 +52,8 @@ function clean_kvm(){
 function clean_userfiles(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
-        rm -rf ~/suse-osh-deploy/*
+        echo "DELETE_ANYWAY is set, deleting user files"
+        rm -rf ~/suse-socok8s-deploy/
     fi
 }
 function teardown(){

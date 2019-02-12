@@ -1,0 +1,70 @@
+localhost:
+  hosts:
+    localhost:
+      ansible_connection: local
+
+airship-deployer:
+  hosts:
+    localhost:
+      ansible_connection: local
+
+airship-admin:
+  hosts:
+    linux-jp1o:
+      ansible_host: 192.168.89.79
+
+airship-masters:
+  hosts:
+    linux-qjrf:
+      ansible_host: 192.168.89.196
+
+airship-ucp-workers:
+  hosts:
+    linux-wstv:
+      ansible_host: 192.168.89.142
+      primary: yes
+    linux-qdka:
+      ansible_host: 192.168.89.143
+    linux-r6tu:
+      ansible_host: 192.168.89.62
+    linux-di7u:
+      ansible_host: 192.168.89.144
+
+airship-openstack-control-workers:
+  hosts:
+    linux-wstv:
+      ansible_host: 192.168.89.142
+      primary: yes
+    linux-qdka:
+      ansible_host: 192.168.89.143
+    linux-r6tu:
+      ansible_host: 192.168.89.62
+    linux-di7u:
+      ansible_host: 192.168.89.144
+
+airship-openstack-compute-workers:
+  hosts:
+    linux-wstv:
+      ansible_host: 192.168.89.142
+      primary: yes
+    linux-qdka:
+      ansible_host: 192.168.89.143
+    linux-r6tu:
+      ansible_host: 192.168.89.62
+    linux-di7u:
+      ansible_host: 192.168.89.144
+
+airship_workers:
+  children:
+    airship-ucp-workers:
+    airship-openstack-control-workers:
+    airship-openstack-compute-workers:
+
+all:
+  children:
+    airship-admin:
+    airship-masters:
+    airship-workers:
+    airship-deployer:
+  vars:
+    ansible_user: root

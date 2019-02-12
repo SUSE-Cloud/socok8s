@@ -1,0 +1,101 @@
+---
+# tasks file for suse-airship-deploy
+- name: Load standard variables
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
+- name: Load vip from user variables
+  include_vars: "{{ socok8s_extravars }}"
+
+- name: Install system packages
+  become: yes
+  package:
+    name: "{{ suse_airship_deploy_packages }}"
+    state: present
+  register: install_packages
+  until: install_packages is success
+  retries: 5
+  delay: 2
+  tags:
+    - install
+
+- name: Pip install python libraries
+  pip:
+    name: "{{ suse_airship_deploy_python_libs }}"
+  register: install_python_libs
+  until: install_python_libs is success
+  retries: 5
+  delay: 2
+  tags:
+    - install
+
+- name: Enable docker systemd service
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+  tags:
+    - install
+
+- name: Add the user to the group 'docker'
+  user:
+    name: "{{ lookup('env','USER') }}"
+    groups: docker
+    append: yes
+
+- name: Ensure kubectl is installed
+  include: kubectl-install.yml
+  tags:
+    - install
+
+- name: Ensure helm and tiller are up to date
+  include: helm-install.yml
+  tags:
+    - install
+
+- name: Ensure helm runs on localhost
+  include: helm-run.yml
+  tags:
+    - run
+
+- name: Ensure VIP is present in /etc/hosts for the services to deploy
+  blockinfile:
+    path: /etc/hosts
+    block: |
+      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} keystone.ucp.svc.cluster.local
+      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} barbican.ucp.svc.cluster.local
+      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} shipyard.ucp.svc.cluster.local
+      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} keystone keystone.openstack.svc.cluster.local
+      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} glance glance.openstack.svc.cluster.local
+      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} cinder cinder.openstack.svc.cluster.local
+      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} nova nova.openstack.svc.cluster.local
+      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} neutron neutron.openstack.svc.cluster.local
+      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} horizon horizon.openstack.svc.cluster.local
+
+- name: Creates /etc/openstack directory
+  become: yes
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "700"
+    owner: "{{ ansible_user }}"
+  with_items:
+    - /etc/openstack
+    - /opt/socok8s
+
+- name: Copy clouds.yml
+  template:
+    src: clouds.yml.j2
+    dest: /etc/openstack/clouds.yaml
+    mode: "700"
+
+#- name: Clone Airship code repositories
+#  git:
+#    repo: "{{ item.value.src }}"
+#    dest: "{{ upstream_repos_clone_folder }}/{{ item.key }}"
+#    update: yes
+#    force: yes
+#    version: "{{ item.value.version | default('HEAD') }}"
+#  with_dict: "{{ airship_repos }}"
+#  register: _gitclone
+#  until: _gitclone is succeeded
+

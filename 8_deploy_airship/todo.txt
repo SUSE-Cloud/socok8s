@@ -1,4 +1,0 @@
-copy patched airship and osh repo's to armada container
-move deployer to container model (but building local images may be an issue?)
-delete node label when tear down
-ceph provisioner for cepf conf irst, then secrets

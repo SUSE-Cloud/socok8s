@@ -211,7 +211,7 @@ on a CI/developer machine.
 In order to not pollute the developer/CI machine (called further
 'localhost'), all the data relevant for a deployment (like any
 eventual override) will be stored in user-space, unpriviledged
-access (this means the ~/suse-osh-deploy folder for now).
+access (this means the ~/suse-socok8s-deploy folder for now).
 Any hardware and software distribution can be used,
 as long as 'localhost' is able to run git, and ansible
 (see requirements). This also helps the story of running behind
@@ -332,12 +332,12 @@ On the deployer:
   running the playbooks. [NOTE: this step can be removed or adapted
   subject to merge of PR #29]
 
-- Add suse_osh_deploy_vip_with_cidr to
-  ~/suse-osh-deploy/env/extravars. This should be an IP available
+- Add socok8s_deploy_vip_with_cidr to
+  ~/suse-socok8s-deploy/env/extravars. This should be an IP available
   on the network you're using which can be used as a VIP.
 
 - Download the kubeconfig from Velum on the CAASP admin node and copy
-  it to ~/suse-osh-deploy/kubeconfig and ~/.kube/config
+  it to ~/suse-socok8s-deploy/kubeconfig and ~/.kube/config
 
 - pip install --upgrade pip to avoid segfaults when installing
   openstack clients.
@@ -351,7 +351,7 @@ On each CAASP node:
 Now you are ready to run Stage 7, as follows:
 
 ```
-ansible-playbook -v -e @~/suse-osh-deploy/env/extravars <play>
+ansible-playbook -v -e @~/suse-socok8s-deploy/env/extravars <play>
 ```
 
 Please also check the etherpad for more documentation:

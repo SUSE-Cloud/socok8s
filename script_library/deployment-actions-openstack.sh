@@ -72,6 +72,6 @@ function clean_userfiles(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
         echo "DELETE_ANYWAY is set, deleting user files"
-        rm -rf ~/suse-osh-deploy/
+        rm -rf ~/suse-socok8s-deploy/
     fi
 }
