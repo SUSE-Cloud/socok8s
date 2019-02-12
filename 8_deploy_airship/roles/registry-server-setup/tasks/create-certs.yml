@@ -1,0 +1,22 @@
+---
+
+- name: Creates certs directory
+  file:
+    path: "{{ suse_registry_certs_dir }}"
+    state: directory
+
+- name: Check if self-signed certifcate already exists
+  stat:
+    path: "{{ suse_registry_certs_dir }}/domain.crt"
+  register: _domain_cert_check
+
+- name: Create local self-signed certificate, if not already present
+  command: >
+     openssl req -x509 -newkey rsa:4096 -nodes
+        -subj '/CN={{ ansible_hostname }}' \
+        -days 365 \
+        -keyout "{{ suse_registry_certs_dir }}/domain.key" \
+        -out "{{ suse_registry_certs_dir }}/domain.crt"
+  register: sscert_generate_result
+  when:
+    - not _domain_cert_check.stat.exists

@@ -6,6 +6,12 @@
   roles:
     - role: suse-airship-setup-deployer
 
+- hosts: airship-all-nodes
+  gather_facts: false
+  any_errors_fatal: true
+  roles:
+    - registry-server-setup
+
 - hosts: airship-deployer
   gather_facts: yes
   any_errors_fatal: true
