@@ -1,3 +1,8 @@
 ---
 upstream_repos_clone_folder: /opt
 developer_mode: "{{ (lookup('env','OSH_DEVELOPER_MODE') | default('False', true) ) | bool }}"
+
+suse_airship_deploy_home: "~/suse-airship-deploy"
+suse_airship_deploy_config_location: "{{ suse_airship_deploy_home }}"
+suse_airship_deploy_user_variables: "{{ suse_airship_deploy_config_location }}/env/extravars"
+suse_airship_deploy_ses_config_path: "{{ suse_airship_deploy_config_location }}/ses_config.yml"

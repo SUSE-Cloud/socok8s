@@ -1,9 +1,9 @@
 ---
 # tasks file for suse-airship-deploy
 - name: Load standard variables
-  include_vars: "{{ playbook_dir }}/../common-vars.yml"
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
 
-- set_fact: 
+- set_fact:
     site_path: "{{ suse_airship_deploy_home }}/sites/{{ suse_airship_deploy_site_name }}"
 
 - name: Create site manifest directory
@@ -27,7 +27,7 @@
 
 - name: Build Armada image
   make:
-    chdir: "{{ suse_airship_deploy_repo_location }}/airship-armada"
+    chdir: "{{ upstream_repos_clone_folder }}/airship-armada"
     target: images
   when: _gitclone is changed
   tags:
@@ -35,12 +35,18 @@
 
 - name: Build Shipyard and Deckhand charts
   make:
-    chdir: "{{ suse_airship_deploy_repo_location }}/{{ item }}"
-    target: all
-  when: _gitclone is changed
+    chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
+    target: "{{ item.target }}"
+    params:
+      DISTRO: "{{ suse_distro_identifier }}"
+      DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      IMAGE_NAME: "{{ item.image_name }}"
+#  when: _gitclone is changed
   loop:
-    - airship-shipyard
-    - airship-deckhand
+    - { repo_name: "airship-shipyard", target: "images", image_name: "airflow" }
+    - { repo_name: "airship-shipyard", target: "images", image_name: "shipyard" }
+    - { repo_name: "airship-deckhand", target: "images", image_name: "deckhand" }
   tags:
     - install
 
@@ -64,11 +70,11 @@
     - install
 
 - name: Deploy Armada pod to CaaSP
-  shell: "kubectl apply -f {{ suse_airship_deploy_config_location }}//armada.yaml"
+  shell: "kubectl apply -f {{ suse_airship_deploy_config_location }}/armada.yaml"
   tags:
     - install
 
-- name: Get Armada pod name 
+- name: Get Armada pod name
   shell: 'kubectl get pod -l app=armada -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
   register: armada_results
   until: armada_results.stdout.find('armada-') == 0
@@ -116,15 +122,15 @@
   loop:
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/.kube
-    - kubectl cp ~/.kube/config {{ armada_pod_name }}:/armada/.kube/config -n ucp
-    - kubectl cp  {{ suse_airship_deploy_config_location }}/manifests {{ armada_pod_name }}:/armada -n ucp
+    - kubectl cp ~/.kube/config ucp/{{ armada_pod_name }}:/armada/.kube/config
+    - kubectl cp  {{ suse_airship_deploy_config_location }}/manifests ucp/{{ armada_pod_name }}:/armada
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/airship-components
-    - kubectl cp {{ suse_airship_deploy_repo_location }}/airship-armada {{ armada_pod_name }}:/armada/airship-components/ -n ucp
-    - kubectl cp {{ suse_airship_deploy_repo_location }}/airship-deckhand {{ armada_pod_name }}:/armada/airship-components/ -n ucp
-    - kubectl cp {{ suse_airship_deploy_repo_location }}/airship-pegleg {{ armada_pod_name }}:/armada/airship-components/ -n ucp
-    - kubectl cp {{ suse_airship_deploy_repo_location }}/airship-shipyard {{ armada_pod_name }}:/armada/airship-components/ -n ucp
-    - kubectl cp {{ suse_airship_deploy_repo_location }}/openstack-helm {{ armada_pod_name }}:/armada/airship-components/ -n ucp
-    - kubectl cp {{ suse_airship_deploy_repo_location }}/openstack-helm-infra {{ armada_pod_name }}:/armada/airship-components/ -n ucp
+    - kubectl cp {{ upstream_repos_clone_folder }}/airship-armada ucp/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/airship-deckhand ucp/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/airship-pegleg ucp/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/airship-shipyard ucp/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm ucp/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm-infra ucp/{{ armada_pod_name }}:/armada/airship-components/
   tags:
     - install
 
@@ -155,3 +161,19 @@
   delay: 10
   ignore_errors: yes
 
+- name: Copy customer site data to treasuremap repo
+  copy:
+    src: "{{ suse_airship_deploy_home }}/sites/{{ suse_airship_deploy_site_name }}"
+    dest: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/"
+
+- name: Run overcloud deployment now
+  shell: ./tools/deployment/airskiff/developer/100-deploy-osh.sh
+  args:
+    executable: /bin/bash
+    chdir: "{{ upstream_repos_clone_folder }}/airship-treasuremap"
+  environment:
+    PL_SITE: "{{ suse_airship_deploy_site_name }}"
+  register: overcloud_deploy_result
+
+- debug:
+    msg: "Overcloud deployment result = {{ overcloud_deploy_result }}"

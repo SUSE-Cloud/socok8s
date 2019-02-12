@@ -1,7 +1,7 @@
 ---
 # tasks file for suse-airship-deploy
 - name: Load standard variables
-  include_vars: "{{ playbook_dir }}/../common-vars.yml"
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
 
 - name: Load admin keyring from user_variables (required for now)
   include_vars: "{{ suse_airship_deploy_user_variables }}"

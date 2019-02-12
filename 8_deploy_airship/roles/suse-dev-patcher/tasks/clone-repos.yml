@@ -2,7 +2,7 @@
 - name: Clone OpenStack-Helm related code repositories
   git:
     repo: "{{ item.value.src }}"
-    dest: "{{suse_airship_deploy_repo_location }}/{{ item.key }}"
+    dest: "{{upstream_repos_clone_folder }}/{{ item.key }}"
     update: yes
     force: yes
     version: "{{ item.value.version }}"

@@ -2,10 +2,10 @@
 upstream_repos:
   openstack-helm-infra:
     src: https://git.openstack.org/openstack/openstack-helm-infra
-    version: 5da44ee3095906d97808fe73b8d0f6617cd623c7  # commit ref 4th December 2018
+    version: master
   openstack-helm:
     src: https://git.openstack.org/openstack/openstack-helm
-    version: 030868aee3e14122eac1d39a1bb2d154ef9c86c9  # frozen ref 4th December 2018
+    version: master
   openstack-helm-images:
     src: https://github.com/openstack/openstack-helm-images
     version: master
@@ -26,4 +26,4 @@ upstream_repos:
     version: master
   airship-treasuremap:
     src: https://github.com/openstack/airship-treasuremap
-    version: 7db4b789f26a97a9988c5bca13e9833df5f0017f
+    version: master

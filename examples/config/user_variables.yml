@@ -1,18 +1,5 @@
-# BEGIN ANSIBLE MANAGED BLOCK
-ceph_admin_keyring_b64key: QVFCMzNlUmJBQUFBQUJBQVdqZGFHN2VxUXdhRlBzQ1NuanQvc3c9PQ==
-ceph_user_keyring_b64key: QVFCMzNlUmJBQUFBQUJBQVdqZGFHN2VxUXdhRlBzQ1NuanQvc3c9PQ==
-# END ANSIBLE MANAGED BLOCK
-
-caasp_cluster_master_nodes: [192.168.86.200]
-caasp_cluster_worker_nodes: [192.168.86.201, 192.168.86.202, 192.168.86.203, 192.168.86.204]
-caasp_cluster_worker_cp_nodes: [192.168.86.201, 192.168.86.202, 192.168.86.203, 192.168.86.204]
-
-
-suse_airship_deploy_vip_with_cidr: 192.168.86.197
-
-caasp_kubeconfig_via_cli: true
-caasp_login_credentials:
-  server_name: linux-eqli.lan
-  server_port: 6443
-  username: akant@suse.com
-  password: password
+suse_osh_deploy_vip_with_cidr: 192.168.89.251
+suse_airship_deploy_vip_with_cidr: 192.168.89.251
+ceph_admin_keyring_b64key: QVFBWkUxdGNBQUFBQUJBQVJMdnF0eFQxbU9DZG0rNXM2SlhJM3c9PQ==
+ceph_user_keyring_b64key: QVFBWkUxdGNBQUFBQUJBQVJMdnF0eFQxbU9DZG0rNXM2SlhJM3c9PQ==
+suse_airship_deploy_site_name: demo

@@ -8,4 +8,4 @@ dev_patcher_packages:
 #unrelated patches will fail (because not cloned)
 #conflicting patches will fail (because need resolving)
 dev_patcher_patches:
-  - 623146
+  - 636229
