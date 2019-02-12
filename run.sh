@@ -24,6 +24,8 @@ source ${scripts_absolute_dir}/run-ansible.sh
 pushd ${socok8s_absolute_dir}
 
 # All the deployment actions (deploy steps) are defined in script_library/actions-openstack.sh for example.
+# For simplificity, the following script contains each action for a deploy mechanism, and each action should
+# contain a "master" playbook, which should be named playbooks/${DEPLOYMENT_MECHANISM}-${deployment_action}
 source ${scripts_absolute_dir}/deployment-actions-${DEPLOYMENT_MECHANISM}.sh
 
 # When automation is changed to introduce steps,

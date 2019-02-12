@@ -1,0 +1,99 @@
+---
+- hosts: ses_nodes
+  gather_facts: no
+  vars:
+    ses_packages:
+      - python-setuptools
+      - python-virtualenv
+      - python-devel
+      - autoconf
+      - git
+      - gcc
+      - make
+      - jq
+      - ca-certificates-suse
+      - rng-tools
+    # Domain name to use in the deployment. Default assumes properly configured dns name.
+    domainname: "{{ ansible_domain | default('openstack.local', True) }}"
+  tasks:
+    - name: Ensure all the vars are loaded
+      include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+
+    # TODO(evrardjp): Test if we can include this step in the creation of the node.
+    # In the meantime, we rely on raw ansible module to run task, which causes
+    # the absence of idempotency, and therefore complaining of ansible-lint (301)
+    - name: Configure host repositories
+      raw: |
+        zypper ar -f -G {{ deploy_on_openstack_repos_to_configure[item] }} {{ item }}
+      loop:
+        - SLE12SP3-product
+        - SLE12SP3-update
+        - SLE12SP3SDK-product
+        - SLE12SP3SDK-update
+        - SUSE-CA
+        - OpenStack-Cloud8-product
+        - SES5-product
+        - SES5-update
+        - SLE12Containers
+      tags:
+        - skip_ansible_lint
+
+    # TODO(evrardjp): Revert back to zypper module when dist-upgrade is fixed there
+    - name: Refresh zypper. After this step, we can rely on ansible modules.
+      raw: |
+        #TODO(evrardjp): Check if utilities/devel tools/virt/cloud8updates are really needed
+        #zypper ar -f -G https://provo-mirror.opensuse.org/repositories/utilities/SLE_12/ SLE12-utilities;
+        #zypper ar -f -G https://provo-mirror.opensuse.org/repositories/Virtualization:/containers/SLE_12_SP3/ Virtualization_containers;
+        #zypper ar -f -G  http://kirk.provo.novell.com/repositories/SUSE/Products/OpenStack-Cloud/8/x86_64/product/ openstackcloud-8-update
+        zypper refresh && zypper dist-upgrade -y
+      tags:
+        - skip_ansible_lint
+
+    #On some images this service is not defined and the systemctl command fails.
+    #The failed_when false is temporary until I find out proper conditional on this task.
+    - name: Disable firewall
+      systemd:
+        enabled: no
+        name: "{{ item }}"
+      failed_when: false
+      with_items:
+        - SuSEfirewall2_setup.service
+        - SuSEfirewall2_init.service
+
+    # TODO(evrardjp): Move this to native ansible module, and remove the
+    # skip_ansible_lint
+    - name: Prepare keys
+      shell: |
+        if [ ! -f ~/.ssh/id_rsa ]; then
+          ssh-keygen -t rsa -f ~/.ssh/id_rsa -N ""
+          cat .ssh/id_rsa.pub >> .ssh/authorized_keys
+        fi
+        ssh-keyscan -H  127.0.0.1 >> ~/.ssh/known_hosts
+      args:
+        executable: /bin/bash
+        warn: False
+      tags:
+        - skip_ansible_lint
+
+    - name: Reboot host
+      reboot:
+        reboot_timeout: 900
+
+    - name: Install extra software
+      zypper:
+        name: "{{ ses_packages }}"
+        state: present
+      register: _pkginstall
+      until: _pkginstall is success
+      retries: 5
+
+    - name: Store facts
+      setup:
+
+    - name: Configure /etc/hosts
+      lineinfile:
+        name: /etc/hosts
+        line: "{{ item }}"
+      with_items:
+        - "{{ (ansible_all_ipv6_addresses|default(['::1']))[0] }} {{ inventory_hostname }}.{{ domainname }} {{ inventory_hostname }} {{ ansible_hostname }}.{{ domainname }} {{ ansible_hostname }}"
+        - "{{ (ansible_all_ipv4_addresses|default(['127.0.0.1']))[0] }} {{ inventory_hostname }}.{{ domainname }} {{ inventory_hostname }} {{ ansible_hostname }}.{{ domainname }} {{ ansible_hostname }}"

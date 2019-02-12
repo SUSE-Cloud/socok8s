@@ -1,0 +1,58 @@
+---
+- hosts: osh-deployer
+  gather_facts: no
+  tasks:
+    - name: Load variables
+      include_vars: "{{ item }}"
+      loop:
+        - "{{ playbook_dir }}/../vars/common-vars.yml"
+        - "{{ playbook_dir }}/../vars/manifest.yml"
+      tags:
+        - always
+
+    - name: Creating velum automation folder
+      file:
+        path: "{{ upstream_repos_clone_folder }}/ccp"
+        state: directory
+
+    - name: Copying environment.json
+      copy:
+        src: "{{ socok8s_caasp_environment_details }}"
+        dest: "{{ upstream_repos_clone_folder }}/ccp/environment.json"
+
+    - name: Install the necessary packages
+      package:
+        name: "{{ velum_automation_host_packages }}"
+        state: present
+      register: _pkginstall
+      until: _pkginstall is success
+      retries: 5
+      vars:
+        velum_automation_host_packages:
+          - git
+          - gcc
+          - make
+          - jq
+
+    - name: Copying suse-cloud repo for velum automation
+      git:
+        repo: "{{ upstream_repos['kubic']['src'] }}"
+        dest: "{{ upstream_repos_clone_folder }}/ccp/automation"
+        force: yes
+        version: "{{ upstream_repos['kubic']['version'] }}"
+
+    # Ansible velum needs to get given a specific shell, bash, therefore
+    # the shell module has to be used (command doesn't accept executable)
+    # Skip ansible lint is therefore used, to avoid the warning that this task
+    # should be using command instead.
+    - name: Use Velum tooling
+      shell: "./velum-interactions {{ item }} -e {{ upstream_repos_clone_folder }}/ccp/environment.json"
+      with_items:
+        - "--setup"
+        - "--configure --enable-tiller"
+        - "--bootstrap --enable-tiller"
+      args:
+        executable: /bin/bash
+        chdir: "{{ upstream_repos_clone_folder }}/ccp/automation/velum-bootstrap"
+      tags:
+        - skip_ansible_lint

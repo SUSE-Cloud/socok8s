@@ -1,0 +1,84 @@
+---
+- name: List all nodes of the caasp cluster
+  shell: |
+    set -o pipefail
+    kubectl get nodes -o json | jq -M -r '.items[].metadata.name'
+  changed_when: false
+  register: _all_casp_nodenames
+
+- name: Ensure enough nodes are running for HA
+  fail:
+    msg: "You do not have enough nodes to run OSH in HA"
+  when:
+    - suse_osh_deploy_require_ha | bool
+    - _all_casp_nodenames.stdout_lines | length < 3
+
+# TODO(evrardjp): Make this conditional if a previous enrollment was already done
+- name: Enroll node for OSH control plane
+  command: "kubectl label nodes {{ item }} openstack-control-plane=enabled"
+  register: _enrollforopenstack
+  changed_when:
+    - _enrollforopenstack.rc == 0
+  failed_when:
+    - _enrollforopenstack.rc != 0
+    - _enrollforopenstack.stderr.find("already has a value (enabled)") == -1
+  with_items:
+    - "{{ _all_casp_nodenames.stdout_lines }}"
+
+- name: Enroll node for OSH compute node
+  command: "kubectl label nodes {{ item }} openstack-compute-node=enabled"
+  register: _enrollforopenstack
+  changed_when:
+    - _enrollforopenstack.rc == 0
+  failed_when:
+    - _enrollforopenstack.rc != 0
+    - _enrollforopenstack.stderr.find("already has a value (enabled)") == -1
+  with_items:
+    - "{{ _all_casp_nodenames.stdout_lines }}"
+
+- name: Enroll node for OSH as ovs node
+  command: "kubectl label nodes {{ item }} openvswitch=enabled"
+  register: _enrollforopenstack
+  changed_when:
+    - _enrollforopenstack.rc == 0
+  failed_when:
+    - _enrollforopenstack.rc != 0
+    - _enrollforopenstack.stderr.find("already has a value (enabled)") == -1
+  with_items:
+    - "{{ _all_casp_nodenames.stdout_lines }}"
+
+- name: Store all nodes details
+  command: kubectl get nodes -o json
+  changed_when: false
+  register: _nodes
+
+- name: Find master node
+  set_fact:
+    master_node: "{{ _nodes.stdout_lines | join('') | from_json | json_query(query) }}"
+  vars:
+    query: 'items[].spec.{node: externalID, taints: taints} | [?taints].node'
+
+# Select the first non-master node for single-node labels
+- name: Apply labels to a single non-master node
+  vars:
+    primary_node: "{{ _all_casp_nodenames.stdout_lines | difference(master_node) | first }}"
+  command: "kubectl label nodes {{ primary_node }} {{ item }} --overwrite=true"
+  register: _enrollforopenstack
+  changed_when:
+    - _enrollforopenstack.rc == 0
+  failed_when:
+    - _enrollforopenstack.rc != 0
+  with_items:
+    - 'openstack-helm-node-class=primary'
+    - 'ceph-mon=enabled'
+  when:
+    - "(master_node | default('')) | length > 0"
+
+# TODO(evrardjp): Move this to check the return code and task content
+- name: Remove taints when only 3 nodes and ha is required
+  command: "kubectl taint nodes {{ item }} node-role.kubernetes.io/master:NoSchedule-"
+  with_items: "{{ master_node }}"
+  when:
+    - "(master_node | default('')) | length > 0"
+    - suse_osh_deploy_require_ha | bool
+    - (_all_casp_nodenames.stdout_lines | length) == 3

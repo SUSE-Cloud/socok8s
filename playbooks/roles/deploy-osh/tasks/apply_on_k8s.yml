@@ -1,0 +1,14 @@
+---
+- name: "Generate file ({{ item.action }})"
+  template:
+    src: "{{ item.template_src_file }}"
+    dest: "{{ item.templated_location }}"
+    mode: "0600"
+    owner: "root"
+    group: "root"
+
+# TODO(evrardjp): Add a changed_when: to help idempotency
+- name: "Apply generated file in k8s ({{ item.action }})"
+  command: "kubectl apply -f {{ item.templated_location }} --overwrite=true"
+  tags:
+    - skip_ansible_lint
