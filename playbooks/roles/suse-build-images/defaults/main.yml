@@ -21,3 +21,5 @@ build_infra_components_list:
 suse_build_images_packages:
   - docker
   - gnu_parallel
+
+sle_utils_repository_url: "https://download.opensuse.org/repositories/utilities/SLE_12"

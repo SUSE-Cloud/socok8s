@@ -1,5 +1,13 @@
 ---
 
+- name: Add utilities repository
+  zypper_repository:
+    name: SLE12-utilities
+    repo: "{{ sle_utils_repository_url }}"
+    state: present
+    auto_import_keys: yes
+    runrefresh: yes
+
 - name: Install system packages for build images
   package:
     name: "{{ suse_build_images_packages }}"
