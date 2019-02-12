@@ -1,9 +1,13 @@
 #!/bin/bash
 
-
+# exit if vars is not set
+socok8s_absolute_dir=${socok8s_absolute_dir:?"socok8s_absolute_dir is undefined"}
 
 function run_ansible(){
     set -x
+
+    ansible_command="ansible-playbook"
+
     # ansible-runner default locations
     if [[ -z ${ANSIBLE_RUNNER_DIR+x} ]]; then
         echo "ANSIBLE_RUNNER_DIR env var is not set, defaulting to '~/suse-osh-deploy'"
@@ -15,9 +19,9 @@ function run_ansible(){
 
     # This creates a structure that's similar to ansible-runner tool
     if [[ ! -d ${ANSIBLE_RUNNER_DIR} ]]; then
-        mkdir -p ${ANSIBLE_RUNNER_DIR}/{env,inventory} || true
+        mkdir -p "${ANSIBLE_RUNNER_DIR}"/{env,inventory} || true
         echo "Adding an empty inventory by default"
-        cp ${socok8s_absolute_dir}/examples/workdir/inventory/hosts.yml ${inventorydir}
+        cp "${socok8s_absolute_dir}"/examples/workdir/inventory/hosts.yml "${inventorydir}"
     fi
 
     #Add extra debugging info if necessary
@@ -29,21 +33,18 @@ function run_ansible(){
     fi
 
     if [[ -f ${extravarsfile} ]]; then
-        echo "Extra variables file exists: $(realpath ${extravarsfile}). Loading its vars in ansible-playbook call."
-        extra_vars="-e @${extravarsfile}"
+        echo "Extra variables file exists: $(realpath "${extravarsfile}"). Loading its vars in ansible-playbook call."
+        ansible_command="$ansible_command -e @${extravarsfile}"
     fi
 
-    if [[ -f ${inventorydir} ]]; then
-        echo "Inventory directory (${inventorydir}) exists, adding it to the ansible-playbook call."
-        inventory="-i ${inventorydir}"
-    fi
     if [[ ${USE_ARA:-False} == "True" ]]; then
         echo "Loading ARA"
-        source ${HOME}/.socok8svenv/ara.rc
+        # shellcheck disable=1090
+        source "${HOME}"/.socok8svenv/ara.rc
     fi
 
-    pushd ${socok8s_absolute_dir}
-        ansible-playbook ${extra_vars:-} -i ${inventorydir} $@ -v
-    popd
+    pushd "${socok8s_absolute_dir}" || exit
+        ${ansible_command} -i "${inventorydir}" "$@" -v
+    popd || exit
     set +x
 }

@@ -1,4 +1,7 @@
 #!/bin/bash
+# shellcheck disable=SC2086
+# disable checks for double quoting
+# this file comes from upstream + some changes, keep it as close as possible
 
 # Copyright 2017 The Openstack-Helm Authors.
 #
@@ -17,7 +20,7 @@
 set -xe
 
 #NOTE: Deploy global ingress
-: ${OSH_INFRA_PATH:="../openstack-helm-infra"}
+: "${OSH_INFRA_PATH:=../openstack-helm-infra}"
 tee /tmp/ingress-kube-system.yaml << EOF
 pod:
   replicas:

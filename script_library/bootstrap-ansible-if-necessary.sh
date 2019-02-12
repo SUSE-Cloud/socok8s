@@ -9,7 +9,9 @@ function install_ansible (){
     if [[ ! -d ~/.socok8svenv ]]; then
         virtualenv ~/.socok8svenv
     fi
+    # disable follow up of source files by shellcheck
+    # shellcheck disable=1090
     source ~/.socok8svenv/bin/activate
-    pip install --upgrade -r $(dirname "$0")/script_library/requirements.txt
+    pip install --upgrade -r "$(dirname "$0")"/script_library/requirements.txt
     python -m ara.setup.env > ~/.socok8svenv/ara.rc
 }

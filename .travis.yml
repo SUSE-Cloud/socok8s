@@ -5,11 +5,7 @@ dist: xenial
 matrix:
   include:
     - name: "shell syntax"
-      script: find . -path "./submodules" -prune -o -type f -name "*.sh" -print | xargs -n1 shellcheck -x --format=gcc
+      script: find . -path "./submodules" -prune -o -path "./files" -prune -o -type f -name "*.sh" -print | xargs -n1 shellcheck -x --format=gcc
     - name: "playbook syntax"
       script: ansible-lint playbooks/*.yml
-  allow_failures:
-    - name: "shell syntax"
-
-install:
-  - pip install ansible-lint
+      install: pip install ansible-lint

@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# Ensure variables are always set before going forward.
-# Will prevent this script to be runned unless called from run.sh (by design)
-set -o nounset
+# exit if var is not set
+socok8s_absolute_dir="${socok8s_absolute_dir:?var is undefined}"
 
 set -o errexit
 
@@ -23,25 +22,25 @@ function enroll_caasp_workers() {
 function patch_upstream(){
     echo "Running dev-patcher"
     echo "Nothing will happen if developer mode is not set"
-    run_ansible ${socok8s_absolute_dir}/playbooks/generic-patch_upstream.yml
+    run_ansible "${socok8s_absolute_dir}"/playbooks/generic-patch_upstream.yml
 }
 function build_images(){
     echo "Running image builder"
     echo "Nothing will happen if developer mode is not set"
-    run_ansible ${socok8s_absolute_dir}/playbooks/generic-build_images.yml -e "build_osh_images=yes"
+    run_ansible "${socok8s_absolute_dir}"/playbooks/generic-build_images.yml -e "build_osh_images=yes"
 }
 function setup_caasp_workers_for_openstack(){
     echo "Ensuring caasp workers can be used for openstack"
-    run_ansible ${socok8s_absolute_dir}/playbooks/generic-setup_caasp_workers_for_openstack.yml
+    run_ansible "${socok8s_absolute_dir}"/playbooks/generic-setup_caasp_workers_for_openstack.yml
 }
 function deploy_osh(){
     echo "Now deploy SUSE version of OSH"
-    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_osh.yml
+    run_ansible "${socok8s_absolute_dir}"/playbooks/generic-deploy_osh.yml
 }
 function clean_k8s(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
-        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_k8s.yml
+        run_ansible "${socok8s_absolute_dir}"/playbooks/generic-clean_k8s.yml
     fi
 }
 function clean_kvm(){

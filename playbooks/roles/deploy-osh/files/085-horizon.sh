@@ -1,4 +1,7 @@
 #!/bin/bash
+# shellcheck disable=SC2086
+# disable checks for double quoting
+# this file comes from upstream + some changes, keep it as close as possible
 
 # Copyright 2017 The Openstack-Helm Authors.
 #
@@ -23,7 +26,7 @@ set -xe
 make horizon
 
 #NOTE: Deploy command
-: ${OSH_EXTRA_HELM_ARGS:=""}
+: "${OSH_EXTRA_HELM_ARGS:=""}"
 helm upgrade --install horizon ./horizon \
     --namespace=openstack \
     --set manifests.network_policy=true \

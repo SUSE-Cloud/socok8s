@@ -13,20 +13,27 @@ socok8s_absolute_dir="$( cd "$(dirname "$0")" ; pwd -P )"
 # by default, ccp will deploy on openstack for inception style fun (and CI).
 DEPLOYMENT_MECHANISM=${DEPLOYMENT_MECHANISM:-"openstack"}
 
-source ${scripts_absolute_dir}/bootstrap-ansible-if-necessary.sh
-source ${scripts_absolute_dir}/pre-flight-checks.sh check_jq_present
-source ${scripts_absolute_dir}/pre-flight-checks.sh check_ansible_requirements
-source ${scripts_absolute_dir}/pre-flight-checks.sh check_git_submodules_are_present
+# disable follow up of source files by shellcheck
+# shellcheck disable=1090
+source "${scripts_absolute_dir}"/bootstrap-ansible-if-necessary.sh
+# shellcheck disable=1090
+source "${scripts_absolute_dir}"/pre-flight-checks.sh check_jq_present
+# shellcheck disable=1090
+source "${scripts_absolute_dir}"/pre-flight-checks.sh check_ansible_requirements
+# shellcheck disable=1090
+source "${scripts_absolute_dir}"/pre-flight-checks.sh check_git_submodules_are_present
 
 # Bring an ansible runner that allows a userspace environment
-source ${scripts_absolute_dir}/run-ansible.sh
+# shellcheck disable=1090
+source "${scripts_absolute_dir}"/run-ansible.sh
 
-pushd ${socok8s_absolute_dir}
+pushd "${socok8s_absolute_dir}"
 
 # All the deployment actions (deploy steps) are defined in script_library/actions-openstack.sh for example.
 # For simplificity, the following script contains each action for a deploy mechanism, and each action should
 # contain a "master" playbook, which should be named playbooks/${DEPLOYMENT_MECHANISM}-${deployment_action}
-source ${scripts_absolute_dir}/deployment-actions-${DEPLOYMENT_MECHANISM}.sh
+# shellcheck source=/dev/null
+source "${scripts_absolute_dir}/deployment-actions-${DEPLOYMENT_MECHANISM}.sh"
 
 # When automation is changed to introduce steps,
 # replace this line with the following line:
