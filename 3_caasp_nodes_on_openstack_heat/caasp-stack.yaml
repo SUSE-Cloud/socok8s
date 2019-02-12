@@ -210,3 +210,24 @@ resources:
           admin_node_ip: { get_attr: [admin, first_address] }
           num_volumes: { get_param: worker_num_volumes }
           volume_size: { get_param: worker_volume_size }
+
+  worker_floating_ips:
+    type: OS::Heat::ResourceGroup
+    properties:
+      count: { get_param: worker_count }
+      resource_def:
+        type: caasp-worker-floatingip.yaml
+        properties:
+          workers: { get_attr: [ workers, worker_name ] }
+          worker_ids: { get_attr: [ workers, worker_id ] }
+          ports: { get_attr: [ workers, worker_port_id ] }
+          public_network: { get_param: external_net }
+          index: '%index%'
+
+outputs:
+  master_server_ids:
+    value: {get_attr: [masters, master_server_id]}
+  master_floating_ips:
+    value: {get_attr: [masters, master_floating_ip]}
+  worker_floating_ips:
+    value: {get_attr: [worker_floating_ips, ip_assignment]}
