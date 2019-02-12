@@ -55,6 +55,7 @@ function deploy_osh(){
 }
 function teardown(){
     clean_openstack
+    delete_caasp
     clean_userfiles
 }
 function clean_k8s(){
@@ -64,12 +65,14 @@ function clean_k8s(){
         ansible -m script -a "script_library/cleanup-k8s.sh" osh-deployer -i inventory-osh.ini
     fi
 }
-function clean_openstack(){
-    echo "Deleting on OpenStack"
-    ${socok8s_absolute_dir}/4_osh_node_on_openstack/delete.sh
+function delete_caasp(){
     echo "Delete Caasp nodes"
     ${socok8s_absolute_dir}/3_caasp_nodes_on_openstack_heat/delete.sh || true
     ${socok8s_absolute_dir}/3_caasp_nodes_on_openstack_manually/delete.sh || true
+}
+function clean_openstack(){
+    echo "Deleting on OpenStack"
+    ${socok8s_absolute_dir}/4_osh_node_on_openstack/delete.sh
     echo "Delete SES node"
     ${socok8s_absolute_dir}/1_ses_node_on_openstack/delete.sh
 }

@@ -185,6 +185,7 @@ Here are the actions available:
 * setup_everything: From A to Z.
 * teardown: Destroys all the nodes in an openstack environment.
   Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace.
+* delete_caasp: Removes existing CaaSP deployment
 * clean_k8s: Removes all k8s definitions that were introduced during deployment
   (Experimental!)
 

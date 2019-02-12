@@ -73,6 +73,9 @@ case "$deployment_action" in
     "teardown")
         teardown
         ;;
+    "delete_caasp")
+        delete_caasp
+        ;;
     "clean_k8s")
         clean_k8s
         ;;
