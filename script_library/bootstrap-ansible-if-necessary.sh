@@ -11,4 +11,5 @@ function install_ansible (){
     fi
     source ~/.socok8svenv/bin/activate
     pip install --upgrade -r $(dirname "$0")/script_library/requirements.txt
+    python -m ara.setup.env > ~/.socok8svenv/ara.rc
 }

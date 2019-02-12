@@ -1,0 +1,33 @@
+---
+- name: Include global vars
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
+- name: Drop ceph conf and keys
+  delegate_to: localhost
+  copy:
+    dest: "{{ socok8s_workspace }}/{{ item.item }}"
+    content: "{{ item.content | b64decode }}"
+    mode: 0644
+  with_items:
+    - "{{ hostvars['ses'].ceph_files.results }}"
+
+- name: Generate ses-config.yml
+  delegate_to: localhost
+  template:
+    src: ses-config.yml.j2
+    dest: "{{ socok8s_ses_pools_details }}"
+
+- name: Find the admin keyring b64 value
+  shell: ceph auth get-key client.admin | base64
+  changed_when: false
+  register: _clientadminkey
+
+- name: Create user_variables
+  delegate_to: localhost
+  blockinfile:
+    path: "{{ socok8s_extravars }}"
+    create: yes
+    block: |
+      ceph_admin_keyring_b64key: {{ _clientadminkey.stdout_lines[0] }}
+      ceph_user_keyring_b64key: {{ _clientadminkey.stdout_lines[0]  }}
+      suse_osh_deploy_ceph_mons: [{% for ip in ansible_all_ipv4_addresses %}'{{ ip }}:6789'{% if not loop.last %},{% endif %}{% endfor %}] #list containing all ips of the host (which should be an AIO containing the mons).

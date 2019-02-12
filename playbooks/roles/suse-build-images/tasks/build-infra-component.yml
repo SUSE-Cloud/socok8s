@@ -1,0 +1,16 @@
+---
+
+- name: Copy infra component - suse {{ component }} build script
+  template:
+    src: "{{ component }}-build.sh.j2"
+    dest: "/tmp/build_component.sh"
+    mode: "0755"
+
+# TODO(evrardjp): Cleanup this for idempotency
+# in the meantime, skip_ansible_lint
+- name: Build and push infra component - suse {{ component }} image
+  command: /tmp/build_component.sh
+  args:
+    chdir: "{{ devenv_root }}/openstack-helm-images"
+  tags:
+    - skip_ansible_lint
