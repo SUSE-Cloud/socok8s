@@ -1,0 +1,6 @@
+# BEGIN ANSIBLE MANAGED BLOCK
+ceph_admin_keyring_b64key: QVFDZWoySmNBQUFBQUJBQWlhSTZJZEw2Nml4S1FINEVlOTBTbXc9PQ==
+ceph_user_keyring_b64key: QVFDZWoySmNBQUFBQUJBQWlhSTZJZEw2Nml4S1FINEVlOTBTbXc9PQ==
+suse_osh_deploy_ceph_mons: ['192.168.50.10:6789'] #list containing all ips of the host (which should be an AIO containing the mons).
+# END ANSIBLE MANAGED BLOCK
+suse_osh_deploy_vip_with_cidr: 192.168.50.46/24
