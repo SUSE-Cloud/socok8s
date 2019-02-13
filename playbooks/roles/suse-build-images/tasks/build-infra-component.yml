@@ -11,6 +11,6 @@
 - name: Build and push infra component - suse {{ component }} image
   command: /tmp/build_component.sh
   args:
-    chdir: "{{ devenv_root }}/openstack-helm-images"
+    chdir: "{{ upstream_repos_clone_folder }}/openstack-helm-images"
   tags:
     - skip_ansible_lint

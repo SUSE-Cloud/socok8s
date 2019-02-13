@@ -1,4 +1,7 @@
 ---
+- name: Include common vars
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
 - name: Add utilities repository
   zypper_repository:
     name: SLE12-utilities
@@ -101,13 +104,13 @@
 # In the meantime, skip_ansible_lint
 - name: Build Openstack Services images via loci
   shell: |
-    export LOCI_SRC_DIR={{ devenv_root }}/loci
+    export LOCI_SRC_DIR={{ upstream_repos_clone_folder }}/loci
     export REGISTRY_URI={{ local_registry_name }}:{{ local_registry_port }}/openstackhelm/
     export BASE_IMAGE=leap15
     export OPENSTACK_VERSION="{{ openstack_svcs_build_image_version }}"
     export PUSH_TO_REGISTRY=yes
     ./openstack/loci/build.sh
   args:
-    chdir: "{{ devenv_root }}/openstack-helm-images"
+    chdir: "{{ upstream_repos_clone_folder }}/openstack-helm-images"
   tags:
     - skip_ansible_lint

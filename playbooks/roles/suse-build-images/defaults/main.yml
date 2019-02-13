@@ -1,8 +1,6 @@
 ---
 # defaults file for suse-build-images
 
-devenv_root: /opt
-
 local_registry_name: local-registry
 local_registry_port: 5000
 openstack_svcs_build_image_version: stable/queens
