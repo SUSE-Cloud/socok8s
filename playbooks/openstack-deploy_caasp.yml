@@ -183,18 +183,31 @@
 
         - meta: refresh_inventory
 
-        # Waiting for port is not enough, as the port might be up (systemd)
-        # while ssh is not ready. Wait for connection is not good either
-        # because the key is unknown.
-        - name: Wait for a while for SSH to be properly booted up
+        - name: Wait for a SSH to be properly started
           wait_for:
-            timeout: 120
+            host: "{{ hostvars[item]['ansible_host'] }}"
+            port: 22
+            search_regex: OpenSSH
+            state: started
+            delay: 10
+            timeout: 180
+          loop: "{{ groups['caasp-admin'] + groups['caasp-masters'] + groups['caasp-workers'] }}"
 
         - name: Get pubkey, and add it to known hosts
-          shell: ssh-keyscan -H {{ hostvars[item]['ansible_host'] | quote }} >> ${HOME}/.ssh/known_hosts
+          command: "ssh-keyscan -H {{ hostvars[item]['ansible_host'] | quote }}"
+          register: _caaspsshkeys
+          retries: 10
+          delay: 10
+          until: _caaspsshkeys.stdout and _caaspsshkeys.stdout.strip()
           loop: "{{ groups['caasp-admin'] + groups['caasp-masters'] + groups['caasp-workers'] }}"
-          args:
-            executable: /bin/bash
+
+
+        - name: Insert known host
+          known_hosts:
+            state: present
+            name: "{{ hostvars[item.item]['ansible_host'] }}"
+            key: "{{ item.stdout }}"
+          loop: "{{ _caaspsshkeys.results }}"
 
     - name: Handle deletion
       when:

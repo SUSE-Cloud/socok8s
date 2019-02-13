@@ -59,16 +59,21 @@
 
         - meta: refresh_inventory
 
-        # Waiting for port is not enough, as the port might be up (systemd)
-        # while ssh is not ready. Wait for connection is not good either
-        # because the key is unknown.
-        - name: Wait for a while for SSH to be properly booted up
+        - name: Wait for a SSH to be properly started
           wait_for:
-            timeout: 120
+            host: "{{ ses_floating_ip }}"
+            port: 22
+            search_regex: OpenSSH
+            state: started
+            delay: 10
+            timeout: 180
 
         - name: Get pubkey, and add it to known hosts
           command: "ssh-keyscan -H {{ ses_floating_ip | quote }}"
           register: _sesfloatingkey
+          retries: 10
+          delay: 10
+          until: _sesfloatingkey.stdout and _sesfloatingkey.stdout.strip()
 
         - name: Insert known host
           known_hosts:
