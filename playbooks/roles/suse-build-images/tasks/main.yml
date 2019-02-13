@@ -94,11 +94,14 @@
     state: restarted
   when: _upd_docker_daemon_conf is defined
 
-- name: Build infra components
-  include_tasks: build-infra-component.yml
-  with_items: "{{ build_infra_components_list }}"
+# We should not build from defaults
+# Instead developer should say what to build, and we build it.
+# Developer should say "How to use it", so it can later be tested in env.
+- name: Build the non-LOCI components
+  include_tasks: build-with-docker.yml
+  loop: "{{ build_images_with_dockerfiles_list }}"
   loop_control:
-    loop_var: component
+    loop_var: image
 
 # TODO(evrardjp): Ensure idempotency here
 # In the meantime, skip_ansible_lint

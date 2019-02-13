@@ -1,14 +1,14 @@
 ---
 
-- name: Copy infra component - suse {{ component }} build script
+- name: Copy infra component - suse {{ image }} build script
   template:
-    src: "{{ component }}-build.sh.j2"
+    src: "{{ image }}-build.sh.j2"
     dest: "/tmp/build_component.sh"
     mode: "0755"
 
 # TODO(evrardjp): Cleanup this for idempotency
 # in the meantime, skip_ansible_lint
-- name: Build and push infra component - suse {{ component }} image
+- name: Build and push infra component - suse {{ image }} image
   command: /tmp/build_component.sh
   args:
     chdir: "{{ upstream_repos_clone_folder }}/openstack-helm-images"

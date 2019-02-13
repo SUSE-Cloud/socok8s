@@ -12,7 +12,7 @@ libvirt_image_version: latest
 openvswitch_distro: suse_15
 openvswitch_image_version: latest
 
-build_infra_components_list:
+build_images_with_dockerfiles_list:
   - libvirt
   - openvswitch
 
