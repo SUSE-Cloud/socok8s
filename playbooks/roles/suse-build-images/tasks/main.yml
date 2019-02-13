@@ -23,26 +23,15 @@
   tags:
     - install
 
-# We should not build from defaults
-# Instead developer should say what to build, and we build it.
-# Developer should say "How to use it", so it can later be tested in env.
-- name: Build the non-LOCI components
+- name: Build and push the non-LOCI components
   include_tasks: build-with-docker.yml
-  loop: "{{ build_images_with_dockerfiles_list }}"
+  loop: "{{ docker_images }}"
   loop_control:
     loop_var: image
 
 # TODO(evrardjp): Ensure idempotency here
 # In the meantime, skip_ansible_lint
-- name: Build Openstack Services images via loci
-  shell: |
-    export LOCI_SRC_DIR={{ upstream_repos_clone_folder }}/loci
-    export REGISTRY_URI={{ local_registry_name }}:{{ local_registry_port }}/openstackhelm/
-    export BASE_IMAGE=leap15
-    export OPENSTACK_VERSION="{{ openstack_svcs_build_image_version }}"
-    export PUSH_TO_REGISTRY=yes
-    ./openstack/loci/build.sh
-  args:
-    chdir: "{{ upstream_repos_clone_folder }}/openstack-helm-images"
-  tags:
-    - skip_ansible_lint
+- name: Build and push Openstack Services images via loci
+  include_tasks: build-with-loci.yml
+  when:
+    - loci_build_projects | length > 0
