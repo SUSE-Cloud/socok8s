@@ -53,7 +53,7 @@ function clean_k8s(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
         echo "DELETE_ANYWAY is set, cleaning up k8s"
-        ansible -m script -a "script_library/cleanup-k8s.sh" osh-deployer -i inventory-osh.ini
+        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_k8s.yml
     fi
 }
 function clean_openstack(){
