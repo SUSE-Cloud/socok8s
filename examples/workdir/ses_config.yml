@@ -1,0 +1,25 @@
+ses_cluster_configuration:
+  ses_cluster_name: ceph
+
+  conf_options:
+      ses_fsid: ad762bdd-d2c1-3028-a5ec-5c1b6768adac
+      ses_mon_initial_members: jevrard-ses
+      ses_mon_host: 192.168.50.10
+      ses_public_network: 192.168.50.0/24
+      ses_cluster_network: 192.168.50.0/24
+  cinder:
+      rbd_store_pool: cinder
+      rbd_store_pool_user: cinder
+      keyring_file_name: ceph.client.cinder.keyring
+  cinder-backup:
+      rbd_store_pool: backups
+      rbd_store_pool_user: cinder_backup
+      keyring_file_name: ceph.client.cinder_backup.keyring
+ # Nova uses the cinder user to access the nova pool, cinder pool
+ # So all we need here is the nova pool name.
+  nova:
+      rbd_store_pool: nova
+  glance:
+      rbd_store_pool: glance
+      rbd_store_pool_user: glance
+      keyring_file_name: ceph.client.glance.keyring
