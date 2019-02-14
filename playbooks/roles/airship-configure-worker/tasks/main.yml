@@ -1,8 +1,7 @@
 ---
 
-- name: Subvolumes setup on Openstack compute nodes
+- name: Subvolumes setup on Openstack controller and compute nodes
   include: subvolumes-setup.yml
-  when: ('airship-openstack-compute-workers' in group_names)
   tags:
     - preinstall
 

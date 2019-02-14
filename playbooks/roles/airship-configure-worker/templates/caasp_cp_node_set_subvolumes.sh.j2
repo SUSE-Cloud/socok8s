@@ -35,8 +35,12 @@ restore_and_reboot() {
   fi
 }
 
+{% if is_compute %}
 create_subvolume /var/lib/nova
 create_subvolume /var/lib/neutron
 create_subvolume /var/lib/libvirt
+{% else %}
+create_subvolume /var/lib/neutron
+{% endif %}
 
 restore_and_reboot

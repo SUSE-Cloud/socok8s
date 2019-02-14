@@ -1,0 +1,19 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-ceph-config-soc
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-ceph-config-chart-group-global
+      component: openstack-ceph-config
+    actions:
+      - method: replace
+        path: .chart_group
+  storagePolicy: cleartext
+data:
+  description: Ceph config for OpenStack namespace(s)
+  chart_group:
+    - openstack-ceph-config-soc

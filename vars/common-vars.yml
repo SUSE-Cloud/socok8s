@@ -1,8 +1,8 @@
 ---
-upstream_repos_clone_folder: /opt
 developer_mode: "{{ (lookup('env','OSH_DEVELOPER_MODE') | default('False', true) ) | bool }}"
 
 socok8s_workspace: "{{ lookup('env','ANSIBLE_RUNNER_DIR') | default('~/suse-socok8s-deploy', true) }}"
+upstream_repos_clone_folder: "{{ socok8s_workspace }}"
 socok8s_extravars: "{{ socok8s_workspace }}/env/extravars"
 socok8s_ses_pools_details: "{{ socok8s_workspace }}/ses_config.yml"
 socok8s_caasp_environment_details: "{{ socok8s_workspace }}/environment.json"

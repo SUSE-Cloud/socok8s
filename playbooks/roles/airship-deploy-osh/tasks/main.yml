@@ -1,0 +1,149 @@
+---
+# tasks file for suse-airship-deploy
+
+#TODO JG move to a common role/task
+- name: Load standard variables
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
+- name: Create ses_cluster_configuration
+  set_fact:
+    ses_cluster_configuration: "{{ lookup('file', socok8s_ses_pools_details) | from_yaml }}"
+
+- name: Create a list of monitors (ip and port) if no override exists for it.
+  set_fact:
+    suse_airship_deploy_ceph_mons:  "[{% for ip in ses_cluster_configuration.ceph_conf.mon_host.split(',') %}'{{ ip }}:{{ ceph_mon_port | default(6789) }}'{% if not loop.last %},{% endif %}{% endfor %}]"
+  when: suse_airship_deploy_ceph_mons is not defined
+  tags:
+    - always
+    - run
+
+- set_fact: 
+    site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ suse_airship_deploy_site_name }}"
+
+- name: Ensure site directory for {{ suse_airship_deploy_site_name }} exists
+  file:
+    path: "{{ site_path }}"
+    state: directory
+
+- name: Create site manifest directory
+  file:
+    path: '{{ site_path }}/{{ item.path }}'
+    state: directory
+  with_filetree: '{{ role_path }}/templates/site/{{ suse_airship_deploy_site_name }}'
+  when: item.state == 'directory'
+  tags:
+    - install
+
+#TODO JG refactor overrides
+- name: Create site manifest yamls
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ site_path }}/{{ item.path }}'
+  with_filetree: '{{ role_path }}/templates/site/{{ suse_airship_deploy_site_name }}'
+  when: item.state == 'file'
+  tags:
+    - install
+
+- set_fact:
+    treasuremap_dir: '{{ upstream_repos_clone_folder }}/airship-treasuremap'
+    pegleg_image: 'quay.io/airshipit/pegleg:latest'
+    pegleg: '../airship-pegleg/tools/pegleg.sh '
+    pegleg_output: 'peggles'
+
+- name: Pegleg lint the site manifests
+  shell: 'IMAGE={{ pegleg_image }} TERM_OPTS=" " {{ pegleg }} site -r . lint "{{ suse_airship_deploy_site_name }}" -x P001 -x P009'
+  args:
+    chdir: '{{ treasuremap_dir }}'
+  tags:
+    - install
+
+- name: Create Pegleg output directory
+  file:
+    path: '{{ treasuremap_dir }}/{{ pegleg_output }}'
+    state: directory
+  tags:
+    - install
+
+- name: Collect site config
+  shell: 'IMAGE={{ pegleg_image }} TERM_OPTS="-l info" {{ pegleg }} site -r . collect {{ suse_airship_deploy_site_name }} -s {{ pegleg_output }}'
+  args:
+    chdir: '{{ treasuremap_dir }}'
+
+- name: Copy site to Shipyard
+  copy:
+    src: '{{ treasuremap_dir }}/{{ pegleg_output }}'
+    dest: '{{ upstream_repos_clone_folder }}/airship-shipyard'
+  tags:
+    - install
+
+- set_fact:
+    shipyard: './tools/shipyard.sh'
+  tags:
+    - install
+
+- name: Create config docs in Shipyard
+  shell: '{{ shipyard }} create configdocs {{ suse_airship_deploy_site_name }}-design --replace --directory=/target/{{ pegleg_output }}'
+  args:
+    chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
+  register: shipyard_create_config
+  failed_when: shipyard_create_config.stdout.find('Error') == 0
+  tags:
+    - install
+
+
+- name: Commit config docs in Shipyard
+  shell: '{{ shipyard }} commit configdocs'
+  args:
+    chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
+  register: shipyard_commit_config
+  failed_when: shipyard_commit_config.stdout.find('Error') == 0
+  tags:
+    - install
+
+- name: Create update software action in Shipyard
+  shell: '{{ shipyard }} create action update_software --allow-intermediate-commits'
+  args:
+    chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
+  register: shipyard_update_software
+  failed_when: shipyard_update_software.stdout.find('Error') == 0
+  tags:
+    - install
+
+- name: Print Shipyard action information
+  debug:
+    msg: "{{ shipyard_update_software.stdout_lines }}"
+  tags:
+    - install
+
+- name: Get action key
+  set_fact:
+    shipyard_action_key: '{{ shipyard_update_software.stdout_lines[1].split()[1] }}'
+  tags:
+    - install
+
+- name: Write site records
+  template:
+    src: ./site-keys.yaml.j2
+    dest: '{{ socok8s_deploy_config_location }}/{{ suse_airship_deploy_site_name }}-keys.yaml'
+  tags:
+    - install
+
+- name: Wait 10 minutes before checking the action status
+  pause:
+    minutes: 10
+  tags:
+    - install
+
+- name: Wait for update software action to complete... it can take up from 30-60 minutes
+  shell: '{{ shipyard }} describe {{ shipyard_action_key }}'
+  args:
+    chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
+  register: shipyard_desc_action
+  until: shipyard_desc_action.stdout.find('Processing') < 0 and shipyard_desc_action.stdout.find('running') < 0
+  retries: 240
+  delay: 15
+  ignore_errors: yes
+
+- name: Print Shipyard update software action status
+  debug:
+    msg: "{{ shipyard_desc_action.stdout_lines }}"

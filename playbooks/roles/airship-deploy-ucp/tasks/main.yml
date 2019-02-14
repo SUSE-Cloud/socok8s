@@ -3,28 +3,6 @@
 - name: Load standard variables
   include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
 
-- set_fact:
-    site_path: "{{ socok8s_workspace }}/sites/{{ socok8s_airship_deploy_site_name }}"
-
-- name: Create site manifest directory
-  file:
-    path: '{{ site_path }}/{{ item.path }}'
-    state: directory
-  with_filetree: '{{ role_path }}/templates/sites/{{ socok8s_airship_deploy_site_name }}'
-  when: item.state == 'directory'
-  tags:
-    - install
-
-#TODO JG refactor overrides
-- name: Create site manifest yamls
-  template:
-    src: '{{ item.src }}'
-    dest: '{{ site_path }}/{{ item.path }}'
-  with_filetree: '{{ role_path }}/templates/sites/{{ socok8s_airship_deploy_site_name }}'
-  when: item.state == 'file'
-  tags:
-    - install
-
 - name: Build Armada image
   make:
     chdir: "{{ upstream_repos_clone_folder }}/airship-armada"
@@ -33,20 +11,14 @@
   tags:
     - install
 
-- name: Build Shipyard and Deckhand charts
+- name: Build Shipyard and Deckhand images
   make:
-    chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
-    target: "{{ item.target }}"
-    params:
-      DISTRO: "{{ suse_distro_identifier }}"
-      DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
-      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
-      IMAGE_NAME: "{{ item.image_name }}"
-#  when: _gitclone is changed
+    chdir: "{{ upstream_repos_clone_folder }}/{{ item }}"
+    target: images
+  when: _gitclone is changed
   loop:
-    - { repo_name: "airship-shipyard", target: "images", image_name: "airflow" }
-    - { repo_name: "airship-shipyard", target: "images", image_name: "shipyard" }
-    - { repo_name: "airship-deckhand", target: "images", image_name: "deckhand" }
+    - airship-shipyard
+    - airship-deckhand
   tags:
     - install
 
@@ -62,6 +34,7 @@
   tags:
     - install
 
+# TODO JG add override for armada image
 - name: Create Armada deployment yaml
   template:
     src: ./armada.yaml.j2
@@ -70,11 +43,11 @@
     - install
 
 - name: Deploy Armada pod to CaaSP
-  shell: "kubectl apply -f {{ socok8s_deploy_config_location }}/armada.yaml"
+  shell: "kubectl apply -f {{ socok8s_deploy_config_location }}//armada.yaml"
   tags:
     - install
 
-- name: Get Armada pod name
+- name: Get Armada pod name 
   shell: 'kubectl get pod -l app=armada -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
   register: armada_results
   until: armada_results.stdout.find('armada-') == 0
@@ -122,20 +95,19 @@
   loop:
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/.kube
-    - kubectl cp ~/.kube/config ucp/{{ armada_pod_name }}:/armada/.kube/config
-    - kubectl cp  {{ socok8s_deploy_config_location }}/manifests ucp/{{ armada_pod_name }}:/armada
+    - kubectl cp ~/.kube/config {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/.kube/config
+    - kubectl cp  {{ socok8s_deploy_config_location }}/manifests {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/airship-components
-    - kubectl cp {{ upstream_repos_clone_folder }}/airship-armada ucp/{{ armada_pod_name }}:/armada/airship-components/
-    - kubectl cp {{ upstream_repos_clone_folder }}/airship-deckhand ucp/{{ armada_pod_name }}:/armada/airship-components/
-    - kubectl cp {{ upstream_repos_clone_folder }}/airship-pegleg ucp/{{ armada_pod_name }}:/armada/airship-components/
-    - kubectl cp {{ upstream_repos_clone_folder }}/airship-shipyard ucp/{{ armada_pod_name }}:/armada/airship-components/
-    - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm ucp/{{ armada_pod_name }}:/armada/airship-components/
-    - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm-infra ucp/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/airship-armada {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/airship-deckhand {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/airship-pegleg {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/airship-shipyard {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm-infra {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
   tags:
     - install
 
-#TODO JG check if ucp deployment is ready
-- name: Deploy Airship UCP ... time for a quick coffee
+- name: Deploy Airship UCP ... quick coffee break, maybe?
   shell: 'kubectl exec {{ armada_pod_name }} -n ucp -- armada apply /armada/manifests/airship.yaml'
   tags:
     - install
@@ -161,19 +133,3 @@
   delay: 10
   ignore_errors: yes
 
-- name: Copy customer site data to treasuremap repo
-  copy:
-    src: "{{ socok8s_workspace }}/sites/{{ socok8s_airship_deploy_site_name }}"
-    dest: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/"
-
-- name: Run overcloud deployment now
-  shell: ./tools/deployment/airskiff/developer/100-deploy-osh.sh
-  args:
-    executable: /bin/bash
-    chdir: "{{ upstream_repos_clone_folder }}/airship-treasuremap"
-  environment:
-    PL_SITE: "{{ socok8s_airship_deploy_site_name }}"
-  register: overcloud_deploy_result
-
-- debug:
-    msg: "Overcloud deployment result = {{ overcloud_deploy_result }}"

@@ -1,8 +1,12 @@
 ---
 - name: Check subvolume directory already exists
   stat:
-    path: /var/lib/nova
+    path: /var/lib/neutron
   register: _subvolume_check
+
+- name: Check if compute node
+  set_fact:
+    is_compute:  ('airship-openstack-compute-workers' in group_names)
 
 - name: Check if subvolumes need to be created
   set_fact:

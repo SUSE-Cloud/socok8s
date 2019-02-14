@@ -33,7 +33,13 @@
   loop_control:
     loop_var: patchnumber
 
+- name: Check if there is local code change to cloned repos on deployer
+  stat:
+    path: "{{ role_path }}/files/repos/"
+  register: local_change_repos
+
 - name: Copy local code changes to cloned repos on deployer
   synchronize:
-    src: "roles/dev-patcher/files/repos/"
+    src: "{{ role_path }}/files/repos/"
     dest: "{{ upstream_repos_clone_folder }}/"
+  when: local_change_repos.stat.exists

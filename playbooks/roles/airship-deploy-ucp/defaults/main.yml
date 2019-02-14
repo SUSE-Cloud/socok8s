@@ -1,9 +1,7 @@
 ---
-
-# Set this to false if you want to speed up your builds or do partial upgrades
-suse_airship_deploy_always_redeploy: True
 ucp_namespace_name: "{{ ucp_namespace | default('ucp') }}"
 
 suse_distro_identifier: opensuse
 suse_airship_components_base_image: "opensuse/leap:15.0"
 suse_airship_components_image_tag: opensuse_15_latest
+

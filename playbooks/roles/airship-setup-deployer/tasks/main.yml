@@ -1,5 +1,4 @@
 ---
-# tasks file for suse-airship-deploy
 - name: Load standard variables
   include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
 
@@ -29,6 +28,7 @@
     - install
 
 - name: Enable docker systemd service
+  become: yes
   systemd:
     name: docker
     state: started
@@ -58,6 +58,7 @@
     - run
 
 - name: Ensure VIP is present in /etc/hosts for the services to deploy
+  become: yes
   blockinfile:
     path: /etc/hosts
     block: |
@@ -76,26 +77,11 @@
   file:
     path: "{{ item }}"
     state: directory
-    mode: "700"
-    owner: "{{ ansible_user }}"
+    #   owner: "{{ ansible_user }}"
   with_items:
-    - /etc/openstack
-    - /opt/socok8s
+    - /etc/openstack   
 
 - name: Copy clouds.yml
   template:
     src: clouds.yml.j2
     dest: /etc/openstack/clouds.yaml
-    mode: "700"
-
-#- name: Clone Airship code repositories
-#  git:
-#    repo: "{{ item.value.src }}"
-#    dest: "{{ upstream_repos_clone_folder }}/{{ item.key }}"
-#    update: yes
-#    force: yes
-#    version: "{{ item.value.version | default('HEAD') }}"
-#  with_dict: "{{ airship_repos }}"
-#  register: _gitclone
-#  until: _gitclone is succeeded
-
