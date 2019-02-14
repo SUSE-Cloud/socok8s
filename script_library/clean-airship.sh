@@ -1,6 +1,6 @@
 #delete ucp helm charts
 
-helm ls -a | grep ucp | awk 'NR > 1 {print $1 }' | xargs helm delete $line --purge
+helm ls -a | grep ucp | awk 'NR >= 1 {print $1 }' | xargs helm delete $line --purge
 
 #helm delete --purge airship-armada
 #helm delete --purge airship-barbican
@@ -15,7 +15,7 @@ helm ls -a | grep ucp | awk 'NR > 1 {print $1 }' | xargs helm delete $line --pur
 helm delete --purge airship-ingress-kube-system
 
 #delete opennstack helm charts
-helm ls -a | grep openstack | awk 'NR > 1 {print $1 }' | xargs helm delete $line --purge
+helm ls -a | grep openstack | awk 'NR >= 1 {print $1 }' | xargs helm delete $line --purge
 
 #helm delete --purge airship-glance
 #helm delete --purge airship-glance-rabbitmq
