@@ -2,11 +2,11 @@ ses_cluster_configuration:
   ses_cluster_name: ceph
 
   conf_options:
-      ses_fsid: ad762bdd-d2c1-3028-a5ec-5c1b6768adac
-      ses_mon_initial_members: jevrard-ses
-      ses_mon_host: 192.168.50.10
-      ses_public_network: 192.168.50.0/24
-      ses_cluster_network: 192.168.50.0/24
+      ses_fsid: 06d75e51-4fe6-3b0e-a9ad-570c85bf9f98
+      ses_mon_initial_members: linux-aojx
+      ses_mon_host: 192.168.89.199
+      ses_public_network: 192.168.89.0/24
+      ses_cluster_network: 192.168.89.0/24
   cinder:
       rbd_store_pool: cinder
       rbd_store_pool_user: cinder

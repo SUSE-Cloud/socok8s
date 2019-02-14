@@ -1,6 +1,10 @@
 # BEGIN ANSIBLE MANAGED BLOCK
-ceph_admin_keyring_b64key: QVFDZWoySmNBQUFBQUJBQWlhSTZJZEw2Nml4S1FINEVlOTBTbXc9PQ==
-ceph_user_keyring_b64key: QVFDZWoySmNBQUFBQUJBQWlhSTZJZEw2Nml4S1FINEVlOTBTbXc9PQ==
-suse_osh_deploy_ceph_mons: ['192.168.50.10:6789'] #list containing all ips of the host (which should be an AIO containing the mons).
+ceph_admin_keyring_b64key: QVFBWkUxdGNBQUFBQUJBQVJMdnF0eFQxbU9DZG0rNXM2SlhJM3c9PQ==
+ceph_user_keyring_b64key: QVFBWkUxdGNBQUFBQUJBQVJMdnF0eFQxbU9DZG0rNXM2SlhJM3c9PQ==
 # END ANSIBLE MANAGED BLOCK
-suse_osh_deploy_vip_with_cidr: 192.168.50.46/24
+
+# Deployment goal is either 'airship' or 'osh'
+socok8s_deployment_goal: airship
+socok8s_deploy_vip_with_cidr: 192.168.89.251
+suse_airship_deploy_site_name: soc-minimal
+redeploy_osh_only: false
