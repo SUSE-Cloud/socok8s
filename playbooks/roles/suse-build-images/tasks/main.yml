@@ -56,9 +56,15 @@
     force: no
     mode: 0644
 
+- name: importing the file contents to variable
+  slurp:
+    src: /etc/docker/daemon.json
+  register: _docker_daemon_conf_json
+  become: true
+
 - name: Read existing docker daemon conf file
   set_fact:
-    _docker_daemon_conf: "{{ lookup('file', '/etc/docker/daemon.json') | default({}) | from_json }}"
+     _docker_daemon_conf: "{{ (_docker_daemon_conf_json.content | b64decode | from_json) }}"
 
 - name: Set registry entry in docker daemon conf if not defined
   set_fact:
