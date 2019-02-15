@@ -12,14 +12,7 @@
         autorefresh: True
         auto_import_keys: yes
         state: present
-      loop:
-        - SLE12SP3-product
-        - SLE12SP3-update
-        - SLE12SP3SDK-product
-        - SLE12SP3SDK-update
-        - SUSE-CA
-        - OpenStack-Cloud8-product
-        - SLE12Containers
+      loop: "{{ deploy_on_openstack_osh_repos_per_imagename[deploy_on_openstack_oshnode_image] }}"
 
     - name: Zypper dist-upgrade
       zypper:

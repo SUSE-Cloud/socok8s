@@ -35,6 +35,7 @@
             timeout: 300
             volumes:
               - "{{ deploy_on_openstack_oshnode_volume_name }}"
+            userdata: "{{ deploy_on_openstack_oshnode_userdata | default(omit) }}"
           register: _osh_server_create
         - name: Show the server data
           debug:
