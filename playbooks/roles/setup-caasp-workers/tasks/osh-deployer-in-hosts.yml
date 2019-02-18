@@ -1,0 +1,18 @@
+---
+- name: Get the facts from the deployer node from the worker nodes
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: True
+  loop: "{{ groups['osh-deployer'] }}"
+
+- name: Configure the hosts for local registry if developer mode is enabled
+  lineinfile:
+    path: /etc/hosts
+    regexp: "^{{ hostvars[oshdeploynode]['ansible_default_ipv4']['address'] | ipaddr('address') }}.*"
+    line: >
+      {{ hostvars[oshdeploynode]['ansible_default_ipv4']['address'] | ipaddr('address') }}
+      {{ hostvars[oshdeploynode]['ansible_fqdn'] }}
+      {{ hostvars[oshdeploynode]['ansible_hostname'] }}
+  vars:
+    oshdeploynode: "{{ groups['osh-deployer'][0] }}"
+

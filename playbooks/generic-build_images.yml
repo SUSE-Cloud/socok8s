@@ -15,16 +15,29 @@
         - always
         - imagebuilder
         - upstream_patching
-  roles:
-    - role: install-docker
-      tags:
-        - docker
+
+    # The certificate generated before also needs to be known by the osh-deployer
+    - name: If developer mode, configure osh-deployer to include certs
+      include_role:
+        name: setup-caasp-workers
+        tasks_from: copy-certificates
       when:
         - developer_mode
-        - build_osh_images | default('False') | bool
-    - role: suse-build-images
-      tags:
-        - imagebuilder
+
+    - name: If developer mode, install docker
+      include_role:
+        name: install-docker
+        apply:
+          tags:
+            - docker
       when:
         - developer_mode
-        - build_osh_images | default('False') | bool
+
+    - name: If developer mode, build suse images given in extravars or suse-build-images defaults.
+      include_role:
+        name: suse-build-images
+        apply:
+          tags:
+            - imagebuilder
+      when:
+        - developer_mode
