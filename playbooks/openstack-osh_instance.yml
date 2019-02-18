@@ -44,7 +44,7 @@
             osh_floating_ip: "{{ _osh_server_create['openstack']['accessIPv4'] }}"
         # The run_ansible ensures the socok8s_workspace is not an empty var by
         # exporting ANSIBLE_RUNNER_DIR
-        - name: Extend inventory in workspace with newly created SES node
+        - name: Extend inventory in workspace with newly created OSH deployer node
           config_template:
             src: "{{ socok8s_workspace }}/inventory/hosts.yml"
             dest: "{{ socok8s_workspace }}/inventory/hosts.yml"
