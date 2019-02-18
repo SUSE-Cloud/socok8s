@@ -6,6 +6,7 @@
     body_format: json
   register: thispatch
 
+# Gerrit starts its http response with ")]}'". Strip that to have a valid json.
 - name: Parse patch details
   set_fact:
     jsoncontent: "{{ thispatch.content.replace(pattern_to_replace,'') | from_json }}"
@@ -15,9 +16,10 @@
 - name: Apply {{ patchnumber }}
   shell: |
     set -o errexit
-    cd {{ upstream_repos_clone_folder }}/{{ project }}
     git fetch {{ jsoncontent[0]['revisions'][current_revision]['fetch']['anonymous http']['url'] }} {{ jsoncontent[0]['revisions'][current_revision]['fetch']['anonymous http']['ref'] }}
     git cherry-pick FETCH_HEAD
+  args:
+    chdir: "{{ upstream_repos_clone_folder }}/{{ project }}"
   vars:
     current_revision: "{{ jsoncontent[0]['current_revision'] }}"
     project: "{{ jsoncontent[0]['project'].replace('openstack/','') }}"
