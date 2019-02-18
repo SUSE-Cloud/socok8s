@@ -1,8 +1,12 @@
 ---
-- hosts: osh-deployer
+- hosts: osh-deployer[0]
   gather_facts: yes
   any_errors_fatal: true
   pre_tasks:
+    - name: Set build_registry
+      set_fact:
+        build_registry: "{{ ansible_fqdn }}:5000/"
+
     #http://jinja.pocoo.org/docs/2.10/templates/#default
     - name: Check if developer mode should be enabled
       set_fact:

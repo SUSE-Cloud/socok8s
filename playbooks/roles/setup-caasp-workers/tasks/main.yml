@@ -1,6 +1,13 @@
 ---
-# Better to have another ansible role for running code against all worker nodes
+- name: Include common vars
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
+- name: Add extra configuration if developer mode is enabled
+  include_tasks: developer-tasks.yml
+  when: developer_mode | bool
+
 - name: Subvolumes setup on control plane worker nodes
   import_tasks: subvolumes-setup.yml
   tags:
     - preinstall
+
