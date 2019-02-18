@@ -1,5 +1,4 @@
 ---
-
 - name: Add utilities repository
   zypper_repository:
     name: SLE12-utilities
@@ -7,6 +6,8 @@
     state: present
     auto_import_keys: yes
     runrefresh: yes
+  when:
+    - "ansible_distribution_major_version == '12'"
 
 - name: Install system packages for build images
   package:
