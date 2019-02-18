@@ -12,6 +12,12 @@
         - imagebuilder
         - upstream_patching
   roles:
+    - role: install-docker
+      tags:
+        - docker
+      when:
+        - developer_mode
+        - build_osh_images | default('False') | bool
     - role: suse-build-images
       tags:
         - imagebuilder
