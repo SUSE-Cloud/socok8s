@@ -48,11 +48,8 @@ case "$deployment_action" in
     "enroll_caasp_workers")
         enroll_caasp_workers
         ;;
-    "setup_hosts")
-        deploy_ses
-        deploy_caasp
-        deploy_ccp_deployer
-        enroll_caasp_workers
+    "setup_caasp_workers_for_openstack")
+        setup_caasp_workers_for_openstack
         ;;
     "patch_upstream")
         patch_upstream
@@ -63,11 +60,24 @@ case "$deployment_action" in
     "deploy_osh")
         deploy_osh
         ;;
+    "setup_hosts")
+        deploy_ses
+        deploy_caasp
+        deploy_ccp_deployer
+        enroll_caasp_workers
+        ;;
+    "setup_openstack")
+        setup_caasp_workers_for_openstack
+        patch_upstream
+        build_images
+        deploy_osh
+        ;;
     "setup_everything")
         deploy_ses
         deploy_caasp
         deploy_ccp_deployer
         enroll_caasp_workers
+        setup_caasp_workers_for_openstack
         patch_upstream
         build_images
         deploy_osh
