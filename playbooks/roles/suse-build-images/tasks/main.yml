@@ -1,6 +1,9 @@
 ---
 - name: Include common vars
-  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+  include_vars: "{{ playbook_dir }}/../vars/{{ item }}"
+  loop:
+    - "common-vars.yml"
+    - "developer-mode.yml"
 
 - name: Add utilities repository
   zypper_repository:

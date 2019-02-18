@@ -1,0 +1,2 @@
+---
+build_registry: "{{ hostvars[groups['osh-deployer'][0]]['ansible_fqdn'] }}:5000/"

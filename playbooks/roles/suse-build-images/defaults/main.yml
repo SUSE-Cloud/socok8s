@@ -1,8 +1,6 @@
 ---
 # defaults file for suse-build-images
 
-build_registry: "local-registry:5000"
-
 #########################
 # DEVELOPER EXPLANATION #
 #########################
@@ -80,8 +78,9 @@ loci_build_projects: []
 #  - keystone
 loci_build_command: "./openstack/loci/build-queens.sh"
 
+# Docker has been installed in a different role
+# and doesn't need to be installed again.
 suse_build_images_packages:
-  - docker
   - gnu_parallel
 
 sle_utils_repository_url: "https://download.opensuse.org/repositories/utilities/SLE_12"
