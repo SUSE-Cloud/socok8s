@@ -1,0 +1,15 @@
+---
+- name: Include developer variables, as they are required for registry location
+  include_vars: "{{ playbook_dir }}/../vars/developer-mode.yml"
+
+# TODO(evrardjp): Convert those to ansible modules
+- name: Generate SSL private and public key
+  command: >
+    openssl req -x509 -newkey rsa:4096 -nodes
+      -subj '/CN={{ build_registry }}'
+      -days 365
+      -keyout "{{ socok8s_registry_certkey }}"
+      -out "{{ socok8s_registry_cert }}"
+  changed_when: true
+  tags:
+    - skip_ansible_lint
