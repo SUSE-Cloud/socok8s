@@ -130,17 +130,43 @@
     - horizon
     - run
 
-
-# TODO(evrardjp): Use mechanism like glance to re-use component-install.yml code and allow any override.
-# TODO(evrardjp): Check stdout to ensure idempotency. In the meantime skip_ansible_lint
-- name: Setup openstack CLIs
-  command: ./tools/deployment/multinode/010-setup-client.sh
-  args:
-    executable: /bin/bash
-    chdir: /opt/openstack-helm
+- name: Install openstack client
+  package:
+    name: python-openstackclient
+    state: present
+  register: _pkginstall
+  until: _pkginstall is success
+  retries: 5
+  delay: 2
   tags:
     - run
-    - skip_ansible_lint
+
+- name: Create .config/openstack directory
+  file:
+    path: /root/.config/openstack
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  tags:
+    - run
+
+- name: Save default clouds.yaml file
+  template:
+    src: clouds.yaml.j2
+    dest: /root/.config/openstack/clouds.yaml
+    owner: root
+    mode: '0640'
+
+- name: Build openstack-helm charts
+  make:
+    chdir: /opt/openstack-helm
+    target: all
+  when:
+    - not developer_mode
+    - _gitclone is changed
+  tags:
+    - run
 
 # TODO(evrardjp): Follow on https://review.openstack.org/#/c/605005/
 - name: Use a different ingress script as long as upstream does not support overrides
