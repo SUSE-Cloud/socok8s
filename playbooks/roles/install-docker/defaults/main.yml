@@ -7,4 +7,3 @@
 docker_packages:
   - docker
   - python2-docker
-  - python3-docker
