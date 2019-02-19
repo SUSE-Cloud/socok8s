@@ -26,7 +26,7 @@
   tags:
     - install
 
-- name: Build and push the non-LOCI components
+- name: Build and push the non-LOCI components from OSH-images
   include_tasks: build-with-docker.yml
   loop: "{{ docker_images }}"
   loop_control:
@@ -34,7 +34,7 @@
 
 # TODO(evrardjp): Ensure idempotency here
 # In the meantime, skip_ansible_lint
-- name: Build and push Openstack Services images via loci
+- name: Build and push Openstack Services images from OSH-images LOCI process
   include_tasks: build-with-loci.yml
   when:
     - loci_build_projects | length > 0
