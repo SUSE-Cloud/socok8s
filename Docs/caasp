@@ -1,0 +1,32 @@
+
+CAASP OPERATIONS:
+
+Transactional Update:
+
+Document for Transactional updates :
+https://www.suse.com/documentation/suse-caasp-3/book_caasp_admin/data/sec_admin_software_transactional-updates.html
+
+Transactional updates can be disabled though NOT recommended:
+root # systemctl --now disable transactional-update.timer
+
+Modify transactional-update.timer:
+So if you want that we check only once a week for new updates, override the daily default:
+
+# mkdir /etc/systemd/system/transactional-update.timer.d
+# vi /etc/systemd/system/transactional-update.timer.d/override.conf
+
+ Enter:
+ [Timer]
+ OnCalendar=
+ OnCalendar=weekly
+
+# systemctl daemon-reload
+
+Instead of the above commands, you can also use:
+# systemctl edit transactional-update.timer
+# systemctl restart transactional-update.timer
+# systemctl status transactional-update.timer
+
+This command shows next run a week after the last run.
+# systemctl list-timers
+
