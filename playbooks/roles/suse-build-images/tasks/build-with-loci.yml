@@ -11,7 +11,7 @@
   vars:
     default_environment:
       LOCI_SRC_DIR: "{{ upstream_repos_clone_folder }}/loci"
-      REGISTRY_URI: "{{ build_registry }}/openstackhelm/"
+      REGISTRY_URI: "{{ build_registry }}openstackhelm/"
       BASE_IMAGE: leap15
       PUSH_TO_REGISTRY: YES
       BUILD_PROJECTS: "{{ ' '.join(loci_build_projects) }}"
