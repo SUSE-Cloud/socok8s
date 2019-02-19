@@ -33,6 +33,11 @@
           - gcc
           - make
           - jq
+          - ruby2.5-rubygem-bundler
+          - ruby2.5-devel
+          - phantomjs
+          - libxml2-devel
+          - libxslt-devel
 
     - name: Copying suse-cloud repo for velum automation
       git:

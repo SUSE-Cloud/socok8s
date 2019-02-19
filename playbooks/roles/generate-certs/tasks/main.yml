@@ -1,0 +1,27 @@
+---
+# tasks file for generate-certs
+- name: Include common vars
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
+- name: Ensure folders exists in workspace
+  file:
+    state: directory
+    path: "{{ item }}"
+  loop: "{{ certfolders | unique }}"
+  vars:
+    certfolders:
+      - "{{ (socok8s_registry_certkey | dirname)  }}"
+      - "{{ (socok8s_registry_cert | dirname)  }}"
+
+- name: Check if certs are present in workspace
+  stat:
+    path: "{{ item }}"
+  loop:
+    - "{{ socok8s_registry_cert }}"
+    - "{{ socok8s_registry_certkey }}"
+  register: _statcerts
+
+- name: Generate certs if any of the two certs is missing
+  include_tasks: generate-certs.yml
+  when:
+    - "not (_statcerts['results'][0]['stat']['exists'] | bool) or not (_statcerts['results'][1]['stat']['exists'] | bool)"

@@ -63,6 +63,18 @@ case "$deployment_action" in
     "deploy_osh")
         deploy_osh
         ;;
+    "setup_hosts")
+        deploy_ses
+        deploy_caasp
+        deploy_ccp_deployer
+        enroll_caasp_workers
+        ;;
+    "setup_openstack")
+        setup_caasp_workers_for_openstack
+        patch_upstream
+        build_images
+        deploy_osh
+        ;;
     "deploy_airship")
         deploy_airship
         ;;
@@ -71,6 +83,7 @@ case "$deployment_action" in
         deploy_caasp
         deploy_ccp_deployer
         enroll_caasp_workers
+        setup_caasp_workers_for_openstack
         patch_upstream
         build_images
         deploy_osh

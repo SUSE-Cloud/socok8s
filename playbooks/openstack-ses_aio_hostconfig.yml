@@ -19,35 +19,21 @@
     - name: Ensure all the vars are loaded
       include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
 
-    # TODO(evrardjp): Test if we can include this step in the creation of the node.
-    # In the meantime, we rely on raw ansible module to run task, which causes
-    # the absence of idempotency, and therefore complaining of ansible-lint (301)
     - name: Configure host repositories
-      raw: |
-        zypper ar -f -G {{ deploy_on_openstack_repos_to_configure[item] }} {{ item }}
-      loop:
-        - SLE12SP3-product
-        - SLE12SP3-update
-        - SLE12SP3SDK-product
-        - SLE12SP3SDK-update
-        - SUSE-CA
-        - OpenStack-Cloud8-product
-        - SES5-product
-        - SES5-update
-        - SLE12Containers
-      tags:
-        - skip_ansible_lint
+      zypper_repository:
+        name: "{{ item }}"
+        repo: "{{ deploy_on_openstack_repos_to_configure[item] }}"
+        autorefresh: True
+        auto_import_keys: yes
+        state: present
+      loop: "{{ deploy_on_openstack_ses_repos_per_imagename[deploy_on_openstack_sesnode_image] | default([]) }}"
 
-    # TODO(evrardjp): Revert back to zypper module when dist-upgrade is fixed there
-    - name: Refresh zypper. After this step, we can rely on ansible modules.
-      raw: |
-        #TODO(evrardjp): Check if utilities/devel tools/virt/cloud8updates are really needed
-        #zypper ar -f -G https://provo-mirror.opensuse.org/repositories/utilities/SLE_12/ SLE12-utilities;
-        #zypper ar -f -G https://provo-mirror.opensuse.org/repositories/Virtualization:/containers/SLE_12_SP3/ Virtualization_containers;
-        #zypper ar -f -G  http://kirk.provo.novell.com/repositories/SUSE/Products/OpenStack-Cloud/8/x86_64/product/ openstackcloud-8-update
-        zypper refresh && zypper dist-upgrade -y
-      tags:
-        - skip_ansible_lint
+    - name: Zypper dist-upgrade
+      zypper:
+        name: "*"
+        state: dist-upgrade
+        update_cache: yes
+        extra_args_precommand: "--gpg-auto-import-keys"
 
     #On some images this service is not defined and the systemctl command fails.
     #The failed_when false is temporary until I find out proper conditional on this task.

@@ -1,25 +1,86 @@
 ---
 # defaults file for suse-build-images
 
-devenv_root: /opt
+#########################
+# DEVELOPER EXPLANATION #
+#########################
 
-local_registry_name: local-registry
-local_registry_port: 5000
-openstack_svcs_build_image_version: stable/queens
+# This should be a list of what to build, and what argument you
+# pass to each build. See also this structure:
+# https://zuul-ci.org/docs/zuul-jobs/roles.html#role-build-docker-image
+# Full story on how to use this:
+# 0) Set developer mode. It should be already like this if you're entering
+#    this role.
+# 1) Override this variable by providing a `docker_image`
+# variable in your ${WORKDIR}/env/extravars. That will be used for building
+# its image, locally.
+# 2) This role will build the docker_images listed locally, and tag them
+#    with the `tags` given in here.
+# 3) This role will publish the images to your local registry, provided
+#    by the `repository` element in each of the docker_images item.
+# 4) To use this built image in OSH, you need to pass the image in value overrides.
+#    For that, check the appropriate override variable for the helm deploy step
+#    for example, memcached takes a `suse_osh_deploy_memcached_yaml_overrides`,
+#    which can be used to give a specific image to the memcached chart.
+# 5) When this is working in your local environment, provide upstream patches in
+#    openstack-helm-images, and if necessary, in OSH/LOCI/OSH-infra/OSH-addons.
+# 6) When those patches are up, please submit a PR in this repo (socok8s)
+#    This PR should contain:
+#    - the dev-patcher upstream changes to consume
+#    - the eventual changes in docker_images defaults, should the docker images
+#      in OSH-images not be published yet (with a link to the PR/comment on what
+#      to track)
+#    - the eventual changes in our deploy-osh role to point to the new
+#      published image name, or alternatively (if not published) point
+#      conditionally to the local built image when developer mode is enabled.
+# In the future, when we'll do SLE image building...
+# 1) Follow the same process 1-4, just pass an additional argument to provide a
+#    different FROM image.
+# 2) When this is working in your local environment, build images in IBS
+#    using the same Dockerfile.
+# 3) Wait for publication of said dockerfile into suse registries
+# 4) Provide a PR to override the default image in deploy-osh.
+# Please note this ^ only applies to dockerfiles.
+# The LOCI image building (a stop gap to be more compatible with ubuntu),
+# will be using different variables, and follow the usual LOCI build process
+# It will only be done on openSUSE Leap 15.
+docker_images: []
 
-libvirt_distro: suse_15
-libvirt_binary_version: 4.4.0
-libvirt_image_version: latest
+##example for libvirt building.
+#docker_images:
+#  - context: libvirt
+#    repository: "{{ build_registry }}/openstackhelm/libvirt"
+#    tags:
+#      - latest-opensuse_15
+## that would require overriding the libvirt chart values
+# images:
+#   tags:
+#     libvirt: "{{ build_registry }}/openstack/libvirt:latest-opensuse_15"
+## Which is possible by passing an override file to the libvirt shell script
+## happening in deploy-osh. That override file is generated using
+## config_template and passed as /tmp/socok8s-libvirt.yaml.
+## This config_template takes the _cmpnt_override named:
+## ``suse_osh_deploy_libvirt_yaml_overrides``.
+## Therefore the following should be set in your extravars:
+# suse_osh_deploy_libvirt_yaml_overrides:
+#   images:
+#     tags:
+#       libvirt: "<insert build server url here, probably local-registry:5000>/openstackhelm/libvirt:latest-opensuse_15"
 
-openvswitch_distro: suse_15
-openvswitch_image_version: latest
+# This is the default dockerfile name in OSH images for leap15/SLE15 images.
+docker_dockerfile: "Dockerfile.suse_15"
 
-build_infra_components_list:
-  - libvirt
-  - openvswitch
+loci_build_projects: []
+# List of projects to build with LOCI.
+# Example:
+#loci_build_projects:
+#  - requirements
+#  - keystone
+loci_build_command: "./openstack/loci/build-queens.sh"
 
+# Docker has been installed in a different role
+# and doesn't need to be installed again.
 suse_build_images_packages:
-  - docker
   - gnu_parallel
 
 sle_utils_repository_url: "https://download.opensuse.org/repositories/utilities/SLE_12"

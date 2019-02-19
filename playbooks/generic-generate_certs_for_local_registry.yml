@@ -15,5 +15,14 @@
 # under the License.
 #
 
-- import_playbook: generic-enroll_caasp_nodes_in_caasp_cluster.yml
-- import_playbook: generic-setup_caasp_workers_for_openstack.yml
+# This has to be idempotent.
+# It will be called before the developer mode, so that developer mode can
+# use the generated certs
+# It will be called in CI after the deploy-osh/enroll caasp nodes, so that
+# we can artifact the certs for reuse in the play to consume it.
+- name: Generate certificates for docker registry
+  hosts: localhost
+  gather_facts: yes
+  connection: local
+  roles:
+    - generate-certs

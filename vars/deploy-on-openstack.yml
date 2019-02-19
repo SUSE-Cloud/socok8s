@@ -20,12 +20,39 @@ deploy_on_openstack_repos_to_configure:
   SES5-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Pool/
   SES5-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Updates/
   SLE12Containers: http://download.suse.de/ibs/SUSE/Updates/SLE-Module-Containers/12/x86_64/update/
+  Leap15develtools: https://download.opensuse.org/repositories/devel:/tools/openSUSE_Leap_15.0/
+deploy_on_openstack_ses_repos_per_imagename:
+  SLES12-SP3:
+    - SLE12SP3-product
+    - SLE12SP3-update
+    - SLE12SP3SDK-product
+    - SLE12SP3SDK-update
+    - SUSE-CA
+    - OpenStack-Cloud8-product
+    - SES5-product
+    - SES5-update
+    - SLE12Containers
+deploy_on_openstack_osh_repos_per_imagename:
+  openSUSE-Leap-15.0:
+    - Leap15develtools
+  SLES12-SP3:
+    - SLE12SP3-product
+    - SLE12SP3-update
+    - SLE12SP3SDK-product
+    - SLE12SP3SDK-update
+    - SUSE-CA
+    - OpenStack-Cloud8-product
+    - SLE12Containers
 deploy_on_openstack_caasp_image: "caasp-3.0.0-GM-OpenStack-qcow"
 deploy_on_openstack_caasp_workers: 3
 deploy_on_openstack_caasp_securitygroup: "{{ deploy_on_openstack_sesnode_securitygroup }}"
 deploy_on_openstack_caasp_stacknamefile: "{{ socok8s_workspace }}/stackname"
 deploy_on_openstack_oshnode_server_name: "{{ deploy_on_openstack_prefix }}-osh"
-deploy_on_openstack_oshnode_image: "SLES12-SP3"
+deploy_on_openstack_oshnode_image: "openSUSE-Leap-15.0"
 deploy_on_openstack_oshnode_flavor: "m1.large"
 deploy_on_openstack_oshnode_securitygroup: "all-incoming"
 deploy_on_openstack_oshnode_volume_name: "{{ deploy_on_openstack_oshnode_server_name }}-vol"
+deploy_on_openstack_oshnode_userdata: |
+  {%- raw -%}#cloud-config
+  disable_root: false
+  {% endraw %}

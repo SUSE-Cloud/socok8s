@@ -5,6 +5,8 @@ socok8s_workspace: "{{ lookup('env','ANSIBLE_RUNNER_DIR') | default('~/suse-soco
 upstream_repos_clone_folder: "{{ socok8s_workspace }}"
 socok8s_extravars: "{{ socok8s_workspace }}/env/extravars"
 socok8s_ses_pools_details: "{{ socok8s_workspace }}/ses_config.yml"
+socok8s_registry_cert: "{{ socok8s_workspace }}/certs/domain.crt"
+socok8s_registry_certkey: "{{ socok8s_workspace }}/certs/domain.key"
 socok8s_caasp_environment_details: "{{ socok8s_workspace }}/environment.json"
 socok8s_libvirtuuid: "{{ socok8s_workspace }}/libvirt.uuid"
 

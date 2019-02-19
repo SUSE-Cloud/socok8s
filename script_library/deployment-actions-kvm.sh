@@ -32,6 +32,10 @@ function build_images(){
     echo "Nothing will happen if developer mode is not set"
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-build_images.yml -e "build_osh_images=yes"
 }
+function setup_caasp_workers_for_openstack(){
+    echo "Ensuring caasp workers can be used for openstack"
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-setup_caasp_workers_for_openstack.yml
+}
 function deploy_osh(){
     echo "Now deploy SUSE version of OSH"
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_osh.yml

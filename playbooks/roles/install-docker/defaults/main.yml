@@ -1,0 +1,10 @@
+---
+# defaults file for install-docker
+
+# We don't know which default python version will be configured on the remote
+# node, therefore we install both docker packages, so we'll be able to find
+# the python libs anyway.
+docker_packages:
+  - docker
+  - python2-docker
+  - python3-docker

@@ -1,0 +1,30 @@
+---
+# Heavily inspired by: https://github.com/openstack-infra/zuul-jobs/blob/master/roles/build-docker-image/tasks/main.yaml
+# To be closer to what upstream is doing.
+# Context = folder inside openstack-helm-images
+# Repository = full repository location, including project image name
+# Target=image name
+- name: Build the docker image {{ image.context }}
+  command: >-
+    docker build {{ image.path | default('.') }} -f {{ image.dockerfile | default(docker_dockerfile) }}
+    {% if image.target | default(false) -%}
+      --target {{ image.target }}
+    {% endif -%}
+    {% for build_arg in image.build_args | default([]) -%}
+      --build-arg {{ build_arg }}
+    {% endfor -%}
+    {% for tag in image.tags | default(['latest-suse_15']) -%}
+    --tag {{ image.repository }}:{{ tag }}
+    {% endfor -%}
+  args:
+    chdir: "{{ upstream_repos_clone_folder }}/openstack-helm-images/{{ image.context }}"
+  tags:
+    - skip_ansible_lint
+
+- name: Push the docker image {{ image.context }}
+  command: docker push {{ image.repository }}:{{ item }}
+  loop: "{{ image.tags | default(['latest-suse_15']) }}"
+  args:
+    chdir: "{{ upstream_repos_clone_folder }}/openstack-helm-images/{{ image.context }}"
+  tags:
+    - skip_ansible_lint

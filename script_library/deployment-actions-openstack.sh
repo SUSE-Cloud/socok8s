@@ -28,8 +28,8 @@ function deploy_ccp_deployer() {
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_ccp_deployer.yml
 }
 function enroll_caasp_workers() {
-    echo "Enrolling caasp worker nodes into the cluster and ensuring they are ready for openstack"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-enroll_caasp_workers.yml
+    echo "Enrolling caasp worker nodes into the cluster"
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-enroll_caasp_workers.yml
 }
 function patch_upstream(){
     echo "Running dev-patcher"
@@ -40,6 +40,10 @@ function build_images(){
     echo "Running image builder"
     echo "Nothing will happen if developer mode is not set"
     run_ansible -e "build_osh_images=yes" ${socok8s_absolute_dir}/playbooks/openstack-build_images.yml
+}
+function setup_caasp_workers_for_openstack(){
+    echo "Ensuring caasp workers can be used for openstack"
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-setup_caasp_workers_for_openstack.yml
 }
 function deploy_osh(){
     echo "Now deploy SUSE version of OSH"
