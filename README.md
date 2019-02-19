@@ -150,9 +150,24 @@ you can run the following:
 ```
 
 ```
-### Re-deploy OpenStack-Helm
+### Deploy OpenStack-Helm
 ./run.sh deploy_osh
 ```
+
+## Re-deploying Airship
+
+If you only want to redeploy the last step, Airship,
+you can run the following:
+
+```
+### (Optional): Cleanup Airship and Openstack-Helm artifacts from all previous
+deployment
+./run.sh clean_airship
+```
+
+```
+### Re-deploy Airship
+./run.sh deploy_airship
 
 # Reference: run.sh
 
@@ -181,12 +196,15 @@ Here are the actions available:
   cherry-picking upstream patches on top of upstream repos.
 * build_images: This allows developer to build images for internal consumption.
   Used in CI.
-* deploy_osh: Self explanatory.
+* deploy_osh: Deploys Openstack Helm only.
+* deploy_airship: Deploys Airship UCP and Openstack Helm.
 * setup_everything: From A to Z.
 * teardown: Destroys all the nodes in an openstack environment.
   Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace.
 * clean_k8s: Removes all k8s definitions that were introduced during deployment
   (Experimental!)
+* clean_airship: Removes all Airship and Openstack-Helm artifacts that were
+  introduced during deployment (Experimental!)
 
 ## env variables
 
@@ -315,6 +333,54 @@ your deployer. Finally, note that the SES node must have a FQDN in
 
 Now you are ready to run the Stage 2 playbooks. From the top level of
 this repository, run ./2_deploy_ses_aio/run.sh.
+
+## Deploy Airship
+
+Prior to deploy Airship, you will need to perform additional
+configuration on the deployer.
+
+On the deployer:
+- Create the Airship deployment home folder, for example, /opt/socok8s.
+
+- Configure the following environment variables:
+
+  export ANSIBLE_RUNNER_DIR=/opt/socok8s
+  export OSH_DEVELOPER_MODE=True #enables dev patcher and local image build
+  export DEPLOYMENT_MECHANISM=kvm
+  export DELETE_ANYWAY=YES
+
+- Create a hosts.yaml file in /opt/socok8s/inventory directory by
+  using the examples/config/inventory-airship.yml and editing it to reflect
+  your environment.
+
+- Create the extravars file in /opt/socok8s/env directory with the following
+  variables:
+
+  - socok8s_deploy_vip_with_cidr: '172.16.1.100' #an IP available
+    on the network you're using which can be used as a VIP.
+  - ceph_admin_keyring_b64key: QVFDMXZ6dGNBQUFBQUJBQVJKakhuYkY4VFpublRPL1RXUEROdHc9PQo=
+  - ceph_user_keyring_b64key: QVFDMXZ6dGNBQUFBQUJBQVJKakhuYkY4VFpublRPL1RXUEROdHc9PQo=
+  - suse_airship_deploy_site_name: soc-minimal
+  - redeploy_osh_only: false # true if only wants to redeploy Openstack_Helm
+
+- Enable and start sshd on your deployer and the location you are
+  running the playbooks. [NOTE: this step can be removed or adapted
+  subject to merge of PR #29]
+
+- Download the kubeconfig from CaaSP Velum dashboard and copy
+  it to /opt/socok8s/kubeconfig.
+
+- Retrieve the ses_config.yaml from Step 2 or edit the example/config/ses_config.yml
+  and place it in the /opt/socok8s directory. 
+
+- For each CAASP node, run ssh-copy-id root@your_caasp_node_host
+  to add your key to the authorized_keys file.
+
+Now you are ready to deploy Airship, as follows:
+
+```
+./run.sh deploy_airship
+```
 
 ## Manually running Stage 7 to run OpenStack Helm
 

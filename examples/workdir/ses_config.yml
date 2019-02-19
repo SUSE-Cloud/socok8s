@@ -1,25 +1,28 @@
-ses_cluster_configuration:
-  ses_cluster_name: ceph
-
-  conf_options:
-      ses_fsid: 06d75e51-4fe6-3b0e-a9ad-570c85bf9f98
-      ses_mon_initial_members: linux-aojx
-      ses_mon_host: 192.168.89.199
-      ses_public_network: 192.168.89.0/24
-      ses_cluster_network: 192.168.89.0/24
-  cinder:
-      rbd_store_pool: cinder
-      rbd_store_pool_user: cinder
-      keyring_file_name: ceph.client.cinder.keyring
-  cinder-backup:
-      rbd_store_pool: backups
-      rbd_store_pool_user: cinder_backup
-      keyring_file_name: ceph.client.cinder_backup.keyring
- # Nova uses the cinder user to access the nova pool, cinder pool
- # So all we need here is the nova pool name.
-  nova:
-      rbd_store_pool: nova
-  glance:
-      rbd_store_pool: glance
-      rbd_store_pool_user: glance
-      keyring_file_name: ceph.client.glance.keyring
+---
+# Example ses_config.yml file
+# This file should be place in ~/suse-airship-deploy on the deployer node
+ceph_conf:
+  cluster_network: 192.168.111.0/24
+  fsid: f85b97cb-ce8c-375a-80cc-d7ce32ba797f
+  mon_host: 172.16.1.17
+  mon_initial_members: ses
+  public_network: 192.168.111.0/24
+cinder:
+  key: AQCDH9tbV49jDxAAk+d2wdxsXRcSFzjf0DHWyw==
+  rbd_store_pool: volumes
+  rbd_store_user: cinder
+cinder-backup:
+  key: AQCSH9tbx9YzNBAA65C+mwyNdmqaRwokMcHAlQ==
+  rbd_store_pool: cinder_backup
+  rbd_store_user: cinder-backup
+glance:
+  key: AQCuH9tbCNUuLBAAImRsG9tgH2ArPPlu4pt0EQ==
+  rbd_store_pool: images
+  rbd_store_user: glance
+libvirt:
+  key: AQCDH9tbV49jDxAAk+d2wdxsXRcSFzjf0DHWyw==
+  rbd_store_pool: vms
+  rbd_store_user: cinder
+nova:
+  rbd_store_pool: nova
+radosgw_urls: []
