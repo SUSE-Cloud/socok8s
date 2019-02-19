@@ -1,0 +1,19 @@
+---
+- name: Show what will be built using LOCI
+  debug:
+    msg: "BUILD_PROJECTS: {{ ' '.join(loci_build_projects) }}"
+
+- name: Build loci images in parallel (using OSH-images tooling)
+  shell: "{{ build_command | default('./openstack/loci/build.sh') }}"
+  args:
+    chdir: "{{ upstream_repos_clone_folder }}/openstack-helm-images"
+  environment: "{{ build_environment | default({}) | combine(default_environment) }}"
+  vars:
+    default_environment:
+      LOCI_SRC_DIR: "{{ upstream_repos_clone_folder }}/loci"
+      REGISTRY_URI: "{{ build_registry }}/openstackhelm/"
+      BASE_IMAGE: leap15
+      PUSH_TO_REGISTRY: YES
+      BUILD_PROJECTS: "{{ ' '.join(loci_build_projects) }}"
+  tags:
+    - skip_ansible_lint

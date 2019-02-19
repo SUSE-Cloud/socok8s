@@ -1,0 +1,4 @@
+---
+build_registry_certs_folder: "/opt/ccp/certs"
+build_registry_cert_name: "domain.crt"
+build_registry_certkey_name: "domain.key"
