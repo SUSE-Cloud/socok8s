@@ -31,15 +31,8 @@
   become: yes
   shell: |
     docker run -d -p {{ local_registry_port }}:{{ local_registry_port }} --name {{ local_registry_name }} \
-      --restart always -v {{ suse_registry_certs_dir}}:/certs \
+      --restart always -v {{ suse_registry_certs_dir}}:{{ suse_registry_certs_dir}} \
       -e REGISTRY_HTTP_TLS_CERTIFICATE={{ suse_registry_certs_dir}}/domain.crt \
       -e REGISTRY_HTTP_TLS_KEY={{ suse_registry_certs_dir }}/domain.key registry:2
   when:
     - registry_running_cmd_status.rc != 0
-
-- name: Ensure local-registry DNS resolution is set in /etc/hosts
-  become: yes
-  blockinfile:
-    path: /etc/hosts
-    block: |
-      {{ ansible_default_ipv4.address | ipaddr('address') }} {{ local_registry_name }}

@@ -7,18 +7,45 @@
   make:
     chdir: "{{ upstream_repos_clone_folder }}/airship-armada"
     target: images
-  when: _gitclone is changed
+  when:
+    - suse_airship_build_local_images
   tags:
     - install
 
-- name: Build Shipyard and Deckhand images
+- name: Build Shipyard images
   make:
-    chdir: "{{ upstream_repos_clone_folder }}/{{ item }}"
-    target: images
-  when: _gitclone is changed
+    chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
+    target: "{{ item.target }}"
+    params:
+      DISTRO: "{{ suse_distro_identifier }}"
+      DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
+      IMAGE_NAME: "{{ item.image_name }}"
+      PUSH_IMAGE: "true"
+  when:
+    - suse_airship_build_local_images
   loop:
-    - airship-shipyard
-    - airship-deckhand
+    - { repo_name: "airship-shipyard", target: "images", image_name: "airflow" }
+    - { repo_name: "airship-shipyard", target: "images", image_name: "shipyard" }
+  tags:
+    - install
+
+- name: Build Deckhand images
+  make:
+    chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
+    target: "{{ item.target }}"
+    params:
+#      DISTRO: "{{ suse_distro_identifier }}"
+#      DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
+#      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+#      DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
+#      IMAGE_NAME: "{{ item.image_name }}"
+#      PUSH_IMAGE: "true"
+  when:
+    - suse_airship_build_local_images
+  loop:
+    - { repo_name: "airship-deckhand", target: "images", image_name: "deckhand" }
   tags:
     - install
 
@@ -47,7 +74,7 @@
   tags:
     - install
 
-- name: Get Armada pod name 
+- name: Get Armada pod name
   shell: 'kubectl get pod -l app=armada -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
   register: armada_results
   until: armada_results.stdout.find('armada-') == 0

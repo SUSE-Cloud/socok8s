@@ -3,5 +3,23 @@ ucp_namespace_name: "{{ ucp_namespace | default('ucp') }}"
 
 suse_distro_identifier: opensuse
 suse_airship_components_base_image: "opensuse/leap:15.0"
-suse_airship_components_image_tag: opensuse_15_latest
 
+# check if argument is set in commandline for airship_local_images_flag value
+# otherwise use corresponding environment variable to determine it
+suse_airship_build_local_images: "{%- if airship_local_images_flag is defined -%}
+                                    {{ airship_local_images_flag | bool }}
+                                  {%- else -%}
+                                    {{ lookup('env','AIRSHIP_BUILD_LOCAL_IMAGES') | default('False', true) | bool }}
+                                  {%- endif -%}
+                                 "
+suse_airship_registry_location: "{%- if suse_airship_build_local_images -%}
+                                   {{ ansible_hostname }}:5000
+                                 {%- else -%}
+                                   quay.io
+                                 {%- endif -%}"
+
+suse_airship_components_image_tag: "{%- if suse_airship_build_local_images -%}
+                                      opensuse_15_latest
+                                    {%- else -%}
+                                      latest
+                                    {%- endif -%}"

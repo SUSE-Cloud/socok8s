@@ -15,3 +15,10 @@
     - restart docker
   when:
     - _copy_ssc_result.changed
+
+- name: Ensure registry server host DNS resolution is set in /etc/hosts
+  become: yes
+  blockinfile:
+    path: /etc/hosts
+    block: |
+      {{ registry_server_host_ip }} {{ local_registry_name }}

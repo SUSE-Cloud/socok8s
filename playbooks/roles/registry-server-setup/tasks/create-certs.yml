@@ -20,3 +20,7 @@
   register: sscert_generate_result
   when:
     - not _domain_cert_check.stat.exists
+
+- name: Get registry host (aka deployer) ip for entry in other host's /etc/hosts
+  set_fact:
+    registry_server_host_ip: "{{ ansible_default_ipv4.address | ipaddr('address') }}"

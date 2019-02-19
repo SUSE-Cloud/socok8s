@@ -261,10 +261,10 @@ data:
   values:
     images:
       tags:
-        shipyard:         'quay.io/airshipit/shipyard:latest'
-        shipyard_db_sync: 'quay.io/airshipit/shipyard:latest'
-        airflow:          'quay.io/airshipit/airflow:latest'
-        airflow_db_sync:  'quay.io/airshipit/airflow:latest'
+        shipyard:         '{{ suse_airship_registry_location }}/airshipit/shipyard:{{ suse_airship_components_image_tag }}'
+        shipyard_db_sync: '{{ suse_airship_registry_location }}/airshipit/shipyard:{{ suse_airship_components_image_tag }}'
+        airflow:          '{{ suse_airship_registry_location }}/airshipit/airflow:{{ suse_airship_components_image_tag }}'
+        airflow_db_sync:  '{{ suse_airship_registry_location }}/airshipit/airflow:{{ suse_airship_components_image_tag }}'
     pod:
       replicas:
         shipyard:
