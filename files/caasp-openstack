@@ -1,1 +1,185 @@
-../submodules/kubic-project-automation/caasp-openstack-heat/caasp-openstack
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# options
+HAS_ACTION=false
+RUN_BUILD=false
+RUN_UPDATE=false
+RUN_DESTROY=false
+
+NAME=caasp-stack
+OPENRC_FILE=
+HEAT_ENVIRONMENT_FILE=heat-environment.yaml.example
+MASTERS=3
+WORKERS=2
+IMAGE=
+
+
+USAGE=$(cat <<USAGE
+Usage:
+
+  * Building a cluster
+
+    -b|--build                       Run the Heat Stack Build Step
+    -m|--masters             <INT>   Number of masters to build (Default: 3)
+    -w|--workers             <INT>   Number of workers to build (Default: 2)
+    -i|--image               <STR>   Image to use
+
+  * Destroying a cluster
+
+    -d|--destroy                     Run the Heat Stack Destroy Step
+
+  * Common options
+
+    -o|--openrc             <STR>   Path to an openrc file
+    -e|--heat-environment   <STR>   Path to a heat environment file
+
+  * Examples:
+
+  Build a 1 master, 2 worker cluster
+
+  $0 --build -m 1 -w 2 --openrc my-openrc --image CaaSP-1.0.0-GM --name test-stack
+
+  Build a 3 master, 2 worker cluster
+
+  $0 --build -m 3 -w 2 --openrc my-openrc --image CaaSP-1.0.0-GM --name test-stack
+
+USAGE
+)
+
+# Utility methods
+log()        { (>&2 echo ">>> [caasp-stack] $@") ; }
+warn()       { log "WARNING: $@" ; }
+error()      { log "ERROR: $@" ; exit 1 ; }
+check_file() { if [ ! -f $1 ]; then error "File $1 doesn't exist!"; fi }
+
+# parse options
+while [[ $# -gt 0 ]] ; do
+  case $1 in
+    -n|--name)
+      # Convert name to lower cases, as cloud-init will do with the machines
+      # hostname.
+      NAME="${2,,}"
+      shift
+      ;;
+    -o|--openrc)
+      f="$(realpath $2)"
+      check_file "$f"
+      OPENRC_FILE="$f"
+      shift
+      ;;
+    -e|--heat-environment)
+      f="$(realpath $2)"
+      check_file "$f"
+      HEAT_ENVIRONMENT_FILE="$f"
+      shift
+      ;;
+    -b|--build)
+      RUN_BUILD=true
+      HAS_ACTION=true
+      ;;
+    -m|--masters)
+      MASTERS="$2"
+      shift
+      ;;
+    -w|--workers)
+      WORKERS="$2"
+      shift
+      ;;
+    -i|--image)
+      IMAGE="$2"
+      shift
+      ;;
+    -u|--update)
+      RUN_UPDATE=true
+      HAS_ACTION=true
+      ;;
+    -d|--destroy)
+      RUN_DESTROY=true
+      HAS_ACTION=true
+      ;;
+    -h|--help)
+      echo "$USAGE"
+      exit 0
+      ;;
+  esac
+  shift
+done
+
+[ -z "$OPENRC_FILE" ]  && error "Option --openrc is required"
+
+# Core methods
+build_stack() {
+  [ -z "$NAME" ] && error "Option --name is required"
+  [ -z "$IMAGE" ] && error "Option --image is required"
+
+  log "Creating Stack"
+
+  # Keep track of the stack name (which Heat enforces as being unique) for
+  # later use in commands like delete.
+  echo -n "$NAME" > .stack_name
+
+  source "$OPENRC_FILE"
+  openstack stack create --verbose --wait -e "$HEAT_ENVIRONMENT_FILE" -t caasp-stack.yaml "$NAME" \
+    --parameter master_count=$MASTERS \
+    --parameter worker_count=$WORKERS \
+    --parameter image="$IMAGE"
+
+  log "CaaSP Stack Created with name $NAME"
+
+  ./tools/generate-environment "$NAME"
+  ../misc-tools/generate-ssh-config environment.json
+
+  log "Waiting for Velum to start - this may take a while"
+  PYTHONUNBUFFERED=1 "../misc-tools/wait-for-velum" https://$(jq -r '.dashboardExternalHost' environment.json)
+}
+
+update_stack() {
+  [ -z "$IMAGE" ] && error "Option --image is required"
+
+  local stack_name=$(cat .stack_name)
+  [ -n "$NAME" ] && stack_name="$NAME"
+
+  log "Updating Stack with ID $stack_name"
+
+  source "$OPENRC_FILE"
+  openstack stack update --wait -e "$HEAT_ENVIRONMENT_FILE" -t caasp-stack.yaml "$stack_name" \
+    --parameter master_count=$MASTERS \
+    --parameter worker_count=$WORKERS \
+    --parameter image="$IMAGE"
+
+  ./tools/generate-environment "$NAME"
+  ../misc-tools/generate-ssh-config environment.json
+}
+
+destroy_stack() {
+  local stack_name="$(cat .stack_name)"
+  [ -n "$NAME" ] && stack_name="$NAME"
+
+  log "Deleting Stack with name $stack_name"
+
+  source "$OPENRC_FILE"
+  openstack stack delete --yes --wait "$stack_name"
+  rm -f .stack_name
+}
+
+# main
+if [ "$HAS_ACTION" != true ]; then
+  echo "$USAGE"
+  error "No action arguments were supplied"
+fi
+
+if [ "$RUN_BUILD" = true ]; then
+  build_stack
+fi
+
+if [ "$RUN_UPDATE" = true ]; then
+  update_stack
+fi
+
+if [ "$RUN_DESTROY" = true ] ; then
+  destroy_stack
+fi
+
+log "Done"

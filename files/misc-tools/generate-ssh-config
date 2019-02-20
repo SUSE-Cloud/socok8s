@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -euo pipefail
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+ENVIRONMENT=${1:?A environment.json path must be supplied}
+OUTPUT=${2:-$DIR/environment.ssh_config}
+
+rm -f $OUTPUT
+touch $OUTPUT
+
+SSH_USER=$(cat $ENVIRONMENT | jq -r '.sshUser')
+SSH_KEY=$(cat $ENVIRONMENT | jq -r '.sshKey')
+
+cat $ENVIRONMENT | jq -c '.minions[]' | \
+while read minion_json; do
+    FQDN=$(echo -n "$minion_json" | jq -r '.fqdn')
+    IPV4=$(echo -n "$minion_json" | jq -r 'if (.addresses.publicIpv4 == null) then .addresses.privateIpv4 else .addresses.publicIpv4 end')
+    PROXY_COMMAND=$(echo -n "$minion_json" | jq -r 'if (.proxyCommand == null) then "" else .proxyCommand end')
+    ROLE=$(echo -n "$minion_json" | jq -r '.role')
+    INDEX=$(echo -n "$minion_json" | jq -r '.index')
+
+    cat << EOF >> $OUTPUT
+Host $FQDN $ROLE-$INDEX $ROLE$INDEX
+  User $SSH_USER
+  Hostname $IPV4
+  IdentityFile $SSH_KEY
+EOF
+
+    if [ -n "$PROXY_COMMAND" ]; then
+        cat << EOF >> $OUTPUT
+  ProxyCommand $PROXY_COMMAND
+EOF
+    fi
+
+    cat << EOF >> $OUTPUT
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+
+EOF
+done

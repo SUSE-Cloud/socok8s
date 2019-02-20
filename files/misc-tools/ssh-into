@@ -1,0 +1,165 @@
+#!/usr/bin/env python3
+
+"""
+    SSH into KVM / OpenStack / Bare metal hosts managed by CI
+"""
+
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+import json
+import logging
+import os
+import subprocess
+import sys
+import urllib.request
+
+log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
+
+sshuser = ""
+sshkey = ""
+
+ssh_cmd_tpl = ("/usr/bin/ssh -t -oLogLevel=error -oStrictHostKeyChecking=no "
+"-oUserKnownHostsFile=/dev/null -i {key1} {sshuser}@{external_ipaddr} "
+"/usr/bin/ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null "
+"-i {key2} {sshuser}@{target_ipaddr}")
+
+
+def parse_args():
+    ap = ArgumentParser(description=__doc__,
+        formatter_class=ArgumentDefaultsHelpFormatter)
+    ap.add_argument('ci_run', help="CI run URL")
+    ap.add_argument('target_role', choices=["admin", "master", "worker"], help="Target host")
+    ap.add_argument('-n', default="0", help="Host number")  # string
+    ap.add_argument('-e', '--env-json-path', help="environment.json full path (default: extract it from Jenkins)")
+    ap.add_argument('-i', '--sshkey', help="SSH identity / private key path",
+                    default="~/.ssh/id_rsa")
+    ap.add_argument('-l', '--logfile', help='logfile')
+    ap.add_argument('--dumpjson', help='Dump environment.json', action="store_true")
+    args = ap.parse_args()
+    return args
+
+
+def run_ssh_interactive_1(ipaddr):
+    cmd = "/usr/bin/ssh -t -oLogLevel=error -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -i {} {}@{} ".format(sshkey, sshuser, ipaddr)
+    log.info(cmd)
+    try:
+        retcode = subprocess.call(cmd, shell=True)
+        if retcode < 0:
+            print("Child was terminated by signal", -retcode, file=sys.stderr)
+        else:
+            print("Child returned", retcode, file=sys.stderr)
+    except OSError as e:
+        print("Execution failed:", e, file=sys.stderr)
+
+
+def run_ssh_interactive(**kw):
+    cmd = ssh_cmd_tpl.format(**kw)
+    log.info(cmd)
+    try:
+        retcode = subprocess.call(cmd, shell=True)
+        if retcode < 0:
+            print("Child was terminated by signal", -retcode, file=sys.stderr)
+        else:
+            print("Child returned", retcode, file=sys.stderr)
+    except OSError as e:
+        print("Execution failed:", e, file=sys.stderr)
+
+
+def fetch_ci_run_log(args):
+    # Fetch CI run log
+
+    url = args.ci_run
+    if not url.endswith("consoleText"):
+        url = url.rstrip("/") + "/consoleText"
+
+    with urllib.request.urlopen(url) as r:
+        text = r.read().decode()
+
+    if len(text) < 3000:
+        log.error("The worker has not been assigned yet or the build failed early")
+        sys.exit(1)
+
+    return text
+
+
+def fetch_environment_json(args, text):
+    # Load or extract environment.json
+    if args.env_json_path:
+        with open(args.env_json_path) as f:
+            env = json.load(f)
+    else:
+        env = None
+        start = 0
+        while True:
+            start = text.find("\n+ cat /", start)
+            if start == -1: break
+            start = text.find("/environment.json\n", start)
+            if start == -1: break
+            start = text.find("{", start)
+            end = text.find("\n}", start)
+            j = text[start:end+2]
+            start = end
+            env = json.loads(j)
+
+    if not env:
+        log.error("environment.json has not been created yet or the build failed earlier")
+        sys.exit(1)
+
+    return env
+
+
+def extract_target_ipaddr(args, env):
+    # Extract target host ipaddr
+    role = args.target_role.rstrip('s')
+    target_ipaddr = None
+    for target_block in env["minions"]:
+        if target_block["role"] == role and target_block["index"] == args.n:
+            target_ipaddr = target_block["addresses"]["privateIpv4"]
+    if target_ipaddr is None:
+        log.error("host not found in environment.json")
+        sys.exit(1)
+    return target_ipaddr
+
+
+def main():
+    global sshuser, sshkey
+    args = parse_args()
+
+    if args.logfile:
+        handler = logging.FileHandler(os.path.abspath(args.logfile))
+    else:
+        handler = logging.StreamHandler()
+    log.addHandler(handler)
+
+    text = fetch_ci_run_log(args)
+    env = fetch_environment_json(args, text)
+
+    # Dump environment.json
+    if args.dumpjson:
+        log.info(json.dumps(env, indent=2, sort_keys=True))
+
+    sshuser = env['sshUser']
+    if args.sshkey:
+        sshkey = args.sshkey
+    else:
+        sshkey = "~/.ssh/" + env['sshKey']
+
+    target_ipaddr = extract_target_ipaddr(args, env)
+
+    # Extract external ipaddrs
+    start = text.find("OPENSTACK_PUBLIC_IP=")
+
+    start = text.find("\nPublic IPv4: ")
+    if start != -1:
+        public_ipaddr = text[start+14:start+30].split("\n", 1)[0]
+        log.info("Found public ipaddr: %r", public_ipaddr)
+        run_ssh_interactive(key1=args.sshkey, sshuser=sshuser,
+            external_ipaddr=public_ipaddr, key2=env['sshKey'],
+            target_ipaddr=target_ipaddr)
+        return
+
+
+
+
+if __name__ == '__main__':
+    sys.exit(main())
