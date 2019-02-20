@@ -2,8 +2,9 @@
 - name: Load standard variables
   include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
 
-- name: Read ses configuration variable file
-  include_vars: "{{ socok8s_ses_pools_details }}"
+- name: Create ses_cluster_configuration
+  set_fact:
+    ses_cluster_configuration: "{{ lookup('file', socok8s_ses_pools_details) | from_yaml }}"
 
 - name: Pre-flight checks for the role
   assert:
@@ -14,7 +15,7 @@
 
 - name: Create a list of monitors (ip and port) if no override exists for it.
   set_fact:
-    suse_airship_deploy_ceph_mons: "[{% for ip in ses_cluster_configuration.conf_options.ses_mon_host.split(',') %}'{{ ip }}:{{ ceph_mon_port | default(6789) }}'{% if not loop.last %},{% endif %}{% endfor %}]"
+    suse_airship_deploy_ceph_mons:  "[{% for ip in ses_cluster_configuration.ceph_conf.mon_host.split(',') %}'{{ ip }}:{{ ceph_mon_port | default(6789) }}'{% if not loop.last %},{% endif %}{% endfor %}]"
   when: suse_airship_deploy_ceph_mons is not defined
   tags:
     - always
