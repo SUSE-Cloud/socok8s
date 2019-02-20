@@ -363,6 +363,16 @@ On the deployer:
   - suse_airship_deploy_site_name: soc-minimal
   - redeploy_osh_only: false # true if only wants to redeploy Openstack_Helm
 
+- To build Airship components image only (with oor without dev-patcher)
+
+  # Airship component images (shipyard, deckhand images)
+
+  Either set environment variable to keep persistent image build behavior
+  export AIRSHIP_BUILD_LOCAL_IMAGES=True
+
+  or pass variable 'airship_local_images_flag=true' to airship playbook to
+  build it on need basis.
+
 - Enable and start sshd on your deployer and the location you are
   running the playbooks. [NOTE: this step can be removed or adapted
   subject to merge of PR #29]
@@ -371,7 +381,7 @@ On the deployer:
   it to /opt/socok8s/kubeconfig.
 
 - Retrieve the ses_config.yaml from Step 2 or edit the example/config/ses_config.yml
-  and place it in the /opt/socok8s directory. 
+  and place it in the /opt/socok8s directory.
 
 - For each CAASP node, run ssh-copy-id root@your_caasp_node_host
   to add your key to the authorized_keys file.
