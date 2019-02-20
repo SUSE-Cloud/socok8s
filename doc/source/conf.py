@@ -24,6 +24,10 @@ sys.path.insert(0, os.path.abspath('../..'))
 extensions = [
     'sphinx.ext.autodoc',
     'openstackdocstheme',
+    'sphinxcontrib.actdiag',
+    'sphinxcontrib.blockdiag',
+    'sphinxcontrib.seqdiag',
+    'sphinxcontrib.nwdiag',
 ]
 
 # Feed configuration for yasfb
