@@ -238,7 +238,11 @@ data:
     timeout: 1800
     labels:
       release_group: airship-deckhand
-  values: {}
+  values:
+    images:
+      tags:
+        deckhand: '{{ suse_airship_registry_location }}/airshipit/deckhand:{{ suse_airship_components_image_tag }}'
+        db_sync:  '{{ suse_airship_registry_location }}/airshipit/deckhand:{{ suse_airship_components_image_tag }}'
   source:
     type: local
     location: /armada/airship-components/airship-deckhand

@@ -20,5 +20,6 @@
   become: yes
   blockinfile:
     path: /etc/hosts
+    marker: "# {mark} ANSIBLE MANAGED BLOCK for registry server"
     block: |
       {{ registry_server_host_ip }} {{ local_registry_name }}

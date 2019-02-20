@@ -1,3 +1,4 @@
 ---
 
-# Set this to false if you want to speed up your builds or do partial upgrades
+
+shipyard_image: "{{ suse_airship_registry_location }}/airshipit/shipyard:{{suse_airship_components_image_tag}}"

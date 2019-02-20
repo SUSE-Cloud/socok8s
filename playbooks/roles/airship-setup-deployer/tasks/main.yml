@@ -57,14 +57,16 @@
   tags:
     - run
 
+# Need to use specific marker to avoid overwriting via other step
 - name: Ensure VIP is present in /etc/hosts for the services to deploy
   become: yes
   blockinfile:
     path: /etc/hosts
+    marker: "# {mark} ANSIBLE MANAGED BLOCK for VIP entries"
     block: |
       {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} keystone.ucp.svc.cluster.local
       {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} barbican.ucp.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} shipyard.ucp.svc.cluster.local
+      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} shipyard-api.ucp.svc.cluster.local
       {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} keystone keystone.openstack.svc.cluster.local
       {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} glance glance.openstack.svc.cluster.local
       {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} cinder cinder.openstack.svc.cluster.local
@@ -79,7 +81,7 @@
     state: directory
     #   owner: "{{ ansible_user }}"
   with_items:
-    - /etc/openstack   
+    - /etc/openstack
 
 - name: Copy clouds.yml
   template:

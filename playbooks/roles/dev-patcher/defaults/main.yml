@@ -10,3 +10,5 @@ dev_patcher_packages:
 dev_patcher_patches:
   - 636229
   - 636240
+  - 637327
+  - 638301
