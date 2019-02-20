@@ -1,0 +1,37 @@
+#!/usr/bin/env python
+
+# Install Netdata http://my-netdata.io/
+# WARNING: installation is performed from upstream binary release
+# To be used only on expendable/temporary hosts
+
+import argparse
+import json
+import subprocess
+
+def runcmd(cmd):
+    print(cmd)
+    subprocess.check_call(cmd, shell=True)
+
+def main():
+    ap = argparse.ArgumentParser(description='Install Netdata on host')
+    ap.add_argument('target', choices=["admin", "master", "worker"], help="Target host")
+    ap.add_argument('--env-json-path', default='./environment.json', help="environment.json full path")
+    args = ap.parse_args()
+
+    with open(args.env_json_path) as f:
+        env = json.load(f)
+    sshuser = env['sshUser']
+    sshkey = env['sshKey']
+    target = [m for m in env["minions"] if m["role"] == args.target]
+    for t in target:
+        ipaddr = t["addresses"]["privateIpv4"]
+        basecmd = "/usr/bin/ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -i {} {}@{} ".format(sshkey, sshuser, ipaddr)
+        cmd = basecmd + "curl -Ss https://my-netdata.io/kickstart-static64.sh -o netdata_installer.sh"
+        runcmd(cmd)
+        runcmd(basecmd + "chmod +x netdata_installer.sh")
+        runcmd(basecmd + "./netdata_installer.sh --dont-wait")
+        print("Netdata is running at http://{}:19999/#theme=white;help=false".format(ipaddr))
+
+
+if __name__ == "__main__":
+    main()

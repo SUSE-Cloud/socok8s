@@ -1,0 +1,140 @@
+#!/usr/bin/env python
+
+from argparse import ArgumentParser
+from os.path import basename
+from yaml import CLoader, CDumper
+import mmap
+import sys
+import tarfile
+import yaml
+
+
+class literal_comment(unicode): pass
+
+def literal_comment_representer(dumper, data):
+    """Mangle a string to make compatible with YAML literal.
+    This provides readable output instead of the default ugly string
+    representation
+    """
+    d = '\n'.join(line.replace('\t', '  ').rstrip() for line in data.splitlines())
+    return dumper.represent_scalar(u'tag:yaml.org,2002:str', d, style='>')
+
+yaml.add_representer(literal_comment, literal_comment_representer)
+
+
+def parse_args():
+    ap = ArgumentParser(description='Extract errors from Salt events log')
+    ap.add_argument('input_fname', help='supportutils tarball or yml file')
+    ap.add_argument('-w', action='store_true', help='write <input basename>.salt_failures.txt')
+    ap.add_argument('-i', action='store_true', help='ignore missing velum-salt-events.yml in tarball')
+    return ap.parse_args()
+
+
+def cleanup_changes(changes):
+    """Remove successful change events as they are not interesting
+    Changes results are nested under:
+    'changes' -> 'ret' -> <id> -> <change_name> -> 'result' -> true|false
+    """
+    ret = changes.get('ret')
+    if not isinstance(ret, dict):
+        return
+
+    for change_id, changes_block in ret.items():
+        for change_name, change_data in changes_block.items():
+            if change_name == 'retcode' or not isinstance(change_data, dict):
+                # not a real change
+                continue
+
+            if change_data.get('result') == True:
+                # drop uninteresting change
+                del changes['ret'][change_id][change_name]
+
+
+
+
+def main():
+    args = parse_args()
+    if args.input_fname.endswith('.tbz'):
+        tf = tarfile.open(args.input_fname)
+        yml_fn = basename(args.input_fname[:-4]) + '/velum-salt-events.yml'
+        try:
+            f = tf.extractfile(yml_fn)
+        except KeyError:
+            print("{} not found in tarball".format(yml_fn))
+            sys.exit(0 if args.i else 1)
+
+        mm = mmap.mmap(-1, f.size)
+        mm.write(f.read())
+    elif args.input_fname.endswith('.yml'):
+        f = open(args.input_fname, "r+b")
+        mm = mmap.mmap(f.fileno(), 0)
+    else:
+        print("Unexpected file extension, use .tbz or .yml")
+        sys.exit(1)
+
+    start_pos = mm.find('\n---\n', 0, 2000)
+    mm.seek(start_pos)
+    f.close()
+
+    events = yaml.load(mm, Loader=CLoader)
+    out = []
+    for chunk in events:
+        if chunk.get("success", True):
+            continue
+
+        # ignore uninteresting failure
+        if chunk.get("user") == "Reactor" and chunk.get("fun") == "runner.state.orchestrate":
+            fa = [
+                'orch.update-etc-hosts',
+                {'test': None, 'pillarenv': None, 'exclude': None, 'pillar': None,
+                    'saltenv': 'base', 'orchestration_jid': None}]
+            ret = {'outputter': 'highstate', 'retcode': 1,
+                    'data': {'caasp-admin.devenv.caasp.suse.net_master': {}}}
+            if chunk.get('fun_args') == fa and chunk['return'] == ret:
+                continue
+
+        if isinstance(chunk['return'], dict) and 'data' in chunk['return']:
+            d = chunk['return']['data'].values()[0]
+            if d == {}:
+                out.append(yaml.dump(chunk))
+                out.append("-" * 80 + '\n')
+            else:
+                # items nested by one level
+                for sev_name, sev_body in d.items():
+                    if sev_body['result'] == True:
+                        continue
+
+                    if sev_body.get('comment', '').startswith('One or more requisite failed: '):
+                        # ignore uninteresting failures
+                        continue
+
+                    changes = sev_body.get('changes')
+                    if isinstance(changes, dict) and 'ret' in changes:
+                        cleanup_changes(changes)
+
+                    out.append("{} >>> {}".format(chunk['fun'], sev_name))
+                    # beautify comment
+                    sev_body[u'comment'] = literal_comment(sev_body['comment'])
+                    out.append(yaml.dump(sev_body))
+                    out.append("-" * 40 + '\n')
+        else:
+            # the return field is not a dict
+            if isinstance(chunk['return'], str):
+                # beautify return field
+                chunk['return'] = literal_comment(chunk['return'])
+            out.append(yaml.dump(chunk))
+            out.append("-" * 80 + '\n')
+
+    if args.w:
+        if out:
+            out_fn = args.input_fname[:-4] + '.salt_failures.txt'
+            print("Writing {}".format(out_fn))
+            with open(out_fn, 'w') as f:
+                f.writelines(out)
+    else:
+        for i in out:
+            print(i)
+
+
+if __name__ == '__main__':
+    main()
