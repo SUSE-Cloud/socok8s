@@ -23,7 +23,6 @@ sys.path.insert(0, os.path.abspath('../..'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'openstackdocstheme',
     'sphinxcontrib.actdiag',
     'sphinxcontrib.blockdiag',
     'sphinxcontrib.seqdiag',
@@ -54,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'socok8s'
-copyright = u'%s, OpenStack Foundation' % datetime.date.today().year
+copyright = u'%s, SUSE' % datetime.date.today().year
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
 add_function_parentheses = True
@@ -91,17 +90,12 @@ htmlhelp_basename = '%sdoc' % project
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass
 # [howto/manual]).
-latex_documents = [
-    ('index',
-     '%s.tex' % project,
-     u'%s Documentation' % project,
-     u'OpenStack Foundation', 'manual'),
-]
+#latex_documents = [
+#    ('index',
+#     '%s.tex' % project,
+#     u'%s Documentation' % project,
+#     u'OpenStack Foundation', 'manual'),
+#]
 
 # Example configuration for intersphinx: refer to the Python standard library.
 #intersphinx_mapping = {'http://docs.python.org/': None}
-
-# -- Options for openstackdocstheme -------------------------------------------
-repository_name = 'SUSE-Cloud/socok8s'
-bug_project = ''
-bug_tag = ''
