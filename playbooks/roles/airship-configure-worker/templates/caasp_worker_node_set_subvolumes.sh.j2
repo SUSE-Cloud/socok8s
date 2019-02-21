@@ -32,15 +32,12 @@ restore_and_reboot() {
     if [ -n "$mounted_snapshot" ]; then
       btrfs property set -ts /.snapshots/$mounted_snapshot/snapshot ro true
     fi
+    echo "reboot now"
   fi
 }
 
-{% if is_compute %}
-create_subvolume /var/lib/nova
-create_subvolume /var/lib/neutron
-create_subvolume /var/lib/libvirt
-{% else %}
-create_subvolume /var/lib/neutron
-{% endif %}
+{% for subvol in caasp_node_subvolumes %}
+create_subvolume {{ subvol }}
+{% endfor %}
 
 restore_and_reboot

@@ -1,5 +1,6 @@
 ---
 upstream_repos_clone_folder: "/opt"
+openstack_version:  "{{ lookup('env','OPENSTACK_VERSION') | default('pike', true) }}"
 developer_mode: "{{ (lookup('env','OSH_DEVELOPER_MODE') | default('False', true) ) | bool }}"
 
 socok8s_workspace: "{{ lookup('env','ANSIBLE_RUNNER_DIR') | default('~/suse-socok8s-deploy', true) }}"
