@@ -50,6 +50,12 @@ function clean_k8s(){
         run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_k8s.yml
     fi
 }
+function clean_airship(){
+    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete airship related everything in your userspace."
+    if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
+        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_airship.yml
+    fi
+}
 function clean_kvm(){
     echo "Not implemented"
 }

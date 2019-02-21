@@ -42,8 +42,8 @@ kubectl delete --all deployments -n openstack
 # make sure all pods are deleted especially test pods
 kubectl delete --all pods -n ucp
 kubectl delete --all pods -n openstack
-kubectl delete pod -n kube-system -l app=ingress-api,application=ingress,component=server
-kubectl delete pod -n kube-system -l application=ingress,component=error-pages
+kubectl delete pod -n kube-system --ignore-not-found -l app=ingress-api,application=ingress,component=server
+kubectl delete pod -n kube-system --ignore-not-found -l application=ingress,component=error-pages
 
 kubectl delete --all pvc -n ucp
 kubectl delete --all pvc -n openstack
@@ -53,7 +53,7 @@ kubectl delete --all pv -n openstack
 kubectl delete --all configmaps --namespace=ucp
 kubectl delete --all configmaps --namespace=openstack
 
-kubectl delete sc general
+kubectl delete sc --ignore-not-found general
 kubectl delete secret --all -n openstack
 kubectl delete secret --all -n ucp
 kubectl delete secret --all -n ceph
@@ -64,7 +64,11 @@ kubectl delete secret --all -n ceph
 kubectl get -n openstack rolebinding.rbac.authorization.k8s.io -o name | xargs kubectl -n openstack delete
 
 # Remove extra data
-kubectl delete clusterrolebinding PrivilegedRoleBinding
-kubectl delete clusterrolebinding NonResourceUrlRoleBinding
+kubectl delete clusterrolebinding --ignore-not-found PrivilegedRoleBinding
+kubectl delete clusterrolebinding --ignore-not-found NonResourceUrlRoleBinding
 
-docker images -a | grep "airship" | awk '{print $3}' | xargs docker rmi -f
+# Need to keep them idempotent
+if [[ $(docker images -a | grep "airship" | wc -c) > 0 ]]; then
+    docker images -a | grep "airship" | awk '{print $3}' | xargs docker rmi -f
+fi
+
