@@ -11,7 +11,7 @@
 # Full story on how to use this:
 # 0) Set developer mode. It should be already like this if you're entering
 #    this role.
-# 1) Override this variable by providing a `docker_image`
+# 1) Override this variable by providing a `docker_images`
 # variable in your ${WORKDIR}/env/extravars. That will be used for building
 # its image, locally.
 # 2) This role will build the docker_images listed locally, and tag them
@@ -22,6 +22,7 @@
 #    For that, check the appropriate override variable for the helm deploy step
 #    for example, memcached takes a `suse_osh_deploy_memcached_yaml_overrides`,
 #    which can be used to give a specific image to the memcached chart.
+#    Custom override for this variable should also go to ${WORKDIR}/env/extravars.
 # 5) When this is working in your local environment, provide upstream patches in
 #    openstack-helm-images, and if necessary, in OSH/LOCI/OSH-infra/OSH-addons.
 # 6) When those patches are up, please submit a PR in this repo (socok8s)
@@ -46,16 +47,19 @@
 # It will only be done on openSUSE Leap 15.
 docker_images: []
 
-##example for libvirt building.
+## ${WORKDIR}/env/extravars example for libvirt building.
+
+#registry_location: "$USER-osh.openstack.local:5000/"
 #docker_images:
 #  - context: libvirt
-#    repository: "{{ build_registry }}/openstackhelm/libvirt"
+#    dockerfile: <custom dockerfile used for testing>
+#    repository: "{{ registry_location }}openstackhelm/libvirt"
 #    tags:
 #      - latest-opensuse_15
 ## that would require overriding the libvirt chart values
 # images:
 #   tags:
-#     libvirt: "{{ build_registry }}/openstack/libvirt:latest-opensuse_15"
+#     libvirt: "{{ build_registry }}openstack/libvirt:latest-opensuse_15"
 ## Which is possible by passing an override file to the libvirt shell script
 ## happening in deploy-osh. That override file is generated using
 ## config_template and passed as /tmp/socok8s-libvirt.yaml.
@@ -65,7 +69,7 @@ docker_images: []
 # suse_osh_deploy_libvirt_yaml_overrides:
 #   images:
 #     tags:
-#       libvirt: "<insert build server url here, probably local-registry:5000>/openstackhelm/libvirt:latest-opensuse_15"
+#       libvirt: "{{ registry_location }}openstackhelm/libvirt:latest-opensuse_15"
 
 # This is the default dockerfile name in OSH images for leap15/SLE15 images.
 docker_dockerfile: "Dockerfile.suse_15"
