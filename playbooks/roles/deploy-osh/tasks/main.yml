@@ -91,17 +91,19 @@
   tags:
     - install
 
-# NOTE: This task should stay close to code-install, so that no race condition
-# happens between the git-cloning, an eventual failure, and the building of the charts.
 - name: Build infra charts
   make:
     chdir: /opt/openstack-helm-infra
     target: all
-  when:
-    - not developer_mode
-    - _gitclone is changed
   tags:
     - install
+
+- name: Build openstack-helm charts
+  make:
+    chdir: /opt/openstack-helm
+    target: all
+  tags:
+    - run
 
 - name: Apply base configuration in K8s for deployments on top of CaaSP/SES
   include_tasks: apply_on_k8s.yml
@@ -157,16 +159,6 @@
     dest: /root/.config/openstack/clouds.yaml
     owner: root
     mode: '0640'
-
-- name: Build openstack-helm charts
-  make:
-    chdir: /opt/openstack-helm
-    target: all
-  when:
-    - not developer_mode
-    - _gitclone is changed
-  tags:
-    - run
 
 # TODO(evrardjp): Follow on https://review.openstack.org/#/c/605005/
 - name: Use a different ingress script as long as upstream does not support overrides
