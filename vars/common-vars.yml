@@ -1,6 +1,5 @@
 ---
-upstream_repos_clone_folder: "/opt/socok8s"
-socok8s_registry_location:  "{{ lookup('env','IMAGE_REGISTRY_LOCATION') | default('docker.io', true) }}"
+upstream_repos_clone_folder: "/opt"
 openstack_version:  "{{ lookup('env','OPENSTACK_VERSION') | default('pike', true) }}"
 developer_mode: "{{ (lookup('env','OSH_DEVELOPER_MODE') | default('False', true) ) | bool }}"
 
