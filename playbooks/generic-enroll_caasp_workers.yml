@@ -39,12 +39,11 @@
           - libxml2-devel
           - libxslt-devel
 
-    - name: Copying suse-cloud repo for velum automation
-      git:
-        repo: "{{ upstream_repos['kubic']['src'] }}"
-        dest: "{{ upstream_repos_clone_folder }}/ccp/automation"
-        force: yes
-        version: "{{ upstream_repos['kubic']['version'] }}"
+    - name: Copying velum automation
+      unarchive:
+        src: "{{ playbook_dir }}/../files/velum-bootstrap.tar.xz"
+        dest: "{{ upstream_repos_clone_folder }}/ccp/"
+
 
     # Ansible velum needs to get given a specific shell, bash, therefore
     # the shell module has to be used (command doesn't accept executable)
@@ -58,6 +57,6 @@
         - "--bootstrap --enable-tiller"
       args:
         executable: /bin/bash
-        chdir: "{{ upstream_repos_clone_folder }}/ccp/automation/velum-bootstrap"
+        chdir: "{{ upstream_repos_clone_folder }}/ccp/velum-bootstrap"
       tags:
         - skip_ansible_lint

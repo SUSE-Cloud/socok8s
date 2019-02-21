@@ -1,0 +1,14 @@
+#!/bin/bash
+set -u
+$(dirname $0)/setup-python
+
+#dist=$(lsb-release -sd | tr -d '"' | tr " " "_")
+dist=SLE_12_SP3
+if ! zypper lr -dU | grep -q "opensuse.org/repositories/network:/cluster"; then
+  set -eo pipefail
+  sudo zypper ar "http://download.opensuse.org/repositories/network:/cluster/${dist}/network:cluster.repo"
+  sudo zypper --gpg-auto-import-keys ref network_cluster
+  sudo zypper in --no-confirm pssh
+fi
+
+${WORKSPACE:-~}/py3venv/bin/python3 $(dirname $0)/parallelssh/tool.py $@

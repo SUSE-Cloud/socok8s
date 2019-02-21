@@ -1,0 +1,58 @@
+#!/bin/bash
+
+set -euo pipefail
+
+chmod 600 ../misc-files/id_shared
+
+STACK_NAME=${1:?A stack name must be provided}
+ENVIRONMENT='{"minions": []}'
+INDEX=0
+
+STACK_RESOURCES=$(openstack stack resource list -f json -n 10 $STACK_NAME)
+
+# Get Admin Node
+echo "Building Admin Details"
+ADMIN_ID=$(set -o pipefail; echo "$STACK_RESOURCES" | jq -r '.[] | select(.resource_name=="admin") | .physical_resource_id')
+ADMIN_NOVA_JSON=$(set -o pipefail; openstack server show -f json $ADMIN_ID)
+ADMIN_MINION_JSON=$(set -o pipefail; echo "$ADMIN_NOVA_JSON" | jq -c "{role: \"admin\", fqdn: .name, addresses: {publicIpv4: .addresses | split(\"=\") | .[1] | split(\",\") | .[1] | gsub(\" \"; \"\"), privateIpv4: .addresses | split(\"=\") | .[1] | split(\",\") | .[0]}, index: \"$INDEX\", minionID: (.id | gsub(\"-\"; \"\")), status: \"unused\"}")
+ADMIN_PRIVATE_IPV4=$(set -o pipefail; echo "$ADMIN_NOVA_JSON" | jq -r ".addresses | split(\"=\") | .[1] | split(\",\") | .[0]")
+ADMIN_PUBLIC_IPV4=$(set -o pipefail; echo "$ADMIN_NOVA_JSON" | jq -r ".addresses | split(\"=\") | .[1] | split(\",\") | .[1] | gsub(\" \"; \"\")")
+ENVIRONMENT=$(set -o pipefail; echo "$ENVIRONMENT" | jq ".minions |= . + [$ADMIN_MINION_JSON]")
+ENVIRONMENT=$(set -o pipefail; echo "$ENVIRONMENT" | jq ".dashboardHost |= \"$ADMIN_PRIVATE_IPV4\"")
+ENVIRONMENT=$(set -o pipefail; echo "$ENVIRONMENT" | jq ".dashboardExternalHost |= \"$ADMIN_PUBLIC_IPV4\"")
+
+INDEX=$((INDEX + 1))
+
+# Iterate all the masters
+MASTER_IDS=$(set -o pipefail; echo "$STACK_RESOURCES" | jq -r '.[] | select(.stack_name | contains("-masters-")) | select(.resource_type == "OS::Nova::Server") | .physical_resource_id')
+K8S_MASTER_NOVA_JSON=$(set -o pipefail; openstack server show -f json ${MASTER_IDS%%$'\n'*}) # Pick the first master to be the K8S public endpoint
+K8S_MASTER_PUBLIC_IPV4=$(set -o pipefail; echo "$K8S_MASTER_NOVA_JSON" | jq -r ".addresses | split (\"=\") | .[1] | split(\",\") | .[1] | gsub(\" \"; \"\")")
+ENVIRONMENT=$(set -o pipefail; echo "$ENVIRONMENT" | jq ".kubernetesExternalHost |= \"$K8S_MASTER_PUBLIC_IPV4\"")
+for master_id in $MASTER_IDS; do
+  echo "Building Master Details: $master_id"
+  master_nova_json=$(set -o pipefail; openstack server show -f json $master_id)
+
+  machine_id=$(set -o pipefail; echo "$master_nova_json" | jq -r '.id' | tr -d '-')
+
+  master_minion_json=$(set -o pipefail; echo "$master_nova_json" | jq -c "{role: \"master\", fqdn: .name, addresses: {publicIpv4: .addresses | split(\"=\") | .[1] | split(\",\") | .[1] | gsub(\" \"; \"\"), privateIpv4: .addresses | split(\"=\") | .[1] | split(\",\") | .[0]}, index: \"$INDEX\", minionID: \"$machine_id\", status: \"unused\"}")
+  ENVIRONMENT=$(set -o pipefail; echo "$ENVIRONMENT" | jq ".minions |= . + [$master_minion_json]")
+  INDEX=$((INDEX + 1))
+done
+
+# Iterate all the workers
+WORKER_IDS=$(set -o pipefail; echo "$STACK_RESOURCES" | jq -r '.[] | select(.stack_name | contains("-workers-")) | select(.resource_type == "OS::Nova::Server") | .physical_resource_id')
+for worker_id in $WORKER_IDS; do
+  echo "Building Worker Details: $worker_id"
+  worker_nova_json=$(set -o pipefail; openstack server show -f json $worker_id)
+
+  machine_id=$(set -o pipefail; echo "$worker_nova_json" | jq -r '.id' | tr -d '-')
+
+  worker_minion_json=$(set -o pipefail; echo "$worker_nova_json" | jq -c "{role: \"worker\", fqdn: .name, addresses: {privateIpv4: .addresses | split(\"=\") | .[1]}, index: \"$INDEX\", minionID: \"$machine_id\", status: \"unused\", proxyCommand: (\"ssh -i `pwd`/../misc-files/id_shared -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@$ADMIN_PUBLIC_IPV4 -W %h:%p\")}")
+  ENVIRONMENT=$(set -o pipefail; echo "$ENVIRONMENT" | jq ".minions |= . + [$worker_minion_json]")
+  INDEX=$((INDEX + 1))
+done
+
+# Add some extra top level fields
+ENVIRONMENT=$(set -o pipefail; echo "$ENVIRONMENT" | jq ". + {sshUser: \"root\", sshKey: \"`pwd`/../misc-files/id_shared\"}")
+
+echo $ENVIRONMENT | json_pp | tee environment.json
