@@ -215,6 +215,9 @@ data:
     labels:
       release_group: airship-armada
   values:
+    images:
+      tags:
+        armada: '{{ suse_airship_registry_location }}/airshipit/armada:{{ suse_airship_components_image_tag }}'
     conf:
       armada:
         keystone_authtoken:
