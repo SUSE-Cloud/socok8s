@@ -12,13 +12,18 @@ suse_airship_build_local_images: "{%- if airship_local_images_flag is defined -%
                                     {{ lookup('env','AIRSHIP_BUILD_LOCAL_IMAGES') | default('False', true) | bool }}
                                   {%- endif -%}
                                  "
-suse_airship_registry_location: "{%- if suse_airship_build_local_images -%}
+
+# Flag to be used when just want to use previously built local airship component images
+# without need of re-building them.
+suse_airship_use_local_images: "{{ lookup('env','AIRSHIP_USE_LOCAL_IMAGES') | default('False', true) | bool }}"
+
+suse_airship_registry_location: "{%- if suse_airship_build_local_images or suse_airship_use_local_images -%}
                                    {{ ansible_hostname }}:5000
                                  {%- else -%}
                                    quay.io
                                  {%- endif -%}"
 
-suse_airship_components_image_tag: "{%- if suse_airship_build_local_images -%}
+suse_airship_components_image_tag: "{%- if suse_airship_build_local_images or suse_airship_use_local_images -%}
                                       opensuse_15_latest
                                     {%- else -%}
                                       latest
