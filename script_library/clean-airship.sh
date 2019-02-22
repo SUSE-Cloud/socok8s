@@ -50,10 +50,14 @@ kubectl delete --all pvc -n openstack
 kubectl delete --all pv -n ucp
 kubectl delete --all pv -n openstack
 
+kubectl delete configmap --namespace kube-system airship-ingress-kube-system-nginx-cluster
 kubectl delete --all configmaps --namespace=ucp
 kubectl delete --all configmaps --namespace=openstack
 
 kubectl delete sc --ignore-not-found general
+kubectl delete serviceaccount --all -n openstack
+kubectl delete serviceaccount --all -n ucp
+kubectl delete serviceaccount --all -n ceph
 kubectl delete secret --all -n openstack
 kubectl delete secret --all -n ucp
 kubectl delete secret --all -n ceph
@@ -66,6 +70,11 @@ kubectl get -n openstack rolebinding.rbac.authorization.k8s.io -o name | xargs k
 # Remove extra data
 kubectl delete clusterrolebinding --ignore-not-found PrivilegedRoleBinding
 kubectl delete clusterrolebinding --ignore-not-found NonResourceUrlRoleBinding
+
+kubectl delete namespace --ignore-not-found openstack
+kubectl delete namespace --ignore-not-found ceph
+kubectl delete namespace --ignore-not-found ucp
+
 
 # Need to keep them idempotent
 if [[ $(docker images -a | grep "airship" | wc -c) > 0 ]]; then

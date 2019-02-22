@@ -363,7 +363,7 @@ On the deployer:
   - suse_airship_deploy_site_name: soc-minimal
   - redeploy_osh_only: false # true if only wants to redeploy Openstack_Helm
 
-- To build Airship components image only (with oor without dev-patcher)
+- To build Airship components image only (with or without dev-patcher)
 
   # Airship component images (shipyard, deckhand images)
 
