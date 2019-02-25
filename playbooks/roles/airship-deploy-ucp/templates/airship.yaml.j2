@@ -31,6 +31,10 @@ data:
     labels:
       release_group: airship-ingress-kube-system
   values:
+    images:
+      tags:
+        ingress_module_init: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
+        ingress_routed_vip: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
     deployment:
       mode: cluster
       type: DaemonSet
@@ -63,7 +67,11 @@ data:
     timeout: 1800
     labels:
       release_group: airship-ingress-ucp
-  values: {}
+  values:
+    images:
+      tags:
+        ingress_module_init: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
+        ingress_routed_vip: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
   source:
     type: local
     location: /armada/airship-components/openstack-helm-infra
@@ -84,6 +92,9 @@ data:
     labels:
       release_group: airship-mariadb
   values:
+    images:
+      tags:
+        prometheus_mysql_exporter_helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
     pod:
       replicas:
         server: 1
@@ -151,7 +162,20 @@ data:
     timeout: 1800
     labels:
       release_group: airship-keystone-ucp
-  values: {}
+  values:
+    images:
+      tags:
+        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        keystone_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
+        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        keystone_fernet_setup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
+        keystone_fernet_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
+        keystone_credential_setup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
+        keystone_credential_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
+        keystone_api: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
+        keystone_domain_manage: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
   source:
     type: local
     location: /armada/airship-components/openstack-helm
@@ -194,7 +218,18 @@ data:
     timeout: 1800
     labels:
       release_group: airship-barbican
-  values: {}
+  values:
+    images:
+      tags:
+        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        scripted_test: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        barbican_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_osh_image_version }}"
+        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        barbican_api: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_osh_image_version }}"
   source:
     type: local
     location: /armada/airship-components/openstack-helm

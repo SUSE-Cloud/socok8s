@@ -2,37 +2,10 @@
 
 helm ls -a | grep ucp | awk 'NR >= 1 {print $1 }' | xargs helm delete $line --purge
 
-#helm delete --purge airship-armada
-#helm delete --purge airship-barbican
-#helm delete --purge airship-deckhand
-#helm delete --purge airship-ingress-ucp
-#helm delete --purge airship-keystone-ucp
-#helm delete --purge airship-mariadb
-#helm delete --purge airship-memcached
-#helm delete --purge airship-postgresql
-#helm delete --purge airship-rabbitmq
-#helm delete --purge airship-shipyard
 helm delete --purge airship-ingress-kube-system
 
 #delete opennstack helm charts
 helm ls -a | grep openstack | awk 'NR >= 1 {print $1 }' | xargs helm delete $line --purge
-
-#helm delete --purge airship-glance
-#helm delete --purge airship-glance-rabbitmq
-#helm delete --purge airship-keystone
-#helm delete --purge airship-keystone-rabbitmq
-#helm delete --purge airship-libvirt
-#helm delete --purge airship-neutron
-#helm delete --purge airship-neutron-rabbitmq
-#helm delete --purge airship-nova
-#helm delete --purge airship-nova-rabbitmq
-#helm delete --purge airship-openstack-ingress-controller
-#helm delete --purge airship-openstack-mariadb
-#helm delete --purge airship-openstack-memcached
-#helm delete --purge airship-openvswitch
-#helm delete --purge airship-heat-rabbitmq
-#helm delete --purge airship-heat
-#helm delete --purge airship-openstack-ceph-config
 
 sleep 30
 
@@ -68,3 +41,6 @@ kubectl delete clusterrolebinding PrivilegedRoleBinding
 kubectl delete clusterrolebinding NonResourceUrlRoleBinding
 
 docker images -a | grep "airship" | awk '{print $3}' | xargs docker rmi -f
+
+sudo rm -rf /opt/airship-*
+sudo rm -rf /opt/openstack-helm*

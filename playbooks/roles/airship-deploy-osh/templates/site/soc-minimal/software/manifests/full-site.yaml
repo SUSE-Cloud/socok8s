@@ -24,5 +24,5 @@ data:
     - openstack-glance-soc
     - openstack-compute-kit-soc
     - openstack-heat-soc
-    #- openstack-horizon-soc
+    - openstack-horizon-soc
 ...
