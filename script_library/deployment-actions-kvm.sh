@@ -9,8 +9,8 @@ set -o errexit
 echo "Deploying on KVM"
 
 function deploy_ses(){
-    echo "This is not supported yet. Please create a node manually and run ses-ansible on it."
-    run_ansible -i inventory-ses.ini ${socok8s_absolute_dir}/2_deploy_ses_aio/play.yml
+    echo "This just runs ses configuration logic. Please create a SES node manually first."
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_ses_aio.yml
     echo "ses-ansible deploy is successful"
 }
 function deploy_caasp(){
@@ -48,6 +48,12 @@ function clean_k8s(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
         run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_k8s.yml
+    fi
+}
+function clean_airship(){
+    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete airship related everything in your userspace."
+    if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
+        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_airship.yml
     fi
 }
 function clean_kvm(){

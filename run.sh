@@ -94,6 +94,9 @@ case "$deployment_action" in
     "clean_k8s")
         clean_k8s
         ;;
+    "clean_airship")
+        clean_airship
+        ;;
     *)
         echo "Parameter unknown, read run.sh code."
         ;;

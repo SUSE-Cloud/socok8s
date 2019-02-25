@@ -55,6 +55,13 @@ airship-workers:
     airship-openstack-control-workers:
     airship-openstack-compute-workers:
 
+ses_nodes:
+  hosts:
+    linux-aojx:
+      ansible_host: 192.168.89.199
+  vars:
+    ansible_user: root
+
 all:
   children:
     airship-admin:

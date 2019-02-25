@@ -1,0 +1,70 @@
+#!/usr/bin/env python
+#
+# Create ${WORKSPACE}/gallery.html - it links to screenshots captured by Jenkins
+# it is served by Jenkins as a build artifact.
+
+import os
+
+gallery_tpl = """
+<html>
+<head>
+<style>
+td.sshot a img {
+    margin: 2em;
+    padding 1em;
+    border: 1px solid #ccc;
+    width: 500px;
+}
+
+td.sshot a img:hover {
+    border: 1px solid #777;
+}
+
+div.gallery img {
+    width: 100%;
+    height: auto;
+}
+
+</style>
+</head>
+<body>
+
+<table>
+#TABLE#
+</table>
+
+</body>
+</html>
+"""
+
+def main():
+    current_build_number = os.environ.get('BUILD_NUMBER', 6)
+    current_build_number = int(current_build_number)
+    workspace = os.environ.get('WORKSPACE', '.')
+    table = '<tr>'
+    col_cnt = 0
+    for bn in range(current_build_number - 8, current_build_number + 1):
+        if bn < 0:
+            continue
+
+        table += """
+        <td class="sshot">
+          <a href="../../{}">
+             <img src="../../{}/artifact/screenshots/error_state.png">
+          </a>
+        </td>""".format(bn, bn)
+
+        col_cnt += 1
+        if col_cnt > 2:
+            table += '</tr><tr>'
+            col_cnt = 0
+
+    table += '</tr>'
+
+    out = gallery_tpl.replace('#TABLE#', table)
+    fn = os.path.join(workspace, 'gallery.html')
+    with open(fn, 'w') as f:
+        f.write(out)
+
+if __name__ == '__main__':
+    main()

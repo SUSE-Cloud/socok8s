@@ -53,6 +53,12 @@ function deploy_airship(){
     echo "Now deploy SUSE version of Airship"
     run_ansible -i inventory-airship.ini ${socok8s_absolute_dir}/8_deploy_airship/play.yml
 }
+function clean_airship(){
+    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete airship related everything in your userspace."
+    if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
+        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_airship.yml
+    fi
+}
 function teardown(){
     clean_openstack
     clean_userfiles

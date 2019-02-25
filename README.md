@@ -168,6 +168,7 @@ deployment
 ```
 ### Re-deploy Airship
 ./run.sh deploy_airship
+```
 
 # Reference: run.sh
 
@@ -363,7 +364,7 @@ On the deployer:
   - suse_airship_deploy_site_name: soc-minimal
   - redeploy_osh_only: false # true if only wants to redeploy Openstack_Helm
 
-- To build Airship components image only (with oor without dev-patcher)
+- To build Airship components image only (with or without dev-patcher)
 
   # Airship component images (shipyard, deckhand images)
 
@@ -372,6 +373,15 @@ On the deployer:
 
   or pass variable 'airship_local_images_flag=true' to airship playbook to
   build it on need basis.
+
+  If just want to re-use previously built local airship component images
+  in your deployment, without need of re-building it, set the following
+  flag only.
+
+  AIRSHIP_USE_LOCAL_IMAGES=True
+
+  Don't set or set as false for AIRSHIP_BUILD_LOCAL_IMAGES environment flag
+  for jsut re-using local images.
 
 - Enable and start sshd on your deployer and the location you are
   running the playbooks. [NOTE: this step can be removed or adapted

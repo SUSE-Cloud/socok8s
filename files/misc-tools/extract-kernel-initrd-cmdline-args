@@ -1,0 +1,178 @@
+#!/usr/bin/env ruby
+
+require "json"
+require "fileutils"
+require "optparse"
+
+def parse_args
+  options = {
+    disable_meltdown_spectre: false
+  }
+
+  OptionParser.new do |opts|
+    opts.banner = "Usage: extract-kernel-initrd-cmdline-args [options] image"
+
+    opts.on("-o OUTPUT", "--output OUTPUT", "Directory to which extract initrd and kernel") do |o|
+      options[:output] = o
+    end
+
+    opts.on("--report REPORT", "json file holding the information about the run") do |r|
+      options[:report] = r
+    end
+
+    opts.on("--disable-meltdown-spectre", "disable meltdown and spectre fixes") do |d|
+      options[:disable_meltdown_spectre] = d
+    end
+
+  end.parse!
+
+  if ARGV.count != 1
+    puts "Missing name of the qcow2 image to inspect"
+    exit 1
+  end
+
+  options[:image] = ARGV[0]
+
+  if !File.exists?(options[:image])
+    puts "Cannot find file #{options[:image]}"
+    exit 1
+  end
+
+  if options[:output].nil?
+    puts "The --output flag must be specified"
+    exit 1
+  end
+
+  if options[:report].nil?
+    puts "The --report flag must be specified"
+    exit 1
+  end
+
+  return options
+end
+
+def ensure_guestfs_tools_installed
+  puts "Checking for virt-cat"
+  if !system("virt-cat --help > /dev/null")
+    puts "guestfs-tools not installed, trying to install it via sudo zypper"
+    system("sudo zypper -n in guestfs-tools")
+    if !system("virt-cat --help > /dev/null")
+      puts "Wasn't able to install guestfs-tools by its own"
+      exit 1
+    end
+  end
+end
+
+# Extract /boot/grub.cfg from the qcow file and parses it
+# Returns (kernel, initrd, boot_args)
+def parse_grub_file(image)
+  cmd = "virt-cat -a #{image} /boot/grub2/grub.cfg"
+  puts "Extracting grub.cfg via: #{cmd}"
+  grub = `#{cmd}`
+  if !$?.success?
+    puts "Cannot extract grub.cfg from #{image}: #{grub}"
+  end
+
+  initrd      = ""
+  kernel      = ""
+  boot_args   = ""
+  kernel_line = ""
+
+  grub.each_line do |line|
+    if line =~ /boot\/vmlinuz/
+      # keep the shortest line, needed to avoid the failsafe boot args
+      if kernel_line == "" || line.size < kernel_line.size
+        kernel_line = line
+      end
+    end
+    if line =~ /(\/boot\/initrd-.*-default)/
+      initrd = $1
+    end
+  end
+
+  if kernel_line =~ /(\/boot\/vmlinuz-.*-default) \$\{extra_cmdline\} (.*)/
+    kernel = $1
+    boot_args = $2
+  end
+
+  return kernel, initrd, boot_args
+end
+
+def extracted_filename(name, output_dir)
+  return File.absolute_path(
+    File.join(
+      output_dir,
+      File.basename(name))
+  )
+end
+
+def extract_files(image, output_directory, *files_to_extract)
+  files_to_extract.each do |file|
+    if File.exist?(extracted_filename(file, output_directory))
+      FileUtils.rm_f(extracted_filename(file, output_directory))
+    end
+  end
+
+  cmd = "virt-copy-out -a #{image} #{files_to_extract.join(" ")} #{output_directory}"
+  puts "Extracting files via #{cmd}"
+  if !system(cmd)
+    puts "error while extracting files from image"
+    exit 1
+  end
+end
+
+def boot_args_to_terraform_format(args, disable_meltdown_spectre)
+  targs = {}
+
+  if disable_meltdown_spectre
+    targs["_"]          = "nospec"
+    targs["spectre_v2"] = "off"
+    targs["pti"]        = "off"
+  end
+
+  args.split(" ").each do |arg|
+    if arg.include?("=")
+      res = arg.split("=", 2)
+      targs[res[0]] = res[1]
+    else
+      if targs.has_key?("_")
+        targs["_"] = targs["_"] + " #{arg}"
+      else
+        targs["_"] = arg
+      end
+    end
+  end
+
+  return targs
+end
+
+options = parse_args()
+ensure_guestfs_tools_installed()
+
+kernel_in, initrd_in, boot_args = parse_grub_file(options[:image])
+{"kernel" => kernel_in, "initrd" => initrd_in, "boot args" => boot_args}.each do |k, v|
+  if v == ""
+    puts "Cannot extract #{k} from specified image"
+    exit 1
+  end
+end
+
+
+puts "Extracting kernel and initrd..."
+extract_files(options[:image], options[:output], kernel_in, initrd_in)
+
+kernel_out = extracted_filename(kernel_in, options[:output])
+initrd_out = extracted_filename(initrd_in, options[:output])
+
+data = {
+  kernel: kernel_out,
+  initrd: initrd_out,
+  args: boot_args_to_terraform_format(boot_args, options[:disable_meltdown_spectre]),
+}
+
+
+File.open(options[:report], "w") do |file|
+  file << JSON.generate(data)
+end
+
+puts "Boot related data written to #{options[:report]}"

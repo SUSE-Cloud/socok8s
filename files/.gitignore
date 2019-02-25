@@ -1,1 +1,3 @@
-../submodules/kubic-project-automation/caasp-openstack-heat/.gitignore
+.stack_name
+environment.json
+heat-environment.yaml
