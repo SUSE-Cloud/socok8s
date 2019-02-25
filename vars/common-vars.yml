@@ -1,7 +1,11 @@
 ---
 upstream_repos_clone_folder: "/opt"
-openstack_version:  "{{ lookup('env','OPENSTACK_VERSION') | default('pike', true) }}"
-developer_mode: "{{ (lookup('env','OSH_DEVELOPER_MODE') | default('False', true) ) | bool }}"
+suse_osh_registry_location: "{{ lookup('env','OPENSTACK_HELM_IMAGE_REGISTRY_LOCATION') | default('docker.io', true) }}"
+suse_osh_image_version: "{{ lookup('env','OPENSTACK_HELM_IMAGE_VERSION') | default('pike', true) }}"
+suse_libvirt_image_version: "{{ lookup('env','OPENSTACK_HELM_LIBVIRT_IMAGE_VERSION') | default('ubuntu-xenial-1.3.1-1ubuntu10.24', true) }}"
+suse_ovs_image_version: "{{ lookup('env','OPENSTACK_HELM_OPENVSWITCH_IMAGE_VERSION') | default('v2.8.1', true) }}"
+
+developer_mode: "{{ (lookup('env','SOCOK8S_DEVELOPER_MODE') | default('False', true) ) | bool }}"
 
 socok8s_workspace: "{{ lookup('env','ANSIBLE_RUNNER_DIR') | default('~/suse-socok8s-deploy', true) }}"
 socok8s_extravars: "{{ socok8s_workspace }}/env/extravars"

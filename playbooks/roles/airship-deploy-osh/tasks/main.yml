@@ -21,11 +21,13 @@
     site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ suse_airship_deploy_site_name }}"
 
 - name: Ensure site directory for {{ suse_airship_deploy_site_name }} exists
+  become: yes
   file:
     path: "{{ site_path }}"
     state: directory
 
 - name: Create site manifest directory
+  become: yes
   file:
     path: '{{ site_path }}/{{ item.path }}'
     state: directory
@@ -36,6 +38,7 @@
 
 #TODO JG refactor overrides
 - name: Create site manifest yamls
+  become: yes
   template:
     src: '{{ item.src }}'
     dest: '{{ site_path }}/{{ item.path }}'
@@ -58,6 +61,7 @@
     - install
 
 - name: Create Pegleg output directory
+  become: yes
   file:
     path: '{{ treasuremap_dir }}/{{ pegleg_output }}'
     state: directory
@@ -70,6 +74,7 @@
     chdir: '{{ treasuremap_dir }}'
 
 - name: Copy site to Shipyard
+  become: yes
   copy:
     src: '{{ treasuremap_dir }}/{{ pegleg_output }}'
     dest: '{{ upstream_repos_clone_folder }}/airship-shipyard'

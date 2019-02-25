@@ -165,12 +165,12 @@ the following:
 
    ### Re-deploy OpenStack-Helm
    ./run.sh deploy_osh
-   
+
 
    ### (Optional): Cleanup Airship and Openstack-Helm artifacts 
    from all previous deployment
    ./run.sh clean_airship
-   
+
    ### Re-deploy Airship
    ./run.sh deploy_airship
 
@@ -204,7 +204,7 @@ Here are the actions available:
 -  build_images: This allows developer to build images for internal
    consumption. Used in CI.
 -  deploy_osh: Self explanatory.
--  deploy_airship: Deploys Airship Undercloud Control Plane (CP) and 
+-  deploy_airship: Deploys Airship Undercloud Control Plane (CP) and
    Openstack Helm (OpenStack CP).
 -  setup_everything: From A to Z.
 -  teardown: Destroys all the nodes in an openstack environment. Set the
@@ -278,10 +278,10 @@ inventory file, with different group names.
 
 -  The CI/developer machine is always named ``localhost``.
 
--  The ``deployer`` node is listed in a group ``osh-deployer``. In order
+-  The ``deployer`` node is listed in a group ``airship-deployer``. In order
    to not extend the length of the deployment, the ``osh-deployer``
    group should contain only one node. We might support multiple
-   ``osh-deployer`` nodes for muliple k8s deployments later.
+   ``airship-deployer`` nodes for muliple k8s deployments later.
 
 -  The inventory for the ``deployer`` node is stored in
    ``inventory-osh.ini`` by default.
@@ -396,24 +396,31 @@ On the deployer:
 -  Create the Airship deployment home folder, for example, /opt/socok8s
 
 -  Configure the following environment variables:
-   export ANSIBLE_RUNNER_DIR=/opt/socok8s
-   export OSH_DEVELOPER_MODE=True #enables dev patcher and local image build
-   export DEPLOYMENT_MECHANISM=kvm
-   export DELETE_ANYWAY=YES   
+
+   * export ANSIBLE_RUNNER_DIR=/opt/socok8s
+   * export OSH_DEVELOPER_MODE=True #enables dev patcher and local image build
+   * export DEPLOYMENT_MECHANISM=kvm
+   * export DELETE_ANYWAY=YES
 
 -  Create a hosts.yaml file in /opt/socok8s/inventory directory by
    using the examples/config/inventory-airship.yml and editing it to
    reflect your environment.
-   
+
 -  Create the extravars file in /opt/socok8s/env directory with the
    following variables:
-   
-   socok8s_deploy_vip_with_cidr: '172.16.1.100' #an IP available
-    on the network you're using which can be used as a VIP.
-   ceph_admin_keyring_b64key: QVFDMXZ6dGNBQUFBQUJBQVJKakhuYkY4VFpublRPL1RXUEROdHc9PQo=
-   ceph_user_keyring_b64key: QVFDMXZ6dGNBQUFBQUJBQVJKakhuYkY4VFpublRPL1RXUEROdHc9PQo=
-   suse_airship_deploy_site_name: soc-minimal
-   redeploy_osh_only: false # true if only wants to redeploy Openstack_Helm
+
+   * # BEGIN ANSIBLE MANAGED BLOCK
+   * ceph_admin_keyring_b64key: QVFDMXZ6dGNBQUFBQUJBQVJKakhuYkY4VFpublRPL1RXUEROdHc9PQo=
+   * ceph_user_keyring_b64key: QVFDMXZ6dGNBQUFBQUJBQVJKakhuYkY4VFpublRPL1RXUEROdHc9PQo=
+   * # END ANSIBLE MANAGED BLOCK
+   *
+   * # Deployment goal is either 'airship' or 'osh'
+   * socok8s_deployment_goal: airship
+   * # Following cidr entry is an IP available on the network you're
+   * # using which can be used as a VIP
+   * socok8s_deploy_vip_with_cidr: 172.16.1.100
+   * suse_airship_deploy_site_name: soc-minimal
+   * redeploy_osh_only: false # true if only wants to redeploy Openstack_Helm
 
 -  Enable and start sshd on your deployer and the location you are
    running the playbooks. [NOTE: this step can be removed or adapted
@@ -421,14 +428,14 @@ On the deployer:
 
 -  Download the kubeconfig from Velum on the CAASP admin node and copy
    it to ~/suse-socok8s-deploy/kubeconfig and ~/.kube/config
-   
+
 -  Retrieve the ses_config.yaml from Step 2 or edit the 
    example/config/ses_config.yml and place it in your workspace home
    (e.g. ~/suse-socok8s-deploy/) directory.
-   
+
 -  For each CAASP node, run ssh-copy-id root@your_caasp_node_host
    to add your key to the authorized_keys file.
-   
+
 Now you are ready to deploy Airship, as follows:
 
 ::
@@ -443,7 +450,7 @@ Temporarily Airship components (armada, shipyard, deckhand etc.)
 images can be builit locally and used in deployment.
 
 When you need to build images and then use in your local deployment,
-set folliwng environment variable to keep persistent image build 
+set folliwng environment variable to keep persistent image build
 behavior
 
 *export AIRSHIP_BUILD_LOCAL_IMAGES=True*
@@ -452,9 +459,9 @@ behavior
 If you just need to build images on a playbook execution, pass variable
 *airship_local_images_flag=true* to playbook run command.
 
-If need is just to use previously built airship component images
+If you just need is to use previously built airship component images
 in your deployment, without need of re-building it, set the following
 environment variable only. Make sure that AIRSHIP_BUILD_LOCAL_IMAGES
-is NOT set or set to *False*.
+is *NOT* set or set to *False*.
 
 *export AIRSHIP_USE_LOCAL_IMAGES=True*

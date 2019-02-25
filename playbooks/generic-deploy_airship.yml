@@ -18,6 +18,7 @@
   roles:
     - role: dev-patcher
       when: redeploy_osh_only is not defined or redeploy_osh_only != true
+      become: yes
 
 - hosts: airship-workers
   gather_facts: yes
