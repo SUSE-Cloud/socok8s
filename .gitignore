@@ -1,3 +1,23 @@
+# Ansible
 *.retry
+
+# CaaSP files
 environment.json
 misc-files/
+
+# Python files
+*.egg-info
+*.egg
+.installed.cfg
+build
+dist
+eggs
+parts
+sdist
+develop-eggs
+
+# tests
+.tox/
+
+# Sphinx
+doc/build

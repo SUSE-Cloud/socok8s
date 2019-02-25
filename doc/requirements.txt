@@ -1,0 +1,10 @@
+sphinx>=1.6.2 # BSD
+# Diagrams
+actdiag
+blockdiag
+nwdiag
+seqdiag
+sphinxcontrib-actdiag
+sphinxcontrib-blockdiag
+sphinxcontrib-nwdiag
+sphinxcontrib-seqdiag
