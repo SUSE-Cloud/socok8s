@@ -167,9 +167,19 @@ the following:
    ./run.sh deploy_osh
 
 
-   ### (Optional): Cleanup Airship and Openstack-Helm artifacts 
+Re-deploying Airship
+--------------------
+
+If you only want to redeploy the last step, airship, you can run
+the following:
+
+::
+
+   ### (Optional): Cleanup Airship and Openstack-Helm artifacts
    from all previous deployment
    ./run.sh clean_airship
+
+::
 
    ### Re-deploy Airship
    ./run.sh deploy_airship
@@ -409,6 +419,7 @@ On the deployer:
 -  Create the extravars file in /opt/socok8s/env directory with the
    following variables:
 
+   *
    * # BEGIN ANSIBLE MANAGED BLOCK
    * ceph_admin_keyring_b64key: QVFDMXZ6dGNBQUFBQUJBQVJKakhuYkY4VFpublRPL1RXUEROdHc9PQo=
    * ceph_user_keyring_b64key: QVFDMXZ6dGNBQUFBQUJBQVJKakhuYkY4VFpublRPL1RXUEROdHc9PQo=
@@ -429,7 +440,7 @@ On the deployer:
 -  Download the kubeconfig from Velum on the CAASP admin node and copy
    it to ~/suse-socok8s-deploy/kubeconfig and ~/.kube/config
 
--  Retrieve the ses_config.yaml from Step 2 or edit the 
+-  Retrieve the ses_config.yaml from Step 2 or edit the
    example/config/ses_config.yml and place it in your workspace home
    (e.g. ~/suse-socok8s-deploy/) directory.
 
