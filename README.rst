@@ -9,7 +9,7 @@ General requirements
 ====================
 
 Cloning this repository
------------------------
+=======================
 
 To get started, you need to clone this repository. This repository uses
 submodules, so you need to get all the code to make sure the playbooks
