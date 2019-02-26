@@ -19,4 +19,4 @@ data:
   sequenced: true
   chart_group:
     - heat-rabbitmq-soc
-    - heat
+    - heat-soc

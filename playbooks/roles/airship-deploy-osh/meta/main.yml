@@ -58,5 +58,4 @@ galaxy_info:
     #       Maximum 20 tags per role.
 
 dependencies:
-  - role: airship-deploy-ucp
   - role: ansible-config_template

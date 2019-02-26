@@ -1,0 +1,26 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: heat-soc
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: heat-global
+      component: heat
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  test:
+    enabled: true
+  values:
+    pod:
+      replicas:
+        api: 1
+        cfn: 1
+        cloudwatch: 1
+        engine: 1
+...

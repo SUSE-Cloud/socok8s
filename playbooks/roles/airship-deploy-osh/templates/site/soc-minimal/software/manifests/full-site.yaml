@@ -22,7 +22,7 @@ data:
     - openstack-keystone-soc
     - openstack-ceph-config-soc
     - openstack-glance-soc
-    - openstack-compute-kit-soc
     - openstack-heat-soc
     - openstack-horizon-soc
+    - openstack-compute-kit-soc
 ...

@@ -22,6 +22,11 @@ metadata:
         path: .values.conf.plugins
   storagePolicy: cleartext
 data:
+  namespace: openstack
+  wait:
+    timeout: 1800
+    labels:
+      release_group: airship-neutron
   values:
     pod:
       replicas:
