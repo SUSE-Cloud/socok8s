@@ -19,4 +19,17 @@
   gather_facts: no
   tasks:
     - name: Running cleanup script
-      script: "{{ playbook_dir }}/../script_library/clean-airship.sh"
+      script: "{{ playbook_dir }}/../script_library/clean-airship.sh {{ clean_action | default('') }}"
+
+- hosts: airship-workers
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - name: Clean airship related existing images on worker node
+      shell: |
+        set -e
+        if [[ $(docker images -a | grep "airship" | wc -c) > 0 ]]; then
+          docker images -a | grep "airship" | awk '{print $3}' | xargs docker rmi -f
+        fi
+      when:
+        - clean_action is undefined or 'clean_images' in clean_action

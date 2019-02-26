@@ -53,10 +53,22 @@ function deploy_airship(){
     echo "Now deploy SUSE version of Airship"
     run_ansible -i inventory-airship.ini ${socok8s_absolute_dir}/8_deploy_airship/play.yml
 }
-function clean_airship(){
-    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete airship related everything in your userspace."
+function clean_airship_not_images(){
+    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete airship related everything (excluding local images) in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
-        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_airship.yml
+        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_airship.yml -e clean_action=$1
+    fi
+}
+function clean_airship(){
+    clean_action=''
+    action_desc='everything'
+    if [[ "${1:-default}" != 'default' ]]; then
+        clean_action=" -e clean_action=$1"
+        action_desc=$1
+    fi
+    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete airship artifacts ( ${action_desc} ) in your userspace."
+    if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
+        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_airship.yml ${clean_action}
     fi
 }
 function teardown(){

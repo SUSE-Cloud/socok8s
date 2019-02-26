@@ -94,6 +94,9 @@ case "$deployment_action" in
     "clean_k8s")
         clean_k8s
         ;;
+    "clean_airship_not_images")
+        clean_airship clean_openstack_clean_ucp_clean_rest
+        ;;
     "clean_airship")
         clean_airship
         ;;

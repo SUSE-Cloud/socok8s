@@ -51,9 +51,15 @@ function clean_k8s(){
     fi
 }
 function clean_airship(){
-    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete airship related everything in your userspace."
+    clean_action=''
+    action_desc='everything'
+    if [[ "${1:-default}" != 'default' ]]; then
+        clean_action=" -e clean_action=$1"
+        action_desc=$1
+    fi
+    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete airship artifacts ( ${action_desc} ) in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
-        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_airship.yml
+        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_airship.yml ${clean_action}
     fi
 }
 function clean_kvm(){
