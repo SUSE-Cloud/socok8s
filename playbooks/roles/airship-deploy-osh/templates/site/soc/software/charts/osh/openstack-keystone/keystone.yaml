@@ -13,6 +13,14 @@ metadata:
       - method: replace
         path: .values.pod
   storagePolicy: cleartext
+  substitutions:
+    # Chart source
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.keystone.api.min
+      dest:
+        path: .values.pod.replicas.api
 data:
   values:
     pod:

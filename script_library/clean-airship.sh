@@ -94,7 +94,7 @@ if [[ ${clean_action} == *"clean_images"* ]]; then
 fi
 
 if [[ ${clean_action} == *"clean_ucp"* ]]; then
-    sudo rm -rf /opt/airship-*
+#    sudo rm -rf /opt/airship-*
 fi
 
 if [[ ${clean_action} == *"clean_openstack"* ]]; then
