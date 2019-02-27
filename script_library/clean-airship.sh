@@ -26,7 +26,6 @@ if [[ ${clean_action} == *"clean_ucp"* ]]; then
     kubectl delete --all deployments -n ucp
     kubectl delete --all pods -n ucp
     kubectl delete --all pvc -n ucp
-    kubectl delete --all pv -n ucp
 fi
 
 #in case the helm delete didn't do its job
@@ -34,7 +33,13 @@ if [[ ${clean_action} == *"clean_openstack"* ]]; then
     kubectl delete --all deployments -n openstack
     kubectl delete --all pods -n openstack
     kubectl delete --all pvc -n openstack
+fi
+
+# delete pv only when pvc in both ucp and openstack are deleted first as same pv is shared
+# between 2 namespaces and delete will be stuck if not all related pvc are deleted first.
+if [[ ${clean_action} == *"clean_ucp"* && ${clean_action} == *"clean_openstack"*  ]]; then
     kubectl delete --all pv -n openstack
+    kubectl delete --all pv -n ucp
 fi
 
 if [[ ${clean_action} == *"clean_rest"* ]]; then
