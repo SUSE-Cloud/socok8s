@@ -27,6 +27,7 @@ extensions = [
     'sphinxcontrib.blockdiag',
     'sphinxcontrib.seqdiag',
     'sphinxcontrib.nwdiag',
+    'sphinx.ext.githubpages',
 ]
 
 # Feed configuration for yasfb

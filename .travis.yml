@@ -2,12 +2,27 @@ language: python
 cache: pip
 dist: xenial
 
-matrix:
+jobs:
   include:
     - name: "shell syntax"
+      stage: tests
       script: find . -path "./submodules" -prune -o -type f -name "*.sh" -print | xargs -n1 shellcheck -x --format=gcc
     - name: "playbook syntax"
+      stage: tests
       script: ansible-lint playbooks/*.yml
+    - name: "build and publish docs"
+      stage: publish docs
+      install:
+        - pip install tox
+      script: tox -e docs
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        github_token: $token # set in the Travis dashboard
+        local_dir: doc/build/html
+        on:
+          branch: master
+
   allow_failures:
     - name: "shell syntax"
 
