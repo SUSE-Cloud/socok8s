@@ -78,7 +78,7 @@ html_theme_options = {
     'github_user': 'SUSE-Cloud',
     'github_repo': 'socok8s',
     'github_banner': True,
-    'page_width': '1024px',
+    'page_width': '1280px',
     'sidebar_width': '340px'
 }
 

@@ -79,7 +79,7 @@
     - install
 
 - name: Deploy Armada pod to CaaSP
-  shell: "kubectl apply -f {{ socok8s_deploy_config_location }}//armada.yaml"
+  shell: "kubectl apply -f {{ socok8s_deploy_config_location }}/armada.yaml"
   tags:
     - install
 
