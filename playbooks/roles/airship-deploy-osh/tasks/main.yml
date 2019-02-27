@@ -49,7 +49,7 @@
 
 - set_fact:
     treasuremap_dir: '{{ upstream_repos_clone_folder }}/airship-treasuremap'
-    pegleg_image: 'quay.io/airshipit/pegleg:latest'
+    pegleg_image: "{{airship_pegleg_image}}"
     pegleg: '../airship-pegleg/tools/pegleg.sh '
     pegleg_output: 'peggles'
 
