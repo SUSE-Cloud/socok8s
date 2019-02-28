@@ -11,6 +11,15 @@
   with_items:
     - "{{ hostvars[groups['ses_nodes'][0]].ceph_files.results }}"
 
+- name: Get key values for ses-config.yml
+  set_fact:
+    "ceph_{{ item | regex_replace('[\\.\\-]', '_') }}_key":
+       "{{lookup('ini', 'key section={{ item }} file={{ socok8s_workspace }}/ceph.{{ item }}.keyring') }}"
+  with_items:
+    - "client.cinder"
+    - "client.cinder_backup"
+    - "client.glance"
+
 - name: Generate ses-config.yml
   delegate_to: localhost
   template:
