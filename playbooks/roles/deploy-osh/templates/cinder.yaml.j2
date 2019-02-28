@@ -6,14 +6,14 @@ conf:
     DEFAULT:
       debug: true
       backup_driver: cinder.backup.drivers.ceph
-      backup_ceph_user: {{ ses_cluster_configuration['cinder-backup']['rbd_store_pool_user'] }}
+      backup_ceph_user: {{ ses_cluster_configuration['cinder-backup']['rbd_store_user'] }}
       backup_ceph_pool: {{ ses_cluster_configuration['cinder-backup']['rbd_store_pool'] }}
   backends:
     rbd1:
       volume_driver: cinder.volume.drivers.rbd.RBDDriver
       volume_backend_name: rbd1
       rbd_ceph_conf: "/etc/ceph/ceph.conf"
-      rbd_user: {{ ses_cluster_configuration['cinder']['rbd_store_pool_user'] }}
+      rbd_user: {{ ses_cluster_configuration['cinder']['rbd_store_user'] }}
       rbd_pool: {{ ses_cluster_configuration['cinder']['rbd_store_pool'] }}
       rbd_secret_uuid: {{ libvirt_ceph_cinder_secret_uuid }}
 {{ lookup('template','files/common-images-overrides.yml') | from_yaml | to_nice_yaml(indent=2) }}

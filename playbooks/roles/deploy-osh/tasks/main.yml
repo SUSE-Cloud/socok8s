@@ -9,7 +9,8 @@
     - always
 
 - name: Get ses_cluster_configuration
-  include_vars: "{{ socok8s_ses_pools_details }}"
+  set_fact:
+    ses_cluster_configuration: "{{ lookup('file', socok8s_ses_pools_details) | from_yaml }}"
   tags:
     - always
 
