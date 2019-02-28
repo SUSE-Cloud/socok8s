@@ -48,7 +48,7 @@
 - name: Enroll node for Airship Openstack control plane primary class
   shell: |
     kubectl label nodes {{ inventory_hostname }} openstack-helm-node-class=primary
-  when: 
+  when:
     - ('airship-openstack-control-workers' in group_names)
     - hostvars[inventory_hostname].primary is defined
     - hostvars[inventory_hostname].primary == 'yes'

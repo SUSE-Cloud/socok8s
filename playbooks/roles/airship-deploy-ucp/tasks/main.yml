@@ -84,9 +84,12 @@
     - install
 
 - name: Apply Armada cluster role binding
-  shell: "kubectl apply -f {{ socok8s_deploy_config_location }}/armada-cluster-role-binding.yaml"
+  command: "kubectl apply -f {{ socok8s_deploy_config_location }}/armada-cluster-role-binding.yaml"
+  register: armada_cluster_role_binding_result
+  changed_when: "armada_cluster_role_binding_result.stdout|search('created')"
   tags:
     - install
+    - skip_ansible_lint
 
 # TODO JG add override for armada image
 - name: Create Armada deployment yaml
@@ -97,19 +100,25 @@
     - install
 
 - name: Deploy Armada pod to CaaSP
-  shell: "kubectl apply -f {{ socok8s_deploy_config_location }}/armada.yaml"
+  command: "kubectl apply -f {{ socok8s_deploy_config_location }}/armada.yaml"
+  register: armada_pod_deploy_result
+  changed_when: "armada_pod_deploy_result.stdout|search('created')"
   tags:
     - install
+    - skip_ansible_lint
 
 - name: Get Armada pod name
-  shell: 'kubectl get pod -l app=armada -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
+  command: 'kubectl get pod -l app=armada -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
   register: armada_results
   until: armada_results.stdout.find('armada-') == 0
   retries: 60
   delay: 10
   ignore_errors: yes
+  tags:
+    - skip_ansible_lint
 
-- set_fact: armada_pod_name={{ armada_results.stdout }}
+- name: Set Armada pod name
+  set_fact: armada_pod_name={{ armada_results.stdout }}
 
 - debug:
     msg: "Armada pod found: {{ armada_pod_name }}"
@@ -130,8 +139,11 @@
   retries: 30
   delay: 10
   ignore_errors: yes
+  tags:
+    - skip_ansible_lint
 
-- file:
+- name: Create manifests directory
+  file:
     path: "{{ socok8s_deploy_config_location }}/manifests"
     state: directory
   tags:
@@ -144,6 +156,7 @@
   tags:
     - install
 
+# TODO(aagate): Add a changed_when: to help idempotency
 - name: Copy Airship UCP content to Armada pod
   command: "{{ item }}"
   loop:
@@ -160,30 +173,39 @@
     - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm-infra {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
   tags:
     - install
+    - skip_ansible_lint
 
+# TODO(aagate): Add a changed_when: to help idempotency
 - name: Deploy Airship UCP ... quick coffee break, maybe?
-  shell: 'kubectl exec {{ armada_pod_name }} -n ucp -- armada apply /armada/manifests/airship.yaml'
+  command: 'kubectl exec {{ armada_pod_name }} -n ucp -- armada apply /armada/manifests/airship.yaml'
   tags:
     - install
+    - skip_ansible_lint
 
+# TODO(aagate): Add a changed_when: to help idempotency
 - name: Wait until Armada api pod is deployed
-  shell: 'kubectl get pod -l application=armada,component=api -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
+  command: 'kubectl get pod -l application=armada,component=api -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
   register: armada_results
   until: armada_results.stdout.find('armada-api-') == 0
   retries: 180
   delay: 10
   ignore_errors: yes
+  tags:
+    - skip_ansible_lint
 
-- set_fact: armada_api_pod_name={{ armada_results.stdout }}
+- name: Set armada api pod name
+  set_fact: armada_api_pod_name={{ armada_results.stdout }}
 
 - debug:
     msg: "armada-api pod found: {{ armada_api_pod_name }}"
 
+# TODO(aagate): Add a changed_when: to help idempotency
 - name: Wait until Airship api becomes ready
-  shell: "kubectl get pod {{ armada_api_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
+  command: "kubectl get pod {{ armada_api_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
   register: armada_api_pod_status
   until: armada_api_pod_status.stdout == "true"
   retries: 60
   delay: 10
   ignore_errors: yes
-
+  tags:
+    - skip_ansible_lint

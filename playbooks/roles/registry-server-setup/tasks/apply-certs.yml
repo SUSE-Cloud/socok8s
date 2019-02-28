@@ -7,6 +7,7 @@
   become: yes
   register: _copy_ssc_result
 
+# TODO(aagate): Add a changed_when: to help idempotency
 - name: Update CA certificates on node
   command: >
     update-ca-certificates
@@ -15,6 +16,8 @@
     - restart docker
   when:
     - _copy_ssc_result.changed
+  tags:
+    - skip_ansible_lint
 
 - name: Ensure registry server host DNS resolution is set in /etc/hosts
   become: yes
