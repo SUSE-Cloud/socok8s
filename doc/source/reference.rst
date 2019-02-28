@@ -223,7 +223,71 @@ Simplified network diagram
 OSH deploy on OpenStack process
 -------------------------------
 
-TODO
+Setup hosts
+~~~~~~~~~~~
+
+This is the sequence of steps that generates, in OpenStack, the environment
+for deploying OSH later.
+
+.. seqdiag::
+
+   seqdiag {
+     localhost; cloud; deployer; CaaSP; ses;
+     activation = none;
+     localhost -> cloud             [label = "Start 12SP3 node"]
+     localhost <- cloud             [label = "SES inventory data"]
+     localhost -> ses               [label = "Deploy SES" ];
+     localhost <- ses               [label = "ses_config data" ];
+
+     localhost -> cloud             [label = "Start CaaSP3 stack"];
+     localhost <- cloud             [label = "CaaSP inventory data"];
+
+     localhost -> cloud             [label = "Start Leap 15 node"];
+     localhost <- cloud             [label = "Deployer inventory data"];
+
+     localhost -> deployer          [label = "Configure deployer" ];
+                  deployer -> CaaSP [label = "Enroll CaaSP nodes"];
+                  deployer <- CaaSP [label = "Kubeconfig data"];
+   }
+
+Setup OpenStack
+~~~~~~~~~~~~~~~
+
+This is the sequence of steps that ends up with your OpenStack-Helm deployment.
+The solid lines represent Ansible plays and their connections.
+
+The dotted lines represent extra connections happening on the Ansible targets.
+
+.. seqdiag::
+
+   seqdiag {
+     localhost; deployer; CaaSP;
+     activation = none;
+
+     === Setup caasp workers for openstack ===
+     localhost -> localhost            [label = "Generate certs\nif none given"];
+     localhost -> CaaSP                [label = "Setup caasp workers for openstack\n(/etc/hosts, subvolumes, certificates)"];
+
+     === Developer mode ===
+     localhost -> deployer             [label = "Run repo patcher" ];
+                  deployer --> deployer[label = "Git clone"];
+                  deployer --> deployer[label = "Fetch patches\nwith gerrit API"];
+
+     localhost -> deployer             [label = "Copy certificates\nInstall Docker\nRun build images" ];
+                  deployer --> deployer[label = "docker build"];
+                  deployer --> deployer[label = "push to deployer\nregistry"];
+
+                  deployer --> deployer[label = "Run loci wrapper\n(docker build)"];
+                  deployer --> deployer[label = "push to deployer\nregistry"];
+
+     === End of developer mode ===
+
+     localhost -> deployer             [label = "Run deploy-osh" ];
+                  deployer --> deployer[label = "Configure VIP\nin /etc/hosts"];
+                  deployer --> deployer[label = "Run helm repo"];
+                  deployer --> deployer[label = "Build charts"];
+                  deployer --> deployer[label = "Generate\nSUSE overrides+\nRun OSH scripts"];
+   }
 
 
 .. _envvars:
