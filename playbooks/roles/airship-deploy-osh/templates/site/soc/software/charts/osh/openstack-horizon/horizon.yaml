@@ -19,7 +19,7 @@ metadata:
     - src:
         schema: pegleg/PodScaleProfile/v1
         name: pod-scale-profile
-        path: .pods.osh.horizon.api.min
+        path: .pods.osh.horizon.server.min
       dest:
         path: .values.pod.replicas.api
 data:

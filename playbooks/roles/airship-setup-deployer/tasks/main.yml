@@ -64,15 +64,15 @@
     path: /etc/hosts
     marker: "# {mark} ANSIBLE MANAGED BLOCK for VIP entries"
     block: |
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} keystone.ucp.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} barbican.ucp.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} shipyard-api.ucp.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} keystone keystone.openstack.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} glance glance.openstack.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} cinder cinder.openstack.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} nova nova.openstack.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} neutron neutron.openstack.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} horizon horizon.openstack.svc.cluster.local
+      {{ socok8s_dcm_vip }} keystone.ucp.svc.cluster.local
+      {{ socok8s_dcm_vip }} barbican.ucp.svc.cluster.local
+      {{ socok8s_dcm_vip }} shipyard-api.ucp.svc.cluster.local
+      {{ socok8s_ext_vip }} keystone keystone.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} glance glance.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} cinder cinder.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} nova nova.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} neutron neutron.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} horizon horizon.openstack.svc.cluster.local
 
 - name: Creates /etc/openstack directory
   become: yes

@@ -45,8 +45,8 @@ data:
         # what type of vip manage machanism will be used
         # possible options: routed, keepalived
         mode: routed
-        interface: ingress-vip
-        addr: {{ socok8s_deploy_vip_with_cidr }}
+        interfaces: ext-vip,dcm-vip
+        addrs: {{ socok8s_ext_vip }},{{ socok8s_dcm_vip }}
       external_policy_local: true
   source:
     type: local
