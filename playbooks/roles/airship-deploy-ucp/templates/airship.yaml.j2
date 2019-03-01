@@ -277,6 +277,18 @@ data:
     labels:
       release_group: airship-deckhand
   values:
+    network:
+      api:
+        ingress:
+          public: true
+          classes:
+            namespace: "nginx"
+            cluster: "nginx-cluster"
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /
+            nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
+            nginx.ingress.kubernetes.io/proxy-send-timeout: '600'
+            nginx.ingress.kubernetes.io/proxy-body-size: '20m'
     images:
       tags:
         deckhand: '{{ suse_airship_registry_location }}/airshipit/deckhand:{{ suse_airship_components_image_tag }}'
@@ -301,6 +313,20 @@ data:
     labels:
       release_group: airship-shipyard
   values:
+    network:
+      shipyard:
+        ingress:
+          public: true
+          classes:
+            namespace: "nginx"
+            cluster: "nginx-cluster"
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /
+            nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
+            nginx.ingress.kubernetes.io/proxy-send-timeout: '600'
+            nginx.ingress.kubernetes.io/proxy-body-size: '20m'
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              more_clear_headers "Server";
     images:
       tags:
         shipyard:         '{{ suse_airship_registry_location }}/airshipit/shipyard:{{ suse_airship_components_image_tag }}'
@@ -318,6 +344,8 @@ data:
           scheduler: 1
     conf:
       shipyard:
+        base:
+          airflow_api_read_timeout: 300
         # NOTE(drewwalters96): Since Drydock and Promenade are not deployed,
         #    alias those validations to Armada.
         drydock:

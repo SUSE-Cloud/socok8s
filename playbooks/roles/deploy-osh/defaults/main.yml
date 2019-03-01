@@ -2,7 +2,7 @@
 # defaults file for deploy-osh
 
 # Location of the kubeconfig file, fetched from velum UI.
-kubeconfig_file_path: "~/suse-socok8s-deploy/kubeconfig"
+kubeconfig_file_path: "{{ socok8s_workspace }}/kubeconfig"
 
 suse_osh_deploy_packages:
   - python-setuptools
