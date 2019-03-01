@@ -1,9 +1,11 @@
 ---
 - name: Download latest stable kubectl
+  become: yes
   shell: >-
-    kubectl version || (curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl &&
+    kubectl version --client || (curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl &&
     chmod 0755 ./kubectl &&
-    mv ./kubectl /usr/local/bin/kubectl)
+    mv ./kubectl /usr/local/bin/kubectl &&
+    ln -s /usr/local/bin/kubectl /usr/bin/kubectl)
   register: _kubectldl
   args:
     executable: /bin/bash
@@ -61,12 +63,20 @@
       stat:
         path: "{{ kubeconfig_file_path }}"
       delegate_to: localhost
+      register: new_config
+
+    - name: Find if an existing .kube/config file
+      stat:
+        path: "{{ ansible_user_dir }}/.kube/config"
+      delegate_to: localhost
+      register: old_config
 
     - name: Copy local runner kubeconfig file to deploy node
       copy:
         src: "{{ kubeconfig_file_path }}"
         dest: "{{ ansible_user_dir }}/.kube/config"
         mode: "0600"
+      when: new_config.stat.exists and (old_config.stat.exists == False or old_config.stat.mtime < new_config.stat.mtime)
 
 - name: Test kubectl
   command: kubectl cluster-info

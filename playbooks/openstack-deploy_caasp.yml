@@ -178,8 +178,8 @@
         - name: Add vip with cidr in extravars
           lineinfile:
             path: "{{ socok8s_extravars }}"
-            regexp: "^suse_osh_deploy_vip_with_cidr.*"
-            line: "suse_osh_deploy_vip_with_cidr: {{ _vipip.stdout }}/24"
+            regexp: "^socok8s_deploy_vip_with_cidr.*"
+            line: "socok8s_deploy_vip_with_cidr: {{ _vipip.stdout }}/24"
 
         - meta: refresh_inventory
 

@@ -6,4 +6,8 @@ ceph_user_keyring_b64key: QVFDZWoySmNBQUFBQUJBQWlhSTZJZEw2Nml4S1FINEVlOTBTbXc9PQ
 suse_osh_deploy_ceph_mons: ['192.168.50.10:6789']
 # This is the VIP that will be used for the openstack deployment on kubernetes
 # (ingress controller)
-suse_osh_deploy_vip_with_cidr: 192.168.50.46/24
+# Deployment goal is either 'airship' or 'osh'
+socok8s_deployment_goal: airship
+socok8s_deploy_vip_with_cidr: 192.168.50.46/24
+suse_airship_deploy_site_name: soc-minimal
+redeploy_osh_only: false

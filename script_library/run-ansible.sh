@@ -6,8 +6,8 @@ function run_ansible(){
     set -x
     # ansible-runner default locations
     if [[ -z ${ANSIBLE_RUNNER_DIR+x} ]]; then
-        echo "ANSIBLE_RUNNER_DIR env var is not set, defaulting to '~/suse-osh-deploy'"
-        export ANSIBLE_RUNNER_DIR="${HOME}/suse-osh-deploy"
+        echo "ANSIBLE_RUNNER_DIR env var is not set, defaulting to '~/suse-socok8s-deploy'"
+        export ANSIBLE_RUNNER_DIR="${HOME}/suse-socok8s-deploy"
     fi
 
     extravarsfile=${ANSIBLE_RUNNER_DIR}/env/extravars
