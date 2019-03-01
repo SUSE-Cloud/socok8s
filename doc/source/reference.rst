@@ -304,7 +304,7 @@ In socok8s
 tooling. Currently set to ``openstack`` by default, but will later
 include a ``baremetal`` and ``kvm``.
 
-``OSH_DEVELOPER_MODE`` determines if you want to enter developer mode or
+``SOCOK8S_DEVELOPER_MODE`` determines if you want to enter developer mode or
 not. This adds a step for patching upstream code, builds images and then
 continues the deployment.
 

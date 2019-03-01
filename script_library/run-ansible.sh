@@ -6,8 +6,8 @@ function run_ansible(){
     set -x
     # ansible-runner default locations
     if [[ -z ${ANSIBLE_RUNNER_DIR+x} ]]; then
-        echo "ANSIBLE_RUNNER_DIR env var is not set, defaulting to '~/suse-osh-deploy'"
-        export ANSIBLE_RUNNER_DIR="${HOME}/suse-osh-deploy"
+        echo "ANSIBLE_RUNNER_DIR env var is not set, defaulting to '~/suse-socok8s-deploy'"
+        export ANSIBLE_RUNNER_DIR="${HOME}/suse-socok8s-deploy"
     fi
 
     extravarsfile=${ANSIBLE_RUNNER_DIR}/env/extravars
@@ -21,7 +21,7 @@ function run_ansible(){
     fi
 
     #Add extra debugging info if necessary
-    if [[ ${OSH_DEVELOPER_MODE:-"False"} == "True" ]]; then
+    if [[ "${SOCOK8S_DEVELOPER_MODE:-False}" == "True" ]]; then
         # This is set in the current shell env vars, instead of
         # ${ANSIBLE_RUNNER_DIR}/env/envvars, to be non persistent between runs
         export ANSIBLE_STDOUT_CALLBACK=debug

@@ -1,10 +1,21 @@
 ---
-upstream_repos_clone_folder: /opt
-developer_mode: "{{ (lookup('env','OSH_DEVELOPER_MODE') | default('False', true) ) | bool }}"
-socok8s_workspace: "{{ lookup('env','ANSIBLE_RUNNER_DIR') | default('~/suse-osh-deploy', true) }}"
-socok8s_extravars: "{{ socok8s_workspace }}/env/extravars"
-socok8s_ses_pools_details: "{{ socok8s_workspace }}/ses_config.yml"
-socok8s_registry_cert: "{{ socok8s_workspace }}/certs/domain.crt"
-socok8s_registry_certkey: "{{ socok8s_workspace }}/certs/domain.key"
-socok8s_caasp_environment_details: "{{ socok8s_workspace }}/environment.json"
-socok8s_libvirtuuid: "{{ socok8s_workspace }}/libvirt.uuid"
+# Proposing to phase out common_vars in favor of group_vars to define usage of global
+# variables and auto loading/availability of variables in roles
+
+#upstream_repos_clone_folder: "/opt"
+#suse_osh_registry_location: "{{ lookup('env','OPENSTACK_HELM_IMAGE_REGISTRY_LOCATION') | default('docker.io', true) }}"
+#suse_osh_image_version: "{{ lookup('env','OPENSTACK_HELM_IMAGE_VERSION') | default('pike', true) }}"
+#suse_libvirt_image_version: "{{ lookup('env','OPENSTACK_HELM_LIBVIRT_IMAGE_VERSION') | default('ubuntu-xenial-1.3.1-1ubuntu10.24', true) }}"
+#suse_ovs_image_version: "{{ lookup('env','OPENSTACK_HELM_OPENVSWITCH_IMAGE_VERSION') | default('v2.8.1', true) }}"#
+
+#developer_mode: "{{ (lookup('env','SOCOK8S_DEVELOPER_MODE') | default('False', true) ) | bool }}"
+
+#socok8s_workspace: "{{ lookup('env','ANSIBLE_RUNNER_DIR') | default('~/suse-socok8s-deploy', true) }}"
+#socok8s_extravars: "{{ socok8s_workspace }}/env/extravars"
+#socok8s_ses_pools_details: "{{ socok8s_workspace }}/ses_config.yml"
+#socok8s_registry_cert: "{{ socok8s_workspace }}/certs/domain.crt"
+#socok8s_registry_certkey: "{{ socok8s_workspace }}/certs/domain.key"
+#socok8s_caasp_environment_details: "{{ socok8s_workspace }}/environment.json"
+#socok8s_libvirtuuid: "{{ socok8s_workspace }}/libvirt.uuid"
+
+#socok8s_airship_deploy_site_name: soc-minimal

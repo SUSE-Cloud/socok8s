@@ -29,6 +29,17 @@
 
 - name: Get patch details
   include_tasks: patch-repos.yml
-  loop: "{{ dev_patcher_patches }}"
+  loop: "{{ dev_patcher_patches | default([], True) }}"
   loop_control:
     loop_var: patchnumber
+
+- name: Check if there is local code change to cloned repos on deployer
+  stat:
+    path: "{{ role_path }}/files/repos/"
+  register: local_change_repos
+
+- name: Copy local code changes to cloned repos on deployer
+  synchronize:
+    src: "{{ role_path }}/files/repos/"
+    dest: "{{ upstream_repos_clone_folder }}/"
+  when: local_change_repos.stat.exists
