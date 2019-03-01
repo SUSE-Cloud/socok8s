@@ -13,6 +13,33 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.heat.api.min
+      dest:
+        path: .values.pod.replicas.api
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.heat.cfn.min
+      dest:
+        path: .values.pod.replicas.cfn
+
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.heat.cloudwatch.min
+      dest:
+        path: .values.pod.replicas.cloudwatch
+
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.heat.engine.min
+      dest:
+        path: .values.pod.replicas.engine
 data:
   test:
     enabled: true

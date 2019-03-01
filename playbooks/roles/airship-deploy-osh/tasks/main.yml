@@ -18,9 +18,9 @@
     - run
 
 - set_fact:
-    site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ suse_airship_deploy_site_name }}"
+    site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ socok8s_site_name }}"
 
-- name: Ensure site directory for {{ suse_airship_deploy_site_name }} exists
+- name: Ensure site directory for {{ socok8s_site_name }} exists
   become: yes
   file:
     path: "{{ site_path }}"
@@ -31,7 +31,7 @@
   file:
     path: '{{ site_path }}/{{ item.path }}'
     state: directory
-  with_filetree: '{{ role_path }}/templates/site/{{ suse_airship_deploy_site_name }}'
+  with_filetree: '{{ role_path }}/templates/site/soc'
   when: item.state == 'directory'
   tags:
     - install
@@ -42,10 +42,17 @@
   template:
     src: '{{ item.src }}'
     dest: '{{ site_path }}/{{ item.path }}'
-  with_filetree: '{{ role_path }}/templates/site/{{ suse_airship_deploy_site_name }}'
+  with_filetree: '{{ role_path }}/templates/site/soc'
   when: item.state == 'file'
   tags:
     - install
+
+- name: Create pod scale profile
+  become: yes
+  copy:
+    src: '{{ role_path }}/files/profiles/pod-scale-{{ scale_profile }}.yaml'
+    dest:  '{{ site_path }}/profiles'
+    mode: 0644
 
 - set_fact:
     treasuremap_dir: '{{ upstream_repos_clone_folder }}/airship-treasuremap'
@@ -54,7 +61,7 @@
     pegleg_output: 'peggles'
 
 - name: Pegleg lint the site manifests
-  shell: 'IMAGE={{ pegleg_image }} TERM_OPTS=" " {{ pegleg }} site -r . lint "{{ suse_airship_deploy_site_name }}" -x P001 -x P009'
+  shell: 'IMAGE={{ pegleg_image }} TERM_OPTS=" " {{ pegleg }} site -r . lint "{{ socok8s_site_name }}" -x P001 -x P009'
   args:
     chdir: '{{ treasuremap_dir }}'
   tags:
@@ -69,7 +76,7 @@
     - install
 
 - name: Collect site config
-  shell: 'IMAGE={{ pegleg_image }} TERM_OPTS="-l info" {{ pegleg }} site -r . collect {{ suse_airship_deploy_site_name }} -s {{ pegleg_output }}'
+  shell: 'IMAGE={{ pegleg_image }} TERM_OPTS="-l info" {{ pegleg }} site -r . collect {{ socok8s_site_name }} -s {{ pegleg_output }}'
   args:
     chdir: '{{ treasuremap_dir }}'
 
@@ -87,7 +94,7 @@
     - install
 
 - name: Create config docs in Shipyard
-  shell: '{{ shipyard }} create configdocs {{ suse_airship_deploy_site_name }}-design --replace --directory=/target/{{ pegleg_output }}'
+  shell: '{{ shipyard }} create configdocs {{ socok8s_site_name }}-design --replace --directory=/target/{{ pegleg_output }}'
   args:
     chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
   environment:
@@ -135,7 +142,7 @@
 - name: Write site records
   template:
     src: ./site-keys.yaml.j2
-    dest: '{{ socok8s_deploy_config_location }}/{{ suse_airship_deploy_site_name }}-keys.yaml'
+    dest: '{{ socok8s_deploy_config_location }}/{{ socok8s_site_name }}-keys.yaml'
   tags:
     - install
 

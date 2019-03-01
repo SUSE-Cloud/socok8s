@@ -430,8 +430,9 @@ On the deployer:
    * # Following cidr entry is an IP available on the network you're
    * # using which can be used as a VIP
    * socok8s_deploy_vip_with_cidr: 172.16.1.100
-   * suse_airship_deploy_site_name: soc-minimal
-   * redeploy_osh_only: false # true if only wants to redeploy Openstack_Helm
+   * # either "minimal" or "ha"
+   * scale_profile: ha
+   * redeploy_osh_only: false # true if only wants to redeploy Openstack-Helm
 
 -  Enable and start sshd on your deployer and the location you are
    running the playbooks. [NOTE: this step can be removed or adapted

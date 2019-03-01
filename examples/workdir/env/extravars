@@ -5,5 +5,6 @@ ceph_user_keyring_b64key: QVFBWkUxdGNBQUFBQUJBQVJMdnF0eFQxbU9DZG0rNXM2SlhJM3c9PQ
 # Deployment goal is either 'airship' or 'osh'
 socok8s_deployment_goal: airship
 socok8s_deploy_vip_with_cidr: 192.168.89.251
-suse_airship_deploy_site_name: soc-minimal
+#either "minimal" or "ha"
+scale_profile: ha
 redeploy_osh_only: false

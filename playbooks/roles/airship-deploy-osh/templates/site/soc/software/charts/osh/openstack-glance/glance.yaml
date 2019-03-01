@@ -17,6 +17,19 @@ metadata:
       - method: delete
         path: .values.ceph_client
   storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.glance.api.min
+      dest:
+        path: .values.pod.replicas.api
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.glance.registry.min
+      dest:
+        path: .values.pod.replicas.registry
 data:
   wait:
     timeout: 3000

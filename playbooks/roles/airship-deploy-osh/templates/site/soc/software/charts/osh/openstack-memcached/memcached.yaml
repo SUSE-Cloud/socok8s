@@ -2,35 +2,34 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: openstack-ingress-controller-soc
+  name: openstack-memcached-soc
   layeringDefinition:
     abstract: false
     layer: site
     parentSelector:
-      name: openstack-ingress-controller-global
-      component: ingress
+      name: openstack-memcached-global
+      component: memcached
     actions:
-      - method: replace
+      - method: merge
         path: .values.pod
   storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/PodScaleProfile/v1
         name: pod-scale-profile
-        path: .pods.osh.ingress.ingress.min
+        path: .pods.osh.memcached.server.min
       dest:
-        path: .values.pod.replicas.ingress
-  substitutions:
+        path: .values.pod.replicas.server
     - src:
         schema: pegleg/PodScaleProfile/v1
         name: pod-scale-profile
-        path: .pods.osh.ingress.error_page.min
+        path: .pods.osh.memcached.prometheus_memcached_exporter.min
       dest:
-        path: .values.pod.replicas.error_page
+        path: .values.pod.replicas.prometheus_memcached_exporter
 data:
   values:
     pod:
       replicas:
-        ingress: 1
-        error_page: 1
+        server: 1
+        prometheus_memcached_exporter: 1
 ...

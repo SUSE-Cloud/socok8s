@@ -1,5 +1,6 @@
 ---
 
-
 shipyard_image: "{{ suse_airship_registry_location }}/airshipit/shipyard:{{suse_airship_components_image_tag}}"
 airship_pegleg_image: "{{ suse_airship_registry_location }}/airshipit/pegleg:{{suse_airship_components_image_tag}}"
+scale_profile: "{{ lookup('env','scale_profile') | default('minimal') }}"
+socok8s_site_name: "soc-{{ scale_profile }}"

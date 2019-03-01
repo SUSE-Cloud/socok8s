@@ -9,120 +9,118 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: site
-    actions:
-      - method: merge
-        path: .
 data:
   pods:
     osh:
       barbican:
         api:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
       cinder:
         api:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
         volume:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
         scheduler:
-          min: 1
-          max: 1
+          min: 3
+          max: 3
         backup:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
       glance:
         api:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
         registry:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
       heat:
         api:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
         cfn:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
         cloudwatch:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
         engine:
-          min: 1
-          max: 1
+          min: 4
+          max: 6
       horizon:
         server:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
       ingress:
         ingress:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
         error_page:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
       keystone:
         api:
-          min: 3
+          min: 2
           max: 3
       mariadb:
         server:
            min: 3
-           max: 3
+           max: 5
+           quorum: true
         ingress:
-           min: 1
-           max: 1
+           min: 2
+           max: 3
         error_page:
-           min: 1
-           max: 1
+           min: 2
+           max: 3
         prometheus_mysql_exporter:
            min: 1
-           max: 1
+           max: 2
       memcached:
         server:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
         prometheus_memcached_exporter:
           min: 1
-          max: 1
+          max: 2
       neutron:
         server:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
       nova:
         api_metadata:
-          min: 1
-          max: 1
+          min: 4
+          max: 6
         compute_ironic:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
         placement:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
         osapi:
-          min: 1
-          max: 1
+          min: 4
+          max: 6
         conductor:
-          min: 1
-          max: 1
+          min: 4
+          max: 6
         consoleauth:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
         scheduler:
-          min: 1
-          max: 1
+          min: 4
+          max: 6
         novncproxy:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
         spiceproxy:
-          min: 1
-          max: 1
+          min: 2
+          max: 3
       rabbitmq:
         server:
-          min: 1
-          max: 1
+          min: 3
+          max: 3
       prometheus_rabbitmq_exporter:
           min: 1
-          max: 1
+          max: 2

@@ -15,6 +15,13 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.rabbitmq.server.min
+      dest:
+        path: .values.pod.replicas.server
 data:
   test:
     enabled: false

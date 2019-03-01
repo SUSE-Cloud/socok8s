@@ -5,7 +5,7 @@ metadata:
   layeringDefinition:
     abstract: false
     layer: site
-  name: soc-minimal
+  name: {{ socok8s_site_name }}
   storagePolicy: cleartext
 data:
   site_type: single-node

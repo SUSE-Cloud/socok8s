@@ -18,7 +18,7 @@ data:
   chart_groups:
     - openstack-ingress-controller-soc
     - openstack-mariadb-soc
-    - openstack-memcached
+    - openstack-memcached-soc
     - openstack-keystone-soc
     - openstack-ceph-config-soc
     - openstack-glance-soc

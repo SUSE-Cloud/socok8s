@@ -10,11 +10,10 @@ metadata:
       name: keystone-global
       component: keystone
     actions:
-      - method: replace
-        path: .values.pod
+      - method: merge
+        path: .
   storagePolicy: cleartext
   substitutions:
-    # Chart source
     - src:
         schema: pegleg/PodScaleProfile/v1
         name: pod-scale-profile
