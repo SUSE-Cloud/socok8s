@@ -22,12 +22,14 @@
     force: yes
 
 - name: Execute subvolume setup script
-  shell: /tmp/caasp_worker_node_set_subvolumes.sh
+  command: /tmp/caasp_worker_node_set_subvolumes.sh
   register: subvolume_cmd_out
   failed_when: subvolume_cmd_out.rc != 0
+  tags:
+    - skip_ansible_lint
 
 - name: Reboot node after successful subvolumes creation
-  reboot: 
+  reboot:
     msg: "Ansible triggered reboot after making subvolumes for Nova, Neutron and Libvirt"
     test_command: "kubectl get nodes"
   when: subvolume_cmd_out.stdout.find('reboot') >= 0

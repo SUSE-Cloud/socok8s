@@ -4,7 +4,7 @@
   any_errors_fatal: true
   roles:
     - role: airship-setup-deployer
-      when: redeploy_osh_only is not defined or redeploy_osh_only != true
+      when: redeploy_osh_only is not defined or not redeploy_osh_only
 
 - hosts: all
   gather_facts: false
@@ -17,7 +17,7 @@
   any_errors_fatal: true
   roles:
     - role: dev-patcher
-      when: redeploy_osh_only is not defined or redeploy_osh_only != true
+      when: redeploy_osh_only is not defined or not redeploy_osh_only
       become: yes
 
 - hosts: airship-workers
@@ -25,7 +25,7 @@
   any_errors_fatal: true
   roles:
     - role: airship-configure-worker
-      when: redeploy_osh_only is not defined or redeploy_osh_only != true
+      when: redeploy_osh_only is not defined or not redeploy_osh_only
 
 - hosts: airship-deployer
   gather_facts: yes
@@ -39,21 +39,21 @@
   any_errors_fatal: true
   roles:
     - role: airship-configure-caasp
-      when: redeploy_osh_only is not defined or redeploy_osh_only != true
+      when: redeploy_osh_only is not defined or not redeploy_osh_only
 
 - hosts: airship-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:
     - role: airship-configure-ceph
-      when: redeploy_osh_only is not defined or redeploy_osh_only != true
+      when: redeploy_osh_only is not defined or not redeploy_osh_only
 
 - hosts: airship-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:
     - role: airship-deploy-ucp
-      when: redeploy_osh_only is not defined or redeploy_osh_only != true
+      when: redeploy_osh_only is not defined or not redeploy_osh_only
 
 - hosts: airship-deployer
   gather_facts: yes

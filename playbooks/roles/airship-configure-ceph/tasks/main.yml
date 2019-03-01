@@ -33,14 +33,19 @@
     dest: "/tmp/ceph-storage-classes.yaml"
     mode: "0600"
 
+# TODO(aagate): Add a changed_when: to help idempotency
 - name: "Apply ceph {{ item }} yaml"
   command: "kubectl apply -f /tmp/ceph-{{ item }}.yaml --overwrite=true"
   with_items:
     - secrets
     - storage-classes
+  tags:
+    - skip_ansible_lint
 
-
+# TODO(aagate): Add a changed_when: to help idempotency
 # This is an arbitrary UUID value that's passed to the libvirt daemonset setup job for configuring a libvirt secret XML file
 - name: Create Libvirt ceph cinder secret uuid
-  shell: uuidgen
+  command: uuidgen
   register: libvirt_ceph_cinder_secret_uuid
+  tags:
+    - skip_ansible_lint
