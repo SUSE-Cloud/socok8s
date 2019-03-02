@@ -109,7 +109,6 @@
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Create config docs in Shipyard
-  shell: '{{ shipyard }} create configdocs {{ socok8s_site_name }}-design --replace --directory=/target/{{ pegleg_output }}'
   command: '{{ shipyard }} create configdocs {{ suse_airship_deploy_site_name }}-design --replace --directory=/target/{{ pegleg_output }}'
   args:
     chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
