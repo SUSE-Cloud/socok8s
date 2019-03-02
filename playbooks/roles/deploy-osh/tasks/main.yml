@@ -9,7 +9,7 @@
     - always
 
 - name: Get ses_cluster_configuration
-  include_vars: 
+  include_vars:
     file: "{{ socok8s_ses_pools_details }}"
     name: ses_cluster_configuration
   tags:
