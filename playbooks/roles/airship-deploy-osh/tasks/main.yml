@@ -19,7 +19,7 @@
 
 - name: Set site path
   set_fact:
-    site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ suse_airship_deploy_site_name }}"
+    site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ socok8s_site_name }}"
 
 - name: Ensure site directory for {{ socok8s_site_name }} exists
   become: yes
@@ -64,7 +64,7 @@
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Pegleg lint the site manifests
-  command: '{{ pegleg }} site -r . lint "{{ suse_airship_deploy_site_name }}" -x P001 -x P009'
+  command: '{{ pegleg }} site -r . lint "{{ socok8s_site_name }}" -x P001 -x P009'
   args:
     chdir: '{{ treasuremap_dir }}'
   environment:
@@ -84,7 +84,7 @@
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Collect site config
-  command: '{{ pegleg }} site -r . collect {{ suse_airship_deploy_site_name }} -s {{ pegleg_output }}'
+  command: '{{ pegleg }} site -r . collect {{ socok8s_site_name }} -s {{ pegleg_output }}'
   args:
     chdir: '{{ treasuremap_dir }}'
   environment:
@@ -109,7 +109,7 @@
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Create config docs in Shipyard
-  command: '{{ shipyard }} create configdocs {{ suse_airship_deploy_site_name }}-design --replace --directory=/target/{{ pegleg_output }}'
+  command: '{{ shipyard }} create configdocs {{ socok8s_site_name }}-design --replace --directory=/target/{{ pegleg_output }}'
   args:
     chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
   environment:

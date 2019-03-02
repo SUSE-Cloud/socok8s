@@ -16,4 +16,3 @@ socok8s_caasp_environment_details: "{{ socok8s_workspace }}/environment.json"
 socok8s_libvirtuuid: "{{ socok8s_workspace }}/libvirt.uuid"
 
 socok8s_deploy_config_location: "{{ socok8s_workspace }}"
-socok8s_airship_deploy_site_name: soc-minimal
