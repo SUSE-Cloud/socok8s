@@ -370,9 +370,13 @@ On the deployer:
    running the playbooks. [NOTE: this step can be removed or adapted
    subject to merge of PR #29]
 
--  Add suse_osh_deploy_vip_with_cidr to ~/suse-osh-deploy/env/extravars.
-   This should be an IP available on the network you’re using which can
-   be used as a VIP.
+-  Add socok8s_ext_vip to ~/suse-osh-deploy/env/extravars.
+   This should be an IP available on the external network you’re using
+   which can be used as a VIP to access Openstack public endpoints.
+
+-  Add socok8s_dcm_vip to ~/suse-osh-deploy/env/extravars.
+   This should be an IP available on the data center management network
+   you’re using which can be used as a VIP to access Airship UCP endpoints.
 
 -  Download the kubeconfig from Velum on the CAASP admin node and copy
    it to ~/suse-osh-deploy/kubeconfig and ~/.kube/config
@@ -429,9 +433,11 @@ On the deployer:
    * socok8s_deployment_goal: airship
    * # Following cidr entry is an IP available on the network you're
    * # using which can be used as a VIP
-   * socok8s_deploy_vip_with_cidr: 172.16.1.100
-   * suse_airship_deploy_site_name: soc-minimal
-   * redeploy_osh_only: false # true if only wants to redeploy Openstack_Helm
+   * socok8s_ext_vip: 10.10.1.100
+   * socok8s_dcm_vip: 192.168.1.100
+   * # either "minimal" or "ha"
+   * scale_profile: ha
+   * redeploy_osh_only: false # true if only wants to redeploy Openstack-Helm
 
 -  Enable and start sshd on your deployer and the location you are
    running the playbooks. [NOTE: this step can be removed or adapted

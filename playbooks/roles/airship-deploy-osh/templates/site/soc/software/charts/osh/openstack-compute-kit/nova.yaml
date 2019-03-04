@@ -19,6 +19,49 @@ metadata:
       - method: replace
         path: .values.pod
   storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.nova.api_metadata.min
+      dest:
+        path: .values.pod.replicas.api_metadata
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.nova.placement.min
+      dest:
+        path: .values.pod.replicas.placement
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.nova.osapi.min
+      dest:
+        path: .values.pod.replicas.osapi
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.nova.conductor.min
+      dest:
+        path: .values.pod.replicas.conductor
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.nova.consoleauth.min
+      dest:
+        path: .values.pod.replicas.consoleauth
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.nova.scheduler.min
+      dest:
+        path: .values.pod.replicas.scheduler
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.nova.novncproxy.min
+      dest:
+        path: .values.pod.replicas.novncproxy
 data:
   values:
     labels:

@@ -15,6 +15,13 @@ metadata:
       - method: delete
         path: .values.labels.prometheus_mysql_exporter
   storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.mariadb.server.min
+      dest:
+        path: .values.pod.replicas.server
 data:
   values:
     pod:

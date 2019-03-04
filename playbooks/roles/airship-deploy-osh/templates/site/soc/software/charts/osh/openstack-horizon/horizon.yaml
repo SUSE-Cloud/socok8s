@@ -15,6 +15,13 @@ metadata:
       - method: replace
         path: .values.pod
   storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.horizon.server.min
+      dest:
+        path: .values.pod.replicas.api
 data:
   values:
     pod:

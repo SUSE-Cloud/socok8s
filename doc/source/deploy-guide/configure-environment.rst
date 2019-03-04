@@ -101,18 +101,34 @@ Airship/OpenStack deployment:
 
 You can find examples of the required files in `examples/workdir`.
 
-Configure the VIP that will be used for OpenStack
--------------------------------------------------
+Configure the VIP that will be used for OpenStack service public endpoints
+--------------------------------------------------------------------------
 
-Add `suse_osh_deploy_vip_with_cidr:` with its appropriate value for your
+Add `socok8s_ext_vip:` with its appropriate value for your
 environment in your `env/extravars`. This should be an available IP
-on the same network as your CaaSP cluster.
+on the external network (in development environment, it can be the same as
+CaaSP cluster network).
 
 For example:
 
 .. code-block:: yaml
 
-   suse_osh_deploy_vip_with_cidr: "192.168.50.35/24"
+   socok8s_ext_vip: "10.10.10.10"
+
+
+Configure the VIP that will be used for Airship UCP service endpoints
+--------------------------------------------------------------------------
+
+Add `socok8s_dcm_vip:` with its appropriate value for your
+environment in your `env/extravars`. This should be an available IP
+on the data center management (DCM) network (in development environment, it
+can be the same as CaaSP cluster network).
+
+For example:
+
+.. code-block:: yaml
+
+   socok8s_dcm_vip: "192.168.51.35"
 
 Configure certificates for your own registry
 --------------------------------------------

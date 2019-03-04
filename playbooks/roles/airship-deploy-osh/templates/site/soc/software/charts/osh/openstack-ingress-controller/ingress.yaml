@@ -13,6 +13,20 @@ metadata:
       - method: replace
         path: .values.pod
   storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.ingress.ingress.min
+      dest:
+        path: .values.pod.replicas.ingress
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.ingress.error_page.min
+      dest:
+        path: .values.pod.replicas.error_page
 data:
   values:
     pod:

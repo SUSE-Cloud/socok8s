@@ -2,19 +2,26 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: nova-rabbitmq-soc
+  name: heat-rabbitmq-soc
   layeringDefinition:
     abstract: false
     layer: site
     parentSelector:
-      name: nova-rabbitmq-global
-      component: nova
+      name: heat-rabbitmq-global
+      component: heat
     actions:
       - method: delete
         path: .values.labels.prometheus_rabbitmq_exporter
       - method: merge
         path: .
   storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.rabbitmq.server.min
+      dest:
+        path: .values.pod.replicas.server
 data:
   test:
     enabled: false
