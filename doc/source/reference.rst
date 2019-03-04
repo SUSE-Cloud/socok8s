@@ -107,14 +107,21 @@ charts.
 
 However, the OpenStack-Helm project has a repository, `openstack-helm-images`,
 containing a reference implementation for the images. That repository
-holds the images used for the OpenStack-Helm project charts.
+holds the images used for the OpenStack-Helm project charts. All its images
+are built with Docker.
 
-These images are built with Docker.
-`openstack-helm-images` provides Dockerfiles for all the non-OpenStack images.
-For the OpenStack images, `openstack-helm-images` only has a shell script, a
-thin wrapper around `LOCI`. `LOCI` is the official OpenStack project to
-build OCI compliant images of OpenStack. It follows a source based deployment
-model.
+`openstack-helm-images` provides Dockerfiles directly for all the
+non-OpenStack images.
+
+For the OpenStack images, `openstack-helm-images` contains shell scripts,
+situated in `openstack/loci/`. The `build.sh` script is a thin wrapper around
+`LOCI`. `LOCI` is the official OpenStack project to build OCI compliant
+images of OpenStack projects. It uses `docker build` to construct images from
+openstack sources and their requirements are expressed in `bindep` files
+(`bindep.txt` for rpm/apt packages, `pydep.txt` for python packages).
+The `build.sh` runs `LOCI` for the master branch. Other branches can be built
+suing `build-{branchname}.sh` where `branchname` is the name of the OpenStack
+branch (for example, `queens`). See also :ref:`buildlociimages`.
 
 In the future, `openstack-helm-images` could theoretically add images for
 OpenStack which would be based on packages, by simply providing the appropriate
