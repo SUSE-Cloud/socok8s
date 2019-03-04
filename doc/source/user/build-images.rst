@@ -2,9 +2,11 @@
 Build and consume your own images
 =================================
 
+Build non-openstack images
+==========================
+
 If you want to build and consume your own image, for example, for libvirt, set
 the following in your `${WORKDIR}/env/extravars`:
-
 
 .. code-block:: yaml
 
@@ -24,3 +26,24 @@ the following in your `${WORKDIR}/env/extravars`:
      images:
        tags:
          libvirt: "{{ myregistry }}openstackhelm/libvirt:latest-opensuse_15"
+
+
+.. _buildlociimages:
+
+Build LOCI images
+=================
+
+The LOCI command to build the OpenStack images is by default stored in
+`loci_build_command` (see also our `suse-build-images role default variables`_).
+
+.. _suse-build-images role default variables: https://github.com/SUSE-Cloud/socok8s/blob/master/playbooks/roles/suse-build-images/defaults/main.yml
+
+For example, set `loci_build_command` to `"./openstack/loci/build-ocata.sh"` to
+build LOCI with the ocata branch.
+
+.. note::
+
+   By default, the list of projects to build in LOCI is empty, and the LOCI
+   builds are skipped.
+   Define `loci_build_projects` as a list, each item being an upstream project
+   to build in the image build process.

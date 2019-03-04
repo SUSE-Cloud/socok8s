@@ -6,8 +6,8 @@ function run_ansible(){
     set -x
     # ansible-runner default locations
     if [[ -z ${ANSIBLE_RUNNER_DIR+x} ]]; then
-        echo "ANSIBLE_RUNNER_DIR env var is not set, defaulting to '~/suse-socok8s-deploy'"
-        export ANSIBLE_RUNNER_DIR="${HOME}/suse-socok8s-deploy"
+        echo "ANSIBLE_RUNNER_DIR env var is not set, defaulting to '~/suse-osh-deploy'"
+        export ANSIBLE_RUNNER_DIR="${HOME}/suse-osh-deploy"
     fi
 
     extravarsfile=${ANSIBLE_RUNNER_DIR}/env/extravars
@@ -18,14 +18,6 @@ function run_ansible(){
         mkdir -p ${ANSIBLE_RUNNER_DIR}/{env,inventory} || true
         echo "Adding an empty inventory by default"
         cp ${socok8s_absolute_dir}/examples/workdir/inventory/hosts.yml ${inventorydir}
-    fi
-
-    #Add extra debugging info if necessary
-    if [[ "${SOCOK8S_DEVELOPER_MODE:-False}" == "True" ]]; then
-        # This is set in the current shell env vars, instead of
-        # ${ANSIBLE_RUNNER_DIR}/env/envvars, to be non persistent between runs
-        export ANSIBLE_STDOUT_CALLBACK=debug
-        export ANSIBLE_VERBOSITY=3
     fi
 
     if [[ -f ${extravarsfile} ]]; then
