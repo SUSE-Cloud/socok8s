@@ -20,14 +20,6 @@ function run_ansible(){
         cp ${socok8s_absolute_dir}/examples/workdir/inventory/hosts.yml ${inventorydir}
     fi
 
-    #Add extra debugging info if necessary
-    if [[ ${OSH_DEVELOPER_MODE:-"False"} == "True" ]]; then
-        # This is set in the current shell env vars, instead of
-        # ${ANSIBLE_RUNNER_DIR}/env/envvars, to be non persistent between runs
-        export ANSIBLE_STDOUT_CALLBACK=debug
-        export ANSIBLE_VERBOSITY=3
-    fi
-
     if [[ -f ${extravarsfile} ]]; then
         echo "Extra variables file exists: $(realpath ${extravarsfile}). Loading its vars in ansible-playbook call."
         extra_vars="-e @${extravarsfile}"
