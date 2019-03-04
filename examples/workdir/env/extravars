@@ -2,10 +2,15 @@
 ceph_admin_keyring_b64key: QVFBWkUxdGNBQUFBQUJBQVJMdnF0eFQxbU9DZG0rNXM2SlhJM3c9PQ==
 ceph_user_keyring_b64key: QVFBWkUxdGNBQUFBQUJBQVJMdnF0eFQxbU9DZG0rNXM2SlhJM3c9PQ==
 
-# Deployment goal is either 'airship' or 'osh'
-socok8s_deployment_goal: airship
 socok8s_ext_vip: 10.10.1.100
 socok8s_dcm_vip: 192.168.89.251
 #either "minimal" or "ha"
 scale_profile: ha
 redeploy_osh_only: false
+
+# Following commented list is provided to make clients/customer aware of the
+# varibles which can be overriden if needed.
+
+#suse_osh_registry_location: "docker.io"
+#suse_osh_image_version: "pike"
+
