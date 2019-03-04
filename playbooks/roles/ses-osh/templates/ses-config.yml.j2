@@ -6,17 +6,18 @@ ceph_conf:
   mon_initial_members: {{ hostvars[groups['ses_nodes'][0]].conf_options.stdout_lines.1 }}
   public_network: {{ hostvars[groups['ses_nodes'][0]].conf_options.stdout_lines.3 }}
 cinder:
-  key: {{ ceph_client_cinder_key }}
+  key: "{{ lookup('ini', 'key section=client.cinder file={{ socok8s_workspace }}/ceph.client.cinder.keyring') }}"
   rbd_store_pool: cinder
   rbd_store_user: cinder
 cinder-backup:
-  key: {{ ceph_client_cinder_backup_key }}
+  key: "{{ lookup('ini', 'key section=client.cinder_backup file={{ socok8s_workspace 
+}}/ceph.client.cinder_backup.keyring') }}"
   rbd_store_pool: backups
   rbd_store_user: cinder_backup
 nova:
   rbd_store_pool: nova
 glance:
-  key: {{ ceph_client_glance_key }}
+  key: "{{ lookup('ini', 'key section=client.glance file={{ socok8s_workspace }}/ceph.client.glance.keyring') }}"
   rbd_store_pool: glance
   rbd_store_user: glance
 {% if radosgw_keystone %}
