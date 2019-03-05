@@ -4,6 +4,17 @@ ceph_user_keyring_b64key: QVFDZWoySmNBQUFBQUJBQWlhSTZJZEw2Nml4S1FINEVlOTBTbXc9PQ
 # This is a list of the Ceph MONs, should the ses_config.yml to override the
 # value provided by the ses_config.yml (in case of dual stack, floating IPs...)
 suse_osh_deploy_ceph_mons: ['192.168.50.10:6789']
+
 # This is the VIP that will be used for the openstack deployment on kubernetes
 # (ingress controller)
-suse_osh_deploy_vip_with_cidr: 192.168.50.46/24
+socok8s_ext_vip: 192.168.50.46/24
+#either "minimal" or "ha"
+scale_profile: ha
+redeploy_osh_only: false
+
+# Following commented list is provided to make clients/customer aware of the
+# varibles which can be overriden if needed.
+
+#suse_osh_registry_location: "docker.io"
+#suse_osh_image_version: "pike"
+

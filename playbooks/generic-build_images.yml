@@ -10,7 +10,7 @@
     #http://jinja.pocoo.org/docs/2.10/templates/#default
     - name: Check if developer mode should be enabled
       set_fact:
-        developer_mode: "{{ (lookup('env','OSH_DEVELOPER_MODE') | default('False', true) ) | bool }}"
+        developer_mode: "{{ (lookup('env','SOCOK8S_DEVELOPER_MODE') | default('False', true) ) | bool }}"
       tags:
         - always
         - imagebuilder
