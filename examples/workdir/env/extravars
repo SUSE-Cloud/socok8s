@@ -2,6 +2,11 @@
 ceph_admin_keyring_b64key: QVFBWkUxdGNBQUFBQUJBQVJMdnF0eFQxbU9DZG0rNXM2SlhJM3c9PQ==
 ceph_user_keyring_b64key: QVFBWkUxdGNBQUFBQUJBQVJMdnF0eFQxbU9DZG0rNXM2SlhJM3c9PQ==
 
+# This is a list of the Ceph MONs, should the ses_config.yml to override the
+# value provided by the ses_config.yml (in case of dual stack, floating IPs...)
+suse_osh_deploy_ceph_mons: ['192.168.50.10:6789']
+
+
 socok8s_ext_vip: 10.10.1.100
 socok8s_dcm_vip: 192.168.89.251
 #either "minimal" or "ha"

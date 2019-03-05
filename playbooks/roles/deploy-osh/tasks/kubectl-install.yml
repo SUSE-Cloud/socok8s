@@ -76,7 +76,9 @@
         src: "{{ kubeconfig_file_path }}"
         dest: "{{ ansible_user_dir }}/.kube/config"
         mode: "0600"
-      when: new_config.stat.exists and (not old_config.stat.exists or old_config.stat.mtime < new_config.stat.mtime)
+      when:
+        - "new_config.stat.exists"
+        - "( not old_config.stat.exists or old_config.stat.mtime < new_config.stat.mtime )"
 
 - name: Test kubectl
   command: kubectl cluster-info

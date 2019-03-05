@@ -2,7 +2,7 @@
 
 set -o errexit
 
-if [[ ${OSH_DEVELOPER_MODE:-"False"} == "True" ]]; then
+if [[ "${SOCOK8S_DEVELOPER_MODE:-False}" == "True" ]]; then
     set -x
 fi
 

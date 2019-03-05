@@ -175,6 +175,12 @@
               caasp-workers:
                 hosts: "{{ workerinventory }}"
 
+        - name: Add vip with cidr in extravars
+          lineinfile:
+            path: "{{ socok8s_extravars }}"
+            regexp: "^socok8s_ext_vip.*"
+            line: "socok8s_ext_vip: {{ _vipip.stdout }}/24"
+
         - meta: refresh_inventory
 
         - name: Wait for a SSH to be properly started

@@ -2,16 +2,16 @@
 upstream_repos:
   openstack-helm-infra:
     src: https://git.openstack.org/openstack/openstack-helm-infra
-    version: master
+    version: cb021c212485ec572a9aea9bb8a9f1479027a4de
   openstack-helm:
     src: https://git.openstack.org/openstack/openstack-helm
-    version: master
+    version: 7edbfc8a7eadd32e6f13685b7fbc6f45b0ea660d
   openstack-helm-images:
     src: https://github.com/openstack/openstack-helm-images
-    version: master
+    version: 96048a62fa6bbe09468d316eaffc3ee9b24f74eb
   loci:
     src: https://github.com/openstack/loci
-    version: master
+    version: c94e1dfc86cae044a4582f321bb1721846419a00
   airship-armada:
     src: https://github.com/openstack/airship-armada
     version: master

@@ -68,14 +68,14 @@ carry your own fork), you might want to run:
 
 .. code-block:: console
 
-   export OSH_DEVELOPER_MODE='True'
+   export SOCOK8S_DEVELOPER_MODE='True'
    ./run.sh patch_upstream
 
 Build your own images by running:
 
 .. code-block:: console
 
-   export OSH_DEVELOPER_MODE='True'
+   export SOCOK8S_DEVELOPER_MODE='True'
    ./run.sh build_images
 
 Deploy Airship/OpenStack-Helm
@@ -112,7 +112,7 @@ you need to run the following:
 
 .. code-block:: console
 
-   export OSH_DEVELOPER_MODE='True'
+   export SOCOK8S_DEVELOPER_MODE='True'
    ./run.sh setup_openstack
 
 For Airship deployment
@@ -129,5 +129,5 @@ you need to run the following:
 
 .. code-block:: console
 
-   export OSH_DEVELOPER_MODE='True'
+   export SOCOK8S_DEVELOPER_MODE='True'
    ./run.sh setup_airship
