@@ -104,7 +104,7 @@ You can find examples of the required files in `examples/workdir`.
 Configure the VIP that will be used for OpenStack
 -------------------------------------------------
 
-Add `socok8s_deploy_vip_with_cidr:` with its appropriate value for your
+Add `socok8s_ext_vip` with its appropriate value for your
 environment in your `env/extravars`. This should be an available IP
 on the same network as your CaaSP cluster.
 
@@ -112,7 +112,7 @@ For example:
 
 .. code-block:: yaml
 
-   socok8s_deploy_vip_with_cidr: "192.168.50.35/24"
+   socok8s_ext_vip: "192.168.50.35/24"
 
 Configure certificates for your own registry
 --------------------------------------------

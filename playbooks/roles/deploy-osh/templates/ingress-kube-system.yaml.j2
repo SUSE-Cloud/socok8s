@@ -13,6 +13,6 @@ network:
     # possible options: routed, keepalived
     mode: routed
     interface: ingress-vip
-    addr: {{ socok8s_deploy_vip_with_cidr }}
+    addr: {{ socok8s_ext_vip }}
     external_policy_local: true
 {{ lookup('template','files/common-images-overrides.yml') | from_yaml | to_nice_yaml(indent=2) }}
