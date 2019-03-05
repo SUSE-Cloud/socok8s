@@ -89,7 +89,6 @@
   changed_when: "armada_cluster_role_binding_result.stdout|search('created')"
   tags:
     - install
-    - skip_ansible_lint
 
 # TODO JG add override for armada image
 - name: Create Armada deployment yaml
@@ -105,7 +104,6 @@
   changed_when: "armada_pod_deploy_result.stdout|search('created')"
   tags:
     - install
-    - skip_ansible_lint
 
 - name: Get Armada pod name
   command: 'kubectl get pod -l app=armada -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
