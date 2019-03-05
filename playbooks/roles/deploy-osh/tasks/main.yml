@@ -20,7 +20,7 @@
     that:
       - ceph_admin_keyring_b64key is defined
       - ceph_user_keyring_b64key is defined
-      - socok8s_deploy_vip_with_cidr is defined
+      - socok8s_ext_vip is defined
   tags:
     - always
 
@@ -76,14 +76,14 @@
   blockinfile:
     path: /etc/hosts
     block: |
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} keystone keystone.openstack.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} glance glance.openstack.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} cinder cinder.openstack.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} nova nova.openstack.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} neutron neutron.openstack.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} neutron-server neutron-server.openstack.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} horizon horizon.openstack.svc.cluster.local
-      {{ socok8s_deploy_vip_with_cidr | ipaddr('address') }} heat heat.openstack.svc.cluster.local
+      {{ socok8s_ext_vip | ipaddr('address') }} keystone keystone.openstack.svc.cluster.local
+      {{ socok8s_ext_vip | ipaddr('address') }} glance glance.openstack.svc.cluster.local
+      {{ socok8s_ext_vip | ipaddr('address') }} cinder cinder.openstack.svc.cluster.local
+      {{ socok8s_ext_vip | ipaddr('address') }} nova nova.openstack.svc.cluster.local
+      {{ socok8s_ext_vip | ipaddr('address') }} neutron neutron.openstack.svc.cluster.local
+      {{ socok8s_ext_vip | ipaddr('address') }} neutron-server neutron-server.openstack.svc.cluster.local
+      {{ socok8s_ext_vip | ipaddr('address') }} horizon horizon.openstack.svc.cluster.local
+      {{ socok8s_ext_vip | ipaddr('address') }} heat heat.openstack.svc.cluster.local
 
 # Developers have patched code, and don't need fetching product sources
 - name: Fetch OSH code
