@@ -42,7 +42,7 @@
     when: ansible_date_time.epoch|float - _kubeconfigfromautomation.stat.mtime > 86400
     shell: ./velum-interactions -k -e /opt/ccp/environment.json
     args:
-      chdir: /opt/ccp/automation/velum-bootstrap
+      chdir: "{{ upstream_repos_clone_folder }}/ccp/velum-bootstrap"
       executable: /bin/bash
     tags:
       - skip_ansible_lint
