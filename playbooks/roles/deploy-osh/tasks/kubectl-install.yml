@@ -84,6 +84,9 @@
   command: kubectl cluster-info
   changed_when: false
   register: _kubectlclusterinfo
+  retries: 10
+  until: _kubectlclusterinfo is succeeded
+  delay: 5
 
 - name: Show kubectl cluster-info
   debug:
