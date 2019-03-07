@@ -1,0 +1,44 @@
+---
+
+- name: Install system packages for registry setup
+  become: yes
+  package:
+    name: "{{ suse_registry_setup_packages }}"
+    state: present
+  register: install_packages
+  until: install_packages is success
+  retries: 5
+  delay: 2
+  tags:
+    - install
+
+- name: Ensure docker is running on host
+  become: yes
+  service:
+    name: docker
+    state: started
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: Check if local docker registry server is running
+  become: yes
+  shell: |
+    set -o pipefail
+    docker ps | grep {{ local_registry_name }}
+  register: registry_running_cmd_status
+  failed_when: false
+  tags:
+    - run
+    - skip_ansible_lint
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: Start local docker registry if not running
+  become: yes
+  shell: |
+    docker run -d -p {{ local_registry_port }}:{{ local_registry_port }} --name {{ local_registry_name }} \
+      --restart always -v {{ suse_registry_certs_dir }}:{{ suse_registry_certs_dir }} \
+      -e REGISTRY_HTTP_TLS_CERTIFICATE={{ suse_registry_certs_dir }}/domain.crt \
+      -e REGISTRY_HTTP_TLS_KEY={{ suse_registry_certs_dir }}/domain.key registry:2
+  when:
+    - registry_running_cmd_status.rc != 0
+  tags:
+    - skip_ansible_lint

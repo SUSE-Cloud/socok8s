@@ -1,0 +1,191 @@
+---
+# tasks file for suse-airship-deploy
+
+#TODO JG move to a common role/task
+- name: Load standard variables
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
+- name: Create ses_cluster_configuration
+  set_fact:
+    ses_cluster_configuration: "{{ lookup('file', socok8s_ses_pools_details) | from_yaml }}"
+
+- name: Create a list of monitors (ip and port) if no override exists for it.
+  set_fact:
+    suse_airship_deploy_ceph_mons:  "[{% for ip in ses_cluster_configuration.ceph_conf.mon_host.split(',') %}'{{ ip }}:{{ ceph_mon_port | default(6789) }}'{% if not loop.last %},{% endif %}{% endfor %}]"
+  when: suse_airship_deploy_ceph_mons is not defined
+  tags:
+    - always
+    - run
+
+- name: Set site path
+  set_fact:
+    site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ socok8s_site_name }}"
+
+- name: Ensure site directory for {{ socok8s_site_name }} exists
+  become: yes
+  file:
+    path: "{{ site_path }}"
+    state: directory
+
+- name: Create site manifest directory
+  become: yes
+  file:
+    path: '{{ site_path }}/{{ item.path }}'
+    state: directory
+  with_filetree: '{{ role_path }}/templates/site/soc'
+  when: item.state == 'directory'
+  tags:
+    - install
+
+#TODO JG refactor overrides
+- name: Create site manifest yamls
+  become: yes
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ site_path }}/{{ item.path }}'
+  with_filetree: '{{ role_path }}/templates/site/soc'
+  when: item.state == 'file'
+  tags:
+    - install
+
+- name: Create pod scale profile
+  become: yes
+  copy:
+    src: '{{ role_path }}/files/profiles/pod-scale-{{ scale_profile }}.yaml'
+    dest:  '{{ site_path }}/profiles'
+    mode: 0644
+
+- name: Set pegleg parameters
+  set_fact:
+    treasuremap_dir: '{{ upstream_repos_clone_folder }}/airship-treasuremap'
+    pegleg_image: "{{ airship_pegleg_image }}"
+    pegleg: '../airship-pegleg/tools/pegleg.sh '
+    pegleg_output: 'peggles'
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: Pegleg lint the site manifests
+  command: '{{ pegleg }} site -r . lint "{{ socok8s_site_name }}" -x P001 -x P009'
+  args:
+    chdir: '{{ treasuremap_dir }}'
+  environment:
+    IMAGE: '{{ pegleg_image }}'
+    TERM_OPTS: ' '
+  tags:
+    - install
+    - skip_ansible_lint
+
+- name: Create Pegleg output directory
+  become: yes
+  file:
+    path: '{{ treasuremap_dir }}/{{ pegleg_output }}'
+    state: directory
+  tags:
+    - install
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: Collect site config
+  command: '{{ pegleg }} site -r . collect {{ socok8s_site_name }} -s {{ pegleg_output }}'
+  args:
+    chdir: '{{ treasuremap_dir }}'
+  environment:
+    IMAGE: '{{ pegleg_image }}'
+    TERM_OPTS: '-l info'
+  tags:
+    - skip_ansible_lint
+
+- name: Copy site to Shipyard
+  become: yes
+  copy:
+    src: '{{ treasuremap_dir }}/{{ pegleg_output }}'
+    dest: '{{ upstream_repos_clone_folder }}/airship-shipyard'
+  tags:
+    - install
+
+- name: Set up shipyard shell script
+  set_fact:
+    shipyard: './tools/shipyard.sh'
+  tags:
+    - install
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: Create config docs in Shipyard
+  command: '{{ shipyard }} create configdocs {{ socok8s_site_name }}-design --replace --directory=/target/{{ pegleg_output }}'
+  args:
+    chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
+  environment:
+    SHIPYARD_IMAGE: "{{ shipyard_image }}"
+  register: shipyard_create_config
+  failed_when: shipyard_create_config.stdout.find('Error') == 0
+  tags:
+    - install
+    - skip_ansible_lint
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: Commit config docs in Shipyard
+  command: '{{ shipyard }} commit configdocs'
+  args:
+    chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
+  environment:
+    SHIPYARD_IMAGE: "{{ shipyard_image }}"
+  register: shipyard_commit_config
+  failed_when: shipyard_commit_config.stdout.find('Error') == 0
+  tags:
+    - install
+    - skip_ansible_lint
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: Create update software action in Shipyard
+  command: '{{ shipyard }} create action update_software --allow-intermediate-commits'
+  args:
+    chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
+  environment:
+    SHIPYARD_IMAGE: "{{ shipyard_image }}"
+  register: shipyard_update_software
+  failed_when: shipyard_update_software.stdout.find('Error') == 0
+  tags:
+    - install
+    - skip_ansible_lint
+
+- name: Print Shipyard action information
+  debug:
+    msg: "{{ shipyard_update_software.stdout_lines }}"
+  tags:
+    - install
+
+- name: Get action key
+  set_fact:
+    shipyard_action_key: '{{ shipyard_update_software.stdout_lines[1].split()[1] }}'
+  tags:
+    - install
+
+- name: Write site records
+  template:
+    src: ./site-keys.yaml.j2
+    dest: '{{ socok8s_deploy_config_location }}/{{ socok8s_site_name }}-keys.yaml'
+  tags:
+    - install
+
+- name: Wait 10 minutes before checking the action status
+  pause:
+    minutes: 10
+  tags:
+    - install
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: Wait for update software action to complete... it can take up from 30-60 minutes
+  command: '{{ shipyard }} describe {{ shipyard_action_key }}'
+  args:
+    chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
+  environment:
+    SHIPYARD_IMAGE: "{{ shipyard_image }}"
+  register: shipyard_desc_action
+  until: shipyard_desc_action.stdout.find('Processing') < 0 and shipyard_desc_action.stdout.find('running') < 0
+  retries: 240
+  delay: 15
+  ignore_errors: yes
+  tags:
+    - skip_ansible_lint
+
+- name: Print Shipyard update software action status
+  debug:
+    msg: "{{ shipyard_desc_action.stdout_lines }}"

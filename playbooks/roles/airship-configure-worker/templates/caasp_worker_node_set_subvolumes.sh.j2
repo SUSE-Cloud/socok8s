@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+
+mounted_snapshot=$(mount | grep snapshot | gawk  'match($6, /ro.*@\/.snapshots\/(.*)\/snapshot/ , arr1 ) { print arr1[1] }')
+
+inited_create_subvolume=false
+
+init(){
+  if [ $inited_create_subvolume = false ]; then
+    systemctl stop kubelet
+    systemctl stop docker
+
+    if [ -n "$mounted_snapshot" ]; then
+      btrfs property set -ts /.snapshots/$mounted_snapshot/snapshot ro false
+    fi
+    mount -o remount, rw /
+    inited_create_subvolume=true
+  fi
+}
+
+create_subvolume(){
+  if [ ! -d "$1" ]; then
+    init 
+    mksubvolume "$1"
+  fi
+}
+
+restore_and_reboot() {
+  if [ $inited_create_subvolume = true ]; then
+    if [ -n "$mounted_snapshot" ]; then
+      btrfs property set -ts /.snapshots/$mounted_snapshot/snapshot ro true
+    fi
+    echo "reboot now"
+  fi
+}
+
+{% for subvol in caasp_node_subvolumes %}
+create_subvolume {{ subvol }}
+{% endfor %}
+
+restore_and_reboot

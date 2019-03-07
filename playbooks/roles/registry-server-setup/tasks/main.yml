@@ -1,0 +1,27 @@
+---
+
+- name: Include global vars
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
+- name: Create self-signed cert on deployer node
+  include: create-certs.yml
+  when:
+    - registry_server_hostgroup in group_names
+    - suse_setup_registry_server | bool
+  tags:
+    - install
+
+- name: Apply self-signed cert on deployer and caasp nodes
+  include: apply-certs.yml
+  when:
+    - suse_setup_registry_server | bool
+  tags:
+    - install
+
+- name: Local registry setup on deployer node
+  include: local-registry-setup.yml
+  when:
+    - registry_server_hostgroup in group_names
+    - suse_setup_registry_server | bool
+  tags:
+    - install

@@ -1,0 +1,51 @@
+---
+- name: Load standard variables
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
+- name: Create ses_cluster_configuration
+  set_fact:
+    ses_cluster_configuration: "{{ lookup('file', socok8s_ses_pools_details) | from_yaml }}"
+
+- name: Pre-flight checks for the role
+  assert:
+    that:
+      - ceph_admin_keyring_b64key is defined
+      - ceph_user_keyring_b64key is defined
+
+- name: Create a list of monitors (ip and port) if no override exists for it.
+  set_fact:
+    suse_airship_deploy_ceph_mons:  "[{% for ip in ses_cluster_configuration.ceph_conf.mon_host.split(',') %}'{{ ip }}:{{ ceph_mon_port | default(6789) }}'{% if not loop.last %},{% endif %}{% endfor %}]"
+  when: suse_airship_deploy_ceph_mons is not defined
+  tags:
+    - always
+    - run
+
+#TODO JG move to ceph provisioner chart
+- name: Create ceph secrets yaml
+  template:
+    src: "suse-define-ses-secrets-in-k8s.yml.j2"
+    dest: "/tmp/ceph-secrets.yaml"
+    mode: "0600"
+
+- name: Create ceph storage class yaml
+  template:
+    src: "suse-define-ses-storageclasses-in-k8s.yml.j2"
+    dest: "/tmp/ceph-storage-classes.yaml"
+    mode: "0600"
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: "Apply ceph {{ item }} yaml"
+  command: "kubectl apply -f /tmp/ceph-{{ item }}.yaml --overwrite=true"
+  with_items:
+    - secrets
+    - storage-classes
+  tags:
+    - skip_ansible_lint
+
+# TODO(aagate): Add a changed_when: to help idempotency
+# This is an arbitrary UUID value that's passed to the libvirt daemonset setup job for configuring a libvirt secret XML file
+- name: Create Libvirt ceph cinder secret uuid
+  command: uuidgen
+  register: libvirt_ceph_cinder_secret_uuid
+  tags:
+    - skip_ansible_lint

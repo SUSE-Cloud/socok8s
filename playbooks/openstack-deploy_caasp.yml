@@ -179,7 +179,7 @@
           lineinfile:
             path: "{{ socok8s_extravars }}"
             regexp: "^socok8s_ext_vip.*"
-            line: "socok8s_ext_vip: {{ _vipip.stdout }}/24"
+            line: "socok8s_ext_vip: {{ _vipip.stdout }}"
 
         - meta: refresh_inventory
 

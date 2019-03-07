@@ -1,13 +1,14 @@
 # These are the base64 encoded keyrings from Ceph.
-ceph_admin_keyring_b64key: QVFDZWoySmNBQUFBQUJBQWlhSTZJZEw2Nml4S1FINEVlOTBTbXc9PQ==
-ceph_user_keyring_b64key: QVFDZWoySmNBQUFBQUJBQWlhSTZJZEw2Nml4S1FINEVlOTBTbXc9PQ==
+ceph_admin_keyring_b64key: QVFBWkUxdGNBQUFBQUJBQVJMdnF0eFQxbU9DZG0rNXM2SlhJM3c9PQ==
+ceph_user_keyring_b64key: QVFBWkUxdGNBQUFBQUJBQVJMdnF0eFQxbU9DZG0rNXM2SlhJM3c9PQ==
+
 # This is a list of the Ceph MONs, should the ses_config.yml to override the
 # value provided by the ses_config.yml (in case of dual stack, floating IPs...)
 suse_osh_deploy_ceph_mons: ['192.168.50.10:6789']
 
-# This is the VIP that will be used for the openstack deployment on kubernetes
-# (ingress controller)
-socok8s_ext_vip: 192.168.50.46/24
+
+socok8s_ext_vip: 10.10.1.100
+socok8s_dcm_vip: 192.168.89.251
 #either "minimal" or "ha"
 scale_profile: ha
 redeploy_osh_only: false

@@ -1,0 +1,62 @@
+---
+
+- name: Subvolumes setup on Openstack controller and compute nodes
+  include: subvolumes-setup.yml
+  tags:
+    - preinstall
+
+- name: Enroll node for Airship UCP
+  shell: "kubectl label nodes {{ inventory_hostname }} ucp-control-plane=enabled"
+  when: ('airship-ucp-workers' in group_names)
+  register: _enrollforucp
+  changed_when:
+    - _enrollforucp.rc == 0
+  failed_when:
+    - _enrollforucp.rc != 0
+    - _enrollforucp.stderr.find("already has a value (enabled)") == -1
+  tags:
+    - skip_ansible_lint
+
+- name: Enroll node for Airship Openstack control plane
+  shell: |
+    kubectl label nodes {{ inventory_hostname }} openstack-control-plane=enabled
+    kubectl label nodes {{ inventory_hostname }} openvswitch=enabled
+  when: ('airship-openstack-control-workers' in group_names)
+  register: _enrollforopenstackcp
+  changed_when:
+    - _enrollforopenstackcp.rc == 0
+  failed_when:
+    - _enrollforopenstackcp.rc != 0
+    - _enrollforopenstackcp.stderr.find("already has a value (enabled)") == -1
+  tags:
+    - skip_ansible_lint
+
+- name: Enroll node for Airship Openstack compute plane
+  shell: |
+    kubectl label nodes {{ inventory_hostname }} openstack-compute-node=enabled
+    kubectl label nodes {{ inventory_hostname }} openvswitch=enabled
+  when: ('airship-openstack-compute-workers' in group_names)
+  register: _enrollforopenstackcomp
+  changed_when:
+    - _enrollforopenstackcomp.rc == 0
+  failed_when:
+    - _enrollforopenstackcomp.rc != 0
+    - _enrollforopenstackcomp.stderr.find("already has a value (enabled)") == -1
+  tags:
+    - skip_ansible_lint
+
+- name: Enroll node for Airship Openstack control plane primary class
+  shell: |
+    kubectl label nodes {{ inventory_hostname }} openstack-helm-node-class=primary
+  when:
+    - ('airship-openstack-control-workers' in group_names)
+    - hostvars[inventory_hostname].primary is defined
+    - hostvars[inventory_hostname].primary == 'yes'
+  register: _enrollforopenstackcp
+  changed_when:
+    - _enrollforopenstackcp.rc == 0
+  failed_when:
+    - _enrollforopenstackcp.rc != 0
+    - _enrollforopenstackcp.stderr.find("already has a value (primary)") == -1
+  tags:
+    - skip_ansible_lint

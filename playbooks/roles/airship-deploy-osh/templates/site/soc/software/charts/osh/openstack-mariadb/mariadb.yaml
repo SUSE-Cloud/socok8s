@@ -1,0 +1,30 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-mariadb-soc
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-mariadb-global
+      component: mariadb
+    actions:
+      - method: merge
+        path: .values.pod
+      - method: delete
+        path: .values.labels.prometheus_mysql_exporter
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.mariadb.server.min
+      dest:
+        path: .values.pod.replicas.server
+data:
+  values:
+    pod:
+      replicas:
+        server: 1
+...

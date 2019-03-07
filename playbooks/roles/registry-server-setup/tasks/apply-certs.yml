@@ -1,0 +1,28 @@
+---
+
+- name: Copy self-signed certs to expected location on nodes
+  copy:
+    src: "{{ suse_registry_certs_dir }}/domain.crt"
+    dest: "/etc/pki/trust/anchors"
+  become: yes
+  register: _copy_ssc_result
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: Update CA certificates on node
+  command: >
+    update-ca-certificates
+  become: yes
+  notify:
+    - restart docker
+  when:
+    - _copy_ssc_result.changed
+  tags:
+    - skip_ansible_lint
+
+- name: Ensure registry server host DNS resolution is set in /etc/hosts
+  become: yes
+  blockinfile:
+    path: /etc/hosts
+    marker: "# {mark} ANSIBLE MANAGED BLOCK for registry server"
+    block: |
+      {{ registry_server_host_ip }} {{ local_registry_name }}

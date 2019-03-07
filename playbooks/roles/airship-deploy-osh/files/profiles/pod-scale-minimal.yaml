@@ -1,0 +1,128 @@
+---
+# The HA pod sacle profile for Airship
+#
+schema: pegleg/PodScaleProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: pod-scale-profile
+  storagePolicy: cleartext
+  layeringDefinition:
+    abstract: false
+    layer: site
+  #    actions:
+  #      - method: merge
+  #        path: .
+data:
+  pods:
+    osh:
+      barbican:
+        api:
+          min: 1
+          max: 1
+      cinder:
+        api:
+          min: 1
+          max: 1
+        volume:
+          min: 1
+          max: 1
+        scheduler:
+          min: 1
+          max: 1
+        backup:
+          min: 1
+          max: 1
+      glance:
+        api:
+          min: 1
+          max: 1
+        registry:
+          min: 1
+          max: 1
+      heat:
+        api:
+          min: 1
+          max: 1
+        cfn:
+          min: 1
+          max: 1
+        cloudwatch:
+          min: 1
+          max: 1
+        engine:
+          min: 1
+          max: 1
+      horizon:
+        server:
+          min: 1
+          max: 1
+      ingress:
+        ingress:
+          min: 1
+          max: 1
+        error_page:
+          min: 1
+          max: 1
+      keystone:
+        api:
+          min: 1
+          max: 1
+      mariadb:
+        server:
+           min: 1
+           max: 1
+        ingress:
+           min: 1
+           max: 1
+        error_page:
+           min: 1
+           max: 1
+        prometheus_mysql_exporter:
+           min: 1
+           max: 1
+      memcached:
+        server:
+          min: 1
+          max: 1
+        prometheus_memcached_exporter:
+          min: 1
+          max: 1
+      neutron:
+        server:
+          min: 1
+          max: 1
+      nova:
+        api_metadata:
+          min: 1
+          max: 1
+        compute_ironic:
+          min: 1
+          max: 1
+        placement:
+          min: 1
+          max: 1
+        osapi:
+          min: 1
+          max: 1
+        conductor:
+          min: 1
+          max: 1
+        consoleauth:
+          min: 1
+          max: 1
+        scheduler:
+          min: 1
+          max: 1
+        novncproxy:
+          min: 1
+          max: 1
+        spiceproxy:
+          min: 1
+          max: 1
+      rabbitmq:
+        server:
+          min: 1
+          max: 1
+      prometheus_rabbitmq_exporter:
+          min: 1
+          max: 1

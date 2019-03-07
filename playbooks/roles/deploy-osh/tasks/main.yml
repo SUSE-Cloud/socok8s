@@ -76,14 +76,14 @@
   blockinfile:
     path: /etc/hosts
     block: |
-      {{ socok8s_ext_vip | ipaddr('address') }} keystone keystone.openstack.svc.cluster.local
-      {{ socok8s_ext_vip | ipaddr('address') }} glance glance.openstack.svc.cluster.local
-      {{ socok8s_ext_vip | ipaddr('address') }} cinder cinder.openstack.svc.cluster.local
-      {{ socok8s_ext_vip | ipaddr('address') }} nova nova.openstack.svc.cluster.local
-      {{ socok8s_ext_vip | ipaddr('address') }} neutron neutron.openstack.svc.cluster.local
-      {{ socok8s_ext_vip | ipaddr('address') }} neutron-server neutron-server.openstack.svc.cluster.local
-      {{ socok8s_ext_vip | ipaddr('address') }} horizon horizon.openstack.svc.cluster.local
-      {{ socok8s_ext_vip | ipaddr('address') }} heat heat.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} keystone keystone.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} glance glance.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} cinder cinder.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} nova nova.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} neutron neutron.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} neutron-server neutron-server.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} horizon horizon.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} heat heat.openstack.svc.cluster.local
 
 # Developers have patched code, and don't need fetching product sources
 - name: Fetch OSH code

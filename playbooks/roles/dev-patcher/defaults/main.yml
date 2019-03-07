@@ -14,3 +14,10 @@ dev_patcher_patches:
   - 639964
   # osh: Increase default logging
   - 639711
+  - 636229
+  - 636240
+  - 637327
+  - 638301
+  - 639495
+  - 639861
+  - 640115

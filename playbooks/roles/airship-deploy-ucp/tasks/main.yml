@@ -1,0 +1,209 @@
+---
+# tasks file for suse-airship-deploy
+- name: Load standard variables
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
+- name: Build Armada image
+  make:
+    chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
+    target: "{{ item.target }}"
+    params:
+      DISTRO: "{{ suse_distro_identifier }}"
+      DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
+      IMAGE_NAME: "{{ item.image_name }}"
+      PUSH_IMAGE: "true"
+  when:
+    - suse_airship_build_local_images
+  loop:
+    - { repo_name: "airship-armada", target: "images", image_name: "armada" }
+  tags:
+    - install
+
+- name: Build Shipyard images
+  make:
+    chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
+    target: "{{ item.target }}"
+    params:
+      DISTRO: "{{ suse_distro_identifier }}"
+      DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
+      IMAGE_NAME: "{{ item.image_name }}"
+      PUSH_IMAGE: "true"
+  when:
+    - suse_airship_build_local_images
+  loop:
+    - { repo_name: "airship-shipyard", target: "images", image_name: "airflow" }
+    - { repo_name: "airship-shipyard", target: "images", image_name: "shipyard" }
+  tags:
+    - install
+
+- name: Build Deckhand images
+  make:
+    chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
+    target: "{{ item.target }}"
+    params:
+      DISTRO: "{{ suse_distro_identifier }}"
+      DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
+      IMAGE_NAME: "{{ item.image_name }}"
+      PUSH_IMAGE: "true"
+  when:
+    - suse_airship_build_local_images
+  loop:
+    - { repo_name: "airship-deckhand", target: "images", image_name: "deckhand" }
+  tags:
+    - install
+
+- name: Build Pegleg image
+  make:
+    chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
+    target: "{{ item.target }}"
+    params:
+      DISTRO: "{{ suse_distro_identifier }}"
+      DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
+      IMAGE_NAME: "{{ item.image_name }}"
+      PUSH_IMAGE: "true"
+  when:
+    - suse_airship_build_local_images
+  loop:
+    - { repo_name: "airship-pegleg", target: "images", image_name: "pegleg" }
+  tags:
+    - install
+
+- name: Create Armada cluster role binding yaml
+  template:
+    src: ./armada-cluster-role-binding.yaml.j2
+    dest: "{{ socok8s_deploy_config_location }}/armada-cluster-role-binding.yaml"
+  tags:
+    - install
+
+- name: Apply Armada cluster role binding
+  command: "kubectl apply -f {{ socok8s_deploy_config_location }}/armada-cluster-role-binding.yaml"
+  register: armada_cluster_role_binding_result
+  changed_when: "armada_cluster_role_binding_result.stdout|search('created')"
+  tags:
+    - install
+
+# TODO JG add override for armada image
+- name: Create Armada deployment yaml
+  template:
+    src: ./armada.yaml.j2
+    dest: "{{ socok8s_deploy_config_location }}/armada.yaml"
+  tags:
+    - install
+
+- name: Deploy Armada pod to CaaSP
+  command: "kubectl apply -f {{ socok8s_deploy_config_location }}/armada.yaml"
+  register: armada_pod_deploy_result
+  changed_when: "armada_pod_deploy_result.stdout|search('created')"
+  tags:
+    - install
+
+- name: Get Armada pod name
+  command: 'kubectl get pod -l app=armada -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
+  register: armada_results
+  until: armada_results.stdout.find('armada-') == 0
+  retries: 60
+  delay: 10
+  ignore_errors: yes
+  tags:
+    - skip_ansible_lint
+
+- name: Set Armada pod name
+  set_fact: armada_pod_name={{ armada_results.stdout }}
+
+- debug:
+    msg: "Armada pod found: {{ armada_pod_name }}"
+
+    #checking ready appears to be sufficient JG
+    #- name: Wait until Armada pod is running
+    #  shell: "kubectl get pod {{ armada_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.phase}'"
+    #  register: armada_pod_status
+    #  until: armada_pod_status.stdout_lines == "Running"
+    #  retries: 60
+    #  delay: 15
+    #  ignore_errors: yes
+
+- name: Wait until Armada pod is ready
+  shell: "kubectl get pod {{ armada_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
+  register: armada_pod_status
+  until: armada_pod_status.stdout == "true"
+  retries: 30
+  delay: 10
+  ignore_errors: yes
+  tags:
+    - skip_ansible_lint
+
+- name: Create manifests directory
+  file:
+    path: "{{ socok8s_deploy_config_location }}/manifests"
+    state: directory
+  tags:
+    - install
+
+- name: Create airship ucp manifest
+  template:
+    src: ./airship.yaml.j2
+    dest: "{{ socok8s_deploy_config_location }}/manifests/airship.yaml"
+  tags:
+    - install
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: Copy Airship UCP content to Armada pod
+  command: "{{ item }}"
+  loop:
+    - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada
+    - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/.kube
+    - kubectl cp ~/.kube/config {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/.kube/config
+    - kubectl cp  {{ socok8s_deploy_config_location }}/manifests {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada
+    - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/airship-components
+    - kubectl cp {{ upstream_repos_clone_folder }}/airship-armada {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/airship-deckhand {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/airship-pegleg {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/airship-shipyard {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm-infra {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+  tags:
+    - install
+    - skip_ansible_lint
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: Deploy Airship UCP ... quick coffee break, maybe?
+  command: 'kubectl exec {{ armada_pod_name }} -n ucp -- armada apply /armada/manifests/airship.yaml'
+  tags:
+    - install
+    - skip_ansible_lint
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: Wait until Armada api pod is deployed
+  command: 'kubectl get pod -l application=armada,component=api -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
+  register: armada_results
+  until: armada_results.stdout.find('armada-api-') == 0
+  retries: 180
+  delay: 10
+  ignore_errors: yes
+  tags:
+    - skip_ansible_lint
+
+- name: Set armada api pod name
+  set_fact: armada_api_pod_name={{ armada_results.stdout }}
+
+- debug:
+    msg: "armada-api pod found: {{ armada_api_pod_name }}"
+
+# TODO(aagate): Add a changed_when: to help idempotency
+- name: Wait until Airship api becomes ready
+  command: "kubectl get pod {{ armada_api_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
+  register: armada_api_pod_status
+  until: armada_api_pod_status.stdout == "true"
+  retries: 60
+  delay: 10
+  ignore_errors: yes
+  tags:
+    - skip_ansible_lint

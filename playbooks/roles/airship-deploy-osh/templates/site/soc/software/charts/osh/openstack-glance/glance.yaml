@@ -1,0 +1,55 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: glance-soc
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: glance-global
+      component: glance
+    actions:
+      - method: merge
+        path: .
+      - method: replace
+        path: .values.pod
+      - method: delete
+        path: .values.ceph_client
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.glance.api.min
+      dest:
+        path: .values.pod.replicas.api
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.glance.registry.min
+      dest:
+        path: .values.pod.replicas.registry
+data:
+  wait:
+    timeout: 3000
+  test:
+    enabled: true
+  values:
+    bootstrap:
+      enabled: false
+    pod:
+      replicas:
+        api: 1
+        registry: 1
+    storage: rbd
+    conf:
+      ceph:
+        enabled: true
+        monitors: {{ ','.join(suse_airship_deploy_ceph_mons) }}
+        admin_keyring: {{ ceph_admin_keyring_b64key | b64decode }}
+      glance:
+        glance_store:
+          rbd_store_user: {{ ses_cluster_configuration.glance.rbd_store_user }}
+          rbd_store_pool: {{ ses_cluster_configuration.glance.rbd_store_pool }}
+...

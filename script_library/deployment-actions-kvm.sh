@@ -9,7 +9,9 @@ set -o errexit
 echo "Deploying on KVM"
 
 function deploy_ses(){
-    echo "This is not supported yet. Please create a node manually and run ses-ansible on it."
+    echo "This just runs ses configuration logic. Please create a SES node manually first."
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_ses_aio.yml
+    echo "ses-ansible deploy is successful"
 }
 function deploy_caasp(){
     echo "This is not supported yet. Check at kubic-automation tooling."
@@ -38,10 +40,26 @@ function deploy_osh(){
     echo "Now deploy SUSE version of OSH"
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_osh.yml
 }
+function deploy_airship(){
+    echo "Now deploy SUSE version of Airship"
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_airship.yml
+}
 function clean_k8s(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
         run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_k8s.yml
+    fi
+}
+function clean_airship(){
+    clean_action=''
+    action_desc='everything'
+    if [[ "${1:-default}" != 'default' ]]; then
+        clean_action=" -e clean_action=$1"
+        action_desc=$1
+    fi
+    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete airship artifacts ( ${action_desc} ) in your userspace."
+    if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
+        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_airship.yml ${clean_action}
     fi
 }
 function clean_kvm(){
@@ -51,7 +69,7 @@ function clean_userfiles(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
         echo "DELETE_ANYWAY is set, deleting user files"
-        rm -rf ~/suse-osh-deploy/
+        rm -rf ~/suse-socok8s-deploy/
     fi
 }
 function teardown(){
