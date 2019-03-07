@@ -21,7 +21,6 @@
       - ceph_admin_keyring_b64key is defined
       - ceph_user_keyring_b64key is defined
       - socok8s_ext_vip is defined
-      - socok8s_dcm_vip is defined
   tags:
     - always
 
