@@ -8,12 +8,7 @@ dev_patcher_packages:
 #unrelated patches will fail (because not cloned)
 #conflicting patches will fail (because need resolving)
 dev_patcher_patches:
-  # loci: Support self-signed certificates docker registry
-  - 637963
-  # osh: Adapt Makefile for releasenotes
-  - 639964
-  # osh: Increase default logging
-  - 639711
+  # airship patches
   - 636229
   - 636240
   - 637327
@@ -21,3 +16,23 @@ dev_patcher_patches:
   - 639495
   - 639861
   - 640115
+  # loci: Support self-signed certificates docker registry
+  - 637963
+  # loci: Fix mismatched mod_wsgi for python3
+  - 641741
+  # loci: For OpenSUSE Leap, use more recent version of zVMCloudConnector
+  - 641647
+  # osh: Remove remaining test pods before new test run
+  - 634936
+  # osh: Updating keystone-api to work with opensuse based image
+  - 633847
+  # osh-infra: make db-{drop,init) py3 compatible
+  - 641643
+  # osh: Fix py3 issue on fernet-manage and update-endpoint
+  - 641680
+  # osh: make horizon work on suse based images
+  - 641033
+  # osh: make nova-placement work on suse based images
+  - 641800
+  # make ceilometer-api work on suse based images
+  - 641802
