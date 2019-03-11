@@ -48,5 +48,5 @@ data:
           rbd_ceph_conf: "/etc/ceph/ceph.conf"
           rbd_user: {{ ses_cluster_configuration['cinder']['rbd_store_user'] }}
           rbd_pool: {{ ses_cluster_configuration['cinder']['rbd_store_pool'] }}
-          rbd_secret_uuid: 76f12f7a-16a6-11e9-864e-52540033f343
+          rbd_secret_uuid: {{ libvirt_ceph_cinder_secret_uuid }}
 ...
