@@ -1,0 +1,52 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: cinder-soc
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: cinder-global
+      component: cinder
+    actions:
+      - method: merge
+        path: .
+      - method: replace
+        path: .values.pod
+      - method: delete
+        path: .values.ceph_client
+  storagePolicy: cleartext
+data:
+  wait:
+    timeout: 3000
+  test:
+    enabled: true
+  values:
+    bootstrap:
+      enabled: false
+    pod:
+      replicas:
+        api: 1
+        registry: 1
+    storage: rbd
+    conf:
+      ceph:
+        enabled: true
+        monitors: {{ ','.join(suse_airship_deploy_ceph_mons) }}
+        admin_keyring: {{ ceph_admin_keyring_b64key | b64decode }}
+      cinder:
+        DEFAULT:
+          debug: true
+          backup_driver: cinder.backup.drivers.ceph
+          backup_ceph_user: {{ ses_cluster_configuration['cinder-backup']['rbd_store_user'] }}
+          backup_ceph_pool: {{ ses_cluster_configuration['cinder-backup']['rbd_store_pool'] }}
+      backends:
+        rbd1:
+          volume_driver: cinder.volume.drivers.rbd.RBDDriver
+          volume_backend_name: rbd1
+          rbd_ceph_conf: "/etc/ceph/ceph.conf"
+          rbd_user: {{ ses_cluster_configuration['cinder']['rbd_store_user'] }}
+          rbd_pool: {{ ses_cluster_configuration['cinder']['rbd_store_pool'] }}
+          rbd_secret_uuid: {{ libvirt_ceph_cinder_secret_uuid }}
+...
