@@ -16,12 +16,8 @@ dev_patcher_patches:
   - 639495
   - 639861
   - 640115
-  # loci: Support self-signed certificates docker registry
-  - 637963
-  # loci: Fix mismatched mod_wsgi for python3
-  - 641741
-  # loci: For OpenSUSE Leap, use more recent version of zVMCloudConnector
-  - 641647
+  # loci: use python-ldap instead of pyldap
+  - 640711
   # osh: Remove remaining test pods before new test run
   - 634936
   # osh: Updating keystone-api to work with opensuse based image
@@ -32,7 +28,9 @@ dev_patcher_patches:
   - 641680
   # osh: make horizon work on suse based images
   - 641033
-  # osh: make nova-placement work on suse based images
-  - 641800
-  # make ceilometer-api work on suse based images
+  # osh: make ceilometer-api work on suse based images
   - 641802
+  # osh: Allow more generic overrides for nova placement-api
+  - 642067
+  # osh: Fix indent filter not properly adding a newline after toYaml
+  - 642844
