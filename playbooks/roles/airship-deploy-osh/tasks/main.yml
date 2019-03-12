@@ -17,6 +17,18 @@
     - always
     - run
 
+# This is an arbitrary UUID value that's passed to the libvirt daemonset setup job for configuring a libvirt secret XML file
+- name: Create Libvirt ceph cinder secret uuid
+  shell: "uuidgen > {{ socok8s_libvirtuuid }}"
+  args:
+    creates: "{{ socok8s_libvirtuuid }}"
+  delegate_to: localhost
+
+- name: Get libvirt secret
+  set_fact:
+    libvirt_ceph_cinder_secret_uuid: "{{ lookup('file', socok8s_libvirtuuid) }}"
+  run_once: True
+
 - name: Set site path
   set_fact:
     site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ socok8s_site_name }}"

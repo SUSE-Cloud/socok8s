@@ -28,5 +28,5 @@ data:
         cinder:
           user: {{ ses_cluster_configuration.cinder.rbd_store_user }}
           keyring: {{ ses_cluster_configuration.cinder.key }}
-          secret_uuid: 76f12f7a-16a6-11e9-864e-52540033f343
+          secret_uuid: {{ libvirt_ceph_cinder_secret_uuid }}
 ...
