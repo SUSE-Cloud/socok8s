@@ -8,7 +8,7 @@ ceph_conf:
   public_network: 192.168.111.0/24
 cinder:
   key: AQCDH9tbV49jDxAAk+d2wdxsXRcSFzjf0DHWyw==
-  rbd_store_pool: cinder
+  rbd_store_pool: volumes
   rbd_store_user: cinder
 cinder-backup:
   key: AQCSH9tbx9YzNBAA65C+mwyNdmqaRwokMcHAlQ==
@@ -16,12 +16,8 @@ cinder-backup:
   rbd_store_user: cinder-backup
 glance:
   key: AQCuH9tbCNUuLBAAImRsG9tgH2ArPPlu4pt0EQ==
-  rbd_store_pool: glance
+  rbd_store_pool: images
   rbd_store_user: glance
-libvirt:
-  key: AQCDH9tbV49jDxAAk+d2wdxsXRcSFzjf0DHWyw==
-  rbd_store_pool: vms
-  rbd_store_user: cinder
 nova:
   rbd_store_pool: nova
 radosgw_urls: []

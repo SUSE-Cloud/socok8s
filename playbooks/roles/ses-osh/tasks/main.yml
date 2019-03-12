@@ -9,7 +9,31 @@
     content: "{{ item.content | b64decode }}"
     mode: 0644
   with_items:
-    - "{{ hostvars['ses'].ceph_files.results }}"
+    - "{{ hostvars['ses-aio'].ceph_files.results }}"
+
+- name: Fetch client cinder key for ses-config.yml
+  delegate_to: localhost
+  slurp:
+    src: "{{ socok8s_workspace }}/ceph.client.cinder.keyring"
+  register: client_cinder_file
+
+- name: Fetch client cinder backup key for ses-config.yml
+  delegate_to: localhost
+  slurp:
+    src: "{{ socok8s_workspace }}/ceph.client.cinder_backup.keyring"
+  register: client_cinder_backup_file
+
+- name: Fetch client glance key for ses-config.yml
+  delegate_to: localhost
+  slurp:
+    src: "{{ socok8s_workspace }}/ceph.client.glance.keyring"
+  register: client_glance_file
+
+- name: Set client key facts for ses-config.yml
+  set_fact:
+    client_cinder_file_key: "{{ client_cinder_file['content'] | b64decode | regex_findall('\\bkey\\b\\s*=\\s*(.*)') | first }}"
+    client_cinder_backup_file_key: "{{ client_cinder_backup_file['content'] | b64decode | regex_findall('\\bkey\\b\\s*=\\s*(.*)') | first }}"
+    client_glance_file_key: "{{ client_glance_file['content'] | b64decode | regex_findall('\\bkey\\b\\s*=\\s*(.*)') | first }}"
 
 - name: Generate ses-config.yml
   delegate_to: localhost
