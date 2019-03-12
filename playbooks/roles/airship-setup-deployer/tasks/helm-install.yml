@@ -16,20 +16,44 @@
     helm_state: 'to_install'
   when:  _helmcheck.stdout == '0'
 
-- name: Helm has to be updated
+- name: Check if client latest version needs to be installed forcefully
+  shell: |
+    set -o pipefail
+    helm version --client | awk '$2 ~/{{ helm_client_min_version }}/ {print $2}' | wc -l
+  register: _helm_client_min_check
+  when:
+  - _helmcheck.stdout == '1'
+  - (helm_client_min_version | default('', True) != '')
+
+- name: Check if Helm client and server version matches
   set_fact:
     helm_state: 'ready'
-  when:  _helmcheck.stdout == '1'
+  when:
+    - _helmcheck.stdout == '1'
 
-- name: Helm has to be updated
+- name: Helm has to be updated (different client and server version)
   set_fact:
     helm_state: 'to_update'
   when:  _helmcheck.stdout == '2'
+
+- name: Helm has to be updated for forced client version
+  set_fact:
+    helm_state: 'to_update'
+  when:
+  - _helm_client_min_check is defined
+  - _helm_client_min_check.stdout == '0'
 
 - name: Fail if state is unknown
   fail:
     msg: "Unknown helm state"
   when: _helmcheck.stdout not in ['0','1','2']
+
+- name: Stop running helm serve service for update case
+  systemd:
+    state: stopped
+    name: helm-serve
+    enabled: yes
+  when: helm_state == 'to_update'
 
 # TODO(evrardjp): Move this to get_url or to a package install (to be decided)
 # error of linting: not using get_url.

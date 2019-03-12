@@ -4,6 +4,13 @@
 # Location of the kubeconfig file, fetched from velum UI.
 kubeconfig_file_path: "{{ socok8s_deploy_config_location }}/kubeconfig"
 
+# Sets latest helm client version to be installed in case when helm client and
+# server version are exact match. Provided version is checked to see if its
+# already installed or not? In case of different versions, already latest client
+# version is installed.
+# Set to empty string "" when don't need to have client version.
+helm_client_min_version: "v2.13.0"
+
 suse_airship_deploy_packages:
   - ca-certificates
   - make
