@@ -72,6 +72,11 @@ data:
       tags:
         ingress_module_init: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
         ingress_routed_vip: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
+    network:
+      ingress:
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
+          nginx.ingress.kubernetes.io/proxy-send-timeout: '600'
   source:
     type: local
     location: /armada/airship-components/openstack-helm-infra
@@ -285,17 +290,9 @@ data:
     network:
       api:
         ingress:
-          public: true
-          classes:
-            namespace: "nginx"
-            cluster: "nginx-cluster"
           annotations:
-            nginx.ingress.kubernetes.io/rewrite-target: /
             nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
             nginx.ingress.kubernetes.io/proxy-send-timeout: '600'
-            nginx.ingress.kubernetes.io/proxy-body-size: '10m'
-            nginx.ingress.kubernetes.io/configuration-snippet: |
-              more_clear_headers "Server";
     images:
       tags:
         deckhand: '{{ suse_airship_registry_location }}/airshipit/deckhand:{{ suse_airship_components_image_tag }}'
@@ -323,17 +320,9 @@ data:
     network:
       shipyard:
         ingress:
-          public: true
-          classes:
-            namespace: "nginx"
-            cluster: "nginx-cluster"
           annotations:
-            nginx.ingress.kubernetes.io/rewrite-target: /
             nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
             nginx.ingress.kubernetes.io/proxy-send-timeout: '600'
-            nginx.ingress.kubernetes.io/proxy-body-size: '10m'
-            nginx.ingress.kubernetes.io/configuration-snippet: |
-              more_clear_headers "Server";
     images:
       tags:
         shipyard:         '{{ suse_airship_registry_location }}/airshipit/shipyard:{{ suse_airship_components_image_tag }}'
