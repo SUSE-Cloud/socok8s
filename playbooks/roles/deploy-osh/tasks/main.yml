@@ -341,6 +341,17 @@
     - libvirt
     - run
 
+# we need to deploy the extra values for neutron so on the next task they are picked up
+- name: Deploy neutron overrides
+  import_tasks: component-install.yml
+  vars:
+    _cmpnt_template: neutron.yaml
+    _cmpnt_overrides: "{{ suse_osh_deploy_neutron_yaml_overrides }}"
+    _cmpnt_runcommand: "/bin/true" # we only want to create the template, not run anything
+  tags:
+    - neutron
+    - run
+
 # TODO(evrardjp): Check if need to have our own dummy overrides
 # In that case, try to split the shell script upstream in two scripts.
 # Compute kit deploys nova and neutron but only nova needs overrides
@@ -352,6 +363,7 @@
     _cmpnt_runcommand: "./tools/deployment/multinode/140-compute-kit.sh"
   environment:
     OSH_EXTRA_HELM_ARGS_NOVA: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NOVA') | default('', True) }} --values /tmp/socok8s-nova.yaml"
+    OSH_EXTRA_HELM_ARGS_NEUTRON: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NEUTRON') | default('', True) }} --values /tmp/socok8s-neutron.yaml"
   tags:
     - nova
     - neutron
