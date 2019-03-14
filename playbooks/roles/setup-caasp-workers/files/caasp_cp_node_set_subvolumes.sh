@@ -28,6 +28,7 @@ create_subvolume(){
 create_subvolume /var/lib/nova
 create_subvolume /var/lib/neutron
 create_subvolume /var/lib/libvirt
+create_subvolume /var/lib/openstack-helm
 
 if [ -n "$mounted_snapshot" ]; then
   btrfs property set -ts /.snapshots/$mounted_snapshot/snapshot ro true
