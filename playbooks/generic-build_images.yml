@@ -1,5 +1,5 @@
 ---
-- hosts: osh-deployer[0]
+- hosts: soc-deployer[0]
   gather_facts: yes
   any_errors_fatal: true
   pre_tasks:
@@ -16,8 +16,8 @@
         - imagebuilder
         - upstream_patching
 
-    # The certificate generated before also needs to be known by the osh-deployer
-    - name: If developer mode, configure osh-deployer to include certs
+    # The certificate generated before also needs to be known by the soc-deployer
+    - name: If developer mode, configure soc-deployer to include certs
       include_role:
         name: setup-caasp-workers
         tasks_from: copy-certificates

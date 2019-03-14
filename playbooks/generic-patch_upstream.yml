@@ -1,5 +1,5 @@
 ---
-- hosts: osh-deployer
+- hosts: soc-deployer
   gather_facts: yes
   any_errors_fatal: true
   pre_tasks:

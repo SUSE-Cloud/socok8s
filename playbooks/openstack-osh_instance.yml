@@ -50,12 +50,12 @@
             src: "{{ socok8s_workspace }}/inventory/skeleton-inventory.yml"
             dest: "{{ socok8s_workspace }}/inventory/osh.yml"
             config_type: yaml
-            config_overrides: "{{ osh_aio_overrides }}"
+            config_overrides: "{{ soc_aio_overrides }}"
           vars:
-            osh_aio_overrides:
-              osh-deployer:
+            soc_aio_overrides:
+              soc-deployer:
                 hosts:
-                  osh-aio:
+                  soc-aio:
                     ansible_host: "{{ osh_floating_ip }}"
 
         - meta: refresh_inventory
@@ -107,9 +107,10 @@
           known_hosts:
             state: absent
             name: "{{ hostvars[item]['ansible_host'] }}"
-          loop: "{{ groups['osh-deployer'] }}"
+          loop: "{{ groups['soc-deployer'] }}"
 
         - name: Delete osh inventory
           file:
             state: absent
             path: "{{ socok8s_workspace }}/inventory/osh.yml"
+

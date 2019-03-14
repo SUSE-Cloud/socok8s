@@ -1,0 +1,76 @@
+---
+caasp-admin:
+  hosts:
+    ccpci-27-admin-ekulfxaq55em:
+      ansible_host: 10.86.3.236
+  vars:
+    ansible_user: root
+caasp-masters:
+  hosts:
+    ccpci-27-master-0:
+      ansible_host: 10.86.3.87
+  vars:
+    ansible_user: root
+caasp-workers:
+  hosts:
+    ccpci-27-worker-0:
+      ansible_host: 10.86.3.206
+    ccpci-27-worker-1:
+      ansible_host: 10.86.3.187
+    ccpci-27-worker-2:
+      ansible_host: 10.86.3.220
+  vars:
+    ansible_user: root
+soc-deployer:
+  hosts:
+    soc-aio:
+      ansible_host: 10.86.3.69
+  vars:
+    ansible_user: root
+ses_nodes:
+  hosts:
+    ses-aio:
+      ansible_host: 10.86.3.154
+  vars:
+    ansible_user: root
+
+# added for airship
+
+airship-openstack-control-workers:
+  hosts:
+    ccpci-27-worker-0:
+      ansible_host: 10.86.3.206
+      primary: yes
+    ccpci-27-worker-1:
+      ansible_host: 10.86.3.187
+  vars:
+    ansible_user: root
+
+airship-ucp-workers:
+  hosts:
+    ccpci-27-worker-0:
+      ansible_host: 10.86.3.206
+      primary: yes
+    ccpci-27-worker-1:
+      ansible_host: 10.86.3.187
+  vars:
+    ansible_user: root
+
+airship-kube-system-workers:
+  hosts:
+    ccpci-27-worker-0:
+      ansible_host: 10.86.3.206
+      primary: yes
+    ccpci-27-worker-1:
+      ansible_host: 10.86.3.187
+  vars:
+    ansible_user: root
+
+airship-openstack-compute-workers:
+  hosts:
+    ccpci-27-worker-2:
+      ansible_host: 10.86.3.220
+      primary: yes
+  vars:
+    ansible_user: root
+

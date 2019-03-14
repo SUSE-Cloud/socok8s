@@ -1,5 +1,5 @@
 ---
-- name: Add OSH deployer in etc hosts for dns resolution
+- name: Add soc deployer in etc hosts for dns resolution
   include_tasks: osh-deployer-in-hosts.yml
 
 - name: Include common vars to know developer_mode value
