@@ -19,3 +19,11 @@ redeploy_osh_only: false
 #suse_osh_registry_location: "docker.io"
 #suse_osh_image_version: "pike"
 
+# List of extra patches for the dev-patcher
+# instead of waiting for patch numbers to be added on the main repo
+# you can add patches in your extravars to be applied and they will be
+# added to the list of existing patches to apply
+# merged patches will be skipped
+# unrelated patches will fail (because not cloned)
+# conflicting patches will fail (because need resolving)
+dev_patcher_user_patches: []
