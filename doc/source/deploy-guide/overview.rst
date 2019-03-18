@@ -8,15 +8,15 @@ This guide refers to the following type of hosts:
 * A `deployer`, which is your point of access to your kubernetes
   cluster. The `deployer` can be the same as the `localhost`, but it
   is not a requirement.
-* A series of `CaaSP` nodes: `workers`, `admin`, `master`.
-* A series of `SES` nodes.
+* A series of :term:`CaaSP` nodes: `workers`, `admin`, `master`.
+* A series of :term:`SES` nodes.
 
 The following diagram shows the general workflow of a deployment from scratch:
 
 .. blockdiag::
 
    blockdiag {
-
+     default_fontsize = 11;
      localhost [label="Prepare localhost"]
      ses [label="Deploy SES\n(optional)"]
      caasp [label="Deploy CaaSP\n(optional)"]
@@ -65,10 +65,10 @@ Your environment should be setup with the following:
   :ref:`targethosts`. If you are not coming with your own node for
   `deployer`, this tooling can create one for you (currently only on OpenStack).
 
-* The CaaSP cluster must run CaaSP version 3. If you are not coming with your
-  own CaaSP cluster, this tooling can create one for you (currently only on
-  OpenStack).
+* The :term:`CaaSP` cluster must run :term:`CaaSP` version 3. If you are not
+  coming with your own :term:`CaaSP` cluster, this tooling can create one for
+  you (currently only on OpenStack).
 
-* The SES cluster must run SES 5. If you are not coming with your own SES
-  cluster, this tooling can create an "All-in-one" node for SES for you
-  (currently only on OpenStack).
+* The :term:`SES` cluster must run :term:`SES` 5. If you are not coming with
+  your own :term:`SES` cluster, this tooling can create an "All-in-one" node
+  for :term:`SES` for you (currently only on OpenStack).

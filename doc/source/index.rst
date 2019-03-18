@@ -15,3 +15,4 @@ Please check on the left sidebar for content.
    user/index.rst
    operations.rst
    reference.rst
+   glossary.rst
