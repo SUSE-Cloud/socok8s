@@ -60,7 +60,7 @@
         # Do not reuse to prevent ssh issues or race conditions when running
         # multiple of those jobs at the same time.
         - name: Get a floating ip for the workers
-          loop: "{{ _workernodeswithnofloating.stdout | from_json }}"
+          loop: "{{ _workernodeswithnofloating.stdout | default('[]') | from_json }}"
           os_floating_ip:
             cloud: "{{ deploy_on_openstack_cloudname }}"
             server: "{{ item.ID }}"
