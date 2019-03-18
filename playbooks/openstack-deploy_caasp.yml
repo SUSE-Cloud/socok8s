@@ -16,4 +16,3 @@
 
 ---
 - import_playbook: openstack-caasp_instance.yml
-- import_playbook: openstack-caasp_hostconfig.yml
