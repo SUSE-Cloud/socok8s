@@ -234,7 +234,7 @@ env variables
 tooling. Currently set to ``openstack`` by default, but will later
 include a ``baremetal`` and ``kvm``.
 
-``OSH_DEVELOPER_MODE`` determines if you want to enter developer mode or
+``SOCOK8S_DEVELOPER_MODE`` determines if you want to enter developer mode or
 not. This adds a step for patching upstream code, builds images and then
 continues the deployment.
 
@@ -412,7 +412,7 @@ On the deployer:
 -  Configure the following environment variables:
 
    * export ANSIBLE_RUNNER_DIR=/opt/socok8s
-   * export OSH_DEVELOPER_MODE=True #enables dev patcher and local image build
+   * export SOCOK8S_DEVELOPER_MODE=True #enables dev patcher and local image build
    * export DEPLOYMENT_MECHANISM=kvm
    * export DELETE_ANYWAY=YES
 
