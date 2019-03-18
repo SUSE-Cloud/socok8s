@@ -101,14 +101,15 @@ future, on bare metal.
 This behaviour can be changed by setting the environment variable
 `DEPLOYMENT_MECHANISM`.
 
-For example, if you want to bring your own CaaSP/SES cluster, run:
+For example, if you want to bring your own :term:`CaaSP`/:term:`SES` cluster,
+run:
 
 .. code-block:: console
 
    export DEPLOYMENT_MECHANISM='KVM'
 
-Alternatively, if you want to deploy CaaSP, SES, OpenStack-Helm, and/or Airship
-on top of an OpenStack environment (for CI for example), run:
+Alternatively, if you want to deploy :term:`CaaSP`, :term:`SES`, OpenStack-Helm,
+and/or Airship on top of an OpenStack environment (for CI for example), run:
 
 .. code-block:: console
 
@@ -122,7 +123,8 @@ Configure OpenStack deployment mechanism
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the case you are not bringing your own environment, this socok8s tooling can
-deploy CaaSP, SES, and/or a deployer on its own with the help of OpenStack.
+deploy :term:`CaaSP`, :term:`SES`, and/or a deployer on its own with the help of
+OpenStack.
 
 Make sure your environment have an openstack client configuration file.
 For that, you can create the ``~/.config/openstack/clouds.yaml``.

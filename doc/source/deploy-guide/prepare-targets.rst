@@ -47,13 +47,13 @@ Prepare the target hosts
    to work with the `openstack` deployment mechanism. Check if you have set
    them appropriately. See also :ref:`configureopenstackdeploymentmechanism`.
 
-This step can be skipped if you are bringing your own SES/CaaSP/deployer
-environment.
+This step can be skipped if you are bringing your own
+:term:`SES` / :term:`CaaSP` / deployer environment.
 
 .. note::
 
    If you bring your own deployer host, you will need to make sure the
-   CaaSP tooling can be installed on it. Please search for the
+   :term:`CaaSP` tooling can be installed on it. Please search for the
    variable `velum_automation_host_packages` in the code to find the
    latest requirements.
 
@@ -69,7 +69,7 @@ Create your SES node on OpenStack, and configure SES-AIO on it:
 
    ./run.sh deploy_ses
 
-Create the CaaSP cluster nodes in the cloud:
+Create the :term:`CaaSP` cluster nodes in the cloud:
 
 .. code-block:: console
 
@@ -81,7 +81,7 @@ Create the deployer node:
 
    ./run.sh deploy_ccp_deployer
 
-Enroll all the CaaSP nodes into their roles (master, admin, and workers):
+Enroll all the :term:`CaaSP` nodes into their roles (master, admin, and workers):
 
 .. code-block:: console
 

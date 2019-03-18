@@ -92,7 +92,7 @@ See also
 Make the SES pools known by Ansible
 -----------------------------------
 
-Currently, we rely on two things to know the SES pools created for the
+Currently, we rely on two things to know the :term:`SES` pools created for the
 Airship/OpenStack deployment:
 
 * a `ses_config.yml` file present in the workspace
