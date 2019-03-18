@@ -1,0 +1,29 @@
+---
+schema: armada/Manifest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: full-site
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: full-site-global
+    actions:
+      - method: replace
+        path: .chart_groups
+  storagePolicy: cleartext
+data:
+  release_prefix: airship
+  chart_groups:
+    - openstack-ingress-controller-soc
+    - openstack-mariadb-soc
+    - openstack-memcached-soc
+    - openstack-keystone-soc
+    - openstack-ceph-config-soc
+    - openstack-glance-soc
+    - openstack-cinder-soc
+    - openstack-compute-kit-soc
+    - openstack-heat-soc
+    - openstack-horizon-soc
+...

@@ -8,6 +8,7 @@ socok8s_registry_cert: "{{ socok8s_workspace }}/certs/domain.crt"
 socok8s_registry_certkey: "{{ socok8s_workspace }}/certs/domain.key"
 socok8s_caasp_environment_details: "{{ socok8s_workspace }}/environment.json"
 socok8s_libvirtuuid: "{{ socok8s_workspace }}/libvirt.uuid"
+suse_osh_registry_location: "docker.io"
 
 ######################################################
 # Following variables are used by airship logic only
@@ -47,3 +48,11 @@ suse_airship_components_image_tag: "{%- if suse_airship_build_local_images or su
                                     {%- else -%}
                                       latest
                                     {%- endif -%}"
+suse_osh_image_version: "pike"
+
+socok8s_site_name: "soc"
+
+#TODO(JG) change ro randomized password 
+ucp_keystone_admin_password: 'password123'
+openstack_keystone_admin_password: 'password123'
+ucp_shipyard_keystone_password: 'password123'

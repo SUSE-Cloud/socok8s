@@ -13,6 +13,11 @@ airship-masters:
     linux-qjrf:
       ansible_host: 192.168.89.196
 
+airship-kube-system-workers:
+  hosts:
+    ccpworker01:
+      ansible_host: 172.16.1.48
+
 airship-ucp-workers:
   hosts:
     linux-wstv:

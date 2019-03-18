@@ -1,0 +1,23 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-keystone-memcached-soc
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-keystone-memcached-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  wait:
+    timeout: 1800
+  values:
+    pod:
+      replicas:
+        server: 1
+        prometheus_memcached_exporter: 1
+...
