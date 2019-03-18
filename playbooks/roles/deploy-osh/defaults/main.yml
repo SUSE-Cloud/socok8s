@@ -96,3 +96,4 @@ suse_osh_deploy_memcached_yaml_overrides: {}
 suse_osh_deploy_nova_yaml_overrides: {}
 suse_osh_deploy_ovs_yaml_overrides: {}
 suse_osh_deploy_rabbitmq_yaml_overrides: {}
+suse_osh_deploy_neutron_yaml_overrides: {}
