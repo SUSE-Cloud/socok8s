@@ -1,4 +1,7 @@
 ---
+# The purpose of this file is to define the site's endpoint catalog. This should
+# not need to be modified for a new site.
+# #GLOBAL-CANDIDATE#
 schema: pegleg/EndpointCatalogue/v1
 metadata:
   schema: metadata/Document/v1
@@ -11,13 +14,17 @@ metadata:
     - src:
         schema: pegleg/CommonAddresses/v1
         name: common-addresses
-        path: .dns.ingress_domain
+        path: .dns.ingress_ucp_domain
       dest:
         - path: .ucp.identity.host_fqdn_override.public.host
           pattern: DOMAIN
         - path: .ucp.identity.host_fqdn_override.admin.host
           pattern: DOMAIN
         - path: .ucp.shipyard.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .ucp.key_manager.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .ucp.key_manager.host_fqdn_override.admin.host
           pattern: DOMAIN
         - path: .ceph.object_store.host_fqdn_override.public.host
           pattern: DOMAIN
@@ -61,17 +68,19 @@ data:
       host_fqdn_override:
         default: null
         public:
-          host: iam.DOMAIN
+          host: keystone.DOMAIN
         admin:
-          host: iam.DOMAIN
+          host: keystone.DOMAIN
       path:
         default: /v3
       scheme:
-        default: "https"
+        # default: "https"
+        default: "http"
         internal: "http"
       port:
         api:
-          default: 443
+          # default: 443
+          default: 80
           internal: 5000
     armada:
       name: armada
@@ -90,8 +99,8 @@ data:
     deckhand:
       name: deckhand
       hosts:
-        default: deckhand-int
-        public: deckhand-api
+        default: deckhand-api
+        public: deckhand
       port:
         api:
           default: 9000
@@ -143,6 +152,10 @@ data:
         public: barbican
       host_fqdn_override:
         default: null
+        admin: 
+          host: barbican-api.DOMAIN
+        public: 
+          host: barbican.DOMAIN
       path:
         default: /v1
       scheme:
@@ -228,17 +241,17 @@ data:
     shipyard:
       name: shipyard
       hosts:
-        default: shipyard-int
-        public: shipyard-api
+        default: shipyard-api
+        public: shipyard
       port:
         api:
           default: 9000
-          public: 443
+          public: 80
       path:
         default: /api/v1.0
       scheme:
         default: "http"
-        public: "https"
+        public: "http"
       host_fqdn_override:
         default: null
         public:
@@ -271,11 +284,13 @@ data:
         default: /swift/v1
       scheme:
         default: "http"
-        public: "https"
+        public: "http"
+        #ublic: "https"
       port:
         api:
           default: 8088
-          public: 443
+          #public: 443
+          public: 80
     ceph_object_store:
       name: radosgw
       namespace: ceph
@@ -353,11 +368,29 @@ metadata:
     - src:
         schema: pegleg/CommonAddresses/v1
         name: common-addresses
-        path: .dns.ingress_domain
+        path: .dns.ingress_openstack_domain
       dest:
         - path: .osh.object_store.host_fqdn_override.public.host
           pattern: DOMAIN
         - path: .osh.ceph_object_store.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .osh.image.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .osh.cloudformation.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .osh.orchestration.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .osh.compute.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .osh.compute_novnc_proxy.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .osh.placement.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .osh.network.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .osh.identity.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .osh.identity.host_fqdn_override.admin.host
           pattern: DOMAIN
         - path: .osh.dashboard.host_fqdn_override.public.host
           pattern: DOMAIN
@@ -529,16 +562,23 @@ data:
       namespace: openstack
       name: keystone
       hosts:
-        default: keystone
-        internal: keystone-api
+        default: identity
+        internal: identity-api
       host_fqdn_override:
         default: null
+        public:
+          host: identity.DOMAIN
+        admin:
+          host: identity.DOMAIN
       path:
         default: /v3
       scheme:
+        #default: "https"
         default: "http"
+        internal: "http"
       port:
         api:
+          #default: 443
           default: 80
           internal: 5000
     glance_oslo_messaging:
@@ -570,17 +610,24 @@ data:
     image:
       name: glance
       hosts:
-        default: glance-api
-        public: glance
+        default: image-api
+        public: image
       host_fqdn_override:
         default: null
+        public:
+          host: image.DOMAIN
+        admin: 
+          host: image-api.DOMAIN
       path:
         default: null
       scheme:
         default: "http"
+        #public: "https"
+        public: "http"
       port:
         api:
           default: 9292
+          #public: 443
           public: 80
     image_registry:
       name: glance-registry
@@ -626,8 +673,8 @@ data:
     volume:
       name: cinder
       hosts:
-        default: cinder-api
-        public: cinder
+        default: volume-api
+        public: volume
       host_fqdn_override:
         default: null
         public:
@@ -636,16 +683,18 @@ data:
         default: "/v1/%(tenant_id)s"
       scheme:
         default: "http"
-        public: "https"
+        public: "http"
+        #public: "https"
       port:
         api:
           default: 8776
-          public: 443
+          public: 80
+          #public: 443
     volumev2:
       name: cinderv2
       hosts:
-        default: cinder-api
-        public: cinder
+        default: volume-api
+        public: volume
       host_fqdn_override:
         default: null
         public:
@@ -654,16 +703,18 @@ data:
         default: "/v2/%(tenant_id)s"
       scheme:
         default: "http"
-        public: "https"
+        public: "http"
+        #public: "https"
       port:
         api:
           default: 8776
-          public: 443
+          public: 80
+          #public: 443
     volumev3:
       name: cinderv3
       hosts:
-        default: cinder-api
-        public: cinder
+        default: volume-api
+        public: volume
       host_fqdn_override:
         default: null
         public:
@@ -672,11 +723,13 @@ data:
         default: "/v3/%(tenant_id)s"
       scheme:
         default: "http"
-        public: "https"
+        public: "http"
+        #public: "https"
       port:
         api:
           default: 8776
-          public: 443
+          public: 80
+          #public: 443
     heat_oslo_messaging:
       namespace: openstack
       hosts:
@@ -706,18 +759,23 @@ data:
     orchestration:
       name: heat
       hosts:
-        default: heat-api
-        public: heat
+        default: orchestration-api
+        public: orchestration
       host_fqdn_override:
         default: null
+        public:
+          host: orchestration.DOMAIN
       path:
         default: "/v1/%(project_id)s"
       scheme:
         default: "http"
+        public: "http"
+        #public: "https"
       port:
         api:
           default: 8004
           public: 80
+          #public: 443
     cloudformation:
       name: heat-cfn
       hosts:
@@ -725,15 +783,19 @@ data:
         public: cloudformation
       host_fqdn_override:
         default: null
+        public:
+          host: cloudformation.DOMAIN
       path:
         default: /v1
       scheme:
         default: "http"
-        public: "https"
+        public: "http"
+        #public: "https"
       port:
         api:
           default: 8000
           public: 80
+          #public: 443
     cloudwatch:
       name: heat-cloudwatch
       hosts:
@@ -779,18 +841,23 @@ data:
     network:
       name: neutron
       hosts:
-        default: neutron-server
-        public: neutron
+        default: network-api
+        public: network
       host_fqdn_override:
         default: null
+        public:
+          host: network.DOMAIN
       path:
         default: null
       scheme:
         default: "http"
+        public: "http"
+        #public: "https"
       port:
         api:
           default: 9696
           public: 80
+          #public: 443
     nova_oslo_messaging:
       namespace: openstack
       hosts:
@@ -820,20 +887,25 @@ data:
     compute:
       name: nova
       hosts:
-        default: nova-api
-        public: nova
+        default: compute-api
+        public: compute
       host_fqdn_override:
         default: null
+        public:
+          host: compute.DOMAIN
       path:
         default: "/v2/%(tenant_id)s"
       scheme:
         default: "http"
+        public: "http"
+        #public: "https"
       port:
         api:
           default: 8774
           public: 80
+          #public: 443
         novncproxy:
-          default: 6080
+          default: 443
     compute_metadata:
       name: nova
       hosts:
@@ -856,19 +928,23 @@ data:
         public: novncproxy
       host_fqdn_override:
         default: null
+        public:
+          host: nova-novncproxy.DOMAIN
       path:
         default: /vnc_auto.html
       scheme:
         default: "http"
+        public: "http"
+        #public: "https"
       port:
         novnc_proxy:
           default: 6080
           public: 80
+          #public: 443
     compute_spice_proxy:
       name: nova
       hosts:
         default: nova-spiceproxy
-        public: placement
       host_fqdn_override:
         default: null
       path:
@@ -885,19 +961,24 @@ data:
         public: placement
       host_fqdn_override:
         default: null
+        public:
+          host: placement.DOMAIN
       path:
         default: /
       scheme:
         default: "http"
+        public: "http"
+        #public: "https"
       port:
         api:
           default: 8778
           public: 80
+          #public: 443
     dashboard:
       name: horizon
       hosts:
-        default: horizon-int
-        public: horizon
+        default: dashboard-int
+        public: dashboard
       host_fqdn_override:
         default: null
         public:
@@ -906,11 +987,13 @@ data:
         default: null
       scheme:
         default: "http"
-        public: "https"
+        public: "http"
+        #public: "https"
       port:
         web:
           default: 80
-          public: 443
+          public: 80
+          #public: 443
 ...
 ---
 schema: pegleg/EndpointCatalogue/v1
@@ -925,7 +1008,7 @@ metadata:
     - src:
         schema: pegleg/CommonAddresses/v1
         name: common-addresses
-        path: .dns.ingress_domain
+        path: .dns.ingress_ucp_domain
       dest:
         - path: .osh_infra.kibana.host_fqdn_override.public.host
           pattern: DOMAIN
@@ -1003,13 +1086,6 @@ data:
         default: null
       scheme:
         default: "http"
-      port:
-        client:
-          default: 9200
-        http:
-          default: 80
-        discovery:
-          default: 9300
     prometheus_elasticsearch_exporter:
       namespace: null
       hosts:
@@ -1090,11 +1166,13 @@ data:
         default: null
       scheme:
         default: "http"
-        public: "https"
+        public: "http"
+        #public: "https"
       port:
         grafana:
           default: 3000
-          public: 443
+          public: 80
+          #public: 443
     monitoring:
       name: prometheus
       namespace: osh-infra

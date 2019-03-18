@@ -33,39 +33,39 @@
   set_fact:
     site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ socok8s_site_name }}"
 
-- name: Ensure site directory for {{ socok8s_site_name }} exists
-  become: yes
-  file:
-    path: "{{ site_path }}"
-    state: directory
+    #- name: Ensure site directory for {{ socok8s_site_name }} exists
+    #  become: yes
+    #  file:
+    #    path: "{{ site_path }}"
+    #    state: directory
 
-- name: Create site manifest directory
-  become: yes
-  file:
-    path: '{{ site_path }}/{{ item.path }}'
-    state: directory
-  with_filetree: '{{ role_path }}/templates/site/soc'
-  when: item.state == 'directory'
-  tags:
-    - install
+    #- name: Create site manifest directory
+    #  become: yes
+    #  file:
+    #    path: '{{ site_path }}/{{ item.path }}'
+    #    state: directory
+    #  with_filetree: '{{ role_path }}/templates/site/soc'
+    #  when: item.state == 'directory'
+    #  tags:
+    #    - install
 
 #TODO JG refactor overrides
-- name: Create site manifest yamls
-  become: yes
-  template:
-    src: '{{ item.src }}'
-    dest: '{{ site_path }}/{{ item.path }}'
-  with_filetree: '{{ role_path }}/templates/site/soc'
-  when: item.state == 'file'
-  tags:
-    - install
+#- name: Create site manifest yamls
+#  become: yes
+#  template:
+#    src: '{{ item.src }}'
+#    dest: '{{ site_path }}/{{ item.path }}'
+#  with_filetree: '{{ role_path }}/templates/site/soc'
+#  when: item.state == 'file'
+#  tags:
+#    - install
 
-- name: Create pod scale profile
-  become: yes
-  copy:
-    src: '{{ role_path }}/files/profiles/pod-scale-{{ scale_profile }}.yaml'
-    dest:  '{{ site_path }}/profiles'
-    mode: 0644
+    #- name: Create pod scale profile
+    #  become: yes
+    #  copy:
+    #    src: '{{ role_path }}/files/profiles/pod-scale-{{ scale_profile }}.yaml'
+    #    dest:  '{{ site_path }}/profiles'
+    #    mode: 0644
 
 - name: Set pegleg parameters
   set_fact:
@@ -126,6 +126,7 @@
     chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
+    OS_PASSWORD: "{{ ucp_shipyard_keystone_password }}"
   register: shipyard_create_config
   failed_when: shipyard_create_config.stdout.find('Error') == 0
   tags:
@@ -139,6 +140,7 @@
     chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
+    OS_PASSWORD: "{{ ucp_shipyard_keystone_password }}"
   register: shipyard_commit_config
   failed_when: shipyard_commit_config.stdout.find('Error') == 0
   tags:
@@ -152,6 +154,7 @@
     chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
+    OS_PASSWORD: "{{ ucp_shipyard_keystone_password }}"
   register: shipyard_update_software
   failed_when: shipyard_update_software.stdout.find('Error') == 0
   tags:
@@ -190,6 +193,7 @@
     chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
+    OS_PASSWORD: "{{ ucp_shipyard_keystone_password }}"
   register: shipyard_desc_action
   until: shipyard_desc_action.stdout.find('Processing') < 0 and shipyard_desc_action.stdout.find('running') < 0
   retries: 240

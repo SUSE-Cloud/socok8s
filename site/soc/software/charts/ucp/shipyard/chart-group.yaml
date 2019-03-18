@@ -1,0 +1,21 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-shipyard
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-shipyard-chart-group-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  description: Shipyard
+  sequenced: false
+  chart_group:
+    - ucp-shipyard-soc
+...

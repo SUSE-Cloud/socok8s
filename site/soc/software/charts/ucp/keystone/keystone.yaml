@@ -1,0 +1,23 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-keystone-soc
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-keystone-global
+      component: keystone
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  wait:
+    timeout: 1800
+  values:
+    pod:
+      replicas:
+        api: 1
+...

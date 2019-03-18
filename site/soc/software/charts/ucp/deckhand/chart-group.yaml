@@ -1,0 +1,22 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-deckhand
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-deckhand-chart-group-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  description: Deckhand and Barbican
+  sequenced: false
+  chart_group:
+    - ucp-barbican-soc
+    - ucp-deckhand-soc
+...

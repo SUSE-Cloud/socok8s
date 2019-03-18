@@ -39,6 +39,3 @@ airship_repos:
   openstack-helm:
     src: https://git.openstack.org/openstack/openstack-helm.git
     version: 4f94593e870ac879b2d01300cb02485ace58b3ac
-
-ucp_keystone_admin_password: 'password'
-openstack_keystone_admin_password: 'password123'

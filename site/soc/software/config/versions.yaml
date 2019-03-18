@@ -1,5 +1,11 @@
 ---
 data:
+  charts:
+    kubernetes:
+      ingress:
+        type: local
+        location: /armada/airship-components/openstack-helm-infra
+        subpath: ingress
   images:
     calico:
       calico: {}

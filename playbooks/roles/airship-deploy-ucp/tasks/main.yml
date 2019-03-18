@@ -3,6 +3,74 @@
 - name: Load standard variables
   include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
 
+- name: Set site path
+  set_fact:
+    site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ socok8s_site_name }}"
+
+- name: Ensure site directory for {{ socok8s_site_name }} exists
+  become: yes
+  file:
+    path: "{{ site_path }}"
+    state: directory
+
+- name: Create site manifest directory
+  become: yes
+  file:
+    path: '{{ site_path }}/{{ item.path }}'
+    state: directory
+  with_filetree: '{{ playbook_dir }}/../site/soc'
+  when: item.state == 'directory'
+  tags:
+    - install
+
+- name: Create site profiles manifests
+  become: yes
+  copy:
+    src: '{{ item }}'
+    dest: '{{ site_path }}'
+  loop:
+    - '{{ playbook_dir }}/../site/soc/profiles'
+    - '{{ playbook_dir }}/../site/soc/networks'
+    - '{{ playbook_dir }}/../site/soc/baremetal'
+    - '{{ playbook_dir }}/../site/soc/deployment'
+  tags:
+    - install
+
+- name: Create site-definition yaml
+  become: yes
+  template:
+    src: '{{ playbook_dir }}/../site/soc/site-definition.yaml'
+    dest: '{{ site_path }}'
+  tags:
+    - install
+
+- name: Create site software manifests
+  become: yes
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ site_path }}/software/{{ item.path }}'
+  with_filetree: '{{ playbook_dir }}/../site/soc/software/'
+  when: item.state == 'file'
+  tags:
+    - install
+
+- name: Create site secrets manifests
+  become: yes
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ site_path }}/secrets/{{ item.path }}'
+  with_filetree: '{{ playbook_dir }}/../site/soc/secrets/'
+  when: item.state == 'file'
+  tags:
+    - install
+
+- name: Create pod scale profile
+  become: yes
+  copy:
+    src: '{{ role_path }}/files/profiles/pod-scale-{{ scale_profile }}.yaml'
+    dest:  '{{ site_path }}/profiles'
+    mode: 0644
+
 - name: Build Armada image
   make:
     chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
@@ -22,6 +90,7 @@
     - install
 
 - name: Build Shipyard images
+  become: yes
   make:
     chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
     target: "{{ item.target }}"
@@ -90,7 +159,6 @@
   tags:
     - install
 
-# TODO JG add override for armada image
 - name: Create Armada deployment yaml
   template:
     src: ./armada.yaml.j2
@@ -121,15 +189,6 @@
 - debug:
     msg: "Armada pod found: {{ armada_pod_name }}"
 
-    #checking ready appears to be sufficient JG
-    #- name: Wait until Armada pod is running
-    #  shell: "kubectl get pod {{ armada_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.phase}'"
-    #  register: armada_pod_status
-    #  until: armada_pod_status.stdout_lines == "Running"
-    #  retries: 60
-    #  delay: 15
-    #  ignore_errors: yes
-
 - name: Wait until Armada pod is ready
   shell: "kubectl get pod {{ armada_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
   register: armada_pod_status
@@ -140,19 +199,35 @@
   tags:
     - skip_ansible_lint
 
-- name: Create manifests directory
-  file:
-    path: "{{ socok8s_deploy_config_location }}/manifests"
-    state: directory
-  tags:
-    - install
+- name: Set pegleg parameters
+  set_fact:
+    treasuremap_dir: '{{ upstream_repos_clone_folder }}/airship-treasuremap'
+    pegleg_image: "{{ airship_pegleg_image }}"
+    pegleg: '../airship-pegleg/tools/pegleg.sh '
+    pegleg_output: 'peggles'
 
-- name: Create airship ucp manifest
-  template:
-    src: ./airship.yaml.j2
-    dest: "{{ socok8s_deploy_config_location }}/manifests/airship.yaml"
+# TODO(aagate): Add a changed_when: to help idempotency
+#- name: Pegleg lint the site manifests
+#  command: '{{ pegleg }} site -r . lint "{{ socok8s_site_name }}" -x P001 -x P009'
+#  args:
+#    chdir: '{{ treasuremap_dir }}'
+#  environment:
+#    IMAGE: '{{ pegleg_image }}'
+#    TERM_OPTS: ' '
+#  tags:
+#    - install
+#    - skip_ansible_lint
+
+- name: Collect ucp site manifest
+  command: '{{ pegleg }} site -r . render "{{ socok8s_site_name }}" -o {{ socok8s_site_name }}-ucp.yaml'
+  args:
+    chdir: '{{ treasuremap_dir }}'
+  environment:
+    IMAGE: '{{ pegleg_image }}'
+    TERM_OPTS: ' '
   tags:
     - install
+    - skip_ansible_lint
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Copy Airship UCP content to Armada pod
@@ -161,21 +236,22 @@
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/.kube
     - kubectl cp ~/.kube/config {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/.kube/config
-    - kubectl cp  {{ socok8s_deploy_config_location }}/manifests {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada
+    - kubectl cp  {{ upstream_repos_clone_folder }}/airship-treasuremap/{{ socok8s_site_name }}-ucp.yaml {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/airship-components
-    - kubectl cp {{ upstream_repos_clone_folder }}/airship-armada {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
-    - kubectl cp {{ upstream_repos_clone_folder }}/airship-deckhand {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
-    - kubectl cp {{ upstream_repos_clone_folder }}/airship-pegleg {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
-    - kubectl cp {{ upstream_repos_clone_folder }}/airship-shipyard {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
-    - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+      #    - kubectl cp {{ upstream_repos_clone_folder }}/airship-armada {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+      #- kubectl cp {{ upstream_repos_clone_folder }}/airship-deckhand {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+      #    - kubectl cp {{ upstream_repos_clone_folder }}/airship-pegleg {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+      #    - kubectl cp {{ upstream_repos_clone_folder }}/airship-shipyard {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+      #    - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
     - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm-infra {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+      #    - kubectl cp {{ upstream_repos_clone_folder }}/airship-treasuremap {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
   tags:
     - install
     - skip_ansible_lint
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Deploy Airship UCP ... quick coffee break, maybe?
-  command: 'kubectl exec {{ armada_pod_name }} -n ucp -- armada apply /armada/manifests/airship.yaml'
+  command: 'kubectl exec {{ armada_pod_name }} -n ucp -- armada apply /armada/{{ socok8s_site_name }}-ucp.yaml --target-manifest ucp-bootstrap'
   tags:
     - install
     - skip_ansible_lint

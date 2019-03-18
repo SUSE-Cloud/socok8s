@@ -1,0 +1,35 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kube-system-ingress
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      ingress: kube-system
+      name: ingress-kube-system-global
+    actions:
+      - method: replace
+        path: .source
+      - method: replace
+        path: .source
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    network:
+      host_namespace: True
+      vip:
+        manage: true
+        # what type of vip manage machanism will be used
+        # possible options: routed, keepalived
+        mode: routed
+        interfaces: ext-vip,dcm-vip
+        addrs: {{ socok8s_ext_vip }},{{ socok8s_dcm_vip }}
+      external_policy_local: true
+  source:
+    type: local
+    location: /armada/airship-components/openstack-helm-infra
+    subpath: ingress

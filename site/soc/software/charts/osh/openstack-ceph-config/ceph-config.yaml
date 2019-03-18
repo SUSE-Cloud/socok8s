@@ -8,7 +8,7 @@ metadata:
     layer: site
     parentSelector:
       name: openstack-ceph-config-global
-      component: openstack-ceph-config
+      component: ceph
     actions:
       - method: merge
         path: .

@@ -20,7 +20,6 @@ metadata:
         path: .pods.osh.ingress.ingress.min
       dest:
         path: .values.pod.replicas.ingress
-  substitutions:
     - src:
         schema: pegleg/PodScaleProfile/v1
         name: pod-scale-profile
