@@ -12,6 +12,9 @@ subjects:
   name: cinder-backup
   namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
+  name: cinder-volume
+  namespace: {{ openstack_namespace_name }}
+- kind: ServiceAccount
   name: nova-novncproxy
   namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
