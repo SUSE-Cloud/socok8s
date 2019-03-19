@@ -42,13 +42,10 @@ subjects:
   name: openvswitch-db
   namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
-  name: ingress-kube-system-ingress
+  name: airship-ingress-kube-system-ingress 
   namespace: kube-system
 - kind: ServiceAccount
-  name: airship-ingress-kube-system-ingress
-  namespace: kube-system
-- kind: ServiceAccount
-  name: airship-ingress-ucp-ingress
+  name: airship-ingress-ingress
   namespace: {{ ucp_namespace_name }}
 - kind: ServiceAccount
   name: airship-openstack-ingress-controller-ingress

@@ -1,0 +1,22 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ucp-postgresql-soc
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: ucp-postgresql-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  wait:
+    timeout: 1800
+  values:
+    storage:
+      pvc:
+        size: 2Gi
+...

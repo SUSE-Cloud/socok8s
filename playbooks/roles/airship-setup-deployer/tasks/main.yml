@@ -64,15 +64,24 @@
     path: /etc/hosts
     marker: "# {mark} ANSIBLE MANAGED BLOCK for VIP entries"
     block: |
-      {{ socok8s_dcm_vip }} keystone.ucp.svc.cluster.local
-      {{ socok8s_dcm_vip }} barbican.ucp.svc.cluster.local
-      {{ socok8s_dcm_vip }} shipyard-api.ucp.svc.cluster.local
-      {{ socok8s_ext_vip }} keystone keystone.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} glance glance.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} cinder cinder.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} nova nova.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} neutron neutron.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} horizon horizon.openstack.svc.cluster.local
+      # UCP service public end points
+      {{ socok8s_dcm_vip }} keystone.ucp.svc.cluster.local keystone-api.ucp.svc.cluster.local
+      {{ socok8s_dcm_vip }} barbican.ucp.svc.cluster.local barbican-api.ucp.svc.cluster.local
+      {{ socok8s_dcm_vip }} shipyard.ucp.svc.cluster.local
+      # Openstack admin service and internal endpoints
+      {{ socok8s_dcm_vip }} identity-api.openstack.svc.cluster.local
+      {{ socok8s_dcm_vip }} image-api.openstack.svc.cluster.local
+      {{ socok8s_dcm_vip }} volume-api.openstack.svc.cluster.local
+      {{ socok8s_dcm_vip }} compute-api.openstack.svc.cluster.local
+      {{ socok8s_dcm_vip }} network-api.openstack.svc.cluster.local
+      {{ socok8s_dcm_vip }} dashboard-api.openstack.svc.cluster.local
+      # Openstack service public endpoints
+      {{ socok8s_ext_vip }} identity.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} image.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} volume.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} compute.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} network.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} dashboard.openstack.svc.cluster.local
 
 - name: Creates /etc/openstack directory
   become: yes

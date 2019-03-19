@@ -1,0 +1,14 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kube-system-ingress
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  description: Kube system ingress controller
+  sequenced: False
+  chart_group:
+    - kube-system-ingress

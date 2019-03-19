@@ -6,6 +6,18 @@
     - preinstall
 
 - name: Enroll node for Airship UCP
+  shell: "kubectl label nodes {{ inventory_hostname }} kube-ingress=enabled"
+  when: ('airship-kube-system-workers' in group_names)
+  register: _enrollforucp
+  changed_when:
+    - _enrollforucp.rc == 0
+  failed_when:
+    - _enrollforucp.rc != 0
+    - _enrollforucp.stderr.find("already has a value (enabled)") == -1
+  tags:
+    - skip_ansible_lint
+
+- name: Enroll node for Airship UCP
   shell: "kubectl label nodes {{ inventory_hostname }} ucp-control-plane=enabled"
   when: ('airship-ucp-workers' in group_names)
   register: _enrollforucp
