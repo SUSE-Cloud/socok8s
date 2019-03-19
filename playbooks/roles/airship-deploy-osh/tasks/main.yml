@@ -33,40 +33,6 @@
   set_fact:
     site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ socok8s_site_name }}"
 
-    #- name: Ensure site directory for {{ socok8s_site_name }} exists
-    #  become: yes
-    #  file:
-    #    path: "{{ site_path }}"
-    #    state: directory
-
-    #- name: Create site manifest directory
-    #  become: yes
-    #  file:
-    #    path: '{{ site_path }}/{{ item.path }}'
-    #    state: directory
-    #  with_filetree: '{{ role_path }}/templates/site/soc'
-    #  when: item.state == 'directory'
-    #  tags:
-    #    - install
-
-#TODO JG refactor overrides
-#- name: Create site manifest yamls
-#  become: yes
-#  template:
-#    src: '{{ item.src }}'
-#    dest: '{{ site_path }}/{{ item.path }}'
-#  with_filetree: '{{ role_path }}/templates/site/soc'
-#  when: item.state == 'file'
-#  tags:
-#    - install
-
-    #- name: Create pod scale profile
-    #  become: yes
-    #  copy:
-    #    src: '{{ role_path }}/files/profiles/pod-scale-{{ scale_profile }}.yaml'
-    #    dest:  '{{ site_path }}/profiles'
-    #    mode: 0644
-
 - name: Set pegleg parameters
   set_fact:
     treasuremap_dir: '{{ upstream_repos_clone_folder }}/airship-treasuremap'

@@ -206,18 +206,6 @@
     pegleg: '../airship-pegleg/tools/pegleg.sh '
     pegleg_output: 'peggles'
 
-# TODO(aagate): Add a changed_when: to help idempotency
-#- name: Pegleg lint the site manifests
-#  command: '{{ pegleg }} site -r . lint "{{ socok8s_site_name }}" -x P001 -x P009'
-#  args:
-#    chdir: '{{ treasuremap_dir }}'
-#  environment:
-#    IMAGE: '{{ pegleg_image }}'
-#    TERM_OPTS: ' '
-#  tags:
-#    - install
-#    - skip_ansible_lint
-
 - name: Collect ucp site manifest
   command: '{{ pegleg }} site -r . render "{{ socok8s_site_name }}" -o {{ socok8s_site_name }}-ucp.yaml'
   args:
@@ -238,13 +226,7 @@
     - kubectl cp ~/.kube/config {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/.kube/config
     - kubectl cp  {{ upstream_repos_clone_folder }}/airship-treasuremap/{{ socok8s_site_name }}-ucp.yaml {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/airship-components
-      #    - kubectl cp {{ upstream_repos_clone_folder }}/airship-armada {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
-      #- kubectl cp {{ upstream_repos_clone_folder }}/airship-deckhand {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
-      #    - kubectl cp {{ upstream_repos_clone_folder }}/airship-pegleg {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
-      #    - kubectl cp {{ upstream_repos_clone_folder }}/airship-shipyard {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
-      #    - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
     - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm-infra {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
-      #    - kubectl cp {{ upstream_repos_clone_folder }}/airship-treasuremap {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
   tags:
     - install
     - skip_ansible_lint
