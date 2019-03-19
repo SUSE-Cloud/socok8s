@@ -48,7 +48,6 @@ suse_airship_components_image_tag: "{%- if suse_airship_build_local_images or su
                                     {%- else -%}
                                       latest
                                     {%- endif -%}"
-suse_osh_image_version: "pike"
 
 socok8s_site_name: "soc"
 

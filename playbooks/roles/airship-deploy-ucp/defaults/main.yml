@@ -1,3 +1,4 @@
 ---
 scale_profile: "{{ lookup('env','scale_profile') | default('minimal') }}"
 airship_pegleg_image: "{{ suse_airship_registry_location }}/airshipit/pegleg:{{suse_airship_components_image_tag}}"
+suse_osh_image_version: "pike"
