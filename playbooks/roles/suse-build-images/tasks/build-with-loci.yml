@@ -15,5 +15,6 @@
       BASE_IMAGE: leap15
       PUSH_TO_REGISTRY: YES
       BUILD_PROJECTS: "{{ ' '.join(loci_build_projects) }}"
+      default_project_extra_build_args: "--build-arg REGISTRY_PROTOCOL=https --build-arg REGISTRY_INSECURE=True --build-arg PYTHON3=yes --force-rm --pull --no-cache"
   tags:
     - skip_ansible_lint
