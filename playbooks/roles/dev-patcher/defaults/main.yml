@@ -32,3 +32,5 @@ dev_patcher_patches:
   - 642844
   # osh-images: Add rocky release script
   - 642415
+  # loci: Install python3-testsuite for OpenSUSE python3 based containers.
+  - 643044
