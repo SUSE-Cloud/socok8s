@@ -80,7 +80,7 @@ loci_build_projects: []
 #loci_build_projects:
 #  - requirements
 #  - keystone
-loci_build_command: "./openstack/loci/build-queens.sh"
+loci_build_command: "./openstack/loci/build-rocky.sh"
 
 # Docker has been installed in a different role
 # and doesn't need to be installed again.
