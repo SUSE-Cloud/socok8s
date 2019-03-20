@@ -1,0 +1,28 @@
+# due to a bug in ansible config template[0] we cannot currently pass multiline overrides onto a merged
+# template as they will be mangled so we need to have a different file to pass to helm
+# https://bugs.launchpad.net/openstack-ansible/+bug/1819974
+conf:
+  nova_placement_apache_config: |
+    <Directory "/srv/www">
+      Options Indexes FollowSymLinks
+      AllowOverride All
+      <IfModule !mod_access_compat.c>
+        Require all granted
+      </IfModule>
+      <IfModule mod_access_compat.c>
+        Order allow,deny
+        Allow from all
+      </IfModule>
+    </Directory>
+
+    <Directory "/var/www">
+      Options Indexes FollowSymLinks
+      AllowOverride All
+      <IfModule !mod_access_compat.c>
+        Require all granted
+      </IfModule>
+      <IfModule mod_access_compat.c>
+        Order allow,deny
+        Allow from all
+      </IfModule>
+    </Directory>

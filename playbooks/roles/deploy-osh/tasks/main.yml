@@ -352,6 +352,11 @@
     - neutron
     - run
 
+- name: Copy extra nova overrides
+  copy:
+    src: nova_extra_overrides.yaml
+    dest: /tmp/nova_extra_overrides.yaml
+
 # TODO(evrardjp): Check if need to have our own dummy overrides
 # In that case, try to split the shell script upstream in two scripts.
 # Compute kit deploys nova and neutron but only nova needs overrides
@@ -362,7 +367,7 @@
     _cmpnt_overrides: "{{ suse_osh_deploy_nova_yaml_overrides }}"
     _cmpnt_runcommand: "./tools/deployment/multinode/140-compute-kit.sh"
   environment:
-    OSH_EXTRA_HELM_ARGS_NOVA: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NOVA') | default('', True) }} --values /tmp/socok8s-nova.yaml"
+    OSH_EXTRA_HELM_ARGS_NOVA: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NOVA') | default('', True) }} --values /tmp/socok8s-nova.yaml --values /tmp/nova_extra_overrides.yaml"
     OSH_EXTRA_HELM_ARGS_NEUTRON: "{{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NEUTRON') | default('', True) }} --values /tmp/socok8s-neutron.yaml"
   tags:
     - nova
