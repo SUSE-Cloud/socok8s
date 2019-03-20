@@ -1,0 +1,28 @@
+---
+
+- hosts: osh-deployer
+  gather_facts: no
+  tasks:
+    - name: Load variables
+      include_vars: "{{ item }}"
+      loop:
+        - "{{ playbook_dir }}/../vars/common-vars.yml"
+        - "{{ playbook_dir }}/../vars/manifest.yml"
+      tags:
+        - always
+
+    - name: Use Velum tooling to update CaaSP admin node
+      shell: "./velum-interactions --update-admin -e {{ upstream_repos_clone_folder }}/ccp/environment.json"
+      args:
+        executable: /bin/bash
+        chdir: "{{ upstream_repos_clone_folder }}/ccp/velum-bootstrap"
+      tags:
+        - skip_ansible_lint
+
+    - name: Use Velum tooling to update CaaSP nodes
+      shell: "./velum-interactions --update-minions -e {{ upstream_repos_clone_folder }}/ccp/environment.json"
+      args:
+        executable: /bin/bash
+        chdir: "{{ upstream_repos_clone_folder }}/ccp/velum-bootstrap"
+      tags:
+        - skip_ansible_lint

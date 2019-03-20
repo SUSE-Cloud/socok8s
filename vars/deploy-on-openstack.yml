@@ -21,8 +21,8 @@ deploy_on_openstack_repos_to_configure:
   SES5-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Updates/
   SLE12Containers: http://download.suse.de/ibs/SUSE/Updates/SLE-Module-Containers/12/x86_64/update/
   Leap15develtools: https://download.opensuse.org/repositories/devel:/tools/openSUSE_Leap_15.0/
-  CAASP30-update: http://download.suse.de/ibs/SUSE:/SLE-12-SP3:/Update:/Products:/CASP30:/Update/standard/
-  CAASP30-pool: http://download.suse.de/ibs/SUSE:/SLE-12-SP3:/Update:/Products:/CASP30/standard
+  CAASP30-update: http://dist.nue.suse.com/ibs/SUSE/Updates/SUSE-CAASP/3.0/x86_64/update/
+  CAASP30-pool: http://dist.nue.suse.com/ibs/SUSE/Products/SUSE-CAASP/3.0/x86_64/product/
 deploy_on_openstack_ses_repos_per_imagename:
   SLES12-SP3:
     - SLE12SP3-product

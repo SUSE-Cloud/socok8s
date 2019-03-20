@@ -17,11 +17,6 @@
 ---
 - hosts: caasp-admin:caasp-masters:caasp-workers
   gather_facts: no
-  handlers:
-    - name: Reboot caasp nodes to apply transactional updates
-      listen: "restart server"
-      reboot:
-        reboot_timeout: 900
   tasks:
     - name: Ensure all the vars are loaded
       include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
@@ -35,10 +30,14 @@
         state: present
       loop: "{{ deploy_on_openstack_caasp_repos_per_imagename[deploy_on_openstack_caasp_image] }}"
 
-    - name: Perform dist-upgrade
-      command: transactional-update dup
+    - name: Disable the transactional-update timer
+      systemd:
+        enabled: no
+        state: stopped
+        name: transactional-update.timer
+
+    - name: Perform transactional-update
+      command: transactional-update cleanup dup salt
       register: transactional_update_result
       changed_when: "transactional_update_result.stdout|search('Please reboot your machine')"
       failed_when: "transactional_update_result.rc != 0"
-      notify: "restart server"
-
