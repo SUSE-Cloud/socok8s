@@ -51,7 +51,7 @@ function deploy_osh(){
 }
 function deploy_airship(){
     echo "Now deploy SUSE version of Airship"
-    run_ansible -i inventory-airship.ini ${socok8s_absolute_dir}/8_deploy_airship/play.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_airship.yml
 }
 function clean_airship_not_images(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete airship related everything (excluding local images) in your userspace."

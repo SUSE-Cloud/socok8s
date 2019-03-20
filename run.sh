@@ -72,6 +72,10 @@ case "$deployment_action" in
         build_images
         deploy_osh
         ;;
+    "setup_airship")
+        setup_caasp_workers_for_openstack
+        deploy_airship
+        ;;
     "deploy_airship")
         deploy_airship
         ;;
