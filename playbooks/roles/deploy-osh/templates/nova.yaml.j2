@@ -1,4 +1,9 @@
 conf:
+  nova:
+    cache:
+      # workaround for memcached not working under python3, remove once this patch is merged:
+      # https://review.openstack.org/#/c/640500/
+      enabled: false
   ceph:
     enabled: true
     admin_keyring: {{ ceph_admin_keyring_key }}
