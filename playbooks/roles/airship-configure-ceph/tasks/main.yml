@@ -20,6 +20,17 @@
     - always
     - run
 
+- name: Create Libvirt ceph cinder secret uuid
+  shell: "uuidgen > {{ socok8s_libvirtuuid }}"
+  args:
+    creates: "{{ socok8s_libvirtuuid }}"
+  delegate_to: localhost
+
+- name: Get libvirt secret
+  set_fact:
+    libvirt_ceph_cinder_secret_uuid: "{{ lookup('file', socok8s_libvirtuuid) }}"
+  run_once: True
+
 #TODO JG move to ceph provisioner chart
 - name: Create ceph secrets yaml
   template:
@@ -39,13 +50,5 @@
   with_items:
     - secrets
     - storage-classes
-  tags:
-    - skip_ansible_lint
-
-# TODO(aagate): Add a changed_when: to help idempotency
-# This is an arbitrary UUID value that's passed to the libvirt daemonset setup job for configuring a libvirt secret XML file
-- name: Create Libvirt ceph cinder secret uuid
-  command: uuidgen
-  register: libvirt_ceph_cinder_secret_uuid
   tags:
     - skip_ansible_lint
