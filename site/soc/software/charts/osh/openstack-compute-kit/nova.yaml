@@ -18,6 +18,8 @@ metadata:
         path: .values.conf
       - method: replace
         path: .values.pod
+      - method: merge
+        path: .upgrade.pre
   storagePolicy: cleartext
   substitutions:
     - src:

@@ -7,13 +7,19 @@
   set_fact:
     site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ socok8s_site_name }}"
 
+- name: Ensure site directory for {{ socok8s_site_name }} is empty
+  become: yes
+  file:
+    path: "{{ site_path }}"
+    state: absent
+
 - name: Ensure site directory for {{ socok8s_site_name }} exists
   become: yes
   file:
     path: "{{ site_path }}"
     state: directory
 
-- name: Create site manifest directory
+- name: Create site manifest directory structure
   become: yes
   file:
     path: '{{ site_path }}/{{ item.path }}'
