@@ -43,7 +43,7 @@ deploy_on_openstack_osh_repos_per_imagename:
     - SUSE-CA
     - OpenStack-Cloud8-product
     - SLE12Containers
-deploy_on_openstack_caasp_image: "caasp-3.0.0-GM-OpenStack-qcow"
+deploy_on_openstack_caasp_image: "caasp-3.0.0-OpenStack-19-18-03"
 deploy_on_openstack_caasp_workers: 3
 deploy_on_openstack_caasp_securitygroup: "{{ deploy_on_openstack_sesnode_securitygroup }}"
 deploy_on_openstack_caasp_stacknamefile: "{{ socok8s_workspace }}/stackname"
