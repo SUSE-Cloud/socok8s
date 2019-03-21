@@ -21,3 +21,5 @@ spec:
         image: '{{ suse_airship_registry_location }}/airshipit/armada:{{ suse_airship_components_image_tag }}'
         ports:
         - containerPort: 8000
+      nodeSelector:
+        ucp-control-plane: enabled
