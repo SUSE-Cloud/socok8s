@@ -8,9 +8,10 @@ dev_patcher_packages:
 #unrelated patches will fail (because not cloned)
 #conflicting patches will fail (because need resolving)
 dev_patcher_patches:
+  # airship-treasuremap: Add the wait label to delete nova test pod when nova chart is upgraded
+  - 645218
   # airship patches
   - 636229
-  - 636240
   - 637327
   - 638301
   - 639495
