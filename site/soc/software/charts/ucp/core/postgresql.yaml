@@ -11,6 +11,19 @@ metadata:
     actions:
       - method: merge
         path: .
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.postgresql.server.min
+      dest:
+        path: .values.pod.replicas.server
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.postgresql.prometheus_postgresql_exporter.min
+      dest:
+        path: .values.pod.replicas.prometheus_postgresql_exporter
   storagePolicy: cleartext
 data:
   wait:
@@ -19,4 +32,8 @@ data:
     storage:
       pvc:
         size: 2Gi
+    pod:
+      replicas:
+        server: 1
+        prometheus_postgresql_exporter: 1
 ...
