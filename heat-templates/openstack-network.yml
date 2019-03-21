@@ -1,0 +1,58 @@
+heat_template_version: 2015-04-30
+
+description: >
+  Template to generate the socok8s network including a router
+  to access the external network
+
+parameters:
+  prefix:
+    type: string
+    label: Stack name
+    description: Prefix for the resource names
+  network_external:
+    type: string
+    label: Public network name
+    description: The name of the public network
+    default: floating
+
+resources:
+  network:
+    type: OS::Neutron::Net
+    properties:
+      name:
+        list_join: ['-', [ { get_param: prefix }, 'net']]
+
+  subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      network_id: { get_resource: network }
+      cidr: "192.168.100.0/24"
+      ip_version: 4
+      gateway_ip: 192.168.100.1
+      name:
+        list_join: ['-', [ { get_param: prefix }, 'subnet']]
+
+  router:
+    type: OS::Neutron::Router
+    properties:
+      name:
+        list_join: ['-', [ { get_param: prefix }, 'router']]
+      external_gateway_info:
+        network: { get_param: network_external }
+
+  router_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: router }
+      subnet_id: { get_resource: subnet }
+
+outputs:
+  network_name:
+    description: Network name
+    value: { get_resource: network }
+  subnet_name:
+    description: Subnet name
+    value: { get_resource: subnet }
+  router_name:
+    description: Router name
+    value: { get_resource: router }
