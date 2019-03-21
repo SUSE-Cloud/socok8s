@@ -51,13 +51,14 @@ function deploy_osh(){
 }
 function deploy_airship(){
     echo "Now deploy SUSE version of Airship"
-    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_airship.yml
-}
-function clean_airship_not_images(){
-    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete airship related everything (excluding local images) in your userspace."
-    if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
-        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_airship.yml -e clean_action=$1
+    tagged_info=''
+    tags='all'
+    if [[ "${1:-default}" != 'default' ]]; then
+        tagged_info=" --tags $1"
+        tags=$1
+        echo "Now deploy SUSE version of Airship for specific tags ( ${tags} )"
     fi
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_airship.yml ${tagged_info}
 }
 function clean_airship(){
     clean_action=''

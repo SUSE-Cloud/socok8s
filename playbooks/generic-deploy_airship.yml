@@ -5,12 +5,17 @@
   roles:
     - role: airship-setup-deployer
       when: redeploy_osh_only is not defined or not redeploy_osh_only
+      tags:
+        - install
 
 - hosts: all
   gather_facts: false
   any_errors_fatal: true
   roles:
-    - registry-server-setup
+    - role: registry-server-setup
+      tags:
+        - install
+        - imagebuilder
 
 - hosts: airship-deployer
   gather_facts: yes
@@ -19,6 +24,8 @@
     - role: dev-patcher
       when: redeploy_osh_only is not defined or not redeploy_osh_only
       become: yes
+      tags:
+        - upstream_patching
 
 - hosts: airship-workers
   gather_facts: yes
@@ -26,6 +33,8 @@
   roles:
     - role: airship-configure-worker
       when: redeploy_osh_only is not defined or not redeploy_osh_only
+      tags:
+        - install
 
 - hosts: airship-deployer
   gather_facts: yes
@@ -33,6 +42,9 @@
   roles:
     - role: suse-build-images
       when: build_airship_images | default('False') | bool
+      tags:
+        - install
+        - imagebuilder
 
 - hosts: airship-deployer
   gather_facts: yes
@@ -40,6 +52,8 @@
   roles:
     - role: airship-configure-caasp
       when: redeploy_osh_only is not defined or not redeploy_osh_only
+      tags:
+        - install
 
 - hosts: airship-deployer
   gather_facts: yes
@@ -47,6 +61,8 @@
   roles:
     - role: airship-configure-ceph
       when: redeploy_osh_only is not defined or not redeploy_osh_only
+      tags:
+        - install
 
 - hosts: airship-deployer
   gather_facts: yes
@@ -54,9 +70,14 @@
   roles:
     - role: airship-deploy-ucp
       when: redeploy_osh_only is not defined or not redeploy_osh_only
+      tags:
+        - install
+        - update_airship_ucp_site
 
 - hosts: airship-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:
-    - airship-deploy-osh
+    - role: airship-deploy-osh
+      tags:
+        - install
