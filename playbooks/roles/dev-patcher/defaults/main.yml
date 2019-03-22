@@ -21,15 +21,17 @@ dev_patcher_patches:
   - 634936
   # osh: Updating keystone-api to work with opensuse based image
   - 633847
-  # osh: make horizon work on suse based images
-  - 641033
   # osh: make ceilometer-api work on suse based images
   - 641802
+  # osh: Allow more generic overrides for horizon
+  - 645141
   # osh: Allow more generic overrides for nova placement-api
   - 642067
   # osh: Fix indent filter not properly adding a newline after toYaml
   - 642844
   # osh-images: Add rocky release script
   - 642415
-  # loci: Install python3-testsuite for OpenSUSE python3 based containers.
-  - 643044
+  # osh: change the nova cache to dogpile.cache.memcached
+  - 644821
+  # osh: Add heat dashboard if available to horizon
+  - 645543
