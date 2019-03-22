@@ -65,6 +65,15 @@ metadata:
       dest:
         path: .values.pod.replicas.novncproxy
 data:
+  upgrade:
+    pre:
+      delete:
+        - type: pod
+          name: airship-nova-test
+          labels:
+            application: nova
+            component: test
+            release_group: airship-nova
   values:
     labels:
       agent:
