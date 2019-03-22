@@ -13,6 +13,13 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.ucp.keystone.api.min
+      dest:
+        path: .values.pod.replicas.api
 data:
   wait:
     timeout: 1800

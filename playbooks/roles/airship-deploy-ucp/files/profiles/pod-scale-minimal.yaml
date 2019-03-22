@@ -14,6 +14,83 @@ metadata:
   #        path: .
 data:
   pods:
+    ucp:
+      armada:
+        api:
+          min: 1
+          max: 1
+      shipyard:
+        api:
+          min: 1
+          max: 1
+        airflow:
+          web:
+            min: 1
+            max: 1
+          worker:
+            min: 1
+            max: 1
+          flower:
+            min: 1
+            max: 1
+          scheduler:
+            min: 1
+            max: 1
+      deckhand:
+        api:
+          min: 1
+          max: 1
+      postgresql:
+        server:
+           min: 1
+           max: 1
+           quorum: true
+        prometheus_postgresql_exporter:
+           min: 1
+           max: 1
+      barbican:
+        api:
+          min: 1
+          max: 1
+      ingress:
+        ingress:
+          min: 1
+          max: 1
+        error_page:
+          min: 1
+          max: 1
+      keystone:
+        api:
+          min: 1
+          max: 1
+      mariadb:
+        server:
+           min: 1
+           max: 1
+           quorum: true
+        ingress:
+           min: 1
+           max: 1
+        error_page:
+           min: 1
+           max: 1
+        prometheus_mysql_exporter:
+           min: 1
+           max: 1
+      memcached:
+        server:
+          min: 1
+          max: 1
+        prometheus_memcached_exporter:
+          min: 1
+          max: 1
+      rabbitmq:
+        server:
+          min: 1
+          max: 1
+        prometheus_rabbitmq_exporter:
+          min: 1
+          max: 1
     osh:
       barbican:
         api:

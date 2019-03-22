@@ -12,6 +12,25 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.ucp.shipyard.api.min
+      dest:
+        path: .values.pod.replicas.api
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.ucp.shipyard.airflow.worker.min
+      dest:
+        path: .values.pod.replicas.airflow.worker
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.ucp.shipyard.airflow.scheduler.min
+      dest:
+        path: .values.pod.replicas.airflow.scheduler
 data:
   wait:
     timeout: 1800
@@ -20,9 +39,7 @@ data:
       replicas:
         api: 1
         airflow:
-          web: 1
           worker: 1
-          flower: 1
           scheduler: 1
     conf:
       shipyard:
