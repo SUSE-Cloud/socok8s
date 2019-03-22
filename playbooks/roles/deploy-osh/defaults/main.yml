@@ -4,6 +4,9 @@
 # Location of the kubeconfig file, fetched from velum UI.
 kubeconfig_file_path: "{{ socok8s_workspace }}/kubeconfig"
 
+base_env_vars:
+  OSH_INFRA_PATH: /opt/openstack-helm-infra
+
 suse_osh_deploy_packages:
   - python-setuptools
   - python-virtualenv
