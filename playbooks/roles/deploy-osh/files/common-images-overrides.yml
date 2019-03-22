@@ -76,5 +76,3 @@ images:
     senlin_api: "{{ suse_osh_registry_location }}/openstackhelm/senlin:{{ suse_osh_image_version }}"
     senlin_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/senlin:{{ suse_osh_image_version }}"
     senlin_engine: "{{ suse_osh_registry_location }}/openstackhelm/senlin:{{ suse_osh_image_version }}"
-    tempest: "{{ suse_osh_registry_location }}/kolla/ubuntu-source-tempest:{{ suse_osh_image_version }}"
-    test: "{{ suse_osh_registry_location }}/kolla/ubuntu-source-rally:{{ suse_osh_image_version }}"
