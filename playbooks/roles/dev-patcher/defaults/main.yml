@@ -35,3 +35,5 @@ dev_patcher_patches:
   - 645543
   # osh: Allow more generic overrides for keystone
   - 647403
+  # osh: Remove overlapping Listen directives on apache >= 2.4
+  - 645189
