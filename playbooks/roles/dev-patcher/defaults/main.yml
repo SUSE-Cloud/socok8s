@@ -21,8 +21,6 @@ dev_patcher_patches:
   - 634936
   # osh: Updating keystone-api to work with opensuse based image
   - 633847
-  # osh-infra: make db-{drop,init) py3 compatible
-  - 641643
   # osh: make horizon work on suse based images
   - 641033
   # osh: make ceilometer-api work on suse based images
