@@ -20,6 +20,7 @@
 - name: Set site path
   set_fact:
     site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ socok8s_site_name }}"
+    no_revision_error_msg: "{{ socok8s_site_name }}-design added no new revision"
 
 - name: Set pegleg parameters
   set_fact:
@@ -82,7 +83,9 @@
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
     OS_PASSWORD: "{{ ucp_shipyard_keystone_password }}"
   register: shipyard_create_config
-  failed_when: shipyard_create_config.stdout.find('Error') == 0
+  failed_when:
+    - shipyard_create_config.stdout.find('Error') == 0
+    - "no_revision_error_msg not in shipyard_create_config.stdout"
   tags:
     - install
     - skip_ansible_lint
@@ -95,6 +98,8 @@
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
     OS_PASSWORD: "{{ ucp_shipyard_keystone_password }}"
+  when:
+    - "no_revision_error_msg not in shipyard_create_config.stdout"
   register: shipyard_commit_config
   failed_when: shipyard_commit_config.stdout.find('Error') == 0
   tags:
