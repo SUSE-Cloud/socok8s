@@ -14,6 +14,6 @@ data:
     - ucp-core
     - ucp-keystone
     - ucp-shipyard
-    - ucp-armada
     - ucp-deckhand
+    - ucp-armada
 ...
