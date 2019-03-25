@@ -15,4 +15,12 @@
 #
 
 ---
-- import_playbook: openstack-caasp_instance.yml
+- hosts: caasp-admin
+  gather_facts: no
+  tasks:
+    - name: Update the grains' states
+      shell: |
+        set -eo pipefail
+        docker exec -i $(docker ps | grep salt-master | awk '{print $1}') salt '*' saltutil.refresh_grains
+      tags:
+        - skip_ansible_lint
