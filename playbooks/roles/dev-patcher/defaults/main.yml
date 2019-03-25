@@ -19,8 +19,6 @@ dev_patcher_patches:
   - 640115
   # osh: Remove remaining test pods before new test run
   - 634936
-  # osh: Updating keystone-api to work with opensuse based image
-  - 633847
   # osh: make ceilometer-api work on suse based images
   - 641802
   # osh: Allow more generic overrides for horizon
@@ -35,3 +33,5 @@ dev_patcher_patches:
   - 644821
   # osh: Add heat dashboard if available to horizon
   - 645543
+  # osh: Allow more generic overrides for keystone
+  - 647403
