@@ -98,6 +98,16 @@ if [[ ${clean_action} == *"clean_images"* ]]; then
     fi
 fi
 
+#If jobs are not deleted.
+if [[ ${clean_action} == *"clean_ucp"* ]]; then
+    kubectl get jobs -n ucp | awk '{print$1}'| xargs kubectl delete job -n ucp
+fi
+
+#If jobs are not deleted.
+if [[ ${clean_action} == *"clean_openstack"* ]]; then
+    kubectl get jobs -n openstack | awk '{print$1}'| xargs kubectl delete job -n openstack
+fi
+
 if [[ ${clean_action} == *"clean_ucp"* ]]; then
     sudo rm -rf /opt/airship-*
 fi
