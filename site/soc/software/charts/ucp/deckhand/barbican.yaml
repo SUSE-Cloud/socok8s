@@ -12,14 +12,13 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
-  #TODO(JG) Tie to scale profile in all ucp pods
-  # substitutions:
-  # - src:
-  #     schema: pegleg/PodScaleProfile/v1
-  #     name: pod-scale-profile
-  #     path: .pods.ucp.barbican.api.min
-  #   dest:
-  #     path: .values.pod.replicas.api
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.ucp.barbican.api.min
+      dest:
+        path: .values.pod.replicas.api
 data:
   values:
     pod:

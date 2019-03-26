@@ -14,20 +14,19 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
-  #TOD(JG) tie to scal eprofile
-  # substitutions:
-  # - src:
-  #     schema: pegleg/PodScaleProfile/v1
-  #     name: pod-scale-profile
-  #     path: .pods.ucp.ingress.ingress.min
-  #   dest:
-  #     path: .values.pod.replicas.ingress
-  # - src:
-  #     schema: pegleg/PodScaleProfile/v1
-  #     name: pod-scale-profile
-  #     path: .pods.ucp.ingress.error_page.min
-  #   dest:
-  #     path: .values.pod.replicas.error_page
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.ucp.ingress.ingress.min
+      dest:
+        path: .values.pod.replicas.ingress
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.ucp.ingress.error_page.min
+      dest:
+        path: .values.pod.replicas.error_page
 data:
   values:
     pod:
