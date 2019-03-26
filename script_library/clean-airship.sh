@@ -79,7 +79,7 @@ if [[ ${clean_action} == *"clean_openstack"* ]]; then
     # DO NOT USE clusterrolebinding, else you will delete all rolebindings, even the suse: and system: ones,
     # even when scoped in the namespace.
     kubectl get -n openstack rolebinding.rbac.authorization.k8s.io -o name | xargs kubectl -n openstack delete
-
+    kubectl get jobs -n openstack -o name | xargs kubectl delete -n openstack
     kubectl delete namespace --ignore-not-found openstack
 fi
 
@@ -88,6 +88,7 @@ if [[ ${clean_action} == *"clean_rest"* ]]; then
 fi
 
 if [[ ${clean_action} == *"clean_ucp"* ]]; then
+    kubectl get jobs -n ucp -o name | xargs kubectl delete -n ucp
     kubectl delete namespace --ignore-not-found ucp
 fi
 
