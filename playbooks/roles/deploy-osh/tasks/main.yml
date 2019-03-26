@@ -177,14 +177,14 @@
   vars:
     _component_runcommand: ./tools/deployment/multinode/020-ingress.sh
     _component_run_env:
-      OSH_EXTRA_HELM_ARGS_INGRESS_OPENSTACK: >
+      OSH_EXTRA_HELM_ARGS_INGRESS_openstack: >
         --values=/tmp/socok8s-susedefaults-ingress-namespace.yaml
         --values=/tmp/socok8s-useroverrides-ingress-namespace.yaml
-        {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_OPENSTACK') | default('', True) }}
-      OSH_EXTRA_HELM_ARGS_INGRESS_CEPH: >
+        {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_openstack') | default('', True) }}
+      OSH_EXTRA_HELM_ARGS_INGRESS_ceph: >
         --values=/tmp/socok8s-susedefaults-ingress-namespace.yaml
         --values=/tmp/socok8s-useroverrides-ingress-namespace.yaml
-        {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_CEPH') | default('', True) }}
+        {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_INGRESS_ceph') | default('', True) }}
       OSH_EXTRA_HELM_ARGS_INGRESS_KUBE_SYSTEM: >
         --values=/tmp/socok8s-susedefaults-ingress-kube-system.yaml
         --values=/tmp/socok8s-useroverrides-ingress-kube-system.yaml
