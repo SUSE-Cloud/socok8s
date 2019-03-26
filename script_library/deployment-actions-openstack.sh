@@ -91,9 +91,9 @@ function clean_openstack(){
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio_instance.yml -e ses_node_delete=True
 }
 function clean_userfiles(){
-    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
+    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
-        echo "DELETE_ANYWAY is set, deleting user files"
-        rm -rf ~/suse-socok8s-deploy/
+        extra_arg="-e delete_anyway='yes'"
     fi
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_userfiles.yml ${extra_arg:-}
 }
