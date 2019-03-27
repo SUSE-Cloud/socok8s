@@ -56,3 +56,6 @@ socok8s_site_name: "soc"
 ucp_keystone_admin_password: 'password123'
 openstack_keystone_admin_password: 'password123'
 ucp_shipyard_keystone_password: 'password123'
+
+# Flag to run pod rally tests (default false)
+run_rally_tests: false

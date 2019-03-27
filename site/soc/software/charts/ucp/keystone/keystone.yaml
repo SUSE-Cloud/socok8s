@@ -23,6 +23,8 @@ metadata:
 data:
   wait:
     timeout: 1800
+  test:
+    enabled: {{ run_rally_tests }}
   values:
     pod:
       replicas:
