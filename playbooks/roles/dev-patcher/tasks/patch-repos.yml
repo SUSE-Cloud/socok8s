@@ -13,7 +13,7 @@
   vars:
     pattern_to_replace: ")]}'"
 
-- name: Apply {{ patchnumber }}
+- name: Apply {{ patchnumber }} - {{ jsoncontent[0]['subject'] }}
   shell: |
     set -o errexit
     git fetch {{ jsoncontent[0]['revisions'][current_revision]['fetch']['anonymous http']['url'] }} {{ jsoncontent[0]['revisions'][current_revision]['fetch']['anonymous http']['ref'] }}
