@@ -23,10 +23,10 @@ dev_patcher_patches:
   - 641802
   # osh: Allow more generic overrides for horizon
   - 645141
-  # osh: Allow more generic overrides for nova placement-api
-  - 642067
   # osh: Fix indent filter not properly adding a newline after toYaml
   - 642844
+  # osh: Allow more generic overrides for nova placement-api
+  - 642067
   # osh-images: Add rocky release script
   - 642415
   # osh: change the nova cache to dogpile.cache.memcached
