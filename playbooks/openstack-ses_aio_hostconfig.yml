@@ -64,6 +64,7 @@
     - name: Reboot host
       reboot:
         reboot_timeout: 900
+        connect_timeout: 90
 
     - name: Install extra software
       zypper:
