@@ -1,21 +1,24 @@
 ---
-- name: "Prepare override file {{ _cmpnt_template }}"
-  config_template:
-    src: "{{ _cmpnt_template }}.j2"
-    dest: "/tmp/socok8s-{{ _cmpnt_template }}"
-    config_overrides: "{{ _cmpnt_overrides }}"
-    config_type: yaml
-  register: _usertemplatedata
+- name: Generate SUSE defaults
+  loop: "{{ _component_overrides }}"
+  template:
+    src: "{{ item.suse_file }}.j2"
+    dest: "/tmp/socok8s-susedefaults-{{ item.suse_file }}"
+
+- name: Generate user overrides
+  loop: "{{ _component_overrides }}"
+  copy:
+    content: "{{ item.user_overrides | to_nice_yaml }}"
+    dest: "/tmp/socok8s-useroverrides-{{ item.suse_file }}"
 
 # This needs specific executable, and therefore needs shell module,
 # which causes an ansible-lint issue (no idempotency test). In the meantime
 # that idempotency tests are created, we skip_ansible_lint
 - name: Run the override file
-  shell: "{{ _cmpnt_runcommand }}"
+  shell: "{{ _component_runcommand }}"
   args:
     executable: /bin/bash
-    chdir: "{{ _cmpnt_chdir | default('/opt/openstack-helm') }}"
-  environment:
-    OSH_INFRA_PATH: /opt/openstack-helm-infra
+    chdir: "/opt/openstack-helm"
+  environment: "{{ base_env_vars | combine(_component_run_env) }}"
   tags:
     - skip_ansible_lint
