@@ -1,16 +1,22 @@
 ---
 - name: Load standard variables
   include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+  tags:
+    - always
 
 - name: Create ses_cluster_configuration
   set_fact:
     ses_cluster_configuration: "{{ lookup('file', socok8s_ses_pools_details) | from_yaml }}"
+  tags:
+    - always
 
 - name: Pre-flight checks for the role
   assert:
     that:
       - ceph_admin_keyring_b64key is defined
       - ceph_user_keyring_b64key is defined
+  tags:
+    - always
 
 - name: Create a list of monitors (ip and port) if no override exists for it.
   set_fact:
@@ -25,11 +31,15 @@
   args:
     creates: "{{ socok8s_libvirtuuid }}"
   delegate_to: localhost
+  tags:
+    - always
 
 - name: Get libvirt secret
   set_fact:
     libvirt_ceph_cinder_secret_uuid: "{{ lookup('file', socok8s_libvirtuuid) }}"
   run_once: True
+  tags:
+    - always
 
 #TODO JG move to ceph provisioner chart
 - name: Create ceph secrets yaml

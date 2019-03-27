@@ -4,10 +4,14 @@
 #TODO JG move to a common role/task
 - name: Load standard variables
   include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+  tags:
+    - always
 
 - name: Create ses_cluster_configuration
   set_fact:
     ses_cluster_configuration: "{{ lookup('file', socok8s_ses_pools_details) | from_yaml }}"
+  tags:
+    - always
 
 - name: Create a list of monitors (ip and port) if no override exists for it.
   set_fact:
@@ -21,6 +25,8 @@
   set_fact:
     site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ socok8s_site_name }}"
     no_revision_error_msg: "{{ socok8s_site_name }}-design added no new revision"
+  tags:
+    - always
 
 - name: Set pegleg parameters
   set_fact:
@@ -28,6 +34,8 @@
     pegleg_image: "{{ airship_pegleg_image }}"
     pegleg: '../airship-pegleg/tools/pegleg.sh '
     pegleg_output: 'peggles'
+  tags:
+    - always
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Pegleg lint the site manifests
@@ -40,6 +48,7 @@
   tags:
     - install
     - skip_ansible_lint
+    - update_airship_osh_site
 
 - name: Create Pegleg output directory
   become: yes
@@ -59,6 +68,7 @@
     TERM_OPTS: '-l info'
   tags:
     - skip_ansible_lint
+    - update_airship_osh_site
 
 - name: Copy site to Shipyard
   become: yes
@@ -67,12 +77,14 @@
     dest: '{{ upstream_repos_clone_folder }}/airship-shipyard'
   tags:
     - install
+    - update_airship_osh_site
 
 - name: Set up shipyard shell script
   set_fact:
     shipyard: './tools/shipyard.sh'
   tags:
     - install
+    - always
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Create config docs in Shipyard
@@ -89,6 +101,7 @@
   tags:
     - install
     - skip_ansible_lint
+    - update_airship_osh_site
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Commit config docs in Shipyard
@@ -105,6 +118,7 @@
   tags:
     - install
     - skip_ansible_lint
+    - update_airship_osh_site
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Create update software action in Shipyard
@@ -119,18 +133,21 @@
   tags:
     - install
     - skip_ansible_lint
+    - update_airship_osh_site
 
 - name: Print Shipyard action information
   debug:
     msg: "{{ shipyard_update_software.stdout_lines }}"
   tags:
     - install
+    - update_airship_osh_site
 
 - name: Get action key
   set_fact:
     shipyard_action_key: '{{ shipyard_update_software.stdout_lines[1].split()[1] }}'
   tags:
     - install
+    - update_airship_osh_site
 
 - name: Write site records
   template:
@@ -138,12 +155,14 @@
     dest: '{{ socok8s_deploy_config_location }}/{{ socok8s_site_name }}-keys.yaml'
   tags:
     - install
+    - update_airship_osh_site
 
 - name: Wait 10 minutes before checking the action status
   pause:
     minutes: 10
   tags:
     - install
+    - update_airship_osh_site
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Wait for update software action to complete... it can take up from 30-60 minutes
@@ -160,7 +179,10 @@
   ignore_errors: yes
   tags:
     - skip_ansible_lint
+    - update_airship_osh_site
 
 - name: Print Shipyard update software action status
   debug:
     msg: "{{ shipyard_desc_action.stdout_lines }}"
+  tags:
+    - update_airship_osh_site

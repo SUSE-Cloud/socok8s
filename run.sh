@@ -79,6 +79,9 @@ case "$deployment_action" in
     "deploy_airship")
         deploy_airship
         ;;
+    "update_airship_osh")
+        deploy_airship update_airship_osh_site
+        ;;
     "setup_everything")
         deploy_ses
         deploy_caasp
