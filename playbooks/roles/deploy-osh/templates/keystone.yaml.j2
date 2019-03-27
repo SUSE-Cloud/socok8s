@@ -1,2 +1,46 @@
 ---
-{{ lookup('template','files/common-images-overrides.yml') | from_yaml | to_nice_yaml(indent=2) }}
+#TODO(itxaka): Remove the developer mode when 647403 is merged
+{% if developer_mode %}
+conf:
+  apache2:
+    binary: apache2ctl
+    start_parameters: -DFOREGROUND -k start
+    site_dir: /etc/apache2/vhosts.d
+    conf_dir: /etc/apache2/conf.d
+    a2enmod:
+      - version
+    security: |
+      <Directory "/var/www">
+      Options Indexes FollowSymLinks
+      AllowOverride All
+      <IfModule !mod_access_compat.c>
+        Require all granted
+      </IfModule>
+      <IfModule mod_access_compat.c>
+        Order allow,deny
+        Allow from all
+      </IfModule>
+      </Directory>
+pod:
+  security_context:
+    keystone:
+      pod:
+        runAsUser: 0
+      container:
+        keystone_api:
+          readOnlyRootFilesystem: false
+images:
+  tags:
+    bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    keystone_api: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+    keystone_bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    keystone_credential_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+    keystone_credential_setup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+    keystone_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+    keystone_domain_manage: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+    keystone_fernet_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+    keystone_fernet_setup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+    ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+{%  endif %}
