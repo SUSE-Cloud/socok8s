@@ -162,8 +162,8 @@
 
         - name: Extend inventory in workspace with newly created caasp nodes
           config_template:
-            src: "{{ socok8s_workspace }}/inventory/hosts.yml"
-            dest: "{{ socok8s_workspace }}/inventory/hosts.yml"
+            src: "{{ socok8s_workspace }}/inventory/skeleton-inventory.yml"
+            dest: "{{ socok8s_workspace }}/inventory/caasp.yml"
             config_type: yaml
             config_overrides: "{{ caasp_overrides }}"
           vars:
@@ -232,3 +232,4 @@
           loop:
             - "{{ socok8s_caasp_environment_details }}"
             - "{{ deploy_on_openstack_caasp_stacknamefile }}"
+            - "{{ socok8s_workspace }}/inventory/caasp.yml"

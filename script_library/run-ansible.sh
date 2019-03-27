@@ -17,7 +17,7 @@ function run_ansible(){
     if [[ ! -d ${ANSIBLE_RUNNER_DIR} ]]; then
         mkdir -p ${ANSIBLE_RUNNER_DIR}/{env,inventory} || true
         echo "Adding an empty inventory by default"
-        cp ${socok8s_absolute_dir}/examples/workdir/inventory/hosts.yml ${inventorydir}
+        cp ${socok8s_absolute_dir}/examples/workdir/inventory/hosts.yml ${inventorydir}/skeleton-inventory.yml
     fi
 
     if [[ -f ${extravarsfile} ]]; then

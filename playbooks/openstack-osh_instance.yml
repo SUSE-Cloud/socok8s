@@ -47,8 +47,8 @@
         # exporting ANSIBLE_RUNNER_DIR
         - name: Extend inventory in workspace with newly created OSH deployer node
           config_template:
-            src: "{{ socok8s_workspace }}/inventory/hosts.yml"
-            dest: "{{ socok8s_workspace }}/inventory/hosts.yml"
+            src: "{{ socok8s_workspace }}/inventory/skeleton-inventory.yml"
+            dest: "{{ socok8s_workspace }}/inventory/osh.yml"
             config_type: yaml
             config_overrides: "{{ osh_aio_overrides }}"
           vars:
@@ -108,3 +108,8 @@
             state: absent
             name: "{{ hostvars[item]['ansible_host'] }}"
           loop: "{{ groups['osh-deployer'] }}"
+
+        - name: Delete osh inventory
+          file:
+            state: absent
+            path: "{{ socok8s_workspace }}/inventory/osh.yml"
