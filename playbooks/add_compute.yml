@@ -1,0 +1,14 @@
+---
+- hosts: airship-openstack-compute-workers
+  gather_facts: yes
+  any_errors_fatal: true
+  roles:
+    - role: airship-configure-worker
+      tags:
+        - add_computenode 
+
+- hosts: airship-deployer
+  gather_facts: yes
+  any_errors_fatal: true
+  roles:
+    - airship-deploy-osh

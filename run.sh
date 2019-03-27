@@ -82,6 +82,9 @@ case "$deployment_action" in
     "update_airship_osh")
         deploy_airship update_airship_osh_site
         ;;
+    "add_compute")
+        add_compute
+        ;;
     "setup_everything")
         deploy_ses
         deploy_caasp

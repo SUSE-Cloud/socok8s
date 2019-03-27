@@ -7,6 +7,8 @@
       - "/var/lib/openstack-helm"
       - "/var/lib/neutron"
   when: ('airship-openstack-compute-workers' in group_names)
+  tags:
+    - add_computenode
 
 - name: Set CaaSP controller work node subvolume list
   set_fact:
@@ -20,6 +22,8 @@
     dest: /tmp/caasp_worker_node_set_subvolumes.sh
     mode: "0755"
     force: yes
+  tags:
+    - add_computenode
 
 - name: Execute subvolume setup script
   command: /tmp/caasp_worker_node_set_subvolumes.sh
@@ -27,9 +31,12 @@
   failed_when: subvolume_cmd_out.rc != 0
   tags:
     - skip_ansible_lint
+    - add_computenode
 
 - name: Reboot node after successful subvolumes creation
   reboot:
     msg: "Ansible triggered reboot after making subvolumes for Nova, Neutron and Libvirt"
     test_command: "kubectl get nodes"
   when: subvolume_cmd_out.stdout.find('reboot') >= 0
+  tags:
+    - add_computenode
