@@ -12,7 +12,13 @@ network:
     # what type of vip manage machanism will be used
     # possible options: routed, keepalived
     mode: routed
+    {# Remove this condition when https://review.openstack.org/#/c/640115 merges #}
+    {% if developer_mode | bool %}
     interfaces: ingress-vip
     addrs: {{ socok8s_ext_vip }}
+    {% else %}
+    interface: ingress-vip
+    addr: {{ socok8s_ext_vip }}
+    {% endif %}
     external_policy_local: true
 {{ lookup('template','files/common-images-overrides.yml') | from_yaml | to_nice_yaml(indent=2) }}
