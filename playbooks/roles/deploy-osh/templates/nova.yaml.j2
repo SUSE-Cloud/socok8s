@@ -6,4 +6,52 @@ conf:
       user: {{ ses_cluster_configuration['cinder']['rbd_store_user'] }}
       keyring: {{ suse_ses_cinder_pool_key | default(ceph_admin_keyring_key) }}
       secret_uuid: {{ libvirt_ceph_cinder_secret_uuid }}
-{{ lookup('template','files/common-images-overrides.yml') | from_yaml | to_nice_yaml(indent=2) }}
+{% if developer_mode %}
+  apache2:
+    binary: apache2ctl
+    start_parameters: -DFOREGROUND -k start
+    site_dir: /etc/apache2/vhosts.d
+    conf_dir: /etc/apache2/conf.d
+    a2enmod:
+      - version
+    security: |
+      <Directory "/var/www">
+      Options Indexes FollowSymLinks
+      AllowOverride All
+      <IfModule !mod_access_compat.c>
+        Require all granted
+      </IfModule>
+      <IfModule mod_access_compat.c>
+        Order allow,deny
+        Allow from all
+      </IfModule>
+      </Directory>
+images:
+  tags:
+    bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    nova_api: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+    nova_cell_setup: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+    nova_cell_setup_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    nova_compute: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+    # not built?
+    # nova_compute_ironic: 'docker.io/kolla/ubuntu-source-nova-compute-ironic:ocata'
+    nova_compute_ssh: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+    nova_conductor: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+    nova_consoleauth: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+    nova_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+    nova_novncproxy: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+    # what is in this image?
+    #nova_novncproxy_assets: 'docker.io/kolla/ubuntu-source-nova-novncproxy:ocata'
+    nova_placement: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+    nova_scheduler: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+    # what is in this image?
+    #nova_service_cleaner: 'docker.io/port/ceph-config-helper:v1.10.3'
+    nova_spiceproxy: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+    # what is in this image?
+    #nova_spiceproxy_assets: 'docker.io/kolla/ubuntu-source-nova-spicehtml5proxy:ocata'
+{%  endif %}

@@ -15,7 +15,7 @@
 # under the License.
 #
 
-- hosts: osh-deployer
+- hosts: soc-deployer
   gather_facts: no
   tasks:
     - name: Running cleanup script

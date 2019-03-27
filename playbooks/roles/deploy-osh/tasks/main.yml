@@ -162,20 +162,10 @@
     owner: root
     mode: '0640'
 
-# TODO(evrardjp): Follow on https://review.openstack.org/#/c/605005/
-- name: Use a different ingress script as long as upstream does not support overrides
-  copy:
-    src: 020-ingress.sh
-    dest: /opt/openstack-helm/tools/deployment/multinode/020-ingress.sh
-    mode: '0755'
-  tags:
-    - ingress
-    - run
-
 - name: Setup Basic ingress and namespace
   import_tasks: component-install.yml
   vars:
-    _component_runcommand: ./tools/deployment/multinode/020-ingress.sh
+    _component_runcommand: "./tools/deployment/multinode/020-ingress.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_INGRESS_openstack: >
         --values=/tmp/socok8s-susedefaults-ingress-namespace.yaml

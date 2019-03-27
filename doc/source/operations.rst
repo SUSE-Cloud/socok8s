@@ -49,3 +49,47 @@ Check the next run:
 .. code-block:: console
 
    systemctl list-timers
+
+
+.. _kubernetesoperations:
+
+Kubernetes Operations
+=====================
+
+Kubernetes has documentation for `troubleshooting typical problems with applications and clusters <https://kubernetes.io/docs/tasks/debug-application-cluster/troubleshooting//>`_.
+
+
+.. _tips_and_tricks:
+
+Tips and Tricks
+===============
+
+
+Display all images used by a component
+--------------------------------------
+
+For neutron:
+
+.. code-block:: console
+
+   kubectl get pods -n openstack -l application=neutron -o jsonpath="{.items[*].spec.containers[*].image}"|tr -s '[[:space:]]' '\n' | sort | uniq -c
+    
+
+Remove dangling docker images
+-----------------------------
+
+Useful after building local images:
+
+.. code-block:: console
+
+   docker rmi $(docker images -f "dangling=true" -q)
+
+
+Setting the default context
+---------------------------
+
+So you do not have to pass "-n openstack" all the time
+
+.. code-block:: console
+
+   kubectl config set-context $(kubectl config current-context) --namespace=openstack

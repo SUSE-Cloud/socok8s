@@ -19,9 +19,9 @@ metadata:
   storagePolicy: cleartext
 data:
   wait:
-    timeout: 3000
+    timeout: {{ openstack_helm_deploy_timeout }}
   test:
-    enabled: {{ run_rally_tests }}
+    enabled: {{ run_tests }}
   values:
     bootstrap:
       enabled: false

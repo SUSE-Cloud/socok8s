@@ -9,4 +9,14 @@ conf:
     glance_store:
       rbd_store_user: {{ ses_cluster_configuration['glance']['rbd_store_user'] }}
       rbd_store_pool: {{ ses_cluster_configuration['glance']['rbd_store_pool'] }}
-{{ lookup('template','files/common-images-overrides.yml') | from_yaml | to_nice_yaml(indent=2) }}
+images:
+  tags:
+    bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+    glance_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/glance:{{ suse_openstack_image_version }}"
+    glance_api: "{{ suse_osh_registry_location }}/openstackhelm/glance:{{ suse_openstack_image_version }}"
+    glance_registry: "{{ suse_osh_registry_location }}/openstackhelm/glance:{{ suse_openstack_image_version }}"

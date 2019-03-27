@@ -32,11 +32,11 @@ metadata:
 data:
   namespace: openstack
   wait:
-    timeout: 1800
+    timeout: {{ openstack_helm_deploy_timeout }}
     labels:
       release_group: airship-neutron
   test:
-    enabled: {{ run_rally_tests }}
+    enabled: {{ run_tests }}
   values:
     pod:
       replicas:

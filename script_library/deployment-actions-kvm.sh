@@ -51,6 +51,10 @@ function deploy_airship(){
     fi
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_airship.yml ${tagged_info}
 }
+function add_compute(){
+    echo "Now Add compute"
+    run_ansible ${socok8s_absolute_dir}/playbooks/add_compute.yml
+}
 function clean_k8s(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then

@@ -13,6 +13,9 @@ socok8s_dcm_vip: 192.168.89.251
 scale_profile: ha
 redeploy_osh_only: false
 
+# Flag to run or disable all helm tests (default true)
+run_tests: true
+
 # Following commented list is provided to make clients/customer aware of the
 # varibles which can be overriden if needed.
 

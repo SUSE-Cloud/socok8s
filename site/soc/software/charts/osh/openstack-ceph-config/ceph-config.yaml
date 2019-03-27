@@ -17,7 +17,7 @@ metadata:
   storagePolicy: cleartext
 data:
   wait:
-    timeout: 300
+    timeout: {{ openstack_helm_deploy_timeout }}
     #   resources:
     #     - type: pod
     #       labels:

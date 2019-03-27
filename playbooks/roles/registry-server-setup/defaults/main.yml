@@ -1,7 +1,7 @@
 ---
 
 # TODO: may need better way to identify registry server.
-registry_server_hostgroup: "airship-deployer"
+registry_server_hostgroup: "soc-deployer"
 registry_server_hostvars: "{{ hostvars[groups[registry_server_hostgroup][0]] }}"
 registry_server_host_ip: "{{ registry_server_hostvars.ansible_default_ipv4.address | ipaddr('address') }}"
 

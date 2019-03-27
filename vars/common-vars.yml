@@ -10,6 +10,7 @@ socok8s_caasp_environment_details: "{{ socok8s_workspace }}/environment.json"
 socok8s_libvirtuuid: "{{ socok8s_workspace }}/libvirt.uuid"
 suse_osh_registry_location: "docker.io"
 suse_openstack_image_version: "rocky-opensuse_15"
+suse_infra_image_version: "latest-opensuse_15"
 
 ######################################################
 # Following variables are used by airship logic only
@@ -57,5 +58,8 @@ ucp_keystone_admin_password: 'password123'
 openstack_keystone_admin_password: 'password123'
 ucp_shipyard_keystone_password: 'password123'
 
-# Flag to run pod rally tests (default false)
-run_rally_tests: false
+#Set timeout for ucp deployment
+ucp_deploy_timeout: 1800
+
+#Set timeout for osh deployment
+openstack_helm_deploy_timeout: 3000
