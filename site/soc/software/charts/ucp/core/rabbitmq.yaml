@@ -24,7 +24,7 @@ metadata:
 data:
   timeout: 1800
   test:
-    enabled: false
+    enabled: {{ run_rally_tests }}
   values:
     pod:
       replicas:
