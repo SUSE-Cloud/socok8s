@@ -57,6 +57,9 @@ case "$deployment_action" in
     "deploy_osh")
         deploy_osh
         ;;
+    "add_compute")
+        add_compute
+        ;;
     "setup_caasp_workers_for_openstack")
         setup_caasp_workers_for_openstack
         ;;

@@ -4,6 +4,7 @@
   include: subvolumes-setup.yml
   tags:
     - preinstall
+    - add_computenode
 
 - name: Enroll node for Airship UCP
   shell: "kubectl label nodes {{ inventory_hostname }} kube-ingress=enabled"
@@ -56,6 +57,7 @@
     - _enrollforopenstackcomp.stderr.find("already has a value (enabled)") == -1
   tags:
     - skip_ansible_lint
+    - add_computenode
 
 - name: Enroll node for Airship Openstack control plane primary class
   shell: |
