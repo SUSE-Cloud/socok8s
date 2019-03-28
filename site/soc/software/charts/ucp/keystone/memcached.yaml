@@ -27,7 +27,7 @@ metadata:
         path: .values.pod.replicas.prometheus_memcached_exporter
 data:
   wait:
-    timeout: 1800
+    timeout: {{ ucp_deploy_timeout }}
   values:
     pod:
       replicas:

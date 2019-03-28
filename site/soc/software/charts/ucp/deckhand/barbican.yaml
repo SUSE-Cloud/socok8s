@@ -20,6 +20,8 @@ metadata:
       dest:
         path: .values.pod.replicas.api
 data:
+  wait:
+    timeout: {{ ucp_deploy_timeout }}
   test:
     enabled: {{ run_rally_tests }}
   values:

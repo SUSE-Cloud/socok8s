@@ -59,3 +59,9 @@ ucp_shipyard_keystone_password: 'password123'
 
 # Flag to run pod rally tests (default false)
 run_rally_tests: false
+
+#Set timeout for ucp deployment
+ucp_deploy_timeout: 1800
+
+#Set timeout for osh deployment
+openstack_helm_deploy_timeout: 3000
