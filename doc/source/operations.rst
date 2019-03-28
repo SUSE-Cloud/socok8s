@@ -49,3 +49,15 @@ Check the next run:
 .. code-block:: console
 
    systemctl list-timers
+
+
+.. _kubernetesoperations:
+
+Kubernetes Operations
+=====================
+
+Kubernetes has documentation for `troubleshooting typical problems with applications and clusters <https://kubernetes.io/docs/tasks/debug-application-cluster/troubleshooting//>`_.
+
+
+
+
