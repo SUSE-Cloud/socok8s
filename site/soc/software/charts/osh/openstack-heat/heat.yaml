@@ -42,7 +42,7 @@ metadata:
         path: .values.pod.replicas.engine
 data:
   test:
-    enabled: {{ run_rally_tests }}
+    enabled: {{ run_tests }}
   values:
     pod:
       replicas:

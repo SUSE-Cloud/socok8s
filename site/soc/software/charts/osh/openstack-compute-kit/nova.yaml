@@ -64,7 +64,7 @@ metadata:
         path: .values.pod.replicas.novncproxy
 data:
   test:
-    enabled: {{ run_rally_tests }}
+    enabled: {{ run_tests }}
   values:
     labels:
       agent:

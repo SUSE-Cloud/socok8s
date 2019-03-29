@@ -23,7 +23,7 @@ data:
   wait:
     timeout: 1800
   test:
-    enabled: {{ run_rally_tests }}
+    enabled: {{ run_tests }}
   values:
     pod:
       replicas:

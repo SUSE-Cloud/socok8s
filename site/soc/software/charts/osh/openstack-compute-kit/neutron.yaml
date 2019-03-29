@@ -36,7 +36,7 @@ data:
     labels:
       release_group: airship-neutron
   test:
-    enabled: {{ run_rally_tests }}
+    enabled: {{ run_tests }}
   values:
     pod:
       replicas:

@@ -21,7 +21,7 @@ data:
   wait:
     timeout: 3000
   test:
-    enabled: {{ run_rally_tests }}
+    enabled: {{ run_tests }}
   values:
     bootstrap:
       enabled: false
