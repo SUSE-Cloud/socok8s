@@ -32,7 +32,7 @@ metadata:
 data:
   namespace: openstack
   wait:
-    timeout: 1800
+    timeout: {{ openstack_helm_deploy_timeout }}
     labels:
       release_group: airship-neutron
   test:

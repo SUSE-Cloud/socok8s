@@ -28,6 +28,8 @@ metadata:
       dest:
         path: .values.pod.replicas.error_page
 data:
+  wait:
+    timeout: {{ ucp_deploy_timeout }}
   values:
     pod:
       replicas:
