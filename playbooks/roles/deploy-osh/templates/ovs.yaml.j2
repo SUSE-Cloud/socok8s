@@ -1,2 +1,5 @@
 ---
-{{ lookup('template','files/common-images-overrides.yml') | from_yaml | to_nice_yaml(indent=2) }}
+images:
+  tags:
+    openvswitch_db_server: "{{ suse_osh_registry_location }}/openstackhelm/libvirt:{{ suse_infra_image_version }}"
+    openvswitch_vswitchd: "{{ suse_osh_registry_location }}/openstackhelm/libvirt:{{ suse_infra_image_version }}"
