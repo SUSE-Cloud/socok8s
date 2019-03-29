@@ -37,3 +37,5 @@ dev_patcher_patches:
   - 647403
   # osh: Remove overlapping Listen directives on apache >= 2.4
   - 645189
+  # osh: Add an option to the health probe to test all pids
+  - 644907
