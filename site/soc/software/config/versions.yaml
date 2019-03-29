@@ -178,9 +178,27 @@ data:
       prometheus_process_exporter: {}
     # the ucp section is not used in socok8s deployment.
     ucp:
-      armada: {}
-      barbican: {}
-      deckhand: {}
+      armada:
+        armada: "{{ suse_airship_registry_location }}/airshipit/armada:{{ suse_airship_components_image_tag }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+      barbican:
+        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        scripted_test: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        barbican_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_osh_image_version }}"
+        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        barbican_api: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_osh_image_version }}"
+      deckhand:
+        deckhand: "{{ suse_airship_registry_location }}/airshipit/deckhand:{{ suse_airship_components_image_tag }}"
+        db_sync: "{{ suse_airship_registry_location }}/airshipit/deckhand:{{ suse_airship_components_image_tag }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
       divingbell: {}
       drydock: {}
       ingress: {}
@@ -191,7 +209,14 @@ data:
       postgresql: {}
       promenade: {}
       rabbitmq: {}
-      shipyard: {}
+      shipyard:
+        shipyard: "{{ suse_airship_registry_location }}/airshipit/shipyard:{{ suse_airship_components_image_tag }}"
+        shipyard_db_sync: "{{ suse_airship_registry_location }}/airshipit/shipyard:{{ suse_airship_components_image_tag }}"
+        airflow: "{{ suse_airship_registry_location }}/airshipit/airflow:{{ suse_airship_components_image_tag }}"
+        airflow_db_sync: "{{ suse_airship_registry_location }}/airshipit/airflow:{{ suse_airship_components_image_tag }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
       tiller: {}
 metadata:
   labels:
