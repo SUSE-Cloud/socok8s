@@ -1,11 +1,11 @@
 ---
-- name: Generate SUSE defaults
+- name: Generate SUSE defaults for {{ _component_runcommand.split("-") | last | splitext | first }}
   loop: "{{ _component_overrides }}"
   template:
     src: "{{ item.suse_file }}.j2"
     dest: "/tmp/socok8s-susedefaults-{{ item.suse_file }}"
 
-- name: Generate user overrides
+- name: Generate user overrides for {{ _component_runcommand.split("-") | last | splitext | first }}
   loop: "{{ _component_overrides }}"
   copy:
     content: "{{ item.user_overrides | to_nice_yaml }}"
@@ -14,7 +14,7 @@
 # This needs specific executable, and therefore needs shell module,
 # which causes an ansible-lint issue (no idempotency test). In the meantime
 # that idempotency tests are created, we skip_ansible_lint
-- name: Run the override file
+- name: Run the override file for {{ _component_runcommand.split("-") | last | splitext | first }}
   shell: "{{ _component_runcommand }}"
   args:
     executable: /bin/bash
