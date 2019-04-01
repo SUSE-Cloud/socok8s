@@ -8,6 +8,4 @@ conf:
       secret_uuid: {{ libvirt_ceph_cinder_secret_uuid }}
 images:
   tags:
-    # libvirt: "{{ suse_osh_registry_location }}/openstackhelm/libvirt:{{ suse_infra_image_version }}"
-    # Using static tag name as currently it is saved incorrectly in dockerhub
-    libvirt: "{{ suse_osh_registry_location }}/openstackhelm/libvirt:opensuse_15-latest"
+    libvirt: "{{ suse_osh_registry_location }}/openstackhelm/libvirt:{{ suse_infra_image_version }}"
