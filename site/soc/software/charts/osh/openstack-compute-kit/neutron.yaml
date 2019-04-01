@@ -11,7 +11,7 @@ metadata:
       component: neutron
     actions:
       - method: merge
-        path: .values.pod
+        path: .
       - method: replace
         path: .values.labels.agent.l3
       - method: replace
@@ -36,7 +36,8 @@ data:
     labels:
       release_group: airship-neutron
   test:
-    enabled: {{ run_rally_tests }}
+    enabled: {{ run_tests | default('true') }}
+    timeout: {{ test_timeout | default(300) }}
   values:
     pod:
       replicas:
