@@ -92,6 +92,8 @@
             workerinventory: "{ {% for node in workers %}\"{{ node.Name }}\": { \"ansible_host\":\"{{ node.Networks.split(',')[-1].replace(' ','') }}\" }{% if not loop.last %},{% endif %}{% endfor %} }"
             admininventory: "{ {% for node in admins %}\"{{ node.Name }}\": { \"ansible_host\":\"{{ node.Networks.split(',')[-1].replace(' ','') }}\" }{% if not loop.last %},{% endif %}{% endfor %} }"
             masterinventory: "{ {% for node in masters %}\"{{ node.Name }}\": { \"ansible_host\":\"{{ node.Networks.split(',')[-1].replace(' ','') }}\" }{% if not loop.last %},{% endif %}{% endfor %} }"
+            controlinventory: "{ {% for node in workers %}{% if loop.index <= 2 %}\"{{ node.Name }}\": { \"ansible_host\":\"{{ node.Networks.split(',')[-1].replace(' ','') }}\"{% if loop.first %},\"primary\":\"yes\"{% endif %} }{% if not loop.last %},{% endif %}{% endif %}{% endfor %} }"
+            computeinventory: "{ {% for node in workers %}{% if loop.index == 3 %}\"{{ node.Name }}\": { \"ansible_host\":\"{{ node.Networks.split(',')[-1].replace(' ','') }}\"{% if loop.index == 3 %},\"primary\":\"yes\"{% endif %} } {% if not loop.last %},{% endif %}{% endif %}{% endfor %} }"
 
         # TODO(evrardjp): Replace with stack outputs
         - name: List IDs
@@ -174,6 +176,14 @@
                 hosts: "{{ masterinventory }}"
               caasp-workers:
                 hosts: "{{ workerinventory }}"
+              airship-openstack-control-workers:
+                hosts: "{{ controlinventory }}"
+              airship-ucp-workers:
+                hosts: "{{ controlinventory }}"
+              airship-openstack-compute-workers:
+                hosts: "{{ computeinventory }}"
+              airship-kube-system-workers:
+                hosts: "{{ controlinventory }}"
 
         - name: Add vip with cidr in extravars
           lineinfile:

@@ -54,7 +54,7 @@ airship-openstack-compute-workers:
     linux-di7u:
       ansible_host: 192.168.89.144
 
-airship-workers:
+caasp-workers:
   children:
     airship-ucp-workers:
     airship-openstack-control-workers:

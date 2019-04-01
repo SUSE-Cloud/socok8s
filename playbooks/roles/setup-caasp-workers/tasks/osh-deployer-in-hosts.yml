@@ -3,7 +3,7 @@
   setup:
   delegate_to: "{{ item }}"
   delegate_facts: True
-  loop: "{{ groups['osh-deployer'] }}"
+  loop: "{{ groups['soc-deployer'] }}"
 
 - name: Configure the hosts for local registry if developer mode is enabled
   lineinfile:
@@ -14,5 +14,5 @@
       {{ hostvars[oshdeploynode]['ansible_fqdn'] }}
       {{ hostvars[oshdeploynode]['ansible_hostname'] }}
   vars:
-    oshdeploynode: "{{ groups['osh-deployer'][0] }}"
+    oshdeploynode: "{{ groups['soc-deployer'][0] }}"
 
