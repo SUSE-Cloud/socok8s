@@ -2,9 +2,7 @@
 - hosts: localhost
   gather_facts: no
   connection: local
-  roles:
-    - ansible-config_template
-  post_tasks:
+  tasks:
     - name: Load generic vars
       include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
     - name: Load openstack vars
@@ -86,15 +84,6 @@
             admins: "{{ _adminmachines.stdout | from_json }}"
             masters: "{{ _mastermachines.stdout | from_json }}"
 
-        # TODO(evrardjp): Replace with stack output
-        - name: Create inventory hosts structures
-          set_fact:
-            workerinventory: "{ {% for node in workers %}\"{{ node.Name }}\": { \"ansible_host\":\"{{ node.Networks.split(',')[-1].replace(' ','') }}\" }{% if not loop.last %},{% endif %}{% endfor %} }"
-            admininventory: "{ {% for node in admins %}\"{{ node.Name }}\": { \"ansible_host\":\"{{ node.Networks.split(',')[-1].replace(' ','') }}\" }{% if not loop.last %},{% endif %}{% endfor %} }"
-            masterinventory: "{ {% for node in masters %}\"{{ node.Name }}\": { \"ansible_host\":\"{{ node.Networks.split(',')[-1].replace(' ','') }}\" }{% if not loop.last %},{% endif %}{% endfor %} }"
-            controlinventory: "{ {% for node in workers %}{% if loop.index <= 2 %}\"{{ node.Name }}\": { \"ansible_host\":\"{{ node.Networks.split(',')[-1].replace(' ','') }}\"{% if loop.first %},\"primary\":\"yes\"{% endif %} }{% if not loop.last %},{% endif %}{% endif %}{% endfor %} }"
-            computeinventory: "{ {% for node in workers %}{% if loop.index == 3 %}\"{{ node.Name }}\": { \"ansible_host\":\"{{ node.Networks.split(',')[-1].replace(' ','') }}\"{% if loop.index == 3 %},\"primary\":\"yes\"{% endif %} } {% if not loop.last %},{% endif %}{% endif %}{% endfor %} }"
-
         # TODO(evrardjp): Replace with stack outputs
         - name: List IDs
           set_fact:
@@ -163,27 +152,60 @@
             - skip_ansible_lint
 
         - name: Extend inventory in workspace with newly created caasp nodes
-          config_template:
-            src: "{{ socok8s_workspace }}/inventory/skeleton-inventory.yml"
+          copy:
+            content: "{{ caasp_overrides }}"
             dest: "{{ socok8s_workspace }}/inventory/caasp.yml"
-            config_type: yaml
-            config_overrides: "{{ caasp_overrides }}"
           vars:
-            caasp_overrides:
+            caasp_overrides: |
               caasp-admin:
-                hosts: "{{ admininventory }}"
+                hosts:
+              {% for node in admins %}
+                  {{ node.Name }}:
+                    ansible_host: {{ node.Networks.split(',')[-1].replace(' ','') }}
+              {% endfor %}
+
               caasp-masters:
-                hosts: "{{ masterinventory }}"
+                hosts:
+              {% for node in masters %}
+                  {{ node.Name }}:
+                    ansible_host: {{ node.Networks.split(',')[-1].replace(' ','') }}
+              {% endfor %}
+
               caasp-workers:
-                hosts: "{{ workerinventory }}"
+                hosts:
+              {% for node in workers %}
+                  {{ node.Name }}:
+                    ansible_host: {{ node.Networks.split(',')[-1].replace(' ','') }}
+              {% endfor %}
+
               airship-openstack-control-workers:
-                hosts: "{{ controlinventory }}"
+                hosts: &firsttwoworkers
+              {% for node in workers %}{% if loop.index <= 2 %}
+                  {{ node.Name }}:
+                    ansible_host: {{ node.Networks.split(',')[-1].replace(' ','') }}
+              {% if loop.first %}
+                    primary: yes
+              {% endif %}
+              {% endif %}
+              {% endfor %}
+
               airship-ucp-workers:
-                hosts: "{{ controlinventory }}"
+                hosts: *firsttwoworkers
+
               airship-openstack-compute-workers:
-                hosts: "{{ computeinventory }}"
+                hosts:
+              {% for node in workers %}
+              {% if loop.index == 3 %}
+                  {{ node.Name }}:
+                    ansible_host: {{ node.Networks.split(',')[-1].replace(' ','') }}
+              {% if loop.first %}
+                    primary: yes
+              {% endif %}
+              {% endif %}
+              {% endfor %}
+
               airship-kube-system-workers:
-                hosts: "{{ controlinventory }}"
+                hosts: *firsttwoworkers
 
         - name: Add vip with cidr in extravars
           lineinfile:

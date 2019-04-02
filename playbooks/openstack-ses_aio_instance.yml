@@ -2,9 +2,7 @@
 - hosts: localhost
   gather_facts: no
   connection: local
-  roles:
-    - ansible-config_template
-  post_tasks:
+  tasks:
     - name: Load generic vars
       include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
     - name: Load openstack vars
@@ -42,20 +40,16 @@
         - name: Get server floating IP
           set_fact:
             ses_floating_ip: "{{ _ses_server_create['openstack']['accessIPv4'] }}"
-        # The run_ansible ensures the socok8s_workspace is not an empty var by
-        # exporting ANSIBLE_RUNNER_DIR
         - name: Extend inventory in workspace with newly created SES node
-          config_template:
-            src: "{{ socok8s_workspace }}/inventory/skeleton-inventory.yml"
+          copy:
+            content: "{{ ses_aio_overrides }}"
             dest: "{{ socok8s_workspace }}/inventory/ses.yml"
-            config_type: yaml
-            config_overrides: "{{ ses_aio_overrides }}"
           vars:
-            ses_aio_overrides:
+            ses_aio_overrides: |
               ses_nodes:
                 hosts:
                   ses-aio:
-                    ansible_host: "{{ ses_floating_ip }}"
+                    ansible_host: {{ ses_floating_ip }}
 
         - meta: refresh_inventory
 
