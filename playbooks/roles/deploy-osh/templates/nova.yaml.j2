@@ -7,25 +7,26 @@ conf:
       keyring: {{ suse_ses_cinder_pool_key | default(ceph_admin_keyring_key) }}
       secret_uuid: {{ libvirt_ceph_cinder_secret_uuid }}
 {% if developer_mode %}
-  apache2:
-    binary: apache2ctl
-    start_parameters: -DFOREGROUND -k start
-    site_dir: /etc/apache2/vhosts.d
-    conf_dir: /etc/apache2/conf.d
-    a2enmod:
-      - version
-    security: |
-      <Directory "/var/www">
-      Options Indexes FollowSymLinks
-      AllowOverride All
-      <IfModule !mod_access_compat.c>
-        Require all granted
-      </IfModule>
-      <IfModule mod_access_compat.c>
-        Order allow,deny
-        Allow from all
-      </IfModule>
-      </Directory>
+  software:
+    apache2:
+      binary: apache2ctl
+      start_parameters: -DFOREGROUND -k start
+      site_dir: /etc/apache2/vhosts.d
+      conf_dir: /etc/apache2/conf.d
+      a2enmod:
+        - version
+      security: |
+        <Directory "/var/www">
+          Options Indexes FollowSymLinks
+          AllowOverride All
+        <IfModule !mod_access_compat.c>
+          Require all granted
+        </IfModule>
+        <IfModule mod_access_compat.c>
+          Order allow,deny
+          Allow from all
+        </IfModule>
+        </Directory>
 images:
   tags:
     bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
