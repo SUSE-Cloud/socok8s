@@ -101,6 +101,7 @@ fi
 
 if [[ ${clean_action} == *"clean_ucp"* ]]; then
     sudo rm -rf /opt/airship-*
+    sudo rm -rf ${ANSIBLE_RUNNER_DIR}/secrets
 fi
 
 if [[ ${clean_action} == *"clean_openstack"* ]]; then
