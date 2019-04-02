@@ -31,7 +31,7 @@ function run_ansible(){
     fi
     if [[ ${USE_ARA:-False} == "True" ]]; then
         echo "Loading ARA"
-        source ${HOME}/.socok8svenv/ara.rc
+        source ${ANSIBLE_RUNNER_DIR}/.ansiblevenv/ara.rc
     fi
 
     pushd ${socok8s_absolute_dir}
