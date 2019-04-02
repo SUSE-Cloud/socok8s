@@ -215,20 +215,10 @@
 
         - meta: refresh_inventory
 
-        - name: Wait for a SSH to be properly started
-          wait_for:
-            host: "{{ hostvars[item]['ansible_host'] }}"
-            port: 22
-            search_regex: OpenSSH
-            state: started
-            delay: 10
-            timeout: 180
-          loop: "{{ groups['caasp-admin'] + groups['caasp-masters'] + groups['caasp-workers'] }}"
-
         - name: Get pubkey, and add it to known hosts
           command: "ssh-keyscan -H {{ hostvars[item]['ansible_host'] | quote }}"
           register: _caaspsshkeys
-          retries: 10
+          retries: 25
           delay: 10
           until: _caaspsshkeys.stdout and _caaspsshkeys.stdout.strip()
           loop: "{{ groups['caasp-admin'] + groups['caasp-masters'] + groups['caasp-workers'] }}"
