@@ -3,11 +3,11 @@
   setup:
   delegate_to: "{{ item }}"
   delegate_facts: True
-  loop: "{{ groups['osh-deployer'] }}"
+  loop: "{{ groups['soc-deployer'] }}"
 
 - name: Set build_registry
   set_fact:
-    build_registry_host: "{{ hostvars[groups['osh-deployer'][0]]['ansible_fqdn'] }}"
+    build_registry_host: "{{ hostvars[groups['soc-deployer'][0]]['ansible_fqdn'] }}"
 
 # TODO(evrardjp): Convert those to ansible modules
 - name: Generate SSL private and public key

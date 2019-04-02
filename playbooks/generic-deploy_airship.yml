@@ -1,5 +1,5 @@
 ---
-- hosts: airship-deployer
+- hosts: soc-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:
@@ -17,7 +17,7 @@
         - install
         - imagebuilder
 
-- hosts: airship-deployer
+- hosts: soc-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:
@@ -27,7 +27,7 @@
       tags:
         - upstream_patching
 
-- hosts: airship-workers
+- hosts: caasp-workers
   gather_facts: yes
   any_errors_fatal: true
   roles:
@@ -36,7 +36,7 @@
       tags:
         - install
 
-- hosts: airship-deployer
+- hosts: soc-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:
@@ -46,7 +46,7 @@
         - install
         - imagebuilder
 
-- hosts: airship-deployer
+- hosts: soc-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:
@@ -55,7 +55,7 @@
       tags:
         - install
 
-- hosts: airship-deployer
+- hosts: soc-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:
@@ -64,7 +64,7 @@
       tags:
         - install
 
-- hosts: airship-deployer
+- hosts: soc-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:
@@ -74,7 +74,7 @@
         - install
         - update_airship_ucp_site
 
-- hosts: airship-deployer
+- hosts: soc-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:

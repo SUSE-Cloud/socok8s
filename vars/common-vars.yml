@@ -58,3 +58,9 @@ run_rally_tests: false
 
 # where the generated secrets are stored
 secrets_location: "{{ socok8s_workspace }}/secrets"
+
+#Set timeout for ucp deployment
+ucp_deploy_timeout: 1800
+
+#Set timeout for osh deployment
+openstack_helm_deploy_timeout: 3000

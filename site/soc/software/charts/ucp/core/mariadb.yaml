@@ -21,7 +21,7 @@ metadata:
         path: .values.pod.replicas.server
 data:
   wait:
-    timeout: 1800
+    timeout: {{ ucp_deploy_timeout }}
   values:
     pod:
       replicas:

@@ -15,13 +15,13 @@
 # under the License.
 #
 
-- hosts: airship-deployer
+- hosts: soc-deployer
   gather_facts: no
   tasks:
     - name: Running cleanup script
       script: "{{ playbook_dir }}/../script_library/clean-airship.sh {{ clean_action | default('') }}"
 
-- hosts: airship-workers
+- hosts: caasp-workers
   gather_facts: no
   any_errors_fatal: true
   tasks:
