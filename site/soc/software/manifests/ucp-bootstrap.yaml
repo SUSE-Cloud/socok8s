@@ -13,7 +13,7 @@ data:
     - kube-system-ingress
     - ucp-core
     - ucp-keystone
-    - ucp-shipyard
     - ucp-deckhand
+    - ucp-shipyard
     - ucp-armada
 ...
