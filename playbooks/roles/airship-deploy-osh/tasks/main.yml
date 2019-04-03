@@ -93,7 +93,7 @@
     chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
-    OS_PASSWORD: "{{ ucp_shipyard_keystone_password }}"
+    OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password length=20 chars=ascii_letters,digits,_') }}"
   register: shipyard_create_config
   failed_when:
     - shipyard_create_config.stdout.find('Error') == 0
@@ -110,7 +110,7 @@
     chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
-    OS_PASSWORD: "{{ ucp_shipyard_keystone_password }}"
+    OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password length=20 chars=ascii_letters,digits,_') }}"
   when:
     - "no_revision_error_msg not in shipyard_create_config.stdout"
   register: shipyard_commit_config
@@ -127,7 +127,7 @@
     chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
-    OS_PASSWORD: "{{ ucp_shipyard_keystone_password }}"
+    OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password length=20 chars=ascii_letters,digits,_') }}"
   register: shipyard_update_software
   failed_when: shipyard_update_software.stdout.find('Error') == 0
   tags:
@@ -171,7 +171,7 @@
     chdir: '{{ upstream_repos_clone_folder }}/airship-shipyard'
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
-    OS_PASSWORD: "{{ ucp_shipyard_keystone_password }}"
+    OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password length=20 chars=ascii_letters,digits,_') }}"
   register: shipyard_desc_action
   until: shipyard_desc_action.stdout.find('Processing') < 0 and shipyard_desc_action.stdout.find('running') < 0
   retries: 240

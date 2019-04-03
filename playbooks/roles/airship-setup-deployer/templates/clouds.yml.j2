@@ -4,7 +4,7 @@ clouds:
     identity_api_version: 3
     auth:
       username: 'admin'
-      password: {{ ucp_keystone_admin_password }}
+      password: {{ lookup('password', secrets_location + '/ucp_keystone_admin_password length=20 chars=ascii_letters,digits,_') }}
       project_name: 'admin'
       project_domain_name: 'default'
       user_domain_name: 'default'
@@ -14,7 +14,7 @@ clouds:
     identity_api_version: 3
     auth:
       username: 'admin'
-      password: {{ openstack_keystone_admin_password }}
+      password: {{ lookup('password', secrets_location + '/osh_keystone_admin_password length=20 chars=ascii_letters,digits,_') }}
       project_name: 'admin'
       project_domain_name: 'default'
       user_domain_name: 'default'

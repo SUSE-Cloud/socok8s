@@ -93,6 +93,7 @@
     - /etc/openstack
 
 - name: Copy clouds.yml
+  become: yes
   template:
     src: clouds.yml.j2
     dest: /etc/openstack/clouds.yaml
