@@ -45,8 +45,7 @@ images:
     nova_consoleauth: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
     nova_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
     nova_novncproxy: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
-    # what is in this image?
-    #nova_novncproxy_assets: 'docker.io/kolla/ubuntu-source-nova-novncproxy:ocata'
+    nova_novncproxy_assets: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
     nova_placement: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
     nova_scheduler: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
     # what is in this image?
