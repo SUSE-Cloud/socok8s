@@ -7,7 +7,7 @@
       tags:
         - add_computenode
 
-- hosts: airship-deployer
+- hosts: soc-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:
