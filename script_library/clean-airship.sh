@@ -81,6 +81,11 @@ if [[ ${clean_action} == *"clean_openstack"* ]]; then
     kubectl get -n openstack rolebinding.rbac.authorization.k8s.io -o name | xargs kubectl -n openstack delete
     kubectl get jobs -n openstack -o name | xargs kubectl delete -n openstack
     kubectl delete namespace --ignore-not-found openstack
+    kubectl label node --all openstack-control-plane-
+    kubectl label node --all ucp-control-plane-
+    kubectl label node --all openstack-compute-node-
+    kubectl label node --all openvswitch-
+    kubectl label node --all openstack-helm-node-class-
 fi
 
 if [[ ${clean_action} == *"clean_rest"* ]]; then
@@ -90,6 +95,8 @@ fi
 if [[ ${clean_action} == *"clean_ucp"* ]]; then
     kubectl get jobs -n ucp -o name | xargs kubectl delete -n ucp
     kubectl delete namespace --ignore-not-found ucp
+    kubectl label node --all ucp-control-plane-
+    kubectl label node --all kube-ingress-
 fi
 
 if [[ ${clean_action} == *"clean_images"* ]]; then
