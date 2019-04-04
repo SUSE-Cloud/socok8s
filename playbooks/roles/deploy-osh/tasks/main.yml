@@ -76,14 +76,14 @@
   blockinfile:
     path: /etc/hosts
     block: |
-      {{ socok8s_ext_vip }} keystone keystone.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} glance glance.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} cinder cinder.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} nova nova.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} neutron neutron.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} neutron-server neutron-server.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} horizon horizon.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} heat heat.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} keystone.openstack.svc.cluster.local keystone
+      {{ socok8s_ext_vip }} glance.openstack.svc.cluster.local glance
+      {{ socok8s_ext_vip }} cinder.openstack.svc.cluster.local cinder
+      {{ socok8s_ext_vip }} nova.openstack.svc.cluster.local nova
+      {{ socok8s_ext_vip }} neutron.openstack.svc.cluster.local neutron
+      {{ socok8s_ext_vip }} neutron-server.openstack.svc.cluster.local neutron-server
+      {{ socok8s_ext_vip }} horizon.openstack.svc.cluster.local horizon
+      {{ socok8s_ext_vip }} heat.openstack.svc.cluster.local heat
 
 # Developers have patched code, and don't need fetching product sources
 - name: Fetch OSH code
