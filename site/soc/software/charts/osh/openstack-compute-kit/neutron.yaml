@@ -11,6 +11,8 @@ metadata:
       component: neutron
     actions:
       - method: merge
+        path: .wait
+      - method: merge
         path: .values.pod
       - method: replace
         path: .values.labels.agent.l3
@@ -33,8 +35,6 @@ data:
   namespace: openstack
   wait:
     timeout: {{ openstack_helm_deploy_timeout }}
-    labels:
-      release_group: airship-neutron
   test:
     enabled: {{ run_rally_tests }}
   values:
