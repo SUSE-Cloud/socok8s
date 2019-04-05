@@ -15,7 +15,7 @@ metadata:
       - method: delete
         path: .values.ceph_client
       - method: merge
-        path: .values.conf
+        path: .
       - method: replace
         path: .values.pod
   storagePolicy: cleartext
@@ -66,7 +66,8 @@ data:
   wait:
     timeout: {{ openstack_helm_deploy_timeout }}
   test:
-    enabled: {{ run_rally_tests }}
+    enabled: {{ run_tests | default('true') }}
+    timeout: {{ test_timeout | default(300) }}
   values:
     labels:
       agent:
