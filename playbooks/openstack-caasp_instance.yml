@@ -2,34 +2,28 @@
 - hosts: localhost
   gather_facts: no
   connection: local
+  vars:
+    stackname_suffix: caasp
   tasks:
     - name: Load generic vars
-      include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
-    - name: Load openstack vars
-      include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+      include_vars: "{{ item }}"
+      loop:
+        - "{{ playbook_dir }}/../vars/common-vars.yml"
+        - "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
 
-    - name: Define stackname to create
+    # TODO(evrardjp): Merge this logic with the handle-nodes-on-openstack logic
+    # when the whole stack is ready to move to that role.
+    - name: Define stackname based on runtime
       set_fact:
-        stackname: "{{ deploy_on_openstack_prefix }}-{{ lookup('env', 'BUILD_NUMBER') | default(65000 | random, true) }}"
+        stackname: "{{ deploy_on_openstack_keypairname }}-{{ 10000 | random(seed=socok8s_workspace) }}-{{ stackname_suffix }}"
 
-    - name: Check if a stack already exists
-      stat:
-        path: "{{ deploy_on_openstack_caasp_stacknamefile }}"
-      register: _stackfile
-
+    # TODO(evrardjp): Move All of these tasks into handle-nodes-on-openstack
+    # when the heat stack is clean (no workaround). Probably CaaSP4.
     - name: Handle creation if not exists
       when:
         - not ((caasp_stack_delete | default('false'))| bool)
       block:
-        - name: Ensure no stack existed before continuing
-          assert:
-            that:
-              - not _stackfile.stat.exists
-            fail_msg: "A stack already exists, please remove all your stacks and your file {{ deploy_on_openstack_caasp_stacknamefile }} first"
-            success_msg: "No stack exists, we can continue"
-
         - name: Create stack
-          register: stackcreate
           os_stack:
             cloud: "{{ deploy_on_openstack_cloudname }}"
             state: "present"
@@ -43,12 +37,6 @@
               security_group: "{{ deploy_on_openstack_caasp_securitygroup }}"
               keypair: "{{ deploy_on_openstack_keypairname }}"
               worker_count: "{{ deploy_on_openstack_caasp_workers }}"
-
-        # Keep that as close to stack create, to prevent failures from not creating a lock
-        - name: Save stackname for later (for deletion)
-          copy:
-            content: "{{ stackname }}"
-            dest: "{{ deploy_on_openstack_caasp_stacknamefile }}"
 
         # TODO(evrardjp) Remove this when all the nodes have floating IPs in the template
         - name: Get all the node with no floating ips
@@ -238,7 +226,7 @@
         - name: Delete stack
           os_stack:
             cloud: "{{ deploy_on_openstack_cloudname }}"
-            name: "{{ lookup('file',deploy_on_openstack_caasp_stacknamefile) }}"
+            name: "{{ stackname }}"
             state: absent
 
         - name: Remove host from known hosts
@@ -253,5 +241,4 @@
             path: "{{ item }}"
           loop:
             - "{{ socok8s_caasp_environment_details }}"
-            - "{{ deploy_on_openstack_caasp_stacknamefile }}"
             - "{{ socok8s_workspace }}/inventory/caasp.yml"
