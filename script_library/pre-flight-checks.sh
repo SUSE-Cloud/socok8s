@@ -9,8 +9,8 @@ check_openstack_env_vars_set (){
         echo "No KEYNAME given. You must give an openstack security keypair name to add to your server. Please export KEYNAME='<name of your keypair>'." && exit 1
     fi
 
-    if [ -z ${PREFIX+x} ]; then
-        echo "No PREFIX given. export PREFIX to match your network. It will be used as network and server names" && exit 1
+    if [ -z ${INTERNAL_NETWORK+x} ]; then
+        echo "No INTERNAL_NETWORK given. export INTERNAL_NETWORK to match your network. It will be used as network and server names" && exit 1
     fi
 
     if [ -z ${INTERNAL_SUBNET+x} ];
@@ -25,7 +25,7 @@ check_openstack_environment_is_ready_for_deploy (){
     which openstack > /dev/null  || (echo "Please install openstack and heat CLI in your PATH"; exit 5)
     openstack stack delete --help > /dev/null || (echo "Please install heat client in your PATH"; exit 6)
     openstack keypair list | grep ${KEYNAME} > /dev/null || (echo "keyname not found. export KEYNAME=" && exit 2)
-    openstack network list | grep "${PREFIX}-net" > /dev/null || (echo "network not found. Make sure a network exist matching ${PREFIX}-net" && exit 3)
+    openstack network list | grep "${INTERNAL_NETWORK}" > /dev/null || (echo "network not found. Make sure a network exist matching the name: ${INTERNAL_NETWORK}" && exit 3)
     openstack subnet list | grep ${INTERNAL_SUBNET} > /dev/null || (echo "subnet not found" && exit 4)
 }
 

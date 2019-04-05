@@ -169,24 +169,28 @@ Set this for all the following scripts:
 .. code-block:: console
 
    export OS_CLOUD=engcloud # Assuming you followed the example for clouds.yaml
-   # Your username plus whatever else you would like, will be used for naming
-   # objects you create in the cloud
+   # For convenience set a PREFIX to define other required variables.
    export PREFIX=foctodoodle
-   # Set the name of the keypair you created
-   export KEYNAME=foctodoodle-key
-   # Set the name of the subnet you created
+
+   # Set the name of the keypair you will use
+   export KEYNAME=${PREFIX}-key
+   # Set the name of the tenant network you will use
+   export INTERNAL_NETWORK=${PREFIX}-net
+   # Set the name of the subnet you will use
    export INTERNAL_SUBNET=${PREFIX}-subnet
+   # Set the name of the floating IP pool you will use
+   export EXTERNAL_NETWORK="floating"
 
 Now create a network, a subnet, a router and a connection to the
 floating network (you only have to do it once):
 
 .. code-block:: console
 
-   openstack network create ${PREFIX}-net
-   openstack subnet create --network ${PREFIX}-net --subnet-range 192.168.100.0/24 ${PREFIX}-subnet
-   openstack router create ${PREFIX}-router
-   openstack router set --external-gateway floating ${PREFIX}-router
-   openstack router add subnet ${PREFIX}-router ${PREFIX}-subnet
+   openstack network create ${INTERNAL_NETWORK}
+   openstack subnet create --network ${INTERNAL_NETWORK} --subnet-range 192.168.100.0/24 ${INTERNAL_SUBNET}
+   openstack router create ${INTERNAL_NETWORK}-router
+   openstack router set --external-gateway ${EXTERNAL_NETWORK} ${INTERNAL_NETWORK}-router
+   openstack router add subnet ${INTERNAL_NETWORK}-router ${INTERNAL_SUBNET}
 
 Prior to executing scripts, be aware that you may need to do some
 cleanup prior to retrying scripts or playbooks should they fail. In some
