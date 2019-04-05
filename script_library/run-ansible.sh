@@ -14,10 +14,12 @@ function run_ansible(){
     inventorydir=${ANSIBLE_RUNNER_DIR}/inventory/
 
     # This creates a structure that's similar to ansible-runner tool
-    if [[ ! -d ${ANSIBLE_RUNNER_DIR} ]]; then
-        mkdir -p ${ANSIBLE_RUNNER_DIR}/{env,inventory} || true
-        echo "Adding an empty inventory by default"
-        cp ${socok8s_absolute_dir}/examples/workdir/inventory/hosts.yml ${inventorydir}/skeleton-inventory.yml
+    [[ ! -d ${ANSIBLE_RUNNER_DIR}/env ]] && mkdir -p ${ANSIBLE_RUNNER_DIR}/env
+    if [[ ! -d ${ANSIBLE_RUNNER_DIR}/inventory ]]; then
+        mkdir -p ${ANSIBLE_RUNNER_DIR}/inventory
+        # Ensure default groupnames exist. It also DRY so that we automatically connect on hosts as root.
+        # However don't force this by default if people already have an inventory.
+        cp ${socok8s_absolute_dir}/examples/workdir/inventory/hosts.yml ${inventorydir}/default-inventory.yml
     fi
 
     if [[ -f ${extravarsfile} ]]; then
@@ -25,10 +27,6 @@ function run_ansible(){
         extra_vars="-e @${extravarsfile}"
     fi
 
-    if [[ -f ${inventorydir} ]]; then
-        echo "Inventory directory (${inventorydir}) exists, adding it to the ansible-playbook call."
-        inventory="-i ${inventorydir}"
-    fi
     if [[ ${USE_ARA:-False} == "True" ]]; then
         echo "Loading ARA"
         source ${ANSIBLE_RUNNER_DIR}/.ansiblevenv/ara.rc
