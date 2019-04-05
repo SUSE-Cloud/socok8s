@@ -1,0 +1,16 @@
+---
+- name: Load vars
+  include_vars: "{{ item }}"
+  loop:
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
+    - "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+
+- name: Create servers on openstack clouds
+  include_tasks: create_on_openstack.yml
+  when:
+    - "not ( (delete | default(False)) | bool )"
+
+- name: Delete servers on openstack clouds
+  include_tasks: delete_on_openstack.yml
+  when:
+    - "( (delete | default(False)) | bool )"

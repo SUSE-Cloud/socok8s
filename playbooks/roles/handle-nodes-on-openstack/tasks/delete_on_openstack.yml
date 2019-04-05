@@ -1,0 +1,27 @@
+---
+- name: Delete server
+  os_server:
+    cloud: "{{ deploy_on_openstack_cloudname }}"
+    delete_fip: yes
+    name: "{{ servername }}"
+    state: absent
+    timeout: 300
+
+- name: Delete volume
+  os_volume:
+    cloud: "{{ deploy_on_openstack_cloudname }}"
+    display_name: "{{ servername }}-vol"
+    state: "absent"
+
+# Looping will avoid the need to create a condition if no hosts
+# exists in the inventory.
+- name: Remove all hosts from this group known hosts
+  known_hosts:
+    state: absent
+    name: "{{ hostvars[item]['ansible_host'] }}"
+  loop: "{{ groups[groupname_for_inventory] }}"
+
+- name: Delete inventory
+  file:
+    state: absent
+    path: "{{ socok8s_workspace }}/inventory/{{ groupname_for_inventory }}.yml"
