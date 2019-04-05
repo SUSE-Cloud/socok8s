@@ -2,107 +2,20 @@
 - hosts: localhost
   gather_facts: no
   connection: local
-  tasks:
+  pre_tasks:
     - name: Load generic vars
-      include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
-    - name: Load openstack vars
-      include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
-
-    - name: Handle creation
-      when:
-        - not ((ses_node_delete | default('false'))| bool)
-      block:
-        - name: Create volume
-          os_volume:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            display_name: "{{ deploy_on_openstack_sesnode_volume_name }}"
-            size: 80
-            state: "present"
-        - name: Create server
-          os_server:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            flavor: "{{ deploy_on_openstack_sesnode_flavor }}"
-            image: "{{ deploy_on_openstack_sesnode_image }}"
-            key_name: "{{ deploy_on_openstack_keypairname }}"
-            name: "{{ deploy_on_openstack_sesnode_server_name }}"
-            network: "{{ deploy_on_openstack_internal_network }}"
-            security_groups:
-              - "{{ deploy_on_openstack_sesnode_securitygroup }}"
-            auto_ip: True
-            state: present
-            timeout: 300
-            volumes:
-              - "{{ deploy_on_openstack_sesnode_volume_name }}"
-          register: _ses_server_create
-        - name: Show the server data
-          debug:
-            var: _ses_server_create
-        - name: Get server floating IP
-          set_fact:
-            ses_floating_ip: "{{ _ses_server_create['openstack']['accessIPv4'] }}"
-        - name: Extend inventory in workspace with newly created SES node
-          copy:
-            content: "{{ ses_aio_overrides }}"
-            dest: "{{ socok8s_workspace }}/inventory/ses.yml"
-          vars:
-            ses_aio_overrides: |
-              ses_nodes:
-                hosts:
-                  ses-aio:
-                    ansible_host: {{ ses_floating_ip }}
-
-        - meta: refresh_inventory
-
-        - name: Wait for a SSH to be properly started
-          wait_for:
-            host: "{{ ses_floating_ip }}"
-            port: 22
-            search_regex: OpenSSH
-            state: started
-            delay: 10
-            timeout: 180
-
-        - name: Get pubkey, and add it to known hosts
-          command: "ssh-keyscan -H {{ ses_floating_ip | quote }}"
-          register: _sesfloatingkey
-          retries: 10
-          delay: 10
-          until: _sesfloatingkey.stdout and _sesfloatingkey.stdout.strip()
-
-        - name: Insert known host
-          known_hosts:
-            state: present
-            name: "{{ ses_floating_ip }}"
-            key: "{{ _sesfloatingkey.stdout }}"
-
-
-    - name: Handle deletion
-      when:
-        - (ses_node_delete | default('false')) | bool
-      block:
-        - name: Delete server
-          os_server:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            delete_fip: yes
-            name: "{{ deploy_on_openstack_sesnode_server_name }}"
-            state: absent
-            timeout: 300
-
-        - name: Delete volume
-          os_volume:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            display_name: "{{ deploy_on_openstack_sesnode_volume_name }}"
-            state: "absent"
-
-        # Looping will avoid the need to create a condition if no hosts
-        # exists in the inventory.
-        - name: Remove all hosts from this group known hosts
-          known_hosts:
-            state: absent
-            name: "{{ hostvars[item]['ansible_host'] }}"
-          loop: "{{ groups['ses_nodes'] }}"
-
-        - name: Remove SES inventory hosts
-          file:
-            state: absent
-            path: "{{ socok8s_workspace }}/inventory/ses.yml"
+      include_vars: "{{ item }}"
+      loop:
+        - "{{ playbook_dir }}/../vars/common-vars.yml"
+        - "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+  roles:
+    - role: handle-nodes-on-openstack
+      vars:
+        servername: "{{ deploy_on_openstack_sesnode_server_name }}"
+        flavor: "{{ deploy_on_openstack_sesnode_flavor }}"
+        image: "{{ deploy_on_openstack_sesnode_image }}"
+        network: "{{ deploy_on_openstack_internal_network }}"
+        securitygroups:
+          - "{{ deploy_on_openstack_sesnode_securitygroup }}"
+        groupname_for_inventory: "ses_nodes"
+        delete: "{{ ((ses_node_delete | default('False')) | bool) }}"
