@@ -9,7 +9,6 @@ deploy_on_openstack_sesnode_server_name: "{{ deploy_on_openstack_prefix }}-ses"
 deploy_on_openstack_sesnode_image: "SLES12-SP3"
 deploy_on_openstack_sesnode_flavor: "m1.large"
 deploy_on_openstack_sesnode_securitygroup: "all-incoming"
-deploy_on_openstack_sesnode_volume_name: "{{ deploy_on_openstack_prefix }}-vol"
 deploy_on_openstack_repos_to_configure:
   SLE12SP3-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Pool/
   SLE12SP3-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Updates/
@@ -57,7 +56,6 @@ deploy_on_openstack_oshnode_server_name: "{{ deploy_on_openstack_prefix }}-soc-d
 deploy_on_openstack_oshnode_image: "openSUSE-Leap-15.0"
 deploy_on_openstack_oshnode_flavor: "m1.large"
 deploy_on_openstack_oshnode_securitygroup: "all-incoming"
-deploy_on_openstack_oshnode_volume_name: "{{ deploy_on_openstack_oshnode_server_name }}-vol"
 deploy_on_openstack_oshnode_userdata: |
   {%- raw -%}#cloud-config
   disable_root: false
