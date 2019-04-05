@@ -53,4 +53,29 @@ data:
         glance_store:
           rbd_store_user: {{ ses_cluster_configuration.glance.rbd_store_user }}
           rbd_store_pool: {{ ses_cluster_configuration.glance.rbd_store_pool }}
+  dependencies:
+    - glance-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name:  glance-htk
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.glance-htk
+      dest:
+        path: .source
+data:
+  chart_name: glance-htk
+  release: glance-htk
+  namespace: glance-htk
+  values: {}
+  dependencies: []
 ...

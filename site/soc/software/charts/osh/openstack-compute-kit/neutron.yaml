@@ -33,8 +33,6 @@ data:
   namespace: openstack
   wait:
     timeout: {{ openstack_helm_deploy_timeout }}
-    labels:
-      release_group: airship-neutron
   test:
     enabled: {{ run_tests | default('true') }}
     timeout: {{ test_timeout | default(300) }}

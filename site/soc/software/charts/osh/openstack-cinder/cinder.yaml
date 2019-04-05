@@ -50,4 +50,29 @@ data:
           rbd_user: {{ ses_cluster_configuration['cinder']['rbd_store_user'] }}
           rbd_pool: {{ ses_cluster_configuration['cinder']['rbd_store_pool'] }}
           rbd_secret_uuid: {{ libvirt_ceph_cinder_secret_uuid }}
+  dependencies:
+    - cinder-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name:  cinder-htk
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.cinder-htk
+      dest:
+        path: .source
+data:
+  chart_name: cinder-htk
+  release: cinder-htk
+  namespace: cinder-htk
+  values: {}
+  dependencies: []
 ...
