@@ -2,6 +2,8 @@
 - hosts: localhost
   gather_facts: no
   connection: local
+  vars:
+    stackname_suffix: "caasp"
   tasks:
     - name: Load generic vars
       include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
@@ -10,26 +12,13 @@
 
     - name: Define stackname to create
       set_fact:
-        stackname: "{{ deploy_on_openstack_prefix }}-{{ lookup('env', 'BUILD_NUMBER') | default(65000 | random, true) }}"
-
-    - name: Check if a stack already exists
-      stat:
-        path: "{{ deploy_on_openstack_caasp_stacknamefile }}"
-      register: _stackfile
+        stackname: "{{ deploy_on_openstack_prefix }}-{{ stackname_suffix }}"
 
     - name: Handle creation if not exists
       when:
         - not ((caasp_stack_delete | default('false'))| bool)
       block:
-        - name: Ensure no stack existed before continuing
-          assert:
-            that:
-              - not _stackfile.stat.exists
-            fail_msg: "A stack already exists, please remove all your stacks and your file {{ deploy_on_openstack_caasp_stacknamefile }} first"
-            success_msg: "No stack exists, we can continue"
-
         - name: Create stack
-          register: stackcreate
           os_stack:
             cloud: "{{ deploy_on_openstack_cloudname }}"
             state: "present"
@@ -43,12 +32,6 @@
               security_group: "{{ deploy_on_openstack_caasp_securitygroup }}"
               keypair: "{{ deploy_on_openstack_keypairname }}"
               worker_count: "{{ deploy_on_openstack_caasp_workers }}"
-
-        # Keep that as close to stack create, to prevent failures from not creating a lock
-        - name: Save stackname for later (for deletion)
-          copy:
-            content: "{{ stackname }}"
-            dest: "{{ deploy_on_openstack_caasp_stacknamefile }}"
 
         # TODO(evrardjp) Remove this when all the nodes have floating IPs in the template
         - name: Get all the node with no floating ips
@@ -238,7 +221,12 @@
         - name: Delete stack
           os_stack:
             cloud: "{{ deploy_on_openstack_cloudname }}"
-            name: "{{ lookup('file',deploy_on_openstack_caasp_stacknamefile) }}"
+            name: "{{ stackname }}"
+            state: absent
+
+        - name: Delete extra vip
+          os_port:
+            name: "{{ stackname }}-vip"
             state: absent
 
         - name: Remove host from known hosts
@@ -253,5 +241,4 @@
             path: "{{ item }}"
           loop:
             - "{{ socok8s_caasp_environment_details }}"
-            - "{{ deploy_on_openstack_caasp_stacknamefile }}"
             - "{{ socok8s_workspace }}/inventory/caasp.yml"

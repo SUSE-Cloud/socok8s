@@ -5,6 +5,10 @@
     - "{{ playbook_dir }}/../vars/common-vars.yml"
     - "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
 
+- name: Define servername based on runtime
+  set_fact:
+    servername: "{{ deploy_on_openstack_prefix }}-{{ servername_suffix }}"
+
 - name: Create servers on openstack clouds
   include_tasks: create_on_openstack.yml
   when:

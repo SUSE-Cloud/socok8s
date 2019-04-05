@@ -11,7 +11,7 @@
   roles:
     - role: handle-nodes-on-openstack
       vars:
-        servername: "{{ deploy_on_openstack_oshnode_server_name }}"
+        servername_suffix: "deployer"
         flavor: "{{ deploy_on_openstack_oshnode_flavor }}"
         image: "{{ deploy_on_openstack_oshnode_image }}"
         network: "{{ deploy_on_openstack_internal_network }}"

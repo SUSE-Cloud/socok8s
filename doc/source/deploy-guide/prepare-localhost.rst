@@ -164,33 +164,32 @@ OpenStack CLI’s ``openstack keypair create``) for accessing the
 instances created. Remember the name of this keypair (which appears as
 ``foctodoodle-key`` in the example below)
 
-Set this for all the following scripts:
+Set this for **all** the following scripts in a deployment:
 
 .. code-block:: console
 
-   export OS_CLOUD=engcloud # Assuming you followed the example for clouds.yaml
-   # Your username plus whatever else you would like, will be used for naming
-   # objects you create in the cloud
-   export PREFIX=foctodoodle
+   export OS_CLOUD=engcloud
+   # 'engcloud' is the name in the `clouds.yaml`,
    # Set the name of the keypair you created
    export KEYNAME=foctodoodle-key
-   # Set the name of the subnet you created
-   export INTERNAL_SUBNET=${PREFIX}-subnet
+   # Set the name of the network you will use in the deployment
+   export INTERNAL_NETWORK=foctodoodle-net
+   # Set the name of the subnet you will use in the deployment
+   export INTERNAL_SUBNET=foctodoodle-subnet
+   # Set the name of the floating ip network you will use in the deployment
+   export EXTERNAL_NETWORK=floating
 
-Now create a network, a subnet, a router and a connection to the
-floating network (you only have to do it once):
+If you haven't created the internal networks/subnets and appropriate routers
+already, do it now (you only have to do it once):
 
 .. code-block:: console
 
-   openstack network create ${PREFIX}-net
-   openstack subnet create --network ${PREFIX}-net --subnet-range 192.168.100.0/24 ${PREFIX}-subnet
-   openstack router create ${PREFIX}-router
-   openstack router set --external-gateway floating ${PREFIX}-router
-   openstack router add subnet ${PREFIX}-router ${PREFIX}-subnet
+   openstack network create ${INTERNAL_NETWORK}
+   openstack subnet create --network ${INTERNAL_NETWORK} --subnet-range 192.168.100.0/24 ${INTERNAL_SUBNET}
+   openstack router create ${INTERNAL_NETWORK}-router
+   openstack router set --external-gateway floating ${INTERNAL_NETWORK}-router
+   openstack router add subnet ${INTERNAL_NETWORK}-router ${INTERNAL_SUBNET}
 
-Prior to executing scripts, be aware that you may need to do some
-cleanup prior to retrying scripts or playbooks should they fail. In some
-steps a teardown script is provided to clean up any created resources.
 Reconfirming that you’ve done all the previous steps to set up now will
 save you some time later.
 
