@@ -1,5 +1,4 @@
 ---
-deploy_on_openstack_cloudname: "{{ lookup('env','OS_CLOUD') | default('engcloud-cloud-ci', true) }}"
 deploy_on_openstack_prefix: "{{ lookup('env','PREFIX') }}" #PREFIX is set at all times (ensured in script library)
 deploy_on_openstack_external_network: "floating"
 deploy_on_openstack_internal_network: "{{ deploy_on_openstack_prefix }}-net"

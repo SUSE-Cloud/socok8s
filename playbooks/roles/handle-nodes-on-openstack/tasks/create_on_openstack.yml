@@ -1,14 +1,12 @@
 ---
 - name: Create volume
   os_volume:
-    cloud: "{{ deploy_on_openstack_cloudname }}"
     display_name: "{{ servername }}-vol"
     size: 80
     state: "present"
 
 - name: Create server
   os_server:
-    cloud: "{{ deploy_on_openstack_cloudname }}"
     flavor: "{{ flavor }}"
     image: "{{ image }}"
     key_name: "{{ deploy_on_openstack_keypairname }}"
