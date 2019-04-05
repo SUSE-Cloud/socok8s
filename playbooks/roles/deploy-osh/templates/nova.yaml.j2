@@ -51,6 +51,5 @@ images:
     # what is in this image?
     #nova_service_cleaner: 'docker.io/port/ceph-config-helper:v1.10.3'
     nova_spiceproxy: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
-    # what is in this image?
-    #nova_spiceproxy_assets: 'docker.io/kolla/ubuntu-source-nova-spicehtml5proxy:ocata'
+    nova_spiceproxy_assets: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
 {%  endif %}
