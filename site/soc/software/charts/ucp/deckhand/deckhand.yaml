@@ -16,9 +16,9 @@ metadata:
     - src:
         schema: pegleg/PodScaleProfile/v1
         name: pod-scale-profile
-        path: .pods.ucp.deckhand.api.min
+        path: .pods.ucp.deckhand.deckhand.min
       dest:
-        path: .values.pod.replicas.api
+        path: .values.pod.replicas.deckhand
 data:
   wait:
     timeout: {{ ucp_deploy_timeout }}
@@ -27,5 +27,5 @@ data:
   values:
     pod:
       replicas:
-        api: 1
+        deckhand: 1
 ...

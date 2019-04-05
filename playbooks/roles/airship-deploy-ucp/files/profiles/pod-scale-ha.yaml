@@ -28,7 +28,7 @@ data:
             min: 2
             max: 3
       deckhand:
-        api:
+        deckhand:
           min: 2
           max: 3
       #TODO setting to 3 node cluster causes airflow db init to fail.

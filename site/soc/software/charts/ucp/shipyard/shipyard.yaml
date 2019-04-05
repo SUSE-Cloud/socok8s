@@ -18,7 +18,7 @@ metadata:
         name: pod-scale-profile
         path: .pods.ucp.shipyard.api.min
       dest:
-        path: .values.pod.replicas.api
+        path: .values.pod.replicas.shipyard.api
     - src:
         schema: pegleg/PodScaleProfile/v1
         name: pod-scale-profile
@@ -39,7 +39,8 @@ data:
   values:
     pod:
       replicas:
-        api: 1
+        shipyard:
+          api: 1
         airflow:
           worker: 1
           scheduler: 1
