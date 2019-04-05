@@ -7,7 +7,7 @@
 
 - name: Define servername based on runtime
   set_fact:
-    servername: "{{ deploy_on_openstack_keypairname }}-{{ 10000 | random(seed=socok8s_workspace) }}-{{ servername_suffix }}"
+    servername: "{{ deploy_on_openstack_keypairname }}-{{ lookup('env', 'BUILD_NUMBER') | default(10000 | random(seed=socok8s_workspace), True) }}-{{ servername_suffix }}"
 
 - name: Create servers on openstack clouds
   include_tasks: create_on_openstack.yml
