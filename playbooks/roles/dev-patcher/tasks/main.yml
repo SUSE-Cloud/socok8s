@@ -27,6 +27,25 @@
   register: _gitclone
   until: _gitclone is succeeded
 
+- name: Read git config settings
+  git_config:
+    list_all: yes
+  register: git_config
+
+- name: Set user.name if needed
+  git_config:
+    name: user.name
+    scope: global
+    value: "Dev Patcher"
+  when: "'user.name' not in git_config['config_values'].keys()"
+
+- name: Set user.email if needed
+  git_config:
+    name: user.email
+    scope: global
+    value: "dev-patcher@{{ ansible_hostname }}"
+  when: "'user.email' not in git_config['config_values'].keys()"
+
 - name: Get patch details
   include_tasks: patch-repos.yml
   loop: "{{ (dev_patcher_patches) + (dev_patcher_user_patches | default([])) }}"
