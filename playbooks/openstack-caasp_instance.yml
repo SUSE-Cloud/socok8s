@@ -20,7 +20,6 @@
       block:
         - name: Create stack
           os_stack:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
             state: "present"
             name: "{{ stackname }}"
             template: "{{ playbook_dir }}/../files/caasp-stack.yaml"
@@ -43,7 +42,6 @@
         - name: Get a floating ip for the workers
           loop: "{{ _workernodeswithnofloating.stdout | from_json }}"
           os_floating_ip:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
             server: "{{ item.ID }}"
             reuse: no
             network: "{{ deploy_on_openstack_external_network }}"
@@ -107,7 +105,6 @@
 
         - name: Create a VIP port for OSH
           os_port:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
             state: present
             name: "{{ stackname }}-vip"
             no_security_groups: True
@@ -220,7 +217,6 @@
       block:
         - name: Delete stack
           os_stack:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
             name: "{{ stackname }}"
             state: absent
 

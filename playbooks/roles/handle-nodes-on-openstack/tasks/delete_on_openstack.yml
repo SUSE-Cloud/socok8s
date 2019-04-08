@@ -1,7 +1,6 @@
 ---
 - name: Delete server
   os_server:
-    cloud: "{{ deploy_on_openstack_cloudname }}"
     delete_fip: yes
     name: "{{ servername }}"
     state: absent
@@ -9,7 +8,6 @@
 
 - name: Delete volume
   os_volume:
-    cloud: "{{ deploy_on_openstack_cloudname }}"
     display_name: "{{ servername }}-vol"
     state: "absent"
 
