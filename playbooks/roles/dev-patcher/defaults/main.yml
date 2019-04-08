@@ -8,14 +8,17 @@ dev_patcher_packages:
 #unrelated patches will fail (because not cloned)
 #conflicting patches will fail (because need resolving)
 dev_patcher_patches:
-  # airship-treasuremap: Add the wait label to delete nova test pod when nova chart is upgraded
-  - 645218
-  # airship patches
+  # Adding opensuse support in image building of airflow and shipyard
   - 636229
+  # armada: Support armada to run on opensuse image leap15
   - 637327
+  # deckhand: Adding opensuse image build for deckhand
   - 638301
+  # pegleg: Support pegleg to run on opensuse leap15 image
   - 639495
+  # treasuremap: Add a preliminary draft of schema for the pod scale policy/profile in Airship.
   - 639861
+  # osh-infra: Add support for mulitple VIPS
   - 640115
   # osh: Remove remaining test pods before new test run
   - 634936
@@ -27,8 +30,6 @@ dev_patcher_patches:
   - 642067
   # osh-images: Add rocky release script
   - 642415
-  # osh: change the nova cache to dogpile.cache.memcached
-  - 644821
   # osh: Add heat dashboard if available to horizon
   - 645543
   # osh: Allow more generic overrides for keystone
