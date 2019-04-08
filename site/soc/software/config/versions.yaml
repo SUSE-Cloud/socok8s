@@ -195,7 +195,7 @@ data:
     # the ucp section is not used in socok8s deployment.
     ucp:
       armada:
-        armada: "{{ suse_airship_registry_location }}/airshipit/armada:{{ suse_airship_components_image_tag }}"
+        api: "{{ suse_airship_registry_location }}/airshipit/armada:{{ suse_airship_components_image_tag }}"
         ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
         ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
         ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
