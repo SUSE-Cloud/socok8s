@@ -9,7 +9,7 @@
     content: "{{ item.content | b64decode }}"
     mode: 0644
   with_items:
-    - "{{ hostvars['ses-aio'].ceph_files.results }}"
+    - "{{ hostvars[groups['ses_nodes'][0]].ceph_files.results }}"
 
 - name: Fetch client cinder key for ses-config.yml
   delegate_to: localhost
