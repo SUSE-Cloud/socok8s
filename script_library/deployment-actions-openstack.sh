@@ -49,6 +49,9 @@ function deploy_osh(){
     echo "Now deploy SUSE version of OSH"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_osh.yml
 }
+function airship_prepare(){
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-airship_prepare.yml
+}
 function deploy_airship(){
     echo "Now deploy SUSE version of Airship"
     tagged_info=''
