@@ -21,8 +21,6 @@ dev_patcher_patches:
   - 634936
   # osh: make ceilometer-api work on suse based images
   - 641802
-  # osh: Allow more generic overrides for horizon
-  - 645141
   # osh: Fix indent filter not properly adding a newline after toYaml
   - 642844
   # osh: Allow more generic overrides for nova placement-api
@@ -35,7 +33,5 @@ dev_patcher_patches:
   - 645543
   # osh: Allow more generic overrides for keystone
   - 647403
-  # osh: Remove overlapping Listen directives on apache >= 2.4
-  - 645189
   # osh: Add an option to the health probe to test all pids
   - 644907
