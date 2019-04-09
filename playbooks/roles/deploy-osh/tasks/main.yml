@@ -428,3 +428,20 @@
   tags:
     - barbican
     - run
+
+- name: Deploy Tempest
+  import_tasks: component-install.yml
+  vars:
+    _component_runcommand: "./tools/deployment/multinode/900-tempest.sh"
+    _component_run_env:
+      OSH_EXTRA_HELM_ARGS_TEMPEST: >
+        --values=/tmp/socok8s-susedefaults-tempest.yaml
+        --values=/tmp/socok8s-useroverrides-tempest.yaml
+        {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_TEMPEST') | default('', True) }}
+    _component_overrides:
+      - suse_file: tempest.yaml
+        user_overrides: "{{ suse_osh_deploy_tempest_yaml_overrides }}"
+  tags:
+    - tempest
+    - run
+  when: deploy_tempest
