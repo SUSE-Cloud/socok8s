@@ -8,7 +8,7 @@
       tags:
         - install
 
-- hosts: all
+- hosts: soc-deployer:caasp-workers
   gather_facts: false
   any_errors_fatal: true
   roles:
