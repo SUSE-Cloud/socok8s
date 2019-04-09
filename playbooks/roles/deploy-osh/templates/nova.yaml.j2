@@ -46,14 +46,12 @@ images:
     nova_consoleauth: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
     nova_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
     nova_novncproxy: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
-    # what is in this image?
-    #nova_novncproxy_assets: 'docker.io/kolla/ubuntu-source-nova-novncproxy:ocata'
+    nova_novncproxy_assets: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
     nova_placement: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
     nova_scheduler: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
     # what is in this image?
     #nova_service_cleaner: 'docker.io/port/ceph-config-helper:v1.10.3'
     nova_spiceproxy: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
-    # what is in this image?
-    #nova_spiceproxy_assets: 'docker.io/kolla/ubuntu-source-nova-spicehtml5proxy:ocata'
+    nova_spiceproxy_assets: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
     nova_service_cleaner: "{{ suse_osh_registry_location }}/openstackhelm/ceph-config-helper:{{ suse_infra_image_version }}"
 {%  endif %}
