@@ -25,6 +25,11 @@ data:
         reference: 8f290d3b8d2a8d787f107d05b3be0199d33d7026
         subpath: helm-toolkit
         type: git
+      horizon-htk:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 8f290d3b8d2a8d787f107d05b3be0199d33d7026
+        subpath: helm-toolkit
+        type: git
   images:
     calico:
       calico: {}
@@ -90,10 +95,10 @@ data:
         heat_engine_cleaner: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
         heat_purge_deleted: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       horizon:
-        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        horizon_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/horizon:{{ suse_osh_image_version }}"
-        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        horizon: "{{ suse_osh_registry_location }}/openstackhelm/horizon:{{ suse_osh_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        horizon_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/horizon:{{ suse_openstack_image_version }}"
+        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        horizon: "{{ suse_osh_registry_location }}/openstackhelm/horizon:{{ suse_openstack_image_version }}"
       ingress:
         ingress_module_init: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
         ingress_routed_vip: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
