@@ -8,7 +8,7 @@
       - "/var/lib/neutron"
   when: ('airship-openstack-compute-workers' in group_names)
   tags:
-    - add_computenode
+    - add_compute_node
 
 - name: Set CaaSP controller work node subvolume list
   set_fact:
@@ -23,7 +23,7 @@
     mode: "0755"
     force: yes
   tags:
-    - add_computenode
+    - add_compute_node
 
 - name: Execute subvolume setup script
   command: /tmp/caasp_worker_node_set_subvolumes.sh
@@ -31,7 +31,7 @@
   failed_when: subvolume_cmd_out.rc != 0
   tags:
     - skip_ansible_lint
-    - add_computenode
+    - add_compute_node
 
 - name: Reboot node after successful subvolumes creation
   reboot:
@@ -39,4 +39,4 @@
     test_command: "kubectl get nodes"
   when: subvolume_cmd_out.stdout.find('reboot') >= 0
   tags:
-    - add_computenode
+    - add_compute_node
