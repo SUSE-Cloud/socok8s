@@ -11,7 +11,7 @@ metadata:
       component: mariadb
     actions:
       - method: merge
-        path: .values.pod
+        path: .
       - method: delete
         path: .values.labels.prometheus_mysql_exporter
   storagePolicy: cleartext
@@ -25,6 +25,9 @@ metadata:
 data:
   wait:
     timeout: {{ openstack_helm_deploy_timeout }}
+  test:
+    enabled: {{ run_tests | default('true') }}
+    timeout: {{ test_timeout | default(300) }}
   values:
     pod:
       replicas:

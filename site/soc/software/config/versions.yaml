@@ -2,10 +2,29 @@
 data:
   charts:
     kubernetes:
+      # contains dev patcher to enable multiple vips
       ingress:
         type: local
         location: /armada/airship-components/openstack-helm-infra
         subpath: ingress
+    osh:
+      #TODO remove when Airship treasuremap uplift version moves forward again
+      # needs commit "make db-{drop,init) py3 compatible"
+      glance-htk:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 8f290d3b8d2a8d787f107d05b3be0199d33d7026
+        subpath: helm-toolkit
+        type: git
+      cinder-htk:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 8f290d3b8d2a8d787f107d05b3be0199d33d7026
+        subpath: helm-toolkit
+        type: git
+      heat-htk:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 8f290d3b8d2a8d787f107d05b3be0199d33d7026
+        subpath: helm-toolkit
+        type: git
   images:
     calico:
       calico: {}
@@ -33,46 +52,43 @@ data:
         ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
         barbican_api: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_osh_image_version }}"
       cinder:
-        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        cinder_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_osh_image_version }}"
-        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        cinder_api: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_osh_image_version }}"
-        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        cinder_scheduler: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_osh_image_version }}"
-        cinder_volume: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_osh_image_version }}"
-        cinder_volume_usage_audit: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_osh_image_version }}"
-        cinder_backup: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_osh_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        cinder_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
+        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        cinder_api: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
+        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        cinder_scheduler: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
+        cinder_volume: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
+        cinder_volume_usage_audit: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
+        cinder_backup: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
       glance:
-        glance_api: "{{ suse_osh_registry_location }}/openstackhelm/glance:{{ suse_osh_image_version }}"
-        glance_bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        glance_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/glance:{{ suse_osh_image_version }}"
-        glance_registry: "{{ suse_osh_registry_location }}/openstackhelm/glance:{{ suse_osh_image_version }}"
-        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        glance_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/glance:{{ suse_osh_image_version }}"
-        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        glance_api: "{{ suse_osh_registry_location }}/openstackhelm/glance:{{ suse_osh_image_version }}"
-        glance_registry: "{{ suse_osh_registry_location }}/openstackhelm/glance:{{ suse_osh_image_version }}"
+        glance_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/glance:{{ suse_openstack_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        glance_api: "{{ suse_osh_registry_location }}/openstackhelm/glance:{{ suse_openstack_image_version }}"
+        glance_registry: "{{ suse_osh_registry_location }}/openstackhelm/glance:{{ suse_openstack_image_version }}"
         # Bootstrap image requires curl
-        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       heat:
-        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        heat_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        heat_api: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        heat_cfn: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        heat_cloudwatch: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        heat_engine: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        heat_engine_cleaner: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        heat_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        heat_api: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        heat_cfn: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        heat_cloudwatch: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        heat_engine: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        heat_engine_cleaner: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        heat_purge_deleted: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       horizon:
         db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
         horizon_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/horizon:{{ suse_osh_image_version }}"
@@ -179,7 +195,7 @@ data:
     # the ucp section is not used in socok8s deployment.
     ucp:
       armada:
-        armada: "{{ suse_airship_registry_location }}/airshipit/armada:{{ suse_airship_components_image_tag }}"
+        api: "{{ suse_airship_registry_location }}/airshipit/armada:{{ suse_airship_components_image_tag }}"
         ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
         ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
         ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"

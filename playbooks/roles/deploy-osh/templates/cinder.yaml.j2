@@ -30,6 +30,6 @@ images:
     cinder_scheduler: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
     cinder_volume: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
     cinder_volume_usage_audit: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
-    cinder_storage_init: docker.io/port/ceph-config-helper:v1.10.3
+    cinder_storage_init: "{{ suse_osh_registry_location }}/openstackhelm/ceph-config-helper:{{ suse_infra_image_version }}"
     cinder_backup: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
-    cinder_backup_storage_init: docker.io/port/ceph-config-helper:v1.10.3
+    cinder_backup_storage_init: "{{ suse_osh_registry_location }}/openstackhelm/ceph-config-helper:{{ suse_infra_image_version }}"

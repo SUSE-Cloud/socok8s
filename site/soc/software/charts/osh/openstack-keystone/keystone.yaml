@@ -24,7 +24,8 @@ data:
   wait:
     timeout: {{ openstack_helm_deploy_timeout }}
   test:
-    enabled: {{ run_rally_tests }}
+    enabled: {{ run_tests | default('true') }}
+    timeout: {{ test_timeout | default(300) }}
   values:
     pod:
       replicas:
