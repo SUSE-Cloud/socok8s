@@ -15,3 +15,8 @@
   tags:
     - preinstall
 
+- name: Apparmor profiles in worker nodes
+  import_tasks: apparmor-profiles.yml
+  tags:
+    - apparmor
+
