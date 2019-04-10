@@ -23,7 +23,7 @@ socok8s_deploy_config_location: "{{ socok8s_workspace }}"
 ucp_namespace_name: "{{ ucp_namespace | default('ucp') }}"
 
 # Variables used for building airship images locally
-suse_distro_identifier: opensuse_leap15
+suse_distro_identifier: opensuse_15
 suse_airship_components_base_image: "opensuse/leap:15.0"
 
 # check if argument is set in commandline for airship_local_images_flag value
@@ -45,11 +45,11 @@ suse_airship_registry_location: "{%- if suse_airship_build_local_images or suse_
                                    quay.io
                                  {%- endif -%}"
 
-suse_airship_components_image_tag: "{%- if suse_airship_build_local_images or suse_airship_use_local_images -%}
-                                      opensuse_15.0
-                                    {%- else -%}
-                                      latest
-                                    {%- endif -%}"
+# Tag passed to image building step
+suse_airship_components_image_build_tag: "master"
+
+# Complete distro specific published image tag
+suse_airship_components_image_tag: "{{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}"
 
 socok8s_site_name: "soc"
 
