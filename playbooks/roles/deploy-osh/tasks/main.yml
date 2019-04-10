@@ -388,6 +388,7 @@
         --values=/tmp/socok8s-susedefaults-neutron.yaml
         --values=/tmp/socok8s-useroverrides-neutron.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NEUTRON') | default('', True) }}
+      OSH_OPENSTACK_RELEASE: "rocky"
       OSH_EXTRA_HELM_ARGS_NOVA: >
         --values=/tmp/socok8s-susedefaults-nova.yaml
         --values=/tmp/socok8s-useroverrides-nova.yaml
