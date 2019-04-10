@@ -34,7 +34,7 @@ data:
         type: git
       horizon-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: f6ed763a6a05b73a6bbc063f5ceeb40e9e1f7e8a
+        reference: 8f290d3b8d2a8d787f107d05b3be0199d33d7026
         subpath: helm-toolkit
         type: git
   images:
