@@ -38,3 +38,41 @@ To build this page just run:
 .. code-block:: console
 
    tox -e docs
+
+Building and using the run script
+=================================
+
+The run.sh script is the main bootstrapping script to setup and build the
+environment.  First you must build run.sh as it argbash to construct
+an argument parser and help for the tool itself.
+
+To build run.sh, simply run
+
+::
+
+  make
+
+This will pull down and install argbash in $HOME/.local, and then run argbash
+to construct the run.sh script, which is a wrapper for _run.sh, that includes
+an argparser that explains how to run the script and which environment
+vars are used.
+
+To view the help after it's built
+
+::
+
+  ./run.sh -h
+  This script is used to bootstrap the socok8s dev env. To build the documentation, run tox -edocs
+  Usage: ./run.sh [-h|--help] <command>
+      <command>: The command you want to run.
+      -h, --help: Prints help
+
+  Environment variables that are supported:
+      DEPLOYMENT_MECHANISM: The deployment type you want. (default: 'openstack')
+      USE_ARA: Use ARA?. (default: 'True')
+
+
+The argbash m4 files are macros to define which arguments are available, their
+help strings, and valid commands.   You can modify _parsing.m4 to add new
+arguments, and then simply rebuild run.sh with make again.  You can view argbash
+here:  http://argbash.io or http://github.com/matejak/argbash

@@ -162,7 +162,7 @@ run:
 
 .. code-block:: console
 
-   export DEPLOYMENT_MECHANISM='KVM'
+   export DEPLOYMENT_MECHANISM='kvm'
 
 Alternatively, if you want to deploy :term:`CaaSP`, :term:`SES` and
 OpenStack on top of an OpenStack environment (for CI for example), run:
