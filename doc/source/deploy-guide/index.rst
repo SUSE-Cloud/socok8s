@@ -4,10 +4,10 @@
 Deployment Guide
 ================
 
-This guide provides instruction for performing an Airship or OpenStack-Helm
-installation in a test and a production environment.
+This guide provides instruction for performing an OpenStack deployment
+on top of SUSE products.
 
-It is intended for deployers.
+This guide is intended for deployers.
 
 .. toctree::
    :maxdepth: 1

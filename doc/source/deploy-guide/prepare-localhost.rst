@@ -15,7 +15,7 @@ Prepare localhost
      setup_caasp_workers [label="Setup CaaSP\nfor OpenStack"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build docker images\n(for developers)"]
-     deploy [label="Deploy Airship or\nOpenStack-Helm"]
+     deploy [label="Deploy OpenStack"]
      configure_deployment [label="Configure deployment"]
 
      group {
@@ -39,7 +39,7 @@ Prepare localhost
 
      group {
        color = "#EEEEEE"
-       label = "Setup openstack/Setup airship"
+       label = "OpenStack deployment"
        setup_caasp_workers -> deploy, patch_upstream [folded];
        patch_upstream -> build_images;
        build_images -> deploy;
@@ -90,13 +90,69 @@ running:
 
    git submodule update --init --recursive
 
+Configure Ansible
+-----------------
+
+Use ARA (recommended)
+~~~~~~~~~~~~~~~~~~~~~
+
+To use ARA, set the following environment variable before running `run.sh`.
+
+.. code-block:: console
+
+   export USE_ARA='True'
+
+To setup ARA more permanently for your user on `localhost`, create an ansible
+configuration file loading ara plugins:
+
+.. code-block:: console
+
+   python -m ara.setup.ansible | tee ~/.ansible.cfg
+
+For more details on ARA's web interface, please read
+https://ara.readthedocs.io/en/stable/webserver.html .
+
+Enable mitogen (optional)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To improve deployment speed, enable mitogen strategy and connection plugin.
+First install mitogen in your venv (e.g. `~/suse-socok8s-deploy/.ansiblevenv/` or your local
+ansible environment), then enable it using environment variables.
+
+Alternatively, enable it for all your ansible calls by adding it to your
+ansible configuration:
+
+.. code-block:: console
+
+   cat < EOF >> ~/.ansible.cfg
+   strategy_plugins=${HOME}/suse-socok8s-deploy/.ansiblevenv/lib/python3.6/site-packages/ansible_mitogen/plugins/strategy
+   strategy = mitogen_linear
+   EOF
+
+For more details on mitogen, please read
+https://mitogen.readthedocs.io/en/latest/ansible.html .
+
+Enable pipelining (recommended)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You might want to improve SSH connections by enabling pipelining:
+
+.. code-block:: console
+
+   cat < EOF >> ~/.ansible.cfg
+   [ssh_connection]
+   pipelining = True
+   EOF
+
 .. _deploymechanism:
 
 Set a deployment mechanism
 --------------------------
 
-This tooling can deploy its software on top of OpenStack, KVM, and, in the
-future, on bare metal.
+This tooling can work with two different mechanisms:
+
+* Bring your own environment
+* Deploy everything on top of OpenStack (experimental).
 
 This behaviour can be changed by setting the environment variable
 `DEPLOYMENT_MECHANISM`.
@@ -108,8 +164,8 @@ run:
 
    export DEPLOYMENT_MECHANISM='KVM'
 
-Alternatively, if you want to deploy :term:`CaaSP`, :term:`SES`, OpenStack-Helm,
-and/or Airship on top of an OpenStack environment (for CI for example), run:
+Alternatively, if you want to deploy :term:`CaaSP`, :term:`SES` and
+OpenStack on top of an OpenStack environment (for CI for example), run:
 
 .. code-block:: console
 
@@ -119,8 +175,8 @@ OpenStack is the current default behaviour.
 
 .. _configureopenstackdeploymentmechanism:
 
-Configure OpenStack deployment mechanism
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Configure OpenStack deployment mechanism (experimental)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the case you are not bringing your own environment, this socok8s tooling can
 deploy :term:`CaaSP`, :term:`SES`, and/or a deployer on its own with the help of
@@ -138,28 +194,30 @@ the following example if you are running on engcloud (SUSE employees):
      engcloud:
        region_name: CustomRegion
        auth:
-         auth_url: https://engcloud.prv.suse.net:5000/v3
+         auth_url: https://keystone_url/v3
          username: foctodoodle # your username here
          password: my-super-secret-password # your password here or add it into secure.yaml
          project_name: cloud
          project_domain_name: default
-         user_domain_name: ldap_users
+         user_domain_name: ldap_users # this is just an example, adapt to your needs
        identity_api_version: 3
-       cacert: /usr/share/pki/trust/anchors/SUSE_Trust_Root.crt.pem
    ansible:
      use_hostnames: True
      expand_hostvars: False
      fail_on_errors: True
 
 SUSE Employees, you can access the engcloud web UI at https://engcloud.prv.suse.net/.
-For more information, see https://wiki.microfocus.net/index.php/SUSE/ECP.
+For more information on how to set up your `clouds.yaml`, see
+https://wiki.microfocus.net/index.php/SUSE/ECP.
 If you don’t have the SUSE root certificate installed, check
-http://ca.suse.de/ , or you can set ``insecure: True`` (not recommended).
+http://ca.suse.de/, install the package, and point to the pem file
+in your clouds.yaml, as described in the procedure linked above.
 
 Now pre-create your environment. It is convention here to use your username
 as part of the name of objects you create.
 
-Create a keypair on engcloud (using either the horizon's web interface or
+Create a keypair on your cloud (named further *engcloud*)
+(using either the horizon's web interface or
 OpenStack CLI’s ``openstack keypair create``) for accessing the
 instances created. Remember the name of this keypair (which appears as
 ``foctodoodle-key`` in the example below)
@@ -194,65 +252,14 @@ steps a teardown script is provided to clean up any created resources.
 Reconfirming that you’ve done all the previous steps to set up now will
 save you some time later.
 
+With this done, proceed to next section of the documentation,
+:ref:`targethosts`.
+
 Configure KVM deployment mechanism
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The KVM support is work in progress, and the next step
-(`setup_hosts`) cannot run in KVM. Currently, for KVM, only the setup of
-airship/osh is supported. Therefore there is no extra task (other than
-setting the environment variable, see :ref:`deploymechanism`)
-required when running in your own KVM environment.
+This deployment mechanism is only for "Bring your own cluster" cases.
+There is no additional environment variable to define.
 
-Configure Ansible
------------------
-
-Use ARA
-~~~~~~~
-
-To use ARA, set the following environment variable before running `run.sh`.
-
-.. code-block:: console
-
-   export USE_ARA='True'
-
-To setup ARA more permanently for your user on `localhost`, create an ansible
-configuration file loading ara plugins:
-
-.. code-block:: console
-
-   python -m ara.setup.ansible | tee ~/.ansible.cfg
-
-For more details on ARA's web interface, please read
-https://ara.readthedocs.io/en/stable/webserver.html .
-
-Enable mitogen
-~~~~~~~~~~~~~~
-
-To improve deployment speed, enable mitogen strategy and connection plugin.
-First install mitogen in your venv (e.g. `~/suse-socok8s-deploy/.ansiblevenv/` or your local
-ansible environment), then enable it using environment variables.
-
-Alternatively, enable it for all your ansible calls by adding it to your
-ansible configuration:
-
-.. code-block:: console
-
-   cat < EOF >> ~/.ansible.cfg
-   strategy_plugins=${HOME}/suse-socok8s-deploy/.ansiblevenv/lib/python3.6/site-packages/ansible_mitogen/plugins/strategy
-   strategy = mitogen_linear
-   EOF
-
-For more details on mitogen, please read
-https://mitogen.readthedocs.io/en/latest/ansible.html .
-
-Enable pipelining
-~~~~~~~~~~~~~~~~~
-
-You might want to improve SSH connections by enabling pipelining:
-
-.. code-block:: console
-
-   cat < EOF >> ~/.ansible.cfg
-   [ssh_connection]
-   pipelining = True
-   EOF
+With this done, continue your deployment by reading the
+:ref:`configuredeployment` page.

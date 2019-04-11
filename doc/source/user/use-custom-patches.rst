@@ -1,3 +1,5 @@
+.. _custompatches:
+
 ===================
 Use custom patches
 ===================

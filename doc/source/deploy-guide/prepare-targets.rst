@@ -15,7 +15,7 @@ Prepare the target hosts
      setup_caasp_workers [label="Setup CaaSP\nfor OpenStack"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build docker images\n(for developers)"]
-     deploy [label="Deploy Airship or\nOpenStack-Helm"]
+     deploy [label="Deploy OpenStack"]
      configure_deployment [label="Configure deployment"]
 
      localhost -> ses;
@@ -34,31 +34,26 @@ Prepare the target hosts
 
      group {
        color = "#EEEEEE"
-       label = "Setup openstack/Setup airship"
+       label = "Openstack deployment"
        setup_caasp_workers -> deploy, patch_upstream [folded];
        patch_upstream -> build_images;
        build_images -> deploy;
      }
    }
 
-.. note::
+.. important::
+
+   Skip this step if you are bringing your own :term:`SES`,
+   :term:`CaaSP`, and deployer environment (recommended).
+
+Apply these commands if you are running on OpenStack, and want to construct
+your environment from scratch.
+
+.. warning::
 
    You still need to export the right environment variables for `run.sh`
    to work with the `openstack` deployment mechanism. Check if you have set
    them appropriately. See also :ref:`configureopenstackdeploymentmechanism`.
-
-This step can be skipped if you are bringing your own
-:term:`SES` / :term:`CaaSP` / deployer environment.
-
-.. note::
-
-   If you bring your own deployer host, you will need to make sure the
-   :term:`CaaSP` tooling can be installed on it. Please search for the
-   variable `velum_automation_host_packages` in the code to find the
-   latest requirements.
-
-Apply these commands if you are running on OpenStack, and want to construct
-your environment from scratch.
 
 In separate steps
 -----------------

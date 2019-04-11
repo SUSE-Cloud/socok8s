@@ -220,3 +220,24 @@ Similarily, we are using submodules. They also need a regular version update.
 
 Updating the manifest and the submodules are manual operations.
 There is no code available to bump those versions yet.
+
+Airship Developer Guide
+=======================
+
+Testing upstream patches
+------------------------
+
+Carrying your own patches has been described as a user story on the page
+:ref:`custompatches`.
+
+Build your own images
+---------------------
+
+Carrying your own patches has been described as a user story on the page
+:ref:`buildownimages`.
+
+Point to your own images in airship
+-----------------------------------
+
+This has been described in a user story on the page :ref:`useownimages`.
+
