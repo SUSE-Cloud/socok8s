@@ -2,109 +2,21 @@
 - hosts: localhost
   gather_facts: no
   connection: local
-  tasks:
+  pre_tasks:
     - name: Load generic vars
-      include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
-    - name: Load openstack vars
-      include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
-
-    - name: Handle creation
-      when:
-        - not ((osh_node_delete | default('false'))| bool)
-      block:
-        - name: Create volume
-          os_volume:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            display_name: "{{ deploy_on_openstack_oshnode_volume_name }}"
-            size: 80
-            state: "present"
-        - name: Create server
-          os_server:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            flavor: "{{ deploy_on_openstack_oshnode_flavor }}"
-            image: "{{ deploy_on_openstack_oshnode_image }}"
-            key_name: "{{ deploy_on_openstack_keypairname }}"
-            name: "{{ deploy_on_openstack_oshnode_server_name }}"
-            network: "{{ deploy_on_openstack_internal_network }}"
-            security_groups:
-              - "{{ deploy_on_openstack_oshnode_securitygroup }}"
-            auto_ip: True
-            state: present
-            timeout: 300
-            volumes:
-              - "{{ deploy_on_openstack_oshnode_volume_name }}"
-            userdata: "{{ deploy_on_openstack_oshnode_userdata | default(omit) }}"
-          register: _osh_server_create
-        - name: Show the server data
-          debug:
-            var: _osh_server_create
-        - name: Get server floating IP
-          set_fact:
-            osh_floating_ip: "{{ _osh_server_create['openstack']['accessIPv4'] }}"
-        - name: Extend inventory in workspace with newly created OSH deployer node
-          copy:
-            content: "{{ soc_aio_overrides }}"
-            dest: "{{ socok8s_workspace }}/inventory/osh.yml"
-          vars:
-            soc_aio_overrides: |
-              soc-deployer:
-                hosts:
-                  soc-aio:
-                    ansible_host: {{ osh_floating_ip }}
-
-        - meta: refresh_inventory
-
-        - name: Wait for a SSH to be properly started
-          wait_for:
-            host: "{{ osh_floating_ip }}"
-            port: 22
-            search_regex: OpenSSH
-            state: started
-            delay: 10
-            timeout: 180
-
-        - name: Get pubkey, and add it to known hosts
-          command: "ssh-keyscan -H {{ osh_floating_ip | quote }}"
-          register: _oshfloatingkey
-          retries: 10
-          delay: 10
-          until: _oshfloatingkey.stdout and _oshfloatingkey.stdout.strip()
-
-
-        - name: Insert known host
-          known_hosts:
-            state: present
-            name: "{{ osh_floating_ip }}"
-            key: "{{ _oshfloatingkey.stdout }}"
-
-    - name: Handle deletion
-      when:
-        - (osh_node_delete | default('false')) | bool
-      block:
-        - name: Delete server
-          os_server:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            delete_fip: yes
-            name: "{{ deploy_on_openstack_oshnode_server_name }}"
-            state: absent
-            timeout: 300
-
-        - name: Delete volume
-          os_volume:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            display_name: "{{ deploy_on_openstack_oshnode_volume_name }}"
-            state: "absent"
-
-        # Looping will avoid the need to create a condition if no hosts
-        # exists in the inventory.
-        - name: Remove all hosts from this group known hosts
-          known_hosts:
-            state: absent
-            name: "{{ hostvars[item]['ansible_host'] }}"
-          loop: "{{ groups['soc-deployer'] }}"
-
-        - name: Delete osh inventory
-          file:
-            state: absent
-            path: "{{ socok8s_workspace }}/inventory/osh.yml"
-
+      include_vars: "{{ item }}"
+      loop:
+        - "{{ playbook_dir }}/../vars/common-vars.yml"
+        - "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+  roles:
+    - role: handle-nodes-on-openstack
+      vars:
+        servername_suffix: "deployer"
+        flavor: "{{ deploy_on_openstack_oshnode_flavor }}"
+        image: "{{ deploy_on_openstack_oshnode_image }}"
+        network: "{{ deploy_on_openstack_internal_network }}"
+        securitygroups:
+          - "{{ deploy_on_openstack_oshnode_securitygroup }}"
+        groupname_for_inventory: "soc-deployer"
+        userdata: "{{ deploy_on_openstack_oshnode_userdata }}"
+        delete: "{{ ((osh_node_delete | default('False')) | bool) }}"

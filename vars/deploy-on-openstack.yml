@@ -1,15 +1,16 @@
 ---
 deploy_on_openstack_cloudname: "{{ lookup('env','OS_CLOUD') | default('engcloud-cloud-ci', true) }}"
-deploy_on_openstack_prefix: "{{ lookup('env','PREFIX') }}" #PREFIX is set at all times (ensured in script library)
-deploy_on_openstack_external_network: "floating"
-deploy_on_openstack_internal_network: "{{ deploy_on_openstack_prefix }}-net"
-deploy_on_openstack_internal_subnet: "{{ deploy_on_openstack_prefix }}-subnet"
+# PREFIX must be unique per environment.
+# If you want to deploy two environments on the same network,
+# make sure PREFIX is defined for your environment before running run.sh
+deploy_on_openstack_prefix: "{{ lookup('env','PREFIX') | default('socok8s', true) }}"
+deploy_on_openstack_external_network: "{{ lookup('env', 'EXTERNAL_NETWORK') | default('floating', true) }}"
+deploy_on_openstack_internal_network: "{{ lookup('env','INTERNAL_NETWORK') | default('ccpci-net', true) }}"
+deploy_on_openstack_internal_subnet: "{{ lookup('env', 'INTERNAL_SUBNET') | default('ccpci-subnet', true) }}"
 deploy_on_openstack_keypairname: "{{ lookup('env','KEYNAME') }}"
-deploy_on_openstack_sesnode_server_name: "{{ deploy_on_openstack_prefix }}-ses"
 deploy_on_openstack_sesnode_image: "SLES12-SP3"
 deploy_on_openstack_sesnode_flavor: "m1.large"
 deploy_on_openstack_sesnode_securitygroup: "all-incoming"
-deploy_on_openstack_sesnode_volume_name: "{{ deploy_on_openstack_prefix }}-vol"
 deploy_on_openstack_repos_to_configure:
   SLE12SP3-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Pool/
   SLE12SP3-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Updates/
@@ -53,11 +54,9 @@ deploy_on_openstack_caasp_image: "caasp-3.0.0-GM-OpenStack-qcow"
 deploy_on_openstack_caasp_workers: 3
 deploy_on_openstack_caasp_securitygroup: "{{ deploy_on_openstack_sesnode_securitygroup }}"
 deploy_on_openstack_caasp_stacknamefile: "{{ socok8s_workspace }}/stackname"
-deploy_on_openstack_oshnode_server_name: "{{ deploy_on_openstack_prefix }}-soc-deployer"
 deploy_on_openstack_oshnode_image: "openSUSE-Leap-15.0"
 deploy_on_openstack_oshnode_flavor: "m1.large"
 deploy_on_openstack_oshnode_securitygroup: "all-incoming"
-deploy_on_openstack_oshnode_volume_name: "{{ deploy_on_openstack_oshnode_server_name }}-vol"
 deploy_on_openstack_oshnode_userdata: |
   {%- raw -%}#cloud-config
   disable_root: false

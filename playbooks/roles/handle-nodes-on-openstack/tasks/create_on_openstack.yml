@@ -1,0 +1,59 @@
+---
+- name: Create volume
+  os_volume:
+    cloud: "{{ deploy_on_openstack_cloudname }}"
+    display_name: "{{ servername }}-vol"
+    size: 80
+    state: "present"
+
+- name: Create server
+  os_server:
+    cloud: "{{ deploy_on_openstack_cloudname }}"
+    flavor: "{{ flavor }}"
+    image: "{{ image }}"
+    key_name: "{{ deploy_on_openstack_keypairname }}"
+    name: "{{ servername }}"
+    network: "{{ network }}"
+    security_groups: "{{ securitygroups }}"
+    auto_ip: True
+    state: present
+    timeout: 300
+    volumes:
+      - "{{ servername }}-vol"
+    userdata: "{{ userdata | default(omit) }}"
+  register: _server_create
+
+- name: Show the server data
+  debug:
+    var: _server_create
+
+- name: Get server floating IP
+  set_fact:
+    floating_ip: "{{ _server_create['openstack']['accessIPv4'] }}"
+
+- name: Extend inventory in workspace with newly created OSH deployer node
+  copy:
+    content: "{{ soc_aio_overrides }}"
+    dest: "{{ socok8s_workspace }}/inventory/{{ groupname_for_inventory }}.yml"
+  vars:
+    soc_aio_overrides: |
+      {{ groupname_for_inventory }}:
+        hosts:
+          {{ servername }}:
+            ansible_host: {{ floating_ip }}
+
+- meta: refresh_inventory
+
+- name: Get pubkey, and add it to known hosts
+  command: "ssh-keyscan -H {{ floating_ip | quote }}"
+  changed_when: false
+  register: _floatingkey
+  retries: 20
+  delay: 10
+  until: _floatingkey.stdout and _floatingkey.stdout.strip()
+
+- name: Insert known host
+  known_hosts:
+    state: present
+    name: "{{ floating_ip }}"
+    key: "{{ _floatingkey.stdout }}"
