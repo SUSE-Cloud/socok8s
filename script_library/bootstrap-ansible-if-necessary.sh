@@ -13,6 +13,7 @@ function install_ansible (){
         virtualenv ${ANSIBLE_RUNNER_DIR}/.ansiblevenv/
     fi
     source ${ANSIBLE_RUNNER_DIR}/.ansiblevenv/bin/activate
-    pip install --upgrade -r $(dirname "$0")/script_library/requirements.txt
+
+    pip install ${QUIET:-} --upgrade -r $(dirname "$0")/script_library/requirements.txt
     python -m ara.setup.env > ${ANSIBLE_RUNNER_DIR}/.ansiblevenv/ara.rc
 }
