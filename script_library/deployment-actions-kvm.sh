@@ -56,7 +56,8 @@ function deploy_airship(){
 }
 function add_compute(){
     echo "Now Add compute"
-    run_ansible ${socok8s_absolute_dir}/playbooks/add_compute.yml
+    tagged_info=" --tags add_compute_node"
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_airship.yml ${tagged_info}
 }
 function clean_k8s(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."

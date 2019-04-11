@@ -134,6 +134,7 @@
     - install
     - skip_ansible_lint
     - update_airship_osh_site
+    - add_compute_node
 
 - name: Print Shipyard action information
   debug:
@@ -141,6 +142,7 @@
   tags:
     - install
     - update_airship_osh_site
+    - add_compute_node
 
 - name: Get action key
   set_fact:
@@ -148,6 +150,7 @@
   tags:
     - install
     - update_airship_osh_site
+    - add_compute_node
 
 - name: Write site records
   template:
@@ -156,6 +159,7 @@
   tags:
     - install
     - update_airship_osh_site
+    - add_compute_node
 
 - name: Wait 10 minutes before checking the action status
   pause:
@@ -180,9 +184,11 @@
   tags:
     - skip_ansible_lint
     - update_airship_osh_site
+    - add_compute_node
 
 - name: Print Shipyard update software action status
   debug:
     msg: "{{ shipyard_desc_action.stdout_lines }}"
   tags:
     - update_airship_osh_site
+    - add_compute_node
