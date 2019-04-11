@@ -11,7 +11,8 @@ socok8s_absolute_dir="$( cd "$(dirname "$0")" ; pwd -P )"
 
 # USE an env var to setup where to deploy to
 # by default, ccp will deploy on openstack for inception style fun (and CI).
-DEPLOYMENT_MECHANISM=${DEPLOYMENT_MECHANISM:-"openstack"}
+# DEPLOYMENT_MECHANISM=${DEPLOYMENT_MECHANISM:-"openstack"}
+# DEPLOYMENT_MECHANISM is set by argbash now always.
 
 # The base directory where workspace(s) are created in
 SOCOK8S_WORKSPACE_BASEDIR=${SOCOK8S_WORKSPACE_BASEDIR:-~}
@@ -21,6 +22,12 @@ source ${scripts_absolute_dir}/bootstrap-ansible-if-necessary.sh
 source ${scripts_absolute_dir}/pre-flight-checks.sh check_jq_present
 source ${scripts_absolute_dir}/pre-flight-checks.sh check_ansible_requirements
 source ${scripts_absolute_dir}/pre-flight-checks.sh check_git_submodules_are_present
+
+echo "Preflight Complete"
+if [ "$_arg_pre" = "on" ]; then
+    # we have completed preflight, so exit
+    exit 0
+fi
 
 # Bring an ansible runner that allows a userspace environment
 source ${scripts_absolute_dir}/run-ansible.sh
@@ -35,7 +42,10 @@ source ${scripts_absolute_dir}/deployment-actions-${DEPLOYMENT_MECHANISM}.sh
 # When automation is changed to introduce steps,
 # replace this line with the following line:
 # deployment_action=$1
-deployment_action=${1:-"setup_everything"}
+# deployment_action=${1:-"setup_everything"}
+# the default is set in the _parsing.m4 for command
+deployment_action=$_arg_command
+
 
 case "$deployment_action" in
     "deploy_ses")
