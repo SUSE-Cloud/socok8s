@@ -1,3 +1,5 @@
+.. _configuredeployment:
+
 Configure the deployment
 ========================
 
@@ -13,7 +15,7 @@ Configure the deployment
      setup_caasp_workers [label="Setup CaaSP\nfor OpenStack"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build docker images\n(for developers)"]
-     deploy [label="Deploy Airship or\nOpenStack-Helm"]
+     deploy [label="Deploy OpenStack"]
      configure_deployment [label="Configure deployment"]
 
      localhost -> ses;
@@ -37,14 +39,14 @@ Configure the deployment
 
      group {
        color = "#EEEEEE"
-       label = "Setup openstack/Setup airship"
+       label = "OpenStack deployment"
        setup_caasp_workers -> deploy, patch_upstream [folded];
        patch_upstream -> build_images;
        build_images -> deploy;
      }
    }
 
-All the files for the deployment are in a workspace, whose default location
+All the files for the deployment are in a **workspace**, whose default location
 is `~/suse-osh-deploy` on `localhost`.
 
 This workspace is structured like an `ansible-runner` directory.
@@ -54,8 +56,8 @@ It therefore contains:
 * an `inventory` folder
 * an `env` folder.
 
-Additionally, this folder will contain extra files necessary for the
-deployment.
+Additionally, this folder must contain extra files necessary for the
+deployment, like the `ses_config.yml` and the `kubeconfig` files.
 
 Configure the inventory
 -----------------------
@@ -99,7 +101,7 @@ Airship/OpenStack deployment:
 * the ceph admin keyring, in base64, present in the file `env/extravars` of
   your workspace.
 
-You can find examples of the required files in `examples/workdir`.
+You can find an example `ses_config.yml` in `examples/workdir`.
 
 Configure the VIP that will be used for OpenStack service public endpoints
 --------------------------------------------------------------------------
@@ -130,18 +132,16 @@ For example:
 
    socok8s_dcm_vip: "192.168.51.35"
 
-Configure certificates for your own registry
---------------------------------------------
+Provide a kubeconfig file
+-------------------------
 
-If you want to run developer mode, and want to bring your own registry's SSL
-certificates, you can define, in your extra vars:
+socok8s relies on kubectl and helm commands to configure your OpenStack
+deployment. You need to provide a `kubeconfig` file on your `localhost`, in
+your workspace. You can fetch this file from the Velum UI on your
+CaaSP cluster.
 
-.. code-block:: yaml
-
-   socok8s_registry_certkey:
-   socok8s_registry_cert:
-
-The variables should point to files present in your `localhost`.
+Configure passwords
+-------------------
 
 Advanced configuration
 ----------------------
@@ -163,4 +163,4 @@ override any upstream helm chart's value with the appropriate overrides.
 
 .. note ::
 
-   Please read the :ref:`userscenarios` for inspiration on overrides.
+   Please read the page :ref:`userscenarios` for inspiration on overrides.

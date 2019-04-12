@@ -13,7 +13,7 @@ Setup OpenStack
      setup_caasp_workers [label="Setup CaaSP\nfor OpenStack"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build docker images\n(for developers)"]
-     deploy [label="Deploy Airship or\nOpenStack-Helm"]
+     deploy [label="Deploy OpenStack"]
      configure_deployment [label="Configure deployment"]
 
      localhost -> ses;
@@ -32,15 +32,15 @@ Setup OpenStack
 
      group {
        color = "red"
-       label = "Setup openstack/Setup airship"
+       label = "OpenStack deployment"
        setup_caasp_workers -> deploy, patch_upstream [folded];
        patch_upstream -> build_images;
        build_images -> deploy;
      }
    }
 
-From this point forward, you should decide to deploy Airship or OpenStack-Helm
-directly.
+You can either run these steps separately, or run them
+all in one go.
 
 In separate steps
 -----------------
@@ -78,16 +78,19 @@ Build your own images by running:
    export SOCOK8S_DEVELOPER_MODE='True'
    ./run.sh build_images
 
-Deploy Airship/OpenStack-Helm
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Deploy OpenStack
+~~~~~~~~~~~~~~~~
 
-If you want to deploy OpenStack-Helm without Airship, run:
+.. tip::
 
-.. code-block:: console
+   If you are a helm chart developer, you can run OpenStack-Helm deployment
+   on top of CaaSP without Airship:
 
-   ./run.sh deploy_osh
+   .. code-block:: console
 
-Alternatively, if you want to use Airship to deploy OpenStack, run:
+      ./run.sh deploy_osh
+
+To deploy OpenStack using Airship, run:
 
 .. code-block:: console
 
@@ -96,24 +99,8 @@ Alternatively, if you want to use Airship to deploy OpenStack, run:
 In a single step
 ----------------
 
-All of the above steps can be summarized in a single command.
-
-For OpenStack-Helm only
-~~~~~~~~~~~~~~~~~~~~~~~
-
-Run the following to deploy OpenStack-Helm only:
-
-.. code-block:: console
-
-   ./run.sh setup_openstack
-
-If you want to patch upstream helm charts and/or build your own images,
-you need to run the following:
-
-.. code-block:: console
-
-   export SOCOK8S_DEVELOPER_MODE='True'
-   ./run.sh setup_openstack
+All of the above steps can be summarized in a single command (Do not run
+both!).
 
 For Airship deployment
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -131,3 +118,26 @@ you need to run the following:
 
    export SOCOK8S_DEVELOPER_MODE='True'
    ./run.sh setup_airship
+
+.. note::
+
+   Those steps might take a while to finish.
+   If you want to know what is happening, check out the operations' guide
+   page on :ref:`deploymentprogress`.
+
+For OpenStack-Helm only (developers)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Run the following to deploy OpenStack-Helm only:
+
+.. code-block:: console
+
+   ./run.sh setup_openstack
+
+If you want to patch upstream helm charts and/or build your own images,
+you need to run the following:
+
+.. code-block:: console
+
+   export SOCOK8S_DEVELOPER_MODE='True'
+   ./run.sh setup_openstack

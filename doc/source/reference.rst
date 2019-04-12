@@ -48,7 +48,7 @@ Design considerations
 
 In order to not pollute the developer/CI machine (called `localhost`),
 all the data relevant for a deployment (like any eventual override) is stored
-in a user-space "WORKDIR" folder, with unprivileged access.
+in a user-space `ANSIBLE_RUNNER_DIR` folder, with unprivileged access.
 
 This also helps the story of running behind
 a corporate firewall: the `localhost` can be (connecting to)
@@ -62,9 +62,6 @@ Why...
    scripts. It's ecosystem allows a nice interface to track deployment
    progress with ARA, run in a CI/CD like Zuul or Tower/AWX.
 
-   On top of it, with config_template, Ansible provides a hash merge
-   mechanism which is flexible enough to have all the overrides we need.
-
 ... OpenStack on top of Kubernetes on top of OpenStack by default in `run.sh`?
    We have a cloud for our Engineers, and that cloud is used for CI.
    From that point, creating a node for testing is as simple as doing an API
@@ -73,8 +70,7 @@ Why...
 
    As you might have read in the :ref:`projecthistory`, `run.sh` was mainly
    used for developers and CI. This is why the `run.sh` still points to
-   `openstack` as default `DEPLOYMENT_MECHANISM`. See also :ref:`envvars` for
-   setting a different deployment mechanism.
+   `openstack` as default `DEPLOYMENT_MECHANISM`.
 
 ... OpenStack on top of Kubernetes?
    Long story short: Robustness.
@@ -93,7 +89,7 @@ Why...
 
 ... Installing from sources?
    Neither the socok8s repo nor the OpenStack-Helm project's repositories
-   have been packaged for Leap/SLE 15.
+   have been packaged for Leap/SLE 15, yet.
 
 Image building process
 ======================
@@ -121,7 +117,7 @@ openstack sources and their requirements are expressed in `bindep` files
 (`bindep.txt` for rpm/apt packages, `pydep.txt` for python packages).
 The `build.sh` runs `LOCI` for the master branch. Other branches can be built
 suing `build-{branchname}.sh` where `branchname` is the name of the OpenStack
-branch (for example, `queens`). See also :ref:`buildlociimages`.
+branch (for example, `rocky`). See also :ref:`buildlociimages`.
 
 In the future, `openstack-helm-images` could theoretically add images for
 OpenStack which would be based on packages, by simply providing the appropriate
@@ -180,29 +176,33 @@ variable, to allow users to pass extra arguments.
 
 See for example https://github.com/openstack/openstack-helm/blob/c869b4ef4a0e95272155c5d5dd893c72976753cd/tools/deployment/multinode/100-glance.sh#L49 .
 
-SUSE-ification of the OSH charts
---------------------------------
+SUSE-ification of the OSH charts when deploying in OSH only mode
+----------------------------------------------------------------
 
 socok8s uses the previously explained environment variable to pass an extra
-values file, a "SUSE"ified YAML (See the environment variable in
-https://github.com/SUSE-Cloud/socok8s/blob/a6e224b73b954d4b0ace85aa807fa8b2cee02b99/playbooks/roles/deploy-osh/tasks/main.yml#L289 where
-the generated SUSEified YAML is named `socok8s-glance.yml`).
+values file, a "SUSE"ified YAML. All the SUSEified files are present in
+`playbooks/roles/deploy-osh/templates/`, for example `socok8s-glance.yml`,
+**if they are not part of upstream yet**.
 
-The SUSEified file is generated using Ansible, and the `config_template` module.
-Which means we only have to carry a few YAML files, representing the
-"SUSE"ification of each of the Helm charts.
+How deployers can extend a SUSEified OSH chart in OSH only mode
+---------------------------------------------------------------
 
-How deployers can extend a SUSEified OSH chart
-----------------------------------------------
-
-The `config_template` above is not only simply generating a YAML file from
-template, it also takes an override argument. This allows
-deployers/customers to pass their own YAML overrides, in
-user space (for example `extravars`), to extend the helm chart behaviour
-beyond the "SUSE"ification.
+Deployers/customers to pass their own YAML overrides, in
+user space (for example by using `extravars`), to extend the helm chart
+behaviour beyond the "SUSE"ification.
 
 To find those overrides, a user can look into
 `playbooks/roles/deploy-osh/defaults/main.yml`.
+
+SUSE-ification of the OSH charts when deploying with Airship
+------------------------------------------------------------
+
+...
+
+How deployers can extend a SUSEified OSH chart with Airship
+-----------------------------------------------------------
+
+...
 
 Summary "deploy on OpenStack" diagrams
 ======================================

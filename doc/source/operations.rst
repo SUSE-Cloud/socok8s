@@ -6,6 +6,54 @@ Operations Documentation
 
 In this section, you will find documentation relevant to operate socok8s.
 
+.. _deploymentprogress:
+
+Follow progress of a deployment
+===============================
+
+Using kubectl
+-------------
+
+Using K8s dashboard
+-------------------
+
+Using Shipyard CLI (airship only)
+---------------------------------
+
+Logs
+----
+
+Scaling in/out
+==============
+
+Adding or removing compute nodes
+--------------------------------
+
+Adding or removing network nodes
+--------------------------------
+
+Change scale profile
+--------------------
+
+Updates
+=======
+
+Update Airship UCP Services
+---------------------------
+
+Update OpenStack Services
+-------------------------
+
+Update secrets, passwords and certificates
+------------------------------------------
+
+Update this repository
+----------------------
+
+Troubleshooting
+===============
+
+
 .. _caaspoperations:
 
 CaaSP Operations
@@ -73,7 +121,7 @@ For neutron:
 .. code-block:: console
 
    kubectl get pods -n openstack -l application=neutron -o jsonpath="{.items[*].spec.containers[*].image}"|tr -s '[[:space:]]' '\n' | sort | uniq -c
-    
+
 
 Remove dangling docker images
 -----------------------------

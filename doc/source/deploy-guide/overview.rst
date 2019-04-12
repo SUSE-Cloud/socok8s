@@ -25,7 +25,7 @@ The following diagram shows the general workflow of a deployment from scratch:
      setup_caasp_workers [label="Setup CaaSP\nfor OpenStack"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build docker images\n(for developers)"]
-     deploy [label="Deploy Airship or\nOpenStack-Helm"]
+     deploy [label="Deploy OpenStack"]
      configure_deployment [label="Configure deployment"]
 
 
@@ -45,7 +45,7 @@ The following diagram shows the general workflow of a deployment from scratch:
 
      group {
        color = "#EEEEEE"
-       label = "Setup openstack/Setup airship"
+       label = "OpenStack deployment"
        setup_caasp_workers -> deploy, patch_upstream [folded];
        patch_upstream -> build_images;
        build_images -> deploy;
@@ -62,13 +62,25 @@ Your environment should be setup with the following:
 
 * `deployer` must run openSUSE Leap 15 or SLE15. Those must have all the
   deployment tools available. See more details on the page
-  :ref:`targethosts`. If you are not coming with your own node for
-  `deployer`, this tooling can create one for you (currently only on OpenStack).
+  :ref:`targethosts`.
 
-* The :term:`CaaSP` cluster must run :term:`CaaSP` version 3. If you are not
-  coming with your own :term:`CaaSP` cluster, this tooling can create one for
-  you (currently only on OpenStack).
+  .. note::
+     If you are not coming with your own node for
+     `deployer`, this tooling can create one for you in an OpenStack
+     environment. However, this should be treated as experimental.
 
-* The :term:`SES` cluster must run :term:`SES` 5. If you are not coming with
-  your own :term:`SES` cluster, this tooling can create an "All-in-one" node
-  for :term:`SES` for you (currently only on OpenStack).
+* The :term:`CaaSP` cluster must run :term:`CaaSP` version 3.
+  :term:`CaaSP` must be updated to its latest 3 version.
+
+  .. note::
+     If you are not coming with your own :term:`CaaSP` cluster,
+     this tooling can create one for you in an OpenStack environment.
+     However, this should be treated as experimental.
+
+* The :term:`SES` cluster must run :term:`SES` 5.5.
+
+  .. note::
+     If you are not coming with your own :term:`SES` cluster,
+     this tooling can create an "All-in-one" node for :term:`SES`
+     for you in an OpenStack environment. However, this should be treated
+     as experimental.
