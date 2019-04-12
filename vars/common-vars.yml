@@ -59,6 +59,9 @@ run_rally_tests: false
 # where the generated secrets are stored
 secrets_location: "{{ socok8s_workspace }}/secrets"
 
+#options used to generate random passwords for Airship sites
+password_opts: "length=20 chars=ascii_letters,digits,_"
+
 #Set timeout for ucp deployment
 ucp_deploy_timeout: 1800
 
