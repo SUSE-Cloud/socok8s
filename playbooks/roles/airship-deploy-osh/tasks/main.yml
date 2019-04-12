@@ -82,9 +82,18 @@
 - name: Set up shipyard shell script
   set_fact:
     shipyard: './tools/shipyard.sh'
+    SHIPYARD_HOSTPATH: '/target'
+    OS_CACERT_PATH: "/target/ca_cert.crt"
   tags:
     - install
     - always
+
+- name: Copy CA cert for shipyard CLI usage
+  copy:
+    src:  "{{ suse_tls_certs_dir }}/ca_cert.crt"
+    dest: "{{ upstream_repos_clone_folder }}/airship/shipyard/"
+  when:
+    - (not (disable_tls_ucp | bool) )
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Create config docs in Shipyard
@@ -94,6 +103,7 @@
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
     OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
+    OS_AUTH_URL: "{{ ucp_endpoint_http_scheme }}://keystone.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}:{{ ucp_endpoint_http_port }}/v3"
   register: shipyard_create_config
   failed_when:
     - shipyard_create_config.stdout.find('Error') == 0
@@ -111,6 +121,7 @@
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
     OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
+    OS_AUTH_URL: "{{ ucp_endpoint_http_scheme }}://keystone.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}:{{ ucp_endpoint_http_port }}/v3"
   when:
     - "no_revision_error_msg not in shipyard_create_config.stdout"
   register: shipyard_commit_config
@@ -128,6 +139,7 @@
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
     OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
+    OS_AUTH_URL: "{{ ucp_endpoint_http_scheme }}://keystone.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}:{{ ucp_endpoint_http_port }}/v3"
   register: shipyard_update_software
   failed_when: shipyard_update_software.stdout.find('Error') == 0
   tags:
@@ -176,6 +188,7 @@
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
     OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
+    OS_AUTH_URL: "{{ ucp_endpoint_http_scheme }}://keystone.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}:{{ ucp_endpoint_http_port }}/v3"
   register: shipyard_desc_action
   until: shipyard_desc_action.stdout.find('Processing') < 0 and shipyard_desc_action.stdout.find('running') < 0
   retries: 240

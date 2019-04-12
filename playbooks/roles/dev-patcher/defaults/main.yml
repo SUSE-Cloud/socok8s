@@ -20,3 +20,7 @@ dev_patcher_patches:
   - 639861
   # osh-infra: Add support for mulitple VIPS
   - 640115
+  # osh: Usage of rally.conf for services with rally test for debugging
+  - 656947
+  # treasuremap: Increase default logging for openstack services
+  - 657631

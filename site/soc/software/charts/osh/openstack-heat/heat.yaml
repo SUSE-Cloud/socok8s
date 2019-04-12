@@ -51,4 +51,17 @@ data:
         cfn: 1
         cloudwatch: 1
         engine: 1
+    network:
+      api:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      cfn:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      cloudwatch:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
 ...

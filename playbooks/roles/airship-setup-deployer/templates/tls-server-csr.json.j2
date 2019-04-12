@@ -1,0 +1,35 @@
+{
+  "hosts": [
+    "127.0.0.1",
+    "keystone.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}",
+    "keystone-api.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}",
+    "barbican.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}",
+    "barbican-api.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}",
+    "shipyard.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}",
+    "identity-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "image-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "volume-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "compute-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "network-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "dashboard-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "orchestration-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "identity.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "image.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "volume.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "compute.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "network.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "dashboard.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "novncproxy.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "orchestration.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "*.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "*.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}"
+  ],
+  "CN": "{{ suse_tls_cert_common_name }}",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [{
+    "O": "Airship"
+  }]
+}

@@ -111,11 +111,28 @@ data:
           virt_type: qemu
     pod:
       replicas:
-        api_metadata: 1 
+        api_metadata: 1
         placement: 1
         osapi: 1
         conductor: 1
         consoleauth: 1
         scheduler: 1
         novncproxy: 1
+    network:
+      osapi:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      metadata:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      placement:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      novncproxy:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
 ...

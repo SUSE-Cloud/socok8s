@@ -1,6 +1,4 @@
 ---
-ucp_namespace_name: "{{ ucp_namespace | default('ucp') }}"
-ceph_namespace_name: "{{ ceph_namespace | default('ceph') }}"
-openstack_namespace_name: "{{ openstack_namespace | default('openstack') }}"
+suse_tls_certs_dir: "{{ socok8s_workspace }}/tls_certs"
 
 suse_cp_node_create_subvolume: false

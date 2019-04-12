@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=root
 Restart=always
-ExecStart=/usr/local/bin/helm serve
+ExecStart=/usr/local/bin/helm serve --address {{ ansible_default_ipv4.address | ipaddr('address') }}:8879
 
 [Install]
 WantedBy=multi-user.target

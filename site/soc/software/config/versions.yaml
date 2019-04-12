@@ -7,6 +7,15 @@ data:
         type: local
         location: /armada/airship-components/openstack-helm-infra
         subpath: ingress
+    ucp:
+      barbican-htk:
+        type: tar
+        location: http://{{ ansible_default_ipv4.address | ipaddr('address') }}:8879/charts/helm-toolkit-0.1.0.tgz
+        subpath: helm-toolkit
+      barbican:
+        type: tar
+        location: http://{{ ansible_default_ipv4.address | ipaddr('address') }}:8879/charts/barbican-0.1.0.tgz
+        subpath: barbican
     osh:
       cinder-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
@@ -30,7 +39,7 @@ data:
         type: git
       horizon-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e 
+        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: helm-toolkit
         type: git
       keystone:

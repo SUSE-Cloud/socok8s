@@ -73,26 +73,31 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK for VIP entries"
     block: |
       # UCP service public end points
-      {{ socok8s_dcm_vip }} keystone.ucp.svc.cluster.local keystone-api.ucp.svc.cluster.local
-      {{ socok8s_dcm_vip }} barbican.ucp.svc.cluster.local barbican-api.ucp.svc.cluster.local
-      {{ socok8s_dcm_vip }} shipyard.ucp.svc.cluster.local
+      {{ socok8s_dcm_vip }} keystone.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }} keystone-api.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_dcm_vip }} barbican.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }} barbican-api.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_dcm_vip }} shipyard.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}
       # Openstack admin service and internal endpoints
-      {{ socok8s_dcm_vip }} identity-api.openstack.svc.cluster.local
-      {{ socok8s_dcm_vip }} image-api.openstack.svc.cluster.local
-      {{ socok8s_dcm_vip }} volume-api.openstack.svc.cluster.local
-      {{ socok8s_dcm_vip }} compute-api.openstack.svc.cluster.local
-      {{ socok8s_dcm_vip }} network-api.openstack.svc.cluster.local
-      {{ socok8s_dcm_vip }} dashboard-api.openstack.svc.cluster.local
-      {{ socok8s_dcm_vip }} orchestration-api.openstack.svc.cluster.local
+      {{ socok8s_dcm_vip }} identity-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_dcm_vip }} image-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_dcm_vip }} volume-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_dcm_vip }} compute-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_dcm_vip }} network-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_dcm_vip }} dashboard-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_dcm_vip }} orchestration-api.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
       # Openstack service public endpoints
-      {{ socok8s_ext_vip }} identity.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} image.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} volume.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} compute.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} network.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} dashboard.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} novncproxy.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} orchestration.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} identity.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_ext_vip }} image.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_ext_vip }} volume.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_ext_vip }} compute.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_ext_vip }} network.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_ext_vip }} dashboard.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_ext_vip }} novncproxy.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+      {{ socok8s_ext_vip }} orchestration.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}
+
+- name: Ensure tls certs are available
+  include: cfssl-tls-certs.yml
+  when:
+    - (not (disable_tls_ucp | bool) or not (disable_tls_osh | bool) )
 
 - name: Creates /etc/openstack directory
   become: yes

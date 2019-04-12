@@ -18,8 +18,6 @@ metadata:
       dest:
         - path: .ucp.identity.host_fqdn_override.public.host
           pattern: DOMAIN
-        - path: .ucp.identity.host_fqdn_override.admin.host
-          pattern: DOMAIN
         - path: .ucp.shipyard.host_fqdn_override.public.host
           pattern: DOMAIN
         - path: .ucp.key_manager.host_fqdn_override.public.host
@@ -34,6 +32,7 @@ metadata:
           pattern: DOMAIN
         - path: .ceph.ceph_object_store.host_fqdn_override.public.host
           pattern: DOMAIN
+{% if not (disable_tls_ucp | bool) %}
     - src:
         schema: deckhand/Certificate/v1
         name: ingress-crt
@@ -64,6 +63,7 @@ metadata:
         - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.key
         - path: .ceph.object_store.host_fqdn_override.public.tls.key
         - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.key
+{% endif %}
 data:
   ucp:
     identity:
@@ -76,18 +76,16 @@ data:
         default: null
         public:
           host: keystone.DOMAIN
-        admin:
-          host: keystone.DOMAIN
       path:
         default: /v3
       scheme:
-        # default: "https"
         default: "http"
+        public: "{{ ucp_endpoint_http_scheme }}"
         internal: "http"
       port:
         api:
-          # default: 443
           default: 80
+          public: {{ ucp_endpoint_http_port }}
           internal: 5000
     armada:
       name: armada
@@ -159,18 +157,19 @@ data:
         public: barbican
       host_fqdn_override:
         default: null
-        admin: 
+        admin:
           host: barbican-api.DOMAIN
-        public: 
+        public:
           host: barbican.DOMAIN
       path:
         default: /v1
       scheme:
         default: "http"
+        public: "{{ ucp_endpoint_http_scheme }}"
       port:
         api:
           default: 9311
-          public: 80
+          public: {{ ucp_endpoint_http_port }}
     airflow_oslo_messaging:
       namespace: null
       hosts:
@@ -321,13 +320,11 @@ data:
         default: /swift/v1
       scheme:
         default: "http"
-        public: "http"
-        #ublic: "https"
+        public: "{{ ucp_endpoint_http_scheme }}"
       port:
         api:
           default: 8088
-          #public: 443
-          public: 80
+          public: {{ ucp_endpoint_http_port }}
     ceph_object_store:
       name: radosgw
       namespace: ceph
@@ -342,11 +339,11 @@ data:
         default: /auth/v1.0
       scheme:
         default: "http"
-        public: "https"
+        public: "{{ ucp_endpoint_http_scheme }}"
       port:
         api:
           default: 8088
-          public: 443
+          public: {{ ucp_endpoint_http_port }}
     ceph_mon:
       namespace: ceph
       hosts:
@@ -427,8 +424,6 @@ metadata:
           pattern: DOMAIN
         - path: .osh.identity.host_fqdn_override.public.host
           pattern: DOMAIN
-        - path: .osh.identity.host_fqdn_override.admin.host
-          pattern: DOMAIN
         - path: .osh.dashboard.host_fqdn_override.public.host
           pattern: DOMAIN
         - path: .osh.volume.host_fqdn_override.public.host
@@ -437,6 +432,7 @@ metadata:
           pattern: DOMAIN
         - path: .osh.volumev3.host_fqdn_override.public.host
           pattern: DOMAIN
+{% if not (disable_tls_osh | bool) %}
     - src:
         schema: deckhand/Certificate/v1
         name: ingress-crt
@@ -494,6 +490,7 @@ metadata:
         - path: .osh.compute_novnc_proxy.host_fqdn_override.public.tls.key
         - path: .osh.placement.host_fqdn_override.public.tls.key
         - path: .osh.network.host_fqdn_override.public.tls.key
+{% endif %}
 data:
   osh:
     object_store:
@@ -510,11 +507,11 @@ data:
         default: /swift/v1/KEY_$(tenant_id)s
       scheme:
         default: "http"
-        public: "https"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         api:
           default: 8088
-          public: 443
+          public: {{ osh_endpoint_http_port }}
     ceph_object_store:
       name: radosgw
       namespace: openstack
@@ -529,11 +526,11 @@ data:
         default: /auth/v1.0
       scheme:
         default: "http"
-        public: "https"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         api:
           default: 8088
-          public: 443
+          public: {{ osh_endpoint_http_port }}
     oslo_db:
       hosts:
         default: mariadb
@@ -605,18 +602,16 @@ data:
         default: null
         public:
           host: identity.DOMAIN
-        admin:
-          host: identity.DOMAIN
       path:
         default: /v3
       scheme:
-        #default: "https"
         default: "http"
+        public: "{{ osh_endpoint_http_scheme }}"
         internal: "http"
       port:
         api:
-          #default: 443
           default: 80
+          public: {{ osh_endpoint_http_port }}
           internal: 5000
     glance_oslo_messaging:
       namespace: openstack
@@ -653,19 +648,15 @@ data:
         default: null
         public:
           host: image.DOMAIN
-        admin: 
-          host: image-api.DOMAIN
       path:
         default: null
       scheme:
         default: "http"
-        #public: "https"
-        public: "http"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         api:
           default: 9292
-          #public: 443
-          public: 80
+          public: {{ osh_endpoint_http_port }}
     image_registry:
       name: glance-registry
       hosts:
@@ -677,10 +668,11 @@ data:
         default: null
       scheme:
         default: "http"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         api:
           default: 9191
-          public: 80
+          public: {{ osh_endpoint_http_port }}
     cinder_oslo_messaging:
       namespace: openstack
       hosts:
@@ -720,13 +712,11 @@ data:
         default: "/v1/%(tenant_id)s"
       scheme:
         default: "http"
-        public: "http"
-        #public: "https"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         api:
           default: 8776
-          public: 80
-          #public: 443
+          public: {{ osh_endpoint_http_port }}
     volumev2:
       name: cinderv2
       hosts:
@@ -740,13 +730,11 @@ data:
         default: "/v2/%(tenant_id)s"
       scheme:
         default: "http"
-        public: "http"
-        #public: "https"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         api:
           default: 8776
-          public: 80
-          #public: 443
+          public: {{ osh_endpoint_http_port }}
     volumev3:
       name: cinderv3
       hosts:
@@ -760,13 +748,11 @@ data:
         default: "/v3/%(tenant_id)s"
       scheme:
         default: "http"
-        public: "http"
-        #public: "https"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         api:
           default: 8776
-          public: 80
-          #public: 443
+          public: {{ osh_endpoint_http_port }}
     heat_oslo_messaging:
       namespace: openstack
       hosts:
@@ -806,13 +792,11 @@ data:
         default: "/v1/%(project_id)s"
       scheme:
         default: "http"
-        public: "http"
-        #public: "https"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         api:
           default: 8004
-          public: 80
-          #public: 443
+          public: {{ osh_endpoint_http_port }}
     cloudformation:
       name: heat-cfn
       hosts:
@@ -826,13 +810,11 @@ data:
         default: /v1
       scheme:
         default: "http"
-        public: "http"
-        #public: "https"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         api:
           default: 8000
-          public: 80
-          #public: 443
+          public: {{ osh_endpoint_http_port }}
     cloudwatch:
       name: heat-cloudwatch
       hosts:
@@ -842,13 +824,14 @@ data:
         default: null
       path:
         default: null
+        public: "{{ osh_endpoint_http_scheme }}"
       type: null
       scheme:
         default: "http"
       port:
         api:
           default: 8003
-          public: 80
+          public: {{ osh_endpoint_http_port }}
     neutron_oslo_messaging:
       namespace: openstack
       hosts:
@@ -888,13 +871,11 @@ data:
         default: null
       scheme:
         default: "http"
-        public: "http"
-        #public: "https"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         api:
           default: 9696
-          public: 80
-          #public: 443
+          public: {{ osh_endpoint_http_port }}
     nova_oslo_messaging:
       namespace: openstack
       hosts:
@@ -934,13 +915,11 @@ data:
         default: "/v2/%(tenant_id)s"
       scheme:
         default: "http"
-        public: "http"
-        #public: "https"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         api:
           default: 8774
-          public: 80
-          #public: 443
+          public: {{ osh_endpoint_http_port }}
         novncproxy:
           default: 443
     compute_metadata:
@@ -954,10 +933,11 @@ data:
         default: /
       scheme:
         default: "http"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         metadata:
           default: 8775
-          public: 80
+          public: {{ osh_endpoint_http_port }}
     compute_novnc_proxy:
       name: nova
       hosts:
@@ -971,13 +951,11 @@ data:
         default: /vnc_auto.html
       scheme:
         default: "http"
-        public: "http"
-        #public: "https"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         novnc_proxy:
           default: 6080
-          public: 80
-          #public: 443
+          public: {{ osh_endpoint_http_port }}
     compute_spice_proxy:
       name: nova
       hosts:
@@ -1004,13 +982,11 @@ data:
         default: /
       scheme:
         default: "http"
-        public: "http"
-        #public: "https"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         api:
           default: 8778
-          public: 80
-          #public: 443
+          public: {{ osh_endpoint_http_port }}
     dashboard:
       name: horizon
       hosts:
@@ -1024,13 +1000,11 @@ data:
         default: null
       scheme:
         default: "http"
-        public: "http"
-        #public: "https"
+        public: "{{ osh_endpoint_http_scheme }}"
       port:
         web:
           default: 80
-          public: 80
-          #public: 443
+          public: {{ osh_endpoint_http_port }}
 ...
 ---
 schema: pegleg/EndpointCatalogue/v1
@@ -1203,13 +1177,13 @@ data:
         default: null
       scheme:
         default: "http"
-        public: "http"
-        #public: "https"
+        #public: "http"
+        public: "https"
       port:
         grafana:
           default: 3000
-          public: 80
-          #public: 443
+          #public: 80
+          public: 443
     monitoring:
       name: prometheus
       namespace: osh-infra

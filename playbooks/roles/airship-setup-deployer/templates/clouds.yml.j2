@@ -8,7 +8,10 @@ clouds:
       project_name: 'admin'
       project_domain_name: 'default'
       user_domain_name: 'default'
-      auth_url: 'http://keystone.ucp.svc.cluster.local/v3'
+      auth_url: '{{ ucp_endpoint_http_scheme }}://keystone.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}:{{ ucp_endpoint_http_port }}/v3'
+{% if not (disable_tls_ucp | bool) %}
+    cacert: {{ suse_tls_certs_dir  + "/ca_cert.crt" }}
+{% endif %}
   openstack:
     region_name: RegionOne
     identity_api_version: 3
@@ -18,4 +21,7 @@ clouds:
       project_name: 'admin'
       project_domain_name: 'default'
       user_domain_name: 'default'
-      auth_url: 'http://identity.openstack.svc.cluster.local/v3'
+      auth_url: '{{ osh_endpoint_http_scheme }}://identity.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}:{{ osh_endpoint_http_port }}/v3'
+{% if not (disable_tls_osh | bool) %}
+    cacert: {{ suse_tls_certs_dir  + "/ca_cert.crt" }}
+{% endif %}

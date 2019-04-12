@@ -32,4 +32,11 @@ data:
       replicas:
         ingress: 1
         error_page: 1
+    conf:
+      ingress:
+        ssl-redirect: "false"
+    network:
+      ingress:
+        annotations:
+          nginx.ingress.kubernetes.io/ssl-redirect: "false"
 ...

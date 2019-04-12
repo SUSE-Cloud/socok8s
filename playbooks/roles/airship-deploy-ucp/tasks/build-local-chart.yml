@@ -1,0 +1,55 @@
+---
+
+- name: Check if {{ item['chart_subpath'] }} chart is built earlier
+  find:
+    path: "{{ upstream_repos_clone_folder }}/{{ item['source_subdir'] }}"
+    pattern: "{{ item['chart_subpath'] }}*{{ item['chart_version'] }}*.tgz"
+  register: _archive_matched
+  tags:
+    - update_airship_osh_site
+
+- name: Create local charts directory
+  file:
+    path: "{{ local_charts_repository_path }}/charts"
+    state: directory
+  tags:
+    - update_airship_osh_site
+
+- name: Make / package {{ item['chart_subpath'] }} local chart
+  make:
+    target: "{{ item['chart_subpath'] }}"
+  args:
+    chdir: "{{ upstream_repos_clone_folder }}/{{ item['source_subdir'] }}"
+  when:
+    - _archive_matched.files | length == 0
+  tags:
+    - update_airship_osh_site
+
+- name: Find local built chart archive for {{ item['chart_subpath'] }}
+  find:
+    path: "{{ upstream_repos_clone_folder }}/{{ item['source_subdir'] }}"
+    pattern: "{{ item['chart_subpath'] }}*.tgz"
+  register: _archives_created
+  when:
+    - _archive_matched.files | length == 0
+  tags:
+    - update_airship_osh_site
+
+- name: Copy recently built {{ item['chart_subpath'] }} package to local helm repo
+  copy:
+    src: "{{ archive_file }}"
+    dest: "{{ local_charts_repository_path }}/charts"
+  loop: "{{ _archives_created.files | map(attribute='path') | list }}"
+  loop_control:
+    loop_var: archive_file
+  when:
+    - _archive_matched.files | length == 0
+  tags:
+    - update_airship_osh_site
+
+- name: Re-index local helm repo at {{ local_charts_repository_path }}
+  command: helm repo index --merge index.yaml {{ local_charts_repository_path }}
+  when:
+    - _archive_matched.files | length == 0
+  tags:
+    - update_airship_osh_site

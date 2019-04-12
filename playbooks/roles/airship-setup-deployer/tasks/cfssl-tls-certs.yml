@@ -1,0 +1,86 @@
+---
+- name: Creates CloudFare TLS certs scripts directory
+  file:
+    path: "{{ suse_tls_certs_dir }}/scripts"
+    state: directory
+
+- name: Check for existing TLS cert files presence
+  stat:
+    path: "{{ item }}"
+  register: _cfssl_certs_stat
+  with_items:
+    - "{{ suse_tls_certs_dir }}/scripts/ca.pem"
+    - "{{ suse_tls_certs_dir }}/scripts/ca-key.pem"
+    - "{{ suse_tls_certs_dir }}/scripts/server.pem"
+    - "{{ suse_tls_certs_dir }}/scripts/server-key.pem"
+
+- name: Copy CSR and config files to CloudFare scripts directory
+  template:
+    src: "{{ item }}"
+    dest: "{{ suse_tls_certs_dir }}/scripts/{{ (item | splitext)[0] }}"
+  with_items:
+    - tls-ca-csr.json.j2
+    - tls-ca-config.json.j2
+    - tls-server-csr.json.j2
+  register: _cfssl_config
+
+- name: Check if need to generate certs
+  set_fact:
+    _generate_cfssl_certs: True
+  when: ( ( _cfssl_certs_stat.results | selectattr('stat.exists') | map(attribute='stat')| list | length !=4)
+          or (_cfssl_config.changed ) )
+
+- name: Download latest stable cfssl (CloudFare pki/tls toolkit)
+  become: yes
+  shell: >-
+    ./cfssl || (curl -L https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 -o cfssl &&
+      chmod +x cfssl &&
+      curl -L https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64 -o cfssljson &&
+      chmod +x cfssljson &&
+      curl -L https://pkg.cfssl.org/R1.2/cfssl-certinfo_linux-amd64 -o cfssl-certinfo &&
+      chmod +x cfssl-certinfo)
+  register: _cfssl_dl
+  args:
+    executable: /bin/bash
+    chdir: "{{ suse_tls_certs_dir }}/scripts"
+  changed_when: _cfssl_dl.stdout.find('Available commands') == -1
+  when:
+    - _generate_cfssl_certs is defined
+    - _generate_cfssl_certs
+
+- name: Generate CloudFare SSL CA cert and private key.
+  shell: >-
+    ./cfssl gencert -initca tls-ca-csr.json | ./cfssljson -bare ca
+  args:
+    executable: /bin/bash
+    chdir: "{{ suse_tls_certs_dir }}/scripts"
+  register: cf_genca_out
+  when:
+    - _generate_cfssl_certs is defined
+    - _generate_cfssl_certs
+
+- name: Generate CloudFare SSL Server cert
+  shell: >-
+    ./cfssl gencert -ca=ca.pem -ca-key=ca-key.pem  --config=tls-ca-config.json -profile=kubernetes tls-server-csr.json | ./cfssljson -bare server
+  args:
+    executable: /bin/bash
+    chdir: "{{ suse_tls_certs_dir }}/scripts"
+  register: cf_gencert_out
+  when:
+    - _generate_cfssl_certs is defined
+    - _generate_cfssl_certs
+
+- name: Copy generated certs to expected location
+  copy:
+    src: "{{ suse_tls_certs_dir }}/scripts/{{ item.src }}"
+    dest: "{{ suse_tls_certs_dir }}/{{ item.dest }}"
+  with_items:
+    - { src: "ca.csr", dest: "ca_cert.csr" }
+    - { src: "ca.pem", dest: "ca_cert.crt" }
+    - { src: "ca-key.pem", dest: "ca_privkey.key" }
+    - { src: "server.csr", dest: "server_cert.csr" }
+    - { src: "server.pem", dest: "server_cert.crt" }
+    - { src: "server-key.pem", dest: "server_privkey.key" }
+  when:
+    - _generate_cfssl_certs is defined
+    - _generate_cfssl_certs

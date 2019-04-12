@@ -1,4 +1,17 @@
 ---
+
 scale_profile: "{{ lookup('env','scale_profile') | default('minimal', true) }}"
 airship_pegleg_image: "{{ suse_airship_registry_location }}/airshipit/pegleg:{{ suse_airship_components_image_tag }}"
 suse_osh_image_version: "pike"
+suse_tls_certs_dir: "{{ socok8s_workspace }}/tls_certs"
+
+local_charts_repository_path: "~/.helm/repository/local"
+
+# map of local charts to be built
+local_helm_charts:
+  - source_subdir: "openstack/openstack-helm-infra"
+    chart_subpath: "helm-toolkit"
+    chart_version: "0.1.0"
+  - source_subdir: "openstack/openstack-helm"
+    chart_subpath: "barbican"
+    chart_version: "0.1.0"

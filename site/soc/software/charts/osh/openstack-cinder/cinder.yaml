@@ -50,4 +50,9 @@ data:
           rbd_user: {{ ses_cluster_configuration['cinder']['rbd_store_user'] }}
           rbd_pool: {{ ses_cluster_configuration['cinder']['rbd_store_pool'] }}
           rbd_secret_uuid: {{ libvirt_ceph_cinder_secret_uuid }}
+    network:
+      api:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
 ...

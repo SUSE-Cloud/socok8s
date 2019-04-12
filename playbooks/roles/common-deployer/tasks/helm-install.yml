@@ -42,13 +42,13 @@
     - skip_ansible_lint
 
 - name: Install tiller
-  command: helm init
+  command: helm init --local-repo-url http://{{ ansible_default_ipv4.address | ipaddr('address') }}:8879/charts
   register: _helminstall
   when: helm_state == 'to_install'
   changed_when: True
 
 - name: Upgrade tiller
-  command: helm init --upgrade
+  command: helm init --upgrade --local-repo-url http://{{ ansible_default_ipv4.address | ipaddr('address') }}:8879/charts
   register: _helmupgrade
   when: helm_state == 'to_update' or helm_state == 'to_install'
   changed_when: True

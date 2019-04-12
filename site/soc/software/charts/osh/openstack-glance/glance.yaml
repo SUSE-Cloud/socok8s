@@ -53,4 +53,20 @@ data:
         glance_store:
           rbd_store_user: {{ ses_cluster_configuration.glance.rbd_store_user }}
           rbd_store_pool: {{ ses_cluster_configuration.glance.rbd_store_pool }}
+      logging:
+        logger_root:
+          handlers: stdout
+          level: DEBUG
+        logger_glance:
+          level: DEBUG
+      rally:
+        DEFAULT:
+          debug: true
+          rally_debug: true
+          default_log_levels: amqp=WARN,amqplib=WARN,boto=WARN,qpid=WARN,sqlalchemy=DEBUG,suds=INFO,oslo.messaging=INFO,oslo_messaging=INFO,oslo_middleware=DEBUG,iso8601=WARN,requests.packages.urllib3.connectionpool=DEBUG,urllib3.connectionpool=DEBUG,websocket=DEBUG,requests.packages.urllib3.util.retry=DEBUG,urllib3.util.retry=DEBUG,keystonemiddleware=DEBUG,routes.middleware=WARN,stevedore=WARN,taskflow=WARN,keystoneauth=DEBUG,oslo.cache=INFO,dogpile.core.dogpile=INFO
+    network:
+      api:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
 ...

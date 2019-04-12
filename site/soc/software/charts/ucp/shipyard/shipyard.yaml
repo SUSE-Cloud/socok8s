@@ -53,4 +53,9 @@ data:
           service_type: armada
         promenade:
           service_type: armada
+    network:
+      shipyard:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
 ...

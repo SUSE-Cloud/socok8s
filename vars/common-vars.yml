@@ -27,6 +27,8 @@ suse_ovs_image_version: "v2.8.1"
 
 socok8s_deploy_config_location: "{{ socok8s_workspace }}"
 ucp_namespace_name: "{{ ucp_namespace | default('ucp') }}"
+ceph_namespace_name: "{{ ceph_namespace | default('ceph') }}"
+openstack_namespace_name: "{{ openstack_namespace | default('openstack') }}"
 
 # Variables used for building airship images locally
 suse_distro_identifier: opensuse_15
@@ -63,6 +65,44 @@ suse_airship_components_image_tag: "{%- if suse_airship_build_local_images or su
                                     {%- endif -%}"
 
 socok8s_site_name: "soc"
+
+# suffix used in FQDN for ingress (i.e. "publicly facing" access point)
+# FQDN -- > {component_api_name}.{namespace}.{cluster_domain_suffix}
+cluster_domain_suffix: "svc.dustycloud.local"
+
+# Only public endpoints are enabled and disabled from TLS perspective.
+# When TLS is enabled for an endpoint, corresponding TLS (tls.ca, tls.crt,
+# tls.key) attributes are made available for TLS secret and component
+# specific helm charts refer that secret in its ingress spec definition.
+
+# Flag to disable/enable TLS for ucp namespace public endpoints
+disable_tls_ucp: True
+# Flag to disable/enable TLS for openstack namespace public endpoints
+disable_tls_osh: False
+
+ucp_endpoint_http_scheme: "{%- if disable_tls_ucp | bool -%}
+                             http
+                           {%- else -%}
+                             https
+                           {%- endif -%}"
+
+ucp_endpoint_http_port: "{%- if disable_tls_ucp | bool -%}
+                           80
+                         {%- else -%}
+                           443
+                         {%- endif -%}"
+
+osh_endpoint_http_scheme: "{%- if disable_tls_osh | bool -%}
+                             http
+                           {%- else -%}
+                             https
+                           {%- endif -%}"
+
+osh_endpoint_http_port: "{%- if disable_tls_osh | bool -%}
+                           80
+                         {%- else -%}
+                           443
+                         {%- endif -%}"
 
 # Flag to run pod rally tests (default false)
 run_rally_tests: false

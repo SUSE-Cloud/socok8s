@@ -21,5 +21,9 @@ suse_airship_deploy_python_libs:
   - python-openstackclient
   - python-heatclient
 
+suse_tls_certs_dir: "{{ socok8s_workspace }}/tls_certs"
+suse_tls_cert_CA_common_name: "ca.{{ cluster_domain_suffix }}"
+suse_tls_cert_common_name: "server.{{ cluster_domain_suffix }}"
+
 # Keep this until helm is packaged as rpm
 helm_download_url: "https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"

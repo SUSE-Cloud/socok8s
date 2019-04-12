@@ -1,0 +1,24 @@
+---
+- name: Check for TLS CA cert file presence
+  stat:
+    path: "{{ suse_tls_certs_dir }}/ca_cert.crt"
+  register: _tls_ca_file_check
+  delegate_to: localhost
+
+- name: Copy TLS CA cert to expected location on nodes
+  copy:
+    src: "{{ suse_tls_certs_dir }}/ca_cert.crt"
+    dest: "/etc/pki/trust/anchors"
+  become: yes
+  register: _copy_tls_ca_result
+  when: _tls_ca_file_check.stat.exists
+
+- name: Update CA certificates on node
+  command: >
+    update-ca-certificates
+  become: yes
+  notify:
+    - restart docker
+  when:
+    - _tls_ca_file_check.stat.exists
+    - _copy_tls_ca_result.changed
