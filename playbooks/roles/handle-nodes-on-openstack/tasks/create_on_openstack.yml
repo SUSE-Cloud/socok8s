@@ -1,11 +1,4 @@
 ---
-- name: Create volume
-  os_volume:
-    cloud: "{{ deploy_on_openstack_cloudname }}"
-    display_name: "{{ servername }}-vol"
-    size: 80
-    state: "present"
-
 - name: Create server
   os_server:
     cloud: "{{ deploy_on_openstack_cloudname }}"
@@ -18,8 +11,6 @@
     auto_ip: True
     state: present
     timeout: 300
-    volumes:
-      - "{{ servername }}-vol"
     userdata: "{{ userdata | default(omit) }}"
   register: _server_create
 
