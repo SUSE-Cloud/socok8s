@@ -65,10 +65,9 @@
       delegate_to: localhost
       register: new_config
 
-    - name: Find if an existing .kube/config file
+    - name: Find if there is an existing .kube/config file
       stat:
         path: "{{ ansible_user_dir }}/.kube/config"
-      delegate_to: localhost
       register: old_config
 
     - name: Copy local runner kubeconfig file to deploy node
