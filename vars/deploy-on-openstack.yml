@@ -9,8 +9,14 @@ deploy_on_openstack_internal_network: "{{ lookup('env','INTERNAL_NETWORK') | def
 deploy_on_openstack_internal_subnet: "{{ lookup('env', 'INTERNAL_SUBNET') | default('ccpci-subnet', true) }}"
 deploy_on_openstack_keypairname: "{{ lookup('env','KEYNAME') }}"
 deploy_on_openstack_sesnode_image: "SLES12-SP3"
-deploy_on_openstack_sesnode_flavor: "m1.large"
+deploy_on_openstack_sesnode_flavor: "d4.xlarge"
 deploy_on_openstack_sesnode_securitygroup: "all-incoming"
+# Userdata to prevent the ephemeral disk being mounted by cloud-init
+deploy_on_openstack_sesnode_userdata: |
+  {%- raw -%}#cloud-config
+  mounts:
+    - [ ephemeral0, null ]
+  {% endraw %}
 deploy_on_openstack_repos_to_configure:
   SLE12SP3-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Pool/
   SLE12SP3-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Updates/

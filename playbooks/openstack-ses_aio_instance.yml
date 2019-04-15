@@ -17,5 +17,6 @@
         network: "{{ deploy_on_openstack_internal_network }}"
         securitygroups:
           - "{{ deploy_on_openstack_sesnode_securitygroup }}"
+        userdata: "{{ deploy_on_openstack_sesnode_userdata }}"
         groupname_for_inventory: "ses_nodes"
         delete: "{{ ((ses_node_delete | default('False')) | bool) }}"
