@@ -72,7 +72,8 @@
 
 - name: Copy site to Shipyard
   become: yes
-  copy:
+  delegate_to: '{{ inventory_hostname }}'
+  synchronize:
     src: '{{ treasuremap_dir }}/{{ pegleg_output }}'
     dest: '{{ upstream_repos_clone_folder }}/airship-shipyard'
   tags:
