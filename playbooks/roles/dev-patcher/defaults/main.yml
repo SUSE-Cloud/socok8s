@@ -22,17 +22,7 @@ dev_patcher_patches:
   - 640115
   # osh: Remove remaining test pods before new test run
   - 634936
-  # osh: make ceilometer-api work on suse based images
-  - 641802
-  # osh: Fix indent filter not properly adding a newline after toYaml
-  - 642844
   # osh: Allow more generic overrides for nova placement-api
   - 642067
-  # osh-images: Add rocky release script
-  - 642415
-  # osh: Add heat dashboard if available to horizon
-  - 645543
-  # osh: Allow more generic overrides for keystone
-  - 647403
   # osh: Add an option to the health probe to test all pids
   - 644907
