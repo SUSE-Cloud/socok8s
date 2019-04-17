@@ -43,17 +43,23 @@
     append: yes
 
 - name: Ensure kubectl is installed
-  include: kubectl-install.yml
+  include_role:
+    name: deploy_osh
+    tasks_from: kubectl-install
   tags:
     - install
 
 - name: Ensure helm and tiller are up to date
-  include: helm-install.yml
+  include_role:
+    name: deploy_osh
+    tasks_from: helm-install
   tags:
     - install
 
 - name: Ensure helm runs on localhost
-  include: helm-run.yml
+  include_role:
+    name: deploy_osh
+    tasks_from: helm-run
   tags:
     - run
 
