@@ -53,6 +53,7 @@
     - install
 
 - name: Ensure helm runs on localhost
+  become: yes
   include: helm-run.yml
   tags:
     - run
