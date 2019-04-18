@@ -60,6 +60,9 @@ case "$deployment_action" in
     "add_compute")
         add_compute
         ;;
+    "remove_compute")
+        remove_compute $2
+        ;;
     "setup_caasp_workers_for_openstack")
         setup_caasp_workers_for_openstack
         ;;

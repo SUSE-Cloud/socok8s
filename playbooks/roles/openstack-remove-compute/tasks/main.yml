@@ -1,0 +1,62 @@
+---
+- name: Get openstack compute node id.
+  shell: |
+     set -o pipefail
+     openstack compute service list | grep {{ compute_node_name }} | awk '{print $2}'
+  register: compute_id
+  delegate_to: localhost
+  failed_when: false
+  changed_when: false
+
+- name: Validate the compute node id.
+  debug:
+    msg: "Compute node {{ compute_node_name }} does not exists in openstack."
+  delegate_to: localhost
+  when: compute_id.stdout | length | int == 0
+
+- name: Check for control-plane label.
+  shell: |
+     set -o pipefail
+     kubectl get node {{ compute_node_name }} --show-labels | grep openstack-control-plane=enabled
+  register: node_label_result
+  delegate_to: localhost
+  failed_when: false
+  changed_when: false
+
+- name: Remove openstack-compute-node label from compute node
+  command: "kubectl label node {{ compute_node_name }} openstack-compute-node-"
+  delegate_to: localhost
+  changed_when: false
+
+- name: Remove openvswitch label from compute node.
+  command: "kubectl label node {{ compute_node_name }} openvswitch-"
+  delegate_to: localhost
+  when: node_label_result.stdout | length | int == 0
+
+- name: Wait for compute pods to terminate
+  shell: |
+     set -o pipefail
+     kubectl get pods -n {{ openstack_namespace_name }} --field-selector spec.nodeName={{ compute_node_name }} | grep nova-compute
+  register: nova_pod_name
+  until: nova_pod_name.stdout | length | int == 0
+  retries: 30
+  delay: 10
+  delegate_to: localhost
+  failed_when: false
+  changed_when: false
+
+- name: Delete openstack compute service.
+  command: "openstack compute service delete {{ compute_id.stdout }}"
+  delegate_to: localhost
+  when: compute_id.stdout | length | int != 0
+  failed_when: false
+
+- name: Delete subvolumes from compute node.
+  import_role:
+    name: airship-configure-worker
+    tasks_from: subvolumes-setup.yml
+  delegate_to: '{{ compute_node_name }}'
+  vars:
+    clean_compute: "delete_subvolume"
+    clean_control_node: '{{ node_label_result.stdout }}'
+

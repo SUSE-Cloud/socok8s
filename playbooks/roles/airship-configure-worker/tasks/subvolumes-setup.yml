@@ -16,6 +16,14 @@
       - "/var/lib/neutron"
   when: ('airship-openstack-compute-workers' not in group_names)
 
+- name: Set subvolume list to remove compute contents from control node
+  set_fact:
+    caasp_node_subvolumes:
+      - "/var/lib/libvirt"
+      - "/var/lib/nova"
+      - "/var/lib/openstack-helm"
+  when: clean_control_node is defined and clean_control_node | length != 0
+
 - name: Copy subvolume setup script
   template:
     src: caasp_worker_node_set_subvolumes.sh.j2
@@ -26,17 +34,25 @@
     - add_compute_node
 
 - name: Execute subvolume setup script
-  command: /tmp/caasp_worker_node_set_subvolumes.sh
+  command: /tmp/caasp_worker_node_set_subvolumes.sh  {{ clean_compute | default("create_subvolume") }}
   register: subvolume_cmd_out
   failed_when: subvolume_cmd_out.rc != 0
   tags:
     - skip_ansible_lint
     - add_compute_node
 
+- name: Unmount subvolumes.
+  mount:
+    path: '{{ item }}'
+    state: absent
+  with_items:
+    - "{{ caasp_node_subvolumes }}"
+  when: clean_compute is defined and clean_compute == "delete_subvolume"
+
 - name: Reboot node after successful subvolumes creation
   reboot:
     msg: "Ansible triggered reboot after making subvolumes for Nova, Neutron and Libvirt"
     test_command: "kubectl get nodes"
-  when: subvolume_cmd_out.stdout.find('reboot') >= 0
+  when: subvolume_cmd_out.stdout.find('reboot') >= 0 and ( clean_control_node is not defined or clean_control_node | length == 0)
   tags:
     - add_compute_node
