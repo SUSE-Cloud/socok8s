@@ -8,6 +8,12 @@ data:
         location: /armada/airship-components/openstack-helm-infra
         subpath: ingress
     osh:
+      # TODO remove after Treasuremap catches up on uplifting version
+      horizon:
+        location: https://git.openstack.org/openstack/openstack-helm
+        reference: 5c9dd146b8ffec478dc00d56dcf5b6533045cdbd
+        subpath: horizon
+        type: git
       #TODO remove when Airship treasuremap uplift version moves forward again
       # needs commit "make db-{drop,init) py3 compatible"
       glance-htk:
@@ -23,6 +29,11 @@ data:
       heat-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
         reference: 8f290d3b8d2a8d787f107d05b3be0199d33d7026
+        subpath: helm-toolkit
+        type: git
+      horizon-htk:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: f6ed763a6a05b73a6bbc063f5ceeb40e9e1f7e8a
         subpath: helm-toolkit
         type: git
   images:
@@ -93,10 +104,10 @@ data:
         heat_engine_cleaner: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
         heat_purge_deleted: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       horizon:
-        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        horizon_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/horizon:{{ suse_osh_image_version }}"
-        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        horizon: "{{ suse_osh_registry_location }}/openstackhelm/horizon:{{ suse_osh_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        horizon_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/horizon:{{ suse_openstack_image_version }}"
+        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        horizon: "{{ suse_osh_registry_location }}/openstackhelm/horizon:{{ suse_openstack_image_version }}"
       ingress:
         ingress_module_init: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
         ingress_routed_vip: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
