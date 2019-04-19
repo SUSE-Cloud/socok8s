@@ -1,0 +1,21 @@
+---
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  vars:
+    stackname_suffix: "caasp"
+  tasks:
+    - name: Load generic vars
+      include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+    - name: Load openstack vars
+      include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+
+    - name: _openstack_preflight_caasp | Verify Caasp Image exists
+      fail:
+        msg: "Could not find Image '{{deploy_on_openstack_caasp_image}}'"
+      when: not deploy_on_openstack_caasp_image is os_check_image
+
+    - name: _openstack_preflight_caasp | Verify security group exists
+      fail:
+       msg: "Could not find Security Group '{{deploy_on_openstack_caasp_securitygroup}}'"
+      when: not deploy_on_openstack_caasp_securitygroup is os_check_security_group

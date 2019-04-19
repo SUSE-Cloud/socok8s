@@ -8,6 +8,7 @@
       loop:
         - "{{ playbook_dir }}/../vars/common-vars.yml"
         - "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+
   roles:
     - role: handle-nodes-on-openstack
       vars:

@@ -17,12 +17,16 @@ function deploy_network(){
 }
 function deploy_ses(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
+    echo "Preflight openstack required resources"
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-preflight_ses.yml
     echo "Starting a SES deploy"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_ses.yml
     echo "ses-ansible deploy is successful"
 }
 function deploy_caasp(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
+    echo "Preflight openstack required resources"
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-preflight_caasp.yml
     echo "Starting caasp deploy"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-create_caasp.yml
     echo "CaaSP deployed successfully"
@@ -51,6 +55,8 @@ function setup_caasp_workers_for_openstack(){
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-setup_caasp_workers_for_openstack.yml
 }
 function deploy_osh(){
+    echo "Preflight openstack required resources"
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-preflight_osh.yml
     echo "Now deploy SUSE version of OSH"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_osh.yml
 }
