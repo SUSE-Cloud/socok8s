@@ -22,7 +22,7 @@
     chdir: "{{ upstream_repos_clone_folder }}/{{ project }}"
   vars:
     current_revision: "{{ jsoncontent[0]['current_revision'] }}"
-    project: "{{ jsoncontent[0]['project'].replace('openstack/','') }}"
+    project: "{{ jsoncontent[0]['project'] }}"
   when:
     # Do not apply patches if they are already merged
     - "jsoncontent | length > 0"
