@@ -24,21 +24,3 @@ suse_airship_deploy_python_libs:
 # Keep this until helm is packaged as rpm
 helm_download_url: "https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"
 
-# Airship repos
-airship_repos:
-  airship-armada:
-    src: https://git.openstack.org/openstack/airship-armada.git
-  airship-shipyard:
-    src: https://git.openstack.org/openstack/airship-shipyard.git
-  airship-deckhand:
-    src: https://git.openstack.org/openstack/airship-deckhand.git
-  airship-pegleg:
-    src: https://git.openstack.org/openstack/airship-pegleg.git
-  airship-treasuremap:
-    src: https://git.openstack.org/openstack/airship-treasuremap.git
-  openstack-helm-infra:
-    src: https://git.openstack.org/openstack/openstack-helm-infra.git
-    version: b55e9b10a72ce5531ae22f15f953b2eb71e6f623
-  openstack-helm:
-    src: https://git.openstack.org/openstack/openstack-helm.git
-    version: 4f94593e870ac879b2d01300cb02485ace58b3ac

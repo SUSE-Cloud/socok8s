@@ -26,6 +26,10 @@ metadata:
           pattern: DOMAIN
         - path: .ucp.key_manager.host_fqdn_override.admin.host
           pattern: DOMAIN
+        - path: .ucp.physicalprovisioner.host_fqdn_override.public.host
+          pattern: DOMAIN
+        - path: .ucp.maas_region.host_fqdn_override.public.host
+          pattern: DOMAIN
         - path: .ceph.object_store.host_fqdn_override.public.host
           pattern: DOMAIN
         - path: .ceph.ceph_object_store.host_fqdn_override.public.host
@@ -37,6 +41,7 @@ metadata:
       dest:
         - path: .ucp.identity.host_fqdn_override.public.tls.crt
         - path: .ucp.shipyard.host_fqdn_override.public.tls.crt
+        - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.crt
         - path: .ceph.object_store.host_fqdn_override.public.tls.crt
         - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.crt
     - src:
@@ -46,6 +51,7 @@ metadata:
       dest:
         - path: .ucp.identity.host_fqdn_override.public.tls.ca
         - path: .ucp.shipyard.host_fqdn_override.public.tls.ca
+        - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.ca
         - path: .ceph.object_store.host_fqdn_override.public.tls.ca
         - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.ca
     - src:
@@ -55,6 +61,7 @@ metadata:
       dest:
         - path: .ucp.identity.host_fqdn_override.public.tls.key
         - path: .ucp.shipyard.host_fqdn_override.public.tls.key
+        - path: .ucp.physicalprovisioner.host_fqdn_override.public.tls.key
         - path: .ceph.object_store.host_fqdn_override.public.tls.key
         - path: .ceph.ceph_object_store.host_fqdn_override.public.tls.key
 data:
@@ -204,27 +211,57 @@ data:
         api:
           default: 9000
           nodeport: 31900
+          public: 443
       path:
         default: /api/v1.0
       scheme:
         default: "http"
+        public: "https"
       host_fqdn_override:
         default: null
-    maas_region_ui:
-      name: maas-region-ui
+        public:
+          host: drydock-sw.DOMAIN
+    maas_region:
+      name: maas-region
       hosts:
-        default: maas-region-ui
+        default: maas-region
         public: maas
       path:
         default: /MAAS
       scheme:
         default: "http"
       port:
-        region_ui:
+        region_api:
           default: 80
+          nodeport: 31900
+          podport: 80
           public: 80
+        region_proxy:
+          default: 8000
       host_fqdn_override:
         default: null
+        public:
+          host: maas-sw.DOMAIN
+    maas_ingress:
+      hosts:
+        default: maas-ingress
+        error_pages: maas-ingress-error
+      host_fqdn_override:
+        public: null
+      port:
+        http:
+          default: 80
+        https:
+          default: 443
+        ingress_default_server:
+          default: 8383
+        error_pages:
+          default: 8080
+          podport: 8080
+        healthz:
+          podport: 10259
+        status:
+          podport: 18089
     kubernetesprovisioner:
       name: promenade
       hosts:
