@@ -59,6 +59,10 @@ function add_compute(){
     tagged_info=" --tags add_compute_node"
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_airship.yml ${tagged_info}
 }
+function remove_compute(){
+    echo "Now Remove compute"
+    run_ansible ${socok8s_absolute_dir}/playbooks/remove_compute.yml -e compute_node_name=$1
+}
 function clean_k8s(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then

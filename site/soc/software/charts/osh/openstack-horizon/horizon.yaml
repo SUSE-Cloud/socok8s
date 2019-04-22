@@ -27,4 +27,51 @@ data:
     pod:
       replicas:
         server: 1
+    conf:
+      software:
+        apache2:
+          binary: apache2ctl
+          start_parameters: -DFOREGROUND -k start
+          site_dir: /etc/apache2/vhosts.d
+          conf_dir: /etc/apache2/conf.d
+          a2enmod:
+            - rewrite
+            - version
+      horizon:
+        security: |
+          <Directory "/var/www">
+          Options Indexes FollowSymLinks
+          AllowOverride All
+          <IfModule !mod_access_compat.c>
+            Require all granted
+          </IfModule>
+          <IfModule mod_access_compat.c>
+            Order allow,deny
+            Allow from all
+          </IfModule>
+          </Directory>
+  dependencies:
+    - horizon-htk
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name:  horizon-htk
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.horizon-htk
+      dest:
+        path: .source
+data:
+  chart_name: horizon-htk
+  release: horizon-htk
+  namespace: horizon-htk
+  values: {}
+  dependencies: []
 ...

@@ -36,7 +36,6 @@ images:
     ironic_pxe: "{{ suse_osh_registry_location }}/openstackhelm/ironic:{{ suse_osh_image_version }}"
     ironic_pxe_init: "{{ suse_osh_registry_location }}/openstackhelm/ironic:{{ suse_osh_image_version }}"
     keystone_api: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
-    keystone_bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
     keystone_credential_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
     keystone_credential_setup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
     keystone_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
