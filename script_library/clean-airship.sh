@@ -112,5 +112,5 @@ if [[ ${clean_action} == *"clean_ucp"* ]]; then
 fi
 
 if [[ ${clean_action} == *"clean_openstack"* ]]; then
-    sudo rm -rf /opt/openstack*
+    sudo rm -rf /opt/openstack
 fi

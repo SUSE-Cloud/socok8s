@@ -23,4 +23,3 @@ suse_airship_deploy_python_libs:
 
 # Keep this until helm is packaged as rpm
 helm_download_url: "https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"
-
