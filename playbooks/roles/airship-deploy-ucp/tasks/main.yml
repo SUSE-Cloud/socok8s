@@ -91,7 +91,7 @@
     params:
       DISTRO: "{{ suse_distro_identifier }}"
       DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
-      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_build_tag }}"
       DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
       IMAGE_NAME: "{{ item.image_name }}"
       PUSH_IMAGE: "true"
@@ -110,7 +110,7 @@
     params:
       DISTRO: "{{ suse_distro_identifier }}"
       DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
-      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_build_tag }}"
       DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
       IMAGE_NAME: "{{ item.image_name }}"
       PUSH_IMAGE: "true"
@@ -129,7 +129,7 @@
     params:
       DISTRO: "{{ suse_distro_identifier }}"
       DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
-      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_build_tag }}"
       DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
       IMAGE_NAME: "{{ item.image_name }}"
       PUSH_IMAGE: "true"
@@ -147,7 +147,7 @@
     params:
       DISTRO: "{{ suse_distro_identifier }}"
       DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
-      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_build_tag }}"
       DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
       IMAGE_NAME: "{{ item.image_name }}"
       PUSH_IMAGE: "true"
