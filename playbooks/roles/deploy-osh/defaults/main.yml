@@ -85,6 +85,7 @@ suse_osh_deploy_always_redeploy: True
 suse_osh_image_version: "ocata"
 
 # Default overrides
+suse_osh_deploy_barbican_yaml_overrides: {}
 suse_osh_deploy_cinder_yaml_overrides: {}
 suse_osh_deploy_glance_yaml_overrides: {}
 suse_osh_deploy_ingress_kube_system_yaml_overrides: {}
