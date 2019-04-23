@@ -66,8 +66,8 @@ Optionally, `localhost` can be preinstalled with the following software:
   * python-netaddr
 
 Make sure to install the variant of the packages that matches the Python
-release that ansible is using. (e.g. on Tumbleweed, Ansible is using Python 3,
-so install the "python3-" variant of the packages)
+release that ansible is using. (e.g. on openSUSE Tumbleweed, Ansible is using
+Python 3, so install the "python3-" variant of the packages)
 
 If those optional software aren't installed, they will be installed in a
 venv in `~/suse-socok8s-deploy/.ansiblevenv`.
