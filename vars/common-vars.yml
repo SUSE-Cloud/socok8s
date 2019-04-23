@@ -49,7 +49,12 @@ suse_airship_registry_location: "{%- if suse_airship_build_local_images or suse_
 suse_airship_components_image_build_tag: "master"
 
 # Complete distro specific published image tag
-suse_airship_components_image_tag: "{{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}"
+# Interim solution till we don't publish suse images on quay.io
+suse_airship_components_image_tag: "{%- if suse_airship_build_local_images or suse_airship_use_local_images -%}
+                                     {{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}
+                                    {%- else -%}
+                                      master
+                                    {%- endif -%}"
 
 socok8s_site_name: "soc"
 
