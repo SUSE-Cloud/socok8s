@@ -63,7 +63,7 @@ data:
         subpath: keystone
         type: git
       keystone-htk:
-        location: https://git.openstack.org/openstack/openstack-helm-infr
+        location: https://git.openstack.org/openstack/openstack-helm-infra
         reference: 8f7acd5ebc0612d1538da03466f07419ea320f78
         subpath: helm-toolkit
         type: git
