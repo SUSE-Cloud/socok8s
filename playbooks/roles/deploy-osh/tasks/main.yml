@@ -141,12 +141,10 @@
     - horizon
     - run
 
-- name: Install openstack client
+- name: Install OpenStack client packages
   package:
-    name: python-openstackclient
+    name: "{{ suse_osh_openstackclient_packages }}"
     state: present
-  register: _pkginstall
-  until: _pkginstall is success
   retries: 5
   delay: 2
   tags:
