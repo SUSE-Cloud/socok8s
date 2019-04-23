@@ -34,5 +34,5 @@ upstream_repos:
     dest_subdir: airship
   treasuremap:
     src: https://opendev.org/airship/treasuremap
-    version: master
+    version: d63ff89d6099992563796f6e7b655c11ff29c85a  
     dest_subdir: airship
