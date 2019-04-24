@@ -108,7 +108,7 @@ fi
 
 if [[ ${clean_action} == *"clean_ucp"* ]]; then
     sudo rm -rf /opt/airship
-    sudo rm -rf ${ANSIBLE_RUNNER_DIR}/secrets
+    sudo rm -rf ${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace/secrets
 fi
 
 if [[ ${clean_action} == *"clean_openstack"* ]]; then

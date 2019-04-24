@@ -13,6 +13,10 @@ socok8s_absolute_dir="$( cd "$(dirname "$0")" ; pwd -P )"
 # by default, ccp will deploy on openstack for inception style fun (and CI).
 DEPLOYMENT_MECHANISM=${DEPLOYMENT_MECHANISM:-"openstack"}
 
+# The base directory where workspace(s) are created in
+SOCOK8S_WORKSPACE_BASEDIR=${SOCOK8S_WORKSPACE_BASEDIR:-~}
+
+source ${scripts_absolute_dir}/pre-flight-checks.sh check_common_env_vars_set
 source ${scripts_absolute_dir}/bootstrap-ansible-if-necessary.sh
 source ${scripts_absolute_dir}/pre-flight-checks.sh check_jq_present
 source ${scripts_absolute_dir}/pre-flight-checks.sh check_ansible_requirements
