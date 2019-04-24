@@ -67,4 +67,32 @@ data:
         linuxbridge_agent:
           linux_bridge:
             bridge_mappings: public:br-ex..
+      paste:
+        app:neutronversions:
+          paste.app_factory: neutron.pecan_wsgi.app:versions_factory
+  dependencies:
+    - neutron-htk
+...
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name:  neutron-htk
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.neutron-htk
+      dest:
+        path: .source
+data:
+  chart_name: neutron-htk
+  release: neutron-htk
+  namespace: neutron-htk
+  values: {}
+  dependencies: []
 ...
