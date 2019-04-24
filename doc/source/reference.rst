@@ -48,7 +48,7 @@ Design considerations
 
 In order to not pollute the developer/CI machine (called `localhost`),
 all the data relevant for a deployment (like any eventual override) is stored
-in a user-space `ANSIBLE_RUNNER_DIR` folder, with unprivileged access.
+in a user-space |socok8s_workspace_default| folder, with unprivileged access.
 
 This also helps the story of running behind
 a corporate firewall: the `localhost` can be (connecting to)
