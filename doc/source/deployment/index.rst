@@ -13,8 +13,8 @@ on top of SUSE CaaS Platform and SUSE Enterprise Storage.
    overview.rst
    requirements.rst
    setup-deployer.rst
-   prepare-targets.rst
-   configure-environment.rst
-   setup-openstack.rst
-   verify-openstack.rst
+   ses-integration.rst
+   configure.rst
+   deploy.rst
+   verify.rst
    next-steps.rst
