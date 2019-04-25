@@ -4,16 +4,15 @@
 Deployment Guide
 ================
 
-This guide provides instruction for performing an OpenStack deployment
-on top of SUSE products.
-
-This guide is intended for deployers.
+This guide provides instruction to install SUSE Containerized Openstack on
+on top of SUSE CaaS Platform and SUSE Enterprise Storage.
 
 .. toctree::
    :maxdepth: 1
 
    overview.rst
-   prepare-localhost.rst
+   requirements.rst
+   setup-deployer.rst
    prepare-targets.rst
    configure-environment.rst
    setup-openstack.rst
