@@ -8,7 +8,8 @@ Setup Deployer
    blockdiag {
      default_fontsize = 11;
      deployer [label="Setup deployer"]
-     configure_soc [label="Configure Openstack Cloud Site"]
+     ses_integration [label="SES Integration"]
+     configure_soc [label="Configure\nCloud"]
      setup_caasp_workers [label="Setup CaaS Platform\nworker nodes"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build Docker images\n(for developers)"]
@@ -20,7 +21,8 @@ Setup Deployer
        color="red"
      }
 
-     deployer -> configure_soc;
+     deployer -> ses_integration;
+     ses_integration -> configure_soc;
      configure_soc -> setup_caasp_workers;
 
      group {
