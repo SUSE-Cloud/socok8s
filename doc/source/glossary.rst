@@ -6,6 +6,10 @@ Glossary
    CaaS Platform
      SUSE Container as a Service Platform
 
+   Deployer
+     openSUSE Leap 15 host used to deploy CCP.
+     
+
    SES
      SUSE Enterprise Storage
 
