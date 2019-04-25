@@ -11,7 +11,7 @@ this software, follow the deployment guide.
 .. toctree::
    :hidden:
 
-   deploy-guide/index.rst
+   deployment/index.rst
    operations.rst
    user/index.rst
    contributor.rst
