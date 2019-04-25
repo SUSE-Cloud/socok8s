@@ -1,10 +1,11 @@
 .. _operationsdocumentation:
 
-========================
-Operations Documentation
-========================
+===================================
+Administration and Operations Guide
+===================================
 
-In this section, you will find documentation relevant to operate socok8s.
+In this section, you will find information on the adminsitration and
+operations of SUSE Containerized Openstack.
 
 .. _deploymentprogress:
 
