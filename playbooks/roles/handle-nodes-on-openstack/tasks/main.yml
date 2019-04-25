@@ -7,7 +7,7 @@
 
 - name: Define servername based on runtime
   set_fact:
-    servername: "{{ deploy_on_openstack_prefix }}-{{ servername_suffix }}"
+    servername: "{{ socok8s_envname }}-{{ servername_suffix }}"
 
 - name: Create servers on openstack clouds
   include_tasks: create_on_openstack.yml

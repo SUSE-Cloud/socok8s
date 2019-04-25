@@ -12,7 +12,7 @@
 
     - name: Define stackname to create
       set_fact:
-        stackname: "{{ deploy_on_openstack_prefix }}-{{ stackname_suffix }}"
+        stackname: "{{ socok8s_envname }}-{{ stackname_suffix }}"
 
     - name: Handle creation if not exists
       when:
