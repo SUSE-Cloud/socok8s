@@ -8,7 +8,6 @@ Glossary
 
    Deployer
      openSUSE Leap 15 host used to deploy CCP.
-     
 
    SES
      SUSE Enterprise Storage
