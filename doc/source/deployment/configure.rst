@@ -27,7 +27,11 @@ Configure Cloud
 
      group {
        color = "#EEEEEE"
+<<<<<<< HEAD
        label = "Cloud Deployment"
+=======
+       label = "OpenStack deployment"
+>>>>>>> Update the configure cloud chapter
        setup_caasp_workers -> patch_upstream;
        patch_upstream -> build_images;
        build_images -> deploy_airship [folded];
@@ -52,8 +56,12 @@ contains the following deployment artifacts:
 Configure the inventory
 -----------------------
 
+<<<<<<< HEAD
 You can create an inventory based on the example located in the `examples`
 folder.  (*examples/workdir/inventory/hosts.yml*)
+=======
+You can create an inventory based on the example located in the `examples` folder.
+>>>>>>> Update the configure cloud chapter
 
 .. literalinclude:: ../../../examples/workdir/inventory/hosts.yml
 
@@ -100,15 +108,19 @@ See also
    machine, add your machine's hostname inside your inventory,
    and specify this host variable: **ansible_connection: local**
 
+<<<<<<< HEAD
 .. note ::
 
    If deployer is running as a non root user, replace ansible_user: value for
    the soc-deployer entry with your logged in user.
 
+=======
+>>>>>>> Update the configure cloud chapter
 Configure for SES Integration
 -----------------------------
 
 The file `ses_config.yml`, the output from :ref: `ses_integration` should be
+<<<<<<< HEAD
 present in the worksapce.
 
 The Ceph admin keyring and user keyring, in **base64**, should be present in
@@ -119,13 +131,22 @@ The Ceph admin keyring can be obtained by running the following on ceph host.
 .. code-block:: yaml
 
   sudo ceph auth get-key client.admin | base64
+=======
+present in the worksapce. 
+
+The Ceph admin keyring, in **base64**, should be present in the file
+`env/extravars` in your workspace.
+>>>>>>> Update the configure cloud chapter
 
 For example:
 
 .. code-block:: yaml
 
   ceph_admin_keyring_b64key: QVFDMXZ6dGNBQUFBQUJBQVJKakhuYkY4VFpublRPL1RXUEROdHc9PQo=
+<<<<<<< HEAD
   ceph_user_keyring_b64key: QVFDMXZ6dGNBQUFBQUJBQVJKakhuYkY4VFpublRPL1RXUEROdHc9PQo=
+=======
+>>>>>>> Update the configure cloud chapter
 
 Configure for Kubernetes
 ------------------------
@@ -169,7 +190,11 @@ Configure Cloud Scale Profile
 -----------------------------
 
 The pod scale profile in socok8s allows you to specify the desired number of
+<<<<<<< HEAD
 pods that each Airship and Openstack service should run.
+=======
+pods that each Airship and Openstack service should run. 
+>>>>>>> Update the configure cloud chapter
 
 There are two built-in scale profiles: `minimal` and `ha`. `minimal` will
 deploy exactly one pod for each service, making it suitble for demo or tryout
@@ -177,8 +202,12 @@ on a resource limited system. `ha`, as you have guessed, ensures at least two
 instances of pods for all services, and three or more pods for services that
 require quorum and are more heavily used.
 
+<<<<<<< HEAD
 To specify the scale profile to use, add `scale_profile:` in the
 `env/extravars`.
+=======
+To specify the scale profile to use, add `scale_profile:` in the `env/extravars`.
+>>>>>>> Update the configure cloud chapter
 
 For example:
 
@@ -187,8 +216,13 @@ For example:
 
    scale_profile: ha
 
+<<<<<<< HEAD
 The definitions of the pod scale prolfile can be found in this repository:
 playbooks/roles/airship-deploy-ucp/files/profiles.
+=======
+The definitions of the pod scale prolfile can be found in this repository: 
+playbooks/roles/airship-deploy-ucp/files/profiles. 
+>>>>>>> Update the configure cloud chapter
 
 You can customize the built-in profile or create your own profile following
 the file name convention.
