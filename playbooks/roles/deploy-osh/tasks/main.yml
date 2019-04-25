@@ -51,17 +51,6 @@
   tags:
     - install
 
-- name: Install client packages
-  package:
-    name: "{{ suse_osh_client_packages }}"
-    state: present
-  register: install_client_packages
-  until: install_client_packages is success
-  retries: 5
-  delay: 2
-  tags:
-    - install
-
 - name: Ensure kubectl is properly configured
   include_role:
     name: common-deployer

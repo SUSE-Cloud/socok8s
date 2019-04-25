@@ -16,9 +16,6 @@ suse_airship_deploy_packages:
   - python2-pip
   - python-devel
 
-suse_osh_client_packages:
-  - kubectl
-
 suse_airship_deploy_python_libs:
   - "cmd2<=0.8.7"
   - python-openstackclient

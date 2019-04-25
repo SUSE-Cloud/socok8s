@@ -1,4 +1,13 @@
 ---
+- name: Install kubectl
+  package:
+    name: kubectl
+    state: present
+  retries: 5
+  delay: 2
+  tags:
+    - install
+
 - name: Ensure kube folder exists
   file:
     state: directory

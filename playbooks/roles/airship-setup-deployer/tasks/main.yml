@@ -17,17 +17,6 @@
   tags:
     - install
 
-- name: Install client packages
-  package:
-    name: "{{ suse_osh_client_packages }}"
-    state: present
-  register: install_client_packages
-  until: install_client_packages is success
-  retries: 5
-  delay: 2
-  tags:
-    - install
-
 - name: Pip install python libraries
   pip:
     name: "{{ suse_airship_deploy_python_libs }}"
