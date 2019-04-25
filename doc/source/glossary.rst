@@ -3,7 +3,7 @@ Glossary
 
 .. glossary::
 
-   CaaSP
+   CaaS Platform
      SUSE Container as a Service Platform
 
    SES
