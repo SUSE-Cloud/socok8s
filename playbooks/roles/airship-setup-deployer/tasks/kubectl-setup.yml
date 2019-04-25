@@ -1,18 +1,4 @@
 ---
-- name: Download latest stable kubectl
-  become: yes
-  shell: >-
-    kubectl version --client || (curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl &&
-    chmod 0755 ./kubectl &&
-    mv ./kubectl /usr/local/bin/kubectl &&
-    ln -s /usr/local/bin/kubectl /usr/bin/kubectl)
-  register: _kubectldl
-  args:
-    executable: /bin/bash
-    chdir: /root
-    warn: False
-  changed_when: _kubectldl.stdout.find('Client Version') == -1 # If no version found, means it is installing
-
 - name: Ensure kube folder exists
   file:
     state: directory

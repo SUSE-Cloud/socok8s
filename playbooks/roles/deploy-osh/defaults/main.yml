@@ -25,6 +25,9 @@ suse_osh_deploy_packages:
   - nfs-utils
   - bridge-utils
 
+suse_osh_client_packages:
+  - kubectl
+
 # Keep this until helm is packaged as rpm
 helm_download_url: "https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"
 

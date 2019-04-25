@@ -6,13 +6,12 @@ set -e
 # is packaged for all the distributions.
 
 function install_ansible (){
-    if [[ -z ${ANSIBLE_RUNNER_DIR:-} ]]; then
-        ANSIBLE_RUNNER_DIR=~/suse-socok8s-deploy
+    # NOTE(toabctl): ${SOCOK8S_WORKSPACE_BASEDIR} and ${SOCOK8S_ENVNAME} are always set
+    local socok8s_workspace=${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace
+    if [[ ! -d ${socok8s_workspace}/.ansiblevenv/ ]]; then
+        virtualenv ${socok8s_workspace}/.ansiblevenv/
     fi
-    if [[ ! -d ${ANSIBLE_RUNNER_DIR}/.ansiblevenv/ ]]; then
-        virtualenv ${ANSIBLE_RUNNER_DIR}/.ansiblevenv/
-    fi
-    source ${ANSIBLE_RUNNER_DIR}/.ansiblevenv/bin/activate
+    source ${socok8s_workspace}/.ansiblevenv/bin/activate
     pip install --upgrade -r $(dirname "$0")/script_library/requirements.txt
-    python -m ara.setup.env > ${ANSIBLE_RUNNER_DIR}/.ansiblevenv/ara.rc
+    python -m ara.setup.env > ${socok8s_workspace}/.ansiblevenv/ara.rc
 }

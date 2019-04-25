@@ -46,8 +46,9 @@ Configure the deployment
      }
    }
 
-All the files for the deployment are in a **workspace**, whose default location
-is `~/suse-osh-deploy` on `localhost`.
+All the files for the deployment are in a :term:`workspace`, whose default location
+is |socok8s_workspace_default| on `localhost`.
+The default name can be changed via the environment variable `SOCOK8S_ENVNAME`
 
 This workspace is structured like an `ansible-runner` directory.
 
