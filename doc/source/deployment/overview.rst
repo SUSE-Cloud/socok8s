@@ -26,7 +26,7 @@ SUSE Enterprise Storage.
      build_images [label="Build Docker images\n(for developers)"]
      deploy_airship [label="Deploy Airship"]
      deploy_openstack [label="Deploy OpenStack"]
-     
+
      deployer -> ses_integration;
      ses_integration -> configure_soc;
      configure_soc -> setup_caasp_workers;
