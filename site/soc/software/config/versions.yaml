@@ -53,6 +53,16 @@ data:
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: helm-toolkit
         type: git
+      nova:
+        location: https://opendev.org/openstack/openstack-helm
+        reference: 6d7a90944725a398064ac19c9137e228cc0c6e98
+        subpath: nova
+        type: git
+      nova-htk:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        subpath: helm-toolkit
+        type: git
   images:
     calico:
       calico: {}
@@ -164,29 +174,26 @@ data:
         neutron_sriov_agent: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_openstack_image_version }}-sriov-1804"
         neutron_sriov_agent_init: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_openstack_image_version }}-sriov-1804"
       nova:
-        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        nova_api: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_osh_image_version }}"
-        nova_cell_setup: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_osh_image_version }}"
-        nova_cell_setup_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        nova_compute: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_osh_image_version }}"
-        nova_compute_ironic: '"{{ suse_osh_registry_location }}/kolla/ubuntu-source-nova-compute-ironic:{{ suse_osh_image_version }}"'
-        nova_compute_ssh: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_osh_image_version }}"
-        nova_conductor: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_osh_image_version }}"
-        nova_consoleauth: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_osh_image_version }}"
-        nova_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_osh_image_version }}"
-        nova_novncproxy: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_osh_image_version }}"
-        nova_novncproxy_assets: "{{ suse_osh_registry_location }}/kolla/ubuntu-source-nova-novncproxy:{{ suse_osh_image_version }}"
-        nova_placement: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_osh_image_version }}"
-        nova_scheduler: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_osh_image_version }}"
-        # NOTE(portdirect): we simply use the ceph config helper here,
-        # as it has both oscli and jq.
-        nova_spiceproxy: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_osh_image_version }}"
-        nova_spiceproxy_assets: "{{ suse_osh_registry_location }}/kolla/ubuntu-source-nova-spicehtml5proxy:{{ suse_osh_image_version }}"
+        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        nova_api: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+        nova_cell_setup: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+        nova_cell_setup_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        nova_compute: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+        nova_compute_ssh: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+        nova_conductor: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+        nova_consoleauth: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+        nova_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+        nova_novncproxy: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+        nova_novncproxy_assets: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+        nova_placement: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+        nova_scheduler: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+        nova_spiceproxy: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
+        nova_spiceproxy_assets: "{{ suse_osh_registry_location }}/openstackhelm/nova:{{ suse_openstack_image_version }}"
         nova_service_cleaner: "{{ suse_osh_registry_location }}/openstackhelm/ceph-config-helper:{{ suse_infra_image_version }}"
       openvswitch:
         openvswitch_db_server: "{{ suse_osh_registry_location }}/openstackhelm/openvswitch:{{ suse_infra_image_version }}"
