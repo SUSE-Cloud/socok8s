@@ -7,8 +7,6 @@ Administration and Operations Guide
 In this section, you will find information on the adminsitration and
 operations of SUSE Containerized Openstack.
 
-
-Scaling in/out
 ==============
 
 Adding or removing compute nodes
@@ -20,6 +18,7 @@ To add a compute node, the node must be running SUSE CaaS Platform v3.0 and have
    ./run.sh add_compute
 
 .. note::
+=======
 
    Multiple new compute nodes can be added to the inventory at the same time.
 
@@ -102,9 +101,9 @@ Example output:
 
 .. code-block:: console
 
-   Name                   Action                                   Lifecycle        Execution Time             Step Succ/Fail/Oth        Footnotes        
-   update_software        action/01D9ZSVG70XS9ZMF4Z6QFF32A6        Complete         2019-05-03T21:33:27        13/0/1                    (1)              
-   update_software        action/01DAB3ETP69MGN7XHVVRHNPVCR        Failed           2019-05-08T06:52:58        7/0/7                     (2)       
+   Name                   Action                                   Lifecycle        Execution Time             Step Succ/Fail/Oth        Footnotes
+   update_software        action/01D9ZSVG70XS9ZMF4Z6QFF32A6        Complete         2019-05-03T21:33:27        13/0/1                    (1)
+   update_software        action/01DAB3ETP69MGN7XHVVRHNPVCR        Failed           2019-05-08T06:52:58        7/0/7                     (2)
 
 To view the status of the individual steps of a particular action, copy its action ID and run the following command:
 
@@ -116,30 +115,30 @@ Example output:
 
 .. code-block:: console
 
-   Name:                  update_software                             
-   Action:                action/01DAB3ETP69MGN7XHVVRHNPVCR           
-   Lifecycle:             Failed                                      
-   Parameters:            {}                                          
-   Datetime:              2019-05-08 06:52:55.366919+00:00            
-   Dag Status:            failed                                      
-   Context Marker:        18993f2c-1cfa-4d42-9320-3fbd70e75c21        
-   User:                  shipyard                                    
+   Name:                  update_software
+   Action:                action/01DAB3ETP69MGN7XHVVRHNPVCR
+   Lifecycle:             Failed
+   Parameters:            {}
+   Datetime:              2019-05-08 06:52:55.366919+00:00
+   Dag Status:            failed
+   Context Marker:        18993f2c-1cfa-4d42-9320-3fbd70e75c21
+   User:                  shipyard
 
-   Steps                                                                Index        State            Footnotes        
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/action_xcom                          1            success                           
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/dag_concurrency_check                2            success                           
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/deployment_configuration             3            success                           
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/validate_site_design                 4            success                           
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_build                         5            failed                           
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/decide_airflow_upgrade               6            None                              
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_get_status                    7            success                           
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_post_apply                    8            upstream_failed                           
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/skip_upgrade_airflow                 9            upstream_failed                              
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/upgrade_airflow                      10           None                              
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/deckhand_validate_site_design        11           success                           
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_validate_site_design          12           upstream_failed                           
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_get_releases                  13           failed                         
-   step/01DAB3ETP69MGN7XHVVRHNPVCR/create_action_tag                    14           None                              
+   Steps                                                                Index        State            Footnotes
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/action_xcom                          1            success
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/dag_concurrency_check                2            success
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/deployment_configuration             3            success
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/validate_site_design                 4            success
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_build                         5            failed
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/decide_airflow_upgrade               6            None
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_get_status                    7            success
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_post_apply                    8            upstream_failed
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/skip_upgrade_airflow                 9            upstream_failed
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/upgrade_airflow                      10           None
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/deckhand_validate_site_design        11           success
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_validate_site_design          12           upstream_failed
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_get_releases                  13           failed
+   step/01DAB3ETP69MGN7XHVVRHNPVCR/create_action_tag                    14           None
 
 To view the logs from a particular step such as armada_build, which has failed in the above example, run
 
