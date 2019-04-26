@@ -17,17 +17,6 @@
   tags:
     - install
 
-- name: Install client packages
-  package:
-    name: "{{ suse_osh_client_packages }}"
-    state: present
-  register: install_client_packages
-  until: install_client_packages is success
-  retries: 5
-  delay: 2
-  tags:
-    - install
-
 - name: Pip install python libraries
   pip:
     name: "{{ suse_airship_deploy_python_libs }}"
@@ -54,17 +43,23 @@
     append: yes
 
 - name: Ensure kubectl is properly configured
-  include: kubectl-setup.yml
+  include_role:
+    name: common-deployer
+    tasks_from: kubectl-setup
   tags:
     - install
 
 - name: Ensure helm and tiller are up to date
-  include: helm-install.yml
+  include_role:
+    name: common-deployer
+    tasks_from: helm-install
   tags:
     - install
 
 - name: Ensure helm runs on localhost
-  include: helm-run.yml
+  include_role:
+    name: common-deployer
+    tasks_from: helm-run
   tags:
     - run
 
