@@ -7,22 +7,6 @@ Administration and Operations Guide
 In this section, you will find information on the adminsitration and
 operations of SUSE Containerized Openstack.
 
-.. _deploymentprogress:
-
-Follow progress of a deployment
-===============================
-
-Using kubectl
--------------
-
-Using K8s dashboard
--------------------
-
-Using Shipyard CLI (airship only)
----------------------------------
-
-Logs
-----
 
 Scaling in/out
 ==============
@@ -33,8 +17,9 @@ Adding or removing compute nodes
 Adding or removing network nodes
 --------------------------------
 
-Change scale profile
---------------------
+Change control plane scale profile
+----------------------------------
+
 
 Updates
 =======
@@ -57,8 +42,8 @@ Troubleshooting
 
 .. _caaspoperations:
 
-CaaSP Operations
-================
+CaaS Platform Operations
+========================
 
 Disable transactional update for development purposes
 -----------------------------------------------------
@@ -117,14 +102,14 @@ Tips and Tricks
 Display all images used by a component
 --------------------------------------
 
-For neutron:
+Use neutron as n example:
 
 .. code-block:: console
 
    kubectl get pods -n openstack -l application=neutron -o jsonpath="{.items[*].spec.containers[*].image}"|tr -s '[[:space:]]' '\n' | sort | uniq -c
 
 
-Remove dangling docker images
+Remove dangling Docker images
 -----------------------------
 
 Useful after building local images:
