@@ -14,6 +14,11 @@ data:
         reference: 5c9dd146b8ffec478dc00d56dcf5b6533045cdbd
         subpath: horizon
         type: git
+      horizon-htk:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: f6ed763a6a05b73a6bbc063f5ceeb40e9e1f7e8a
+        subpath: helm-toolkit
+        type: git
       #TODO remove when Airship treasuremap uplift version moves forward again
       # needs commit "make db-{drop,init) py3 compatible"
       glance-htk:
@@ -31,6 +36,21 @@ data:
         reference: 8f290d3b8d2a8d787f107d05b3be0199d33d7026
         subpath: helm-toolkit
         type: git
+      keystone:
+        location: https://git.openstack.org/openstack/openstack-helm
+        reference: 229db2f1552b2bfb0beece4ecd4a1b11eac690c0
+        subpath: keystone
+        type: git
+      keystone-htk:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 8f7acd5ebc0612d1538da03466f07419ea320f78
+        subpath: helm-toolkit
+        type: git
+      ingress-htk:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 8f290d3b8d2a8d787f107d05b3be0199d33d7026
+        subpath: helm-toolkit
+        type: git
       horizon-htk:
         location: https://git.openstack.org/openstack/openstack-helm-infra
         reference: f6ed763a6a05b73a6bbc063f5ceeb40e9e1f7e8a
@@ -41,6 +61,20 @@ data:
         reference: 8f290d3b8d2a8d787f107d05b3be0199d33d7026
         subpath: helm-toolkit
         type: git
+    ucp:
+      keystone:
+        location: https://git.openstack.org/openstack/openstack-helm
+        reference: 229db2f1552b2bfb0beece4ecd4a1b11eac690c0
+        subpath: keystone
+        type: git
+      keystone-htk:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 8f7acd5ebc0612d1538da03466f07419ea320f78
+        subpath: helm-toolkit
+        type: git
+      ingress-htk:
+        location: https://git.openstack.org/openstack/openstack-helm-infra
+        reference: 8f290d3b8d2a8d787f107d05b3be0199d33d7026
   images:
     calico:
       calico: {}
@@ -114,20 +148,20 @@ data:
         db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
         horizon: "{{ suse_osh_registry_location }}/openstackhelm/horizon:{{ suse_openstack_image_version }}"
       ingress:
-        ingress_module_init: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
-        ingress_routed_vip: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_osh_image_version }}"
+        ingress_module_init: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_openstack_image_version }}"
+        ingress_routed_vip: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_openstack_image_version }}"
       keystone:
-        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        keystone_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
-        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        keystone_fernet_setup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
-        keystone_fernet_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
-        keystone_credential_setup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
-        keystone_credential_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
-        keystone_api: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
-        keystone_domain_manage: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_osh_image_version }}"
+        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        keystone_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        keystone_fernet_setup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        keystone_fernet_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        keystone_credential_setup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        keystone_credential_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        keystone_api: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        keystone_domain_manage: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
       libvirt:
         libvirt: "{{ suse_osh_registry_location }}/openstackhelm/libvirt:{{ suse_libvirt_image_version }}"
       #TODO JG add suse image support
@@ -237,8 +271,21 @@ data:
         ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
       divingbell: {}
       drydock: {}
-      ingress: {}
-      keystone: {}
+      ingress:
+        ingress_module_init: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_openstack_image_version }}"
+        ingress_routed_vip: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_openstack_image_version }}"
+      keystone:
+        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        keystone_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        keystone_fernet_setup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        keystone_fernet_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        keystone_credential_setup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        keystone_credential_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        keystone_api: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        keystone_domain_manage: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
       maas: {}
       mariadb: {}
       memcached: {}
@@ -254,6 +301,10 @@ data:
         ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
         ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
       tiller: {}
+    kubernetes:
+      ingress:
+        ingress_module_init: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_openstack_image_version }}"
+        ingress_routed_vip: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_openstack_image_version }}"
 metadata:
   labels:
     name: software-versions-soc
