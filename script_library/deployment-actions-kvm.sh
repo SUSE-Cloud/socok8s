@@ -8,6 +8,9 @@ set -o errexit
 
 echo "Deploying on KVM"
 
+function deploy_network(){
+    echo "This is not supported yet on KVM"
+}
 function deploy_ses(){
     echo "This just runs ses configuration logic. Please create a SES node manually first."
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_ses_aio.yml

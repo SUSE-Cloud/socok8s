@@ -38,6 +38,9 @@ source ${scripts_absolute_dir}/deployment-actions-${DEPLOYMENT_MECHANISM}.sh
 deployment_action=${1:-"setup_everything"}
 
 case "$deployment_action" in
+    "deploy_network")
+        deploy_network
+        ;;
     "deploy_ses")
         deploy_ses
         ;;
@@ -71,6 +74,7 @@ case "$deployment_action" in
         setup_caasp_workers_for_openstack
         ;;
     "setup_hosts")
+        deploy_network
         deploy_ses
         deploy_caasp
         deploy_ccp_deployer
@@ -94,6 +98,7 @@ case "$deployment_action" in
         deploy_airship update_airship_osh_site
         ;;
     "setup_everything")
+        deploy_network
         deploy_ses
         deploy_caasp
         deploy_ccp_deployer
