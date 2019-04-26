@@ -22,6 +22,9 @@ metadata:
 data:
   wait:
     timeout: {{ ucp_deploy_timeout }}
+  test:
+    enabled: {{ run_tests | default('true') }}
+    timeout: {{ test_timeout | default(300) }}
   values:
     pod:
       replicas:
