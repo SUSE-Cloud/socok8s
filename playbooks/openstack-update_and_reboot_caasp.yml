@@ -37,7 +37,28 @@
         name: transactional-update.timer
 
     - name: Perform transactional-update
-      command: transactional-update cleanup dup salt
+      command: transactional-update cleanup dup
       register: transactional_update_result
       changed_when: "transactional_update_result.stdout|search('Please reboot your machine')"
       failed_when: "transactional_update_result.rc != 0"
+      notify: Reboot host
+
+  handlers:
+    - name: Reboot host
+      reboot:
+        reboot_timeout: 900
+        connect_timeout: 90
+
+- hosts: soc-deployer
+  gather_facts: no
+  tasks:
+    - name: "wait for Velum to come back again"
+      uri:
+        url: "https://{{ groups['caasp-admin'][0] }}/"
+        method: GET
+        status: 200
+        validate_certs: no
+      register: result
+      until: result.status == 200
+      retries: 60
+      delay: 5
