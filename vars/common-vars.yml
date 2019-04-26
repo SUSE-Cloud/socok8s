@@ -4,7 +4,8 @@ socok8s_envname: "{{ lookup('env','SOCOK8S_ENVNAME') | default('socok8s', true) 
 upstream_repos_clone_folder: "/opt"
 developer_mode: "{{ (lookup('env','SOCOK8S_DEVELOPER_MODE') | default('False', true) ) | bool }}"
 # configure the workspace base directory (where workspace(s) are created in)
-socok8s_workspace_basedir: "{{ lookup('env','SOCOK8S_WORKSPACE_BASEDIR') | default('~', true) }}"
+socok8s_default_basedir: "{{ lookup('env','HOME') | default('/tmp', true) }}"
+socok8s_workspace_basedir: "{{ lookup('env','SOCOK8S_WORKSPACE_BASEDIR') | default(socok8s_default_basedir, true) }}"
 # configure the full path to the current workspace
 socok8s_workspace: "{{ socok8s_workspace_basedir }}/{{ socok8s_envname }}-workspace"
 socok8s_extravars: "{{ socok8s_workspace }}/env/extravars"
