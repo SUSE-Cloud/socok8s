@@ -33,7 +33,7 @@ SUSE Enterprise Storage.
 
      group {
        color = "#EEEEEE"
-       label = "OpenStack deployment"
+       label = "Cloud Deployment"
        setup_caasp_workers -> patch_upstream;
        patch_upstream -> build_images;
        build_images -> deploy_airship [folded];
