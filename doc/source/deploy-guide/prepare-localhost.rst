@@ -66,11 +66,11 @@ Optionally, `localhost` can be preinstalled with the following software:
   * python-netaddr
 
 Make sure to install the variant of the packages that matches the Python
-release that ansible is using. (e.g. on Tumbleweed, Ansible is using Python 3,
-so install the "python3-" variant of the packages)
+release that ansible is using. (e.g. on openSUSE Tumbleweed, Ansible is using
+Python 3, so install the "python3-" variant of the packages)
 
 If those optional software aren't installed, they will be installed in a
-venv in `~/suse-socok8s-deploy/.ansiblevenv`.
+venv in |socok8s_workspace_default|\ `/.ansiblevenv` .
 
 Cloning this repository
 -----------------------
@@ -116,16 +116,17 @@ Enable mitogen (optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To improve deployment speed, enable mitogen strategy and connection plugin.
-First install mitogen in your venv (e.g. `~/suse-socok8s-deploy/.ansiblevenv/` or your local
-ansible environment), then enable it using environment variables.
+First install mitogen in your venv (e.g. |socok8s_workspace_default|\ `/.ansiblevenv` 
+or your local ansible environment), then enable it using environment variables.
 
 Alternatively, enable it for all your ansible calls by adding it to your
 ansible configuration:
 
-.. code-block:: console
+.. we need parsed-literal instead of code-block here. Otherwise the variable substitute does not work
+.. parsed-literal::
 
    cat < EOF >> ~/.ansible.cfg
-   strategy_plugins=${HOME}/suse-socok8s-deploy/.ansiblevenv/lib/python3.6/site-packages/ansible_mitogen/plugins/strategy
+   strategy_plugins=${HOME}\ |socok8s_workspace_default|\ /.ansiblevenv/lib/python3.6/site-packages/ansible_mitogen/plugins/strategy
    strategy = mitogen_linear
    EOF
 
@@ -145,6 +146,20 @@ You might want to improve SSH connections by enabling pipelining:
    EOF
 
 .. _deploymechanism:
+
+Defining a workspace
+--------------------
+
+`socok8s` might create a :term:`workspace`, install things (eg. ansible in a virtualenv) 
+or create resources (eg. OpenStack Heat stacks if the deployment mechanism is `openstack`).
+For all of theses operations, a environment variable called `SOCOK8S_ENVNAME`
+needs to be set. This variable must be unique if multiple environments are
+installed in parallel.
+
+.. code-block:: console
+
+   export SOCOK8S_ENVNAME='foctodoodle'
+
 
 Set a deployment mechanism
 --------------------------
@@ -226,30 +241,12 @@ Set this for **all** the following scripts in a deployment:
 
 .. code-block:: console
 
+   export SOCOK8S_ENVNAME='foctodoodle'
+   # 'engcloud' is the name in the `clouds.yaml`
    export OS_CLOUD=engcloud
-   # 'engcloud' is the name in the `clouds.yaml`,
    # Set the name of the keypair you created
    export KEYNAME=foctodoodle-key
-   # Set the name of the network you will use in the deployment
-   export INTERNAL_NETWORK=foctodoodle-net
-   # Set the name of the subnet you will use in the deployment
-   export INTERNAL_SUBNET=foctodoodle-subnet
-   # Set the name of the floating ip network you will use in the deployment
    export EXTERNAL_NETWORK=floating
-
-If you haven't created the internal networks/subnets and appropriate routers
-already, do it now (you only have to do it once):
-
-.. code-block:: console
-
-   openstack network create ${INTERNAL_NETWORK}
-   openstack subnet create --network ${INTERNAL_NETWORK} --subnet-range 192.168.100.0/24 ${INTERNAL_SUBNET}
-   openstack router create ${INTERNAL_NETWORK}-router
-   openstack router set --external-gateway floating ${INTERNAL_NETWORK}-router
-   openstack router add subnet ${INTERNAL_NETWORK}-router ${INTERNAL_SUBNET}
-
-Reconfirming that you’ve done all the previous steps to set up now will
-save you some time later.
 
 With this done, proceed to next section of the documentation,
 :ref:`targethosts`.

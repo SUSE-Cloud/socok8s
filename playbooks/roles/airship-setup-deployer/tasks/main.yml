@@ -42,19 +42,24 @@
     groups: docker
     append: yes
 
-- name: Ensure kubectl is installed
-  include: kubectl-install.yml
+- name: Ensure kubectl is properly configured
+  include_role:
+    name: common-deployer
+    tasks_from: kubectl-setup
   tags:
     - install
 
 - name: Ensure helm and tiller are up to date
-  include: helm-install.yml
+  include_role:
+    name: common-deployer
+    tasks_from: helm-install
   tags:
     - install
 
 - name: Ensure helm runs on localhost
-  become: yes
-  include: helm-run.yml
+  include_role:
+    name: common-deployer
+    tasks_from: helm-run
   tags:
     - run
 

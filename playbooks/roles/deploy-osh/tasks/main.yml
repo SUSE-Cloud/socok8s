@@ -51,19 +51,24 @@
   tags:
     - install
 
-- name: Ensure kubectl is installed
-  include: kubectl-install.yml
+- name: Ensure kubectl is properly configured
+  include_role:
+    name: common-deployer
+    tasks_from: kubectl-setup
   tags:
     - install
 
 - name: Ensure helm and tiller are up to date
-  include: helm-install.yml
+  include_role:
+    name: common-deployer
+    tasks_from: helm-install
   tags:
     - install
 
-# TODO(evrardjp): Replace this with systemd service
 - name: Ensure helm runs on localhost
-  include: helm-run.yml
+  include_role:
+    name: common-deployer
+    tasks_from: helm-run
   tags:
     - run
 
@@ -96,14 +101,14 @@
 
 - name: Build infra charts
   make:
-    chdir: /opt/openstack-helm-infra
+    chdir: /opt/openstack/openstack-helm-infra
     target: all
   tags:
     - install
 
 - name: Build openstack-helm charts
   make:
-    chdir: /opt/openstack-helm
+    chdir: /opt/openstack/openstack-helm
     target: all
   tags:
     - run
@@ -129,7 +134,7 @@
 - name: Updated wait for pods logic to account for stuck k8s jobs
   copy:
     src: wait-for-pods.sh
-    dest: /opt/openstack-helm/tools/deployment/common/wait-for-pods.sh
+    dest: /opt/openstack/openstack-helm/tools/deployment/common/wait-for-pods.sh
     mode: '0755'
   tags:
     - horizon
@@ -257,7 +262,7 @@
 - name: Use a different horizon script as missing a multinode version without node port requirement
   copy:
     src: 085-horizon.sh
-    dest: /opt/openstack-helm/tools/deployment/multinode/085-horizon.sh
+    dest: /opt/openstack/openstack-helm/tools/deployment/multinode/085-horizon.sh
     mode: '0755'
   tags:
     - horizon
@@ -284,7 +289,7 @@
 - name: Copy ceph provisioner
   template:
     src: 046-ceph-deploy-with-existing-ceph.sh.j2
-    dest: "/opt/openstack-helm/tools/deployment/developer/ceph/046-ceph-deploy-with-existing-ceph.sh"
+    dest: "/opt/openstack/openstack-helm/tools/deployment/developer/ceph/046-ceph-deploy-with-existing-ceph.sh"
     mode: "0755"
   tags:
     - run
@@ -295,7 +300,7 @@
   command: ../openstack-helm/tools/deployment/developer/ceph/046-ceph-deploy-with-existing-ceph.sh
   args:
     executable: /bin/bash
-    chdir: /opt/openstack-helm-infra
+    chdir: /opt/openstack/openstack-helm-infra
   tags:
     - run
     - skip_ansible_lint

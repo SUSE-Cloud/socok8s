@@ -1,8 +1,14 @@
 ---
-- name: Clone OpenStack-Helm code repositories
+- name: Ensure base directory paths exists for clone
+  file:
+    path: "{{ upstream_repos_clone_folder }}/{{ item.value.dest_subdir }}"
+    state: directory
+  loop: "{{ upstream_repos | default({}) | dict2items }}"
+
+- name: Clone upstream code repositories
   git:
     repo: "{{ item.value.src }}"
-    dest: "{{ upstream_repos_clone_folder }}/{{ item.key }}"
+    dest: "{{ upstream_repos_clone_folder }}/{{ item.value.dest_subdir }}/{{ item.key }}"
     update: yes
     force: yes
     version: "{{ item.value.version }}"

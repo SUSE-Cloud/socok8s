@@ -18,7 +18,7 @@
   shell: "{{ _component_runcommand }}"
   args:
     executable: /bin/bash
-    chdir: "/opt/openstack-helm"
+    chdir: "/opt/openstack/openstack-helm"
   environment: "{{ base_env_vars | combine(_component_run_env) }}"
   tags:
     - skip_ansible_lint

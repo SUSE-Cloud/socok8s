@@ -107,10 +107,10 @@ if [[ ${clean_action} == *"clean_images"* ]]; then
 fi
 
 if [[ ${clean_action} == *"clean_ucp"* ]]; then
-    sudo rm -rf /opt/airship-*
-    sudo rm -rf ${ANSIBLE_RUNNER_DIR}/secrets
+    sudo rm -rf /opt/airship
+    sudo rm -rf ${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace/secrets
 fi
 
 if [[ ${clean_action} == *"clean_openstack"* ]]; then
-    sudo rm -rf /opt/openstack-helm*
+    sudo rm -rf /opt/openstack
 fi

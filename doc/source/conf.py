@@ -79,7 +79,8 @@ html_theme_options = {
     'github_repo': 'socok8s',
     'github_banner': True,
     'page_width': '1280px',
-    'sidebar_width': '340px'
+    'sidebar_width': '340px',
+    'show_relbars': 'true',
 }
 
 html_logo = 'suse_logo_w-tag_color.png'
@@ -99,3 +100,11 @@ htmlhelp_basename = '%sdoc' % project
 
 # Example configuration for intersphinx: refer to the Python standard library.
 #intersphinx_mapping = {'http://docs.python.org/': None}
+
+
+# A string of reStructuredText that will be included at the beginning of
+# every source file that is read.
+rst_prolog = """
+.. |socok8s_envname_default| replace:: socok8s
+.. |socok8s_workspace_default| replace:: ~/|socok8s_envname_default|-workspace
+"""

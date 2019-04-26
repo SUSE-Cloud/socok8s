@@ -3,27 +3,36 @@ upstream_repos:
   openstack-helm-infra:
     src: https://git.openstack.org/openstack/openstack-helm-infra
     version: master
+    dest_subdir: openstack
   openstack-helm:
     src: https://git.openstack.org/openstack/openstack-helm
     version: master
+    dest_subdir: openstack
   openstack-helm-images:
     src: https://github.com/openstack/openstack-helm-images
     version: master
+    dest_subdir: openstack
   loci:
     src: https://github.com/openstack/loci
     version: master
-  airship-armada:
-    src: https://github.com/openstack/airship-armada
+    dest_subdir: openstack
+  armada:
+    src: https://opendev.org/airship/armada
     version: master
-  airship-shipyard:
-    src: https://github.com/openstack/airship-shipyard
+    dest_subdir: airship
+  shipyard:
+    src: https://opendev.org/airship/shipyard
     version: master
-  airship-deckhand:
-    src: https://github.com/openstack/airship-deckhand
+    dest_subdir: airship
+  deckhand:
+    src: https://opendev.org/airship/deckhand
     version: master
-  airship-pegleg:
-    src: https://github.com/openstack/airship-pegleg
+    dest_subdir: airship
+  pegleg:
+    src: https://opendev.org/airship/pegleg
     version: master
-  airship-treasuremap:
-    src: https://github.com/openstack/airship-treasuremap
+    dest_subdir: airship
+  treasuremap:
+    src: https://opendev.org/airship/treasuremap
     version: master
+    dest_subdir: airship

@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+check_common_env_vars_set (){
+    # basic checks that are needed for everything else!
+    if [ -z ${SOCOK8S_ENVNAME+x} ]; then
+        echo "No SOCOK8S_ENVNAME given. export SOCOK8S_ENVNAME=... for setting a env name" && exit 1
+    fi
+    # NOTE(toabctl): SOCOK8S_WORKSPACE_BASEDIR is always set in run.sh
+    if [ -z ${SOCOK8S_WORKSPACE_BASEDIR+x} ]; then
+        echo "No SOCOK8S_WORKSPACE_BASEDIR given. export SOCOK8S_WORKSPACE_BASEDIR=... for setting a directory" && exit 1
+    fi
+
+    echo "Using ${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace as workspace directory"
+}
+
 check_openstack_env_vars_set (){
     if [ -z ${OS_CLOUD+x} ]; then
         echo "No OS_CLOUD given. export OS_CLOUD=... corresponding to your clouds.yaml" && exit 1
@@ -7,15 +20,6 @@ check_openstack_env_vars_set (){
 
     if [ -z ${KEYNAME+x} ]; then
         echo "No KEYNAME given. You must give an openstack security keypair name to add to your server. Please export KEYNAME='<name of your keypair>'." && exit 1
-    fi
-
-    if [ -z ${INTERNAL_NETWORK+x} ]; then
-        echo "No INTERNAL_NETWORK given. export INTERNAL_NETWORK to match your network. It will be used as network and server names" && exit 1
-    fi
-
-    if [ -z ${INTERNAL_SUBNET+x} ];
-    then
-        echo "INTERNAL_SUBNET name not given. export INTERNAL_SUBNET=..." && exit 1
     fi
 
     if [ -z ${EXTERNAL_NETWORK+x} ]; then
@@ -30,8 +34,6 @@ check_openstack_environment_is_ready_for_deploy (){
     which openstack > /dev/null  || (echo "Please install openstack and heat CLI in your PATH"; exit 5)
     openstack stack delete --help > /dev/null || (echo "Please install heat client in your PATH"; exit 6)
     openstack keypair list | grep ${KEYNAME} > /dev/null || (echo "keyname not found. export KEYNAME=" && exit 2)
-    openstack network list | grep "${INTERNAL_NETWORK}" > /dev/null || (echo "network not found. Make sure a network exist matching ${INTERNAL_NETWORK}" && exit 3)
-    openstack subnet list | grep ${INTERNAL_SUBNET} > /dev/null || (echo "subnet not found" && exit 4)
 }
 
 check_ansible_requirements (){

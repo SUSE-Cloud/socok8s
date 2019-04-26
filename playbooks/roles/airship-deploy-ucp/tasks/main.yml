@@ -7,7 +7,7 @@
 
 - name: Set site path
   set_fact:
-    site_path: "{{ upstream_repos_clone_folder }}/airship-treasuremap/site/{{ socok8s_site_name }}"
+    site_path: "{{ upstream_repos_clone_folder }}/airship/treasuremap/site/{{ socok8s_site_name }}"
   tags:
     - always
 
@@ -86,75 +86,75 @@
 
 - name: Build Armada image
   make:
-    chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
+    chdir: "{{ upstream_repos_clone_folder }}/airship/{{ item.repo_name }}"
     target: "{{ item.target }}"
     params:
       DISTRO: "{{ suse_distro_identifier }}"
       DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
-      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_build_tag }}"
       DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
       IMAGE_NAME: "{{ item.image_name }}"
       PUSH_IMAGE: "true"
   when:
     - suse_airship_build_local_images
   loop:
-    - { repo_name: "airship-armada", target: "images", image_name: "armada" }
+    - { repo_name: "armada", target: "images", image_name: "armada" }
   tags:
     - install
 
 - name: Build Shipyard images
   become: yes
   make:
-    chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
+    chdir: "{{ upstream_repos_clone_folder }}/airship/{{ item.repo_name }}"
     target: "{{ item.target }}"
     params:
       DISTRO: "{{ suse_distro_identifier }}"
       DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
-      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_build_tag }}"
       DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
       IMAGE_NAME: "{{ item.image_name }}"
       PUSH_IMAGE: "true"
   when:
     - suse_airship_build_local_images
   loop:
-    - { repo_name: "airship-shipyard", target: "images", image_name: "airflow" }
-    - { repo_name: "airship-shipyard", target: "images", image_name: "shipyard" }
+    - { repo_name: "shipyard", target: "images", image_name: "airflow" }
+    - { repo_name: "shipyard", target: "images", image_name: "shipyard" }
   tags:
     - install
 
 - name: Build Deckhand images
   make:
-    chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
+    chdir: "{{ upstream_repos_clone_folder }}/airship/{{ item.repo_name }}"
     target: "{{ item.target }}"
     params:
       DISTRO: "{{ suse_distro_identifier }}"
       DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
-      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_build_tag }}"
       DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
       IMAGE_NAME: "{{ item.image_name }}"
       PUSH_IMAGE: "true"
   when:
     - suse_airship_build_local_images
   loop:
-    - { repo_name: "airship-deckhand", target: "images", image_name: "deckhand" }
+    - { repo_name: "deckhand", target: "images", image_name: "deckhand" }
   tags:
     - install
 
 - name: Build Pegleg image
   make:
-    chdir: "{{ upstream_repos_clone_folder }}/{{ item.repo_name }}"
+    chdir: "{{ upstream_repos_clone_folder }}/airship/{{ item.repo_name }}"
     target: "{{ item.target }}"
     params:
       DISTRO: "{{ suse_distro_identifier }}"
       DISTRO_BASE_IMAGE: "{{ suse_airship_components_base_image }}"
-      IMAGE_TAG: "{{ suse_airship_components_image_tag }}"
+      IMAGE_TAG: "{{ suse_airship_components_image_build_tag }}"
       DOCKER_REGISTRY: "{{ suse_airship_registry_location }}"
       IMAGE_NAME: "{{ item.image_name }}"
       PUSH_IMAGE: "true"
   when:
     - suse_airship_build_local_images
   loop:
-    - { repo_name: "airship-pegleg", target: "images", image_name: "pegleg" }
+    - { repo_name: "pegleg", target: "images", image_name: "pegleg" }
   tags:
     - install
 
@@ -214,9 +214,9 @@
 
 - name: Set pegleg parameters
   set_fact:
-    treasuremap_dir: '{{ upstream_repos_clone_folder }}/airship-treasuremap'
+    treasuremap_dir: '{{ upstream_repos_clone_folder }}/airship/treasuremap'
     pegleg_image: "{{ airship_pegleg_image }}"
-    pegleg: '../airship-pegleg/tools/pegleg.sh '
+    pegleg: '{{ upstream_repos_clone_folder }}/airship/pegleg/tools/pegleg.sh '
     pegleg_output: 'peggles'
   tags:
     - always
@@ -239,9 +239,9 @@
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/.kube
     - kubectl cp ~/.kube/config {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/.kube/config
-    - kubectl cp  {{ upstream_repos_clone_folder }}/airship-treasuremap/{{ socok8s_site_name }}-ucp.yaml {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada
+    - kubectl cp  {{ upstream_repos_clone_folder }}/airship/treasuremap/{{ socok8s_site_name }}-ucp.yaml {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/airship-components
-    - kubectl cp {{ upstream_repos_clone_folder }}/openstack-helm-infra {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
+    - kubectl cp {{ upstream_repos_clone_folder }}/openstack/openstack-helm-infra {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
   tags:
     - install
     - skip_ansible_lint

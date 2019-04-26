@@ -1,5 +1,5 @@
 ---
-dev_patcher_baseurl: "https://review.openstack.org/changes"
+dev_patcher_baseurl: "https://review.opendev.org/changes"
 
 dev_patcher_packages:
   - git

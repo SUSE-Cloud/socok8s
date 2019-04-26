@@ -1,17 +1,12 @@
 ---
-- name: Download latest stable kubectl
-  become: yes
-  shell: >-
-    kubectl version --client || (curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl &&
-    chmod 0755 ./kubectl &&
-    mv ./kubectl /usr/local/bin/kubectl &&
-    ln -s /usr/local/bin/kubectl /usr/bin/kubectl)
-  register: _kubectldl
-  args:
-    executable: /bin/bash
-    chdir: /root
-    warn: False
-  changed_when: _kubectldl.stdout.find('Client Version') == -1 # If no version found, means it is installing
+- name: Install kubectl
+  package:
+    name: kubectl
+    state: present
+  retries: 5
+  delay: 2
+  tags:
+    - install
 
 - name: Ensure kube folder exists
   file:
@@ -44,7 +39,7 @@
     when: ansible_date_time.epoch|float - _kubeconfigfromautomation.stat.mtime > 86400
     shell: ./velum-interactions -k -e /opt/ccp/environment.json
     args:
-      chdir: /opt/ccp/automation/velum-bootstrap
+      chdir: "{{ upstream_repos_clone_folder }}/ccp/velum-bootstrap"
       executable: /bin/bash
     tags:
       - skip_ansible_lint
@@ -65,10 +60,9 @@
       delegate_to: localhost
       register: new_config
 
-    - name: Find if an existing .kube/config file
+    - name: Find if there is an existing .kube/config file
       stat:
         path: "{{ ansible_user_dir }}/.kube/config"
-      delegate_to: localhost
       register: old_config
 
     - name: Copy local runner kubeconfig file to deploy node
@@ -76,7 +70,9 @@
         src: "{{ kubeconfig_file_path }}"
         dest: "{{ ansible_user_dir }}/.kube/config"
         mode: "0600"
-      when: new_config.stat.exists and (not old_config.stat.exists or old_config.stat.mtime < new_config.stat.mtime)
+      when:
+        - "new_config.stat.exists"
+        - "( not old_config.stat.exists or old_config.stat.mtime < new_config.stat.mtime )"
 
 - name: Test kubectl
   command: kubectl cluster-info

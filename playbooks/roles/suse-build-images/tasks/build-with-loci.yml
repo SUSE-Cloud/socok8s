@@ -6,11 +6,11 @@
 - name: Build loci images in parallel (using OSH-images tooling)
   shell: "{{ loci_build_command | default('./openstack/loci/build.sh') }}"
   args:
-    chdir: "{{ upstream_repos_clone_folder }}/openstack-helm-images"
+    chdir: "{{ upstream_repos_clone_folder }}/openstack/openstack-helm-images"
   environment: "{{ build_environment | default({}) | combine(default_environment) }}"
   vars:
     default_environment:
-      LOCI_SRC_DIR: "{{ upstream_repos_clone_folder }}/loci"
+      LOCI_SRC_DIR: "{{ upstream_repos_clone_folder }}/openstack/loci"
       REGISTRY_URI: "{{ build_registry }}openstackhelm/"
       BASE_IMAGE: leap15
       PUSH_TO_REGISTRY: YES
