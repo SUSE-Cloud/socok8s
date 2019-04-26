@@ -69,7 +69,7 @@ Create SUSE Containerized Openstack Workspace
 ---------------------------------------------
 
 All the deployment artifacts are in a :term:`workspace`, whose default location
-is `socok8s-workspace` in the user home directory on the `deployer`. 
+is `socok8s-workspace` in the user home directory on the `deployer`.
 The default workspace directory name can be changed via the environment
 variable `SOCOK8S_ENVNAME`, and the workspace parent directory can be changed
 via the  environment variable `SOCOK8S_WORKSPACE_BASEDIR` which defaults to `~`.
