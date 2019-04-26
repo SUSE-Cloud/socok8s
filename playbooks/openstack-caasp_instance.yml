@@ -15,8 +15,6 @@
         stackname: "{{ socok8s_envname }}-{{ stackname_suffix }}"
 
     - name: Handle creation if not exists
-      when:
-        - not ((caasp_stack_delete | default('false'))| bool)
       block:
         - name: Create stack
           os_stack:
@@ -213,32 +211,3 @@
             name: "{{ hostvars[item.item]['ansible_host'] }}"
             key: "{{ item.stdout }}"
           loop: "{{ _caaspsshkeys.results }}"
-
-    - name: Handle deletion
-      when:
-        - ((caasp_stack_delete | default('false'))| bool)
-      block:
-        - name: Delete stack
-          os_stack:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            name: "{{ stackname }}"
-            state: absent
-
-        - name: Delete extra vip
-          os_port:
-            name: "{{ stackname }}-vip"
-            state: absent
-
-        - name: Remove host from known hosts
-          known_hosts:
-            state: absent
-            name: "{{ hostvars[item]['ansible_host'] }}"
-          loop: "{{ groups['caasp-admin'] + groups['caasp-masters'] + groups['caasp-workers'] }}"
-
-        - name: Remove caasp files
-          file:
-            state: absent
-            path: "{{ item }}"
-          loop:
-            - "{{ socok8s_caasp_environment_details }}"
-            - "{{ socok8s_workspace }}/inventory/caasp.yml"

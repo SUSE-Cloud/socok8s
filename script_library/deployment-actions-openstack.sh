@@ -95,7 +95,7 @@ function clean_openstack(){
     echo "Deleting on OpenStack"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-osh_instance.yml -e osh_node_delete=True || true
     echo "Delete Caasp nodes"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_caasp.yml -e caasp_stack_delete=True || true
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-cleanup_caasp.yml || true
     echo "Delete SES node"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio_instance.yml -e ses_node_delete=True
     echo "Delete network stack"
