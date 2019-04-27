@@ -1,5 +1,6 @@
 ---
 - name: Install kubectl
+  become: yes
   package:
     name: kubectl
     state: present
