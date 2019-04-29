@@ -2,37 +2,46 @@
 upstream_repos:
   openstack-helm-infra:
     src: https://git.openstack.org/openstack/openstack-helm-infra
-    version: master
+    # Commit on April 24, 2019
+    version: 0ed4f0de5ed7b0eb7bb6cb6f819ad48e3fd71a23
     dest_subdir: openstack
   openstack-helm:
     src: https://git.openstack.org/openstack/openstack-helm
-    version: master
+    # Commit on April 28,2019
+    version: 4b4745f1cda13d2d1c7b92b474135ebfb7ee689c
     dest_subdir: openstack
   openstack-helm-images:
     src: https://github.com/openstack/openstack-helm-images
-    version: master
+    # Commit on April 23, 2019
+    version: bd9bdf0d0e7e8a3fff18f74b98c3beabec2b2d92
     dest_subdir: openstack
   loci:
     src: https://github.com/openstack/loci
-    version: master
+    # Commit on April 24, 2019
+    version: b901ac0bed3f3dcc3f3f5d332e966a6608d1091b
     dest_subdir: openstack
   armada:
     src: https://opendev.org/airship/armada
-    version: master
+    # Commit on April 23, 2019
+    version: b881e176f5fb63fbfb003389ca2f8922db137ede
     dest_subdir: airship
   shipyard:
     src: https://opendev.org/airship/shipyard
-    version: master
+    # April 29, 2019
+    version: 902ee1b7afef80c8eb352bfcfb4ac4b6b227e87b
     dest_subdir: airship
   deckhand:
     src: https://opendev.org/airship/deckhand
-    version: master
+    # Commit on April 22, 2019
+    version: a611a326be52516cdf69c8b385d56169f53a6a12
     dest_subdir: airship
   pegleg:
     src: https://opendev.org/airship/pegleg
-    version: master
+    # Commit on April 24, 2019
+    version: 50ffabdaf511e4206fd7b7c0123f686b9cb9b2a3
     dest_subdir: airship
   treasuremap:
     src: https://opendev.org/airship/treasuremap
-    version: master
+    # Commit on April 28, 2019
+    version: 74e6baf65e60ab6971f35849a741e9e22da75923
     dest_subdir: airship
