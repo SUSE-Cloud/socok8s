@@ -1,19 +1,19 @@
 ---
 upstream_repos:
   openstack-helm-infra:
-    src: https://git.openstack.org/openstack/openstack-helm-infra
+    src: https://opendev.org/openstack/openstack-helm-infra
     version: master
     dest_subdir: openstack
   openstack-helm:
-    src: https://git.openstack.org/openstack/openstack-helm
+    src: https://opendev.org/openstack/openstack-helm
     version: master
     dest_subdir: openstack
   openstack-helm-images:
-    src: https://github.com/openstack/openstack-helm-images
+    src: https://opendev.org/openstack/openstack-helm-images
     version: master
     dest_subdir: openstack
   loci:
-    src: https://github.com/openstack/loci
+    src: https://opendev.org/openstack/loci
     version: master
     dest_subdir: openstack
   armada:
