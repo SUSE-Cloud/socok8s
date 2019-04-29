@@ -202,6 +202,7 @@ resources:
           name: {list_join: ['-', [{get_param: 'OS::stack_name'}, 'worker', '%index%']]}
           image: { get_param: image }
           internal_net: { get_param: internal_network }
+          external_net: { get_param: external_net }
           secgroup_base: { get_resource: secgroup_base }
           secgroup_worker: { get_param: security_group }
           flavor: { get_param: worker_flavor }

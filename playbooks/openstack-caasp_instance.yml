@@ -31,21 +31,6 @@
               keypair: "{{ deploy_on_openstack_keypairname }}"
               worker_count: "{{ deploy_on_openstack_caasp_workers }}"
 
-        # TODO(evrardjp) Remove this when all the nodes have floating IPs in the template
-        - name: Get all the node with no floating ips
-          command: openstack server list --name {{ stackname | quote }}-worker -c ID -f json --noindent
-          changed_when: false
-          register: _workernodeswithnofloating
-        # Do not reuse to prevent ssh issues or race conditions when running
-        # multiple of those jobs at the same time.
-        - name: Get a floating ip for the workers
-          loop: "{{ _workernodeswithnofloating.stdout | from_json }}"
-          os_floating_ip:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            server: "{{ item.ID }}"
-            reuse: no
-            network: "{{ deploy_on_openstack_external_network }}"
-
         # TODO(evrardjp): Replace this with stack output
         - name: Get workers details
           command: openstack server list --name {{ stackname }}-worker -c ID -c Name -c Networks -f json --noindent
