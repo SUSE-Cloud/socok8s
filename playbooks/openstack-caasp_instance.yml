@@ -103,34 +103,16 @@
             chdir: "{{ playbook_dir }}/../files/"
             executable: /bin/bash
 
-        - name: Create a VIP port for OSH
-          os_port:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            state: present
-            name: "{{ stackname }}-vip"
-            no_security_groups: True
-            network: "{{ deploy_on_openstack_internal_network }}"
-          register: _oshclustervip
-
-        - name: Show VIP port creation results
-          debug:
-            var: _oshclustervip
-            verbosity: 1
-
-        # TODO(evrardjp): Use os_port to get that information
-        # Environment variables don't work as part of command, therefore
-        # shell has to be used, which causes lint to worry too much.
-        - name: Display VIP ip
-          shell: |
-            portdetails=$(openstack port show {{ stackname }}-vip -c fixed_ips -f value | cut -f 1 -d ',')
-            vip=$(eval ${portdetails} && echo $ip_address)
-            echo $vip
-          args:
-            executable: /bin/bash
-          register: _vipip
+        - name: Get the VIP from the network stack
+          command: openstack stack output show {{ deploy_on_openstack_network_stackname }} vip -c output_value -f value
           changed_when: false
-          tags:
-            - skip_ansible_lint
+          register: _network_stack_vip_output
+
+        - name: Add vip with cidr in extravars
+          lineinfile:
+            path: "{{ socok8s_extravars }}"
+            regexp: "^socok8s_ext_vip.*"
+            line: "socok8s_ext_vip: {{ _network_stack_vip_output.stdout }}"
 
         - name: Extend inventory in workspace with newly created caasp nodes
           copy:
@@ -187,12 +169,6 @@
 
               airship-kube-system-workers:
                 hosts: *firsttwoworkers
-
-        - name: Add vip with cidr in extravars
-          lineinfile:
-            path: "{{ socok8s_extravars }}"
-            regexp: "^socok8s_ext_vip.*"
-            line: "socok8s_ext_vip: {{ _vipip.stdout }}"
 
         - meta: refresh_inventory
 

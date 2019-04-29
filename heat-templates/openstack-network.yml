@@ -46,6 +46,14 @@ resources:
       router_id: { get_resource: router }
       subnet_id: { get_resource: subnet }
 
+  vip_port:
+    type: OS::Neutron::Port
+    properties:
+      name:
+        list_join: ['-', [ { get_param: prefix }, 'vip']]
+      network: { get_resource: network }
+      port_security_enabled: False
+
 outputs:
   network_name:
     description: Network name
@@ -56,3 +64,5 @@ outputs:
   router_name:
     description: Router name
     value: { get_resource: router }
+  vip:
+    value: {get_attr: [vip_port, fixed_ips, 0, ip_address]}
