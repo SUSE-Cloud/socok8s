@@ -143,22 +143,22 @@
   tags:
     - run
 
-- name: Create .config/openstack directory
+- name: Ensure /etc/openstack directory exists
+  become: yes
   file:
-    path: /root/.config/openstack
+    path: /etc/openstack
     state: directory
     owner: root
     group: root
     mode: '0755'
-  tags:
-    - run
 
 - name: Save default clouds.yaml file
+  become: yes
   template:
-    src: clouds.yaml.j2
-    dest: /root/.config/openstack/clouds.yaml
     owner: root
     mode: '0640'
+    src: clouds.yml.j2
+    dest: /etc/openstack/clouds.yaml
 
 - name: Setup Basic ingress and namespace
   import_tasks: component-install.yml
