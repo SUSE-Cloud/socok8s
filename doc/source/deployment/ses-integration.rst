@@ -46,7 +46,11 @@ will have the same user, as Cinder needs access to create objects that Nova
 uses.
 
 Login in as root to run the SES 5.5 Salt runner on the salt admin host.
-root # salt-run --out=yaml openstack.integrate prefix=mycloud
+root #
+
+.. code-block:: bash 
+  
+  salt-run --out=yaml openstack.integrate prefix=mycloud
 
 The prefix parameter allows pools to be created with the specified prefix.
 In this way, multiple cloud deployments can use different users and pools on
