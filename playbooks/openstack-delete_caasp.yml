@@ -22,11 +22,6 @@
             name: "{{ stackname }}"
             state: absent
 
-        - name: Delete extra vip
-          os_port:
-            name: "{{ stackname }}-vip"
-            state: absent
-
         - name: Remove host from known hosts
           known_hosts:
             state: absent
