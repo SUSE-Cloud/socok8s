@@ -42,6 +42,11 @@ Base software
 
 Install the following software on your `deployer`:
 
+<<<<<<< HEAD
+=======
+  * git
+  * jq
+>>>>>>> Add missing package needed on deployer.
   * ansible>=2.7.0
   * gcc
   * git
