@@ -24,3 +24,17 @@
         - name: show network stack output
           debug:
             var: network_stack_create_output
+
+    - name: Get the VIP from the network stack
+      command: openstack stack output show {{ deploy_on_openstack_network_stackname }} vip -c output_value -f value
+      changed_when: false
+      register: _network_stack_vip_output
+
+    - name: Add vip with cidr in extravars
+      delegate_to: localhost
+      blockinfile:
+        path: "{{ socok8s_extravars }}"
+        create: yes
+        marker: "# {mark} ANSIBLE MANAGED BLOCK FOR VIP"
+        block: |
+          socok8s_ext_vip: {{ _network_stack_vip_output.stdout }}
