@@ -12,7 +12,7 @@ source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_env_vars_set
 
 function deploy_network(){
     echo "Starting the network deployment"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_network.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-create_network.yml
     echo "network deployment successful"
 }
 function deploy_ses(){
@@ -24,7 +24,7 @@ function deploy_ses(){
 function deploy_caasp(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     echo "Starting caasp deploy"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_caasp.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-create_caasp.yml
     echo "CaaSP deployed successfully"
 }
 function deploy_ccp_deployer() {
@@ -95,11 +95,11 @@ function clean_openstack(){
     echo "Deleting on OpenStack"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-osh_instance.yml -e osh_node_delete=True || true
     echo "Delete Caasp nodes"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-cleanup_caasp.yml || true
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-delete_caasp.yml || true
     echo "Delete SES node"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio_instance.yml -e ses_node_delete=True
     echo "Delete network stack"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-cleanup_network.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-delete_network.yml
 }
 function clean_userfiles(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to delete everything in your userspace."
