@@ -88,17 +88,6 @@
             chdir: "{{ playbook_dir }}/../files/"
             executable: /bin/bash
 
-        - name: Get the VIP from the network stack
-          command: openstack stack output show {{ deploy_on_openstack_network_stackname }} vip -c output_value -f value
-          changed_when: false
-          register: _network_stack_vip_output
-
-        - name: Add vip with cidr in extravars
-          lineinfile:
-            path: "{{ socok8s_extravars }}"
-            regexp: "^socok8s_ext_vip.*"
-            line: "socok8s_ext_vip: {{ _network_stack_vip_output.stdout }}"
-
         - name: Extend inventory in workspace with newly created caasp nodes
           copy:
             content: "{{ caasp_overrides }}"
