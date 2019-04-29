@@ -43,6 +43,7 @@ Base software
 Install the following software on your `deployer`:
 
   * git
+  * jq
   * ansible>=2.7.0
 
 Create SUSE Containerized Openstack Workspace
