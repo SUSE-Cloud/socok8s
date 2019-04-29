@@ -3,14 +3,6 @@
   gather_facts: no
   vars:
     ses_packages:
-      - python-setuptools
-      - python-virtualenv
-      - python-devel
-      - autoconf
-      - git
-      - gcc
-      - make
-      - jq
       - ca-certificates-suse
       - rng-tools
     # Domain name to use in the deployment. Default assumes properly configured dns name.
@@ -70,6 +62,7 @@
       zypper:
         name: "{{ ses_packages }}"
         state: present
+        update_cache: yes
       register: _pkginstall
       until: _pkginstall is success
       retries: 5

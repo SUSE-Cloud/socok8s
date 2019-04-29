@@ -32,13 +32,9 @@ deploy_on_openstack_ses_repos_per_imagename:
   SLES12-SP3:
     - SLE12SP3-product
     - SLE12SP3-update
-    - SLE12SP3SDK-product
-    - SLE12SP3SDK-update
     - SUSE-CA
-    - OpenStack-Cloud8-product
     - SES5-product
     - SES5-update
-    - SLE12Containers
 deploy_on_openstack_osh_repos_per_imagename:
   openSUSE-Leap-15.0:
     - Leap15develtools
