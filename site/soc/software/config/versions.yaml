@@ -9,47 +9,47 @@ data:
         subpath: ingress
     osh:
       cinder-htk:
-        location: https://git.openstack.org/openstack/openstack-helm-infra
+        location: https://opendev.org/openstack/openstack-helm-infra
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: helm-toolkit
         type: git
       glance-htk:
-        location: https://git.openstack.org/openstack/openstack-helm-infra
+        location: https://opendev.org/openstack/openstack-helm-infra
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: helm-toolkit
         type: git
       heat-htk:
-        location: https://git.openstack.org/openstack/openstack-helm-infra
+        location: https://opendev.org/openstack/openstack-helm-infra
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: helm-toolkit
         type: git
       horizon:
-        location: https://git.openstack.org/openstack/openstack-helm
+        location: https://opendev.org/openstack/openstack-helm
         reference: f22f53030335121a6019a603910deef0a759b1de
         subpath: horizon
         type: git
       horizon-htk:
-        location: https://git.openstack.org/openstack/openstack-helm-infra
+        location: https://opendev.org/openstack/openstack-helm-infra
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e 
         subpath: helm-toolkit
         type: git
       keystone:
-        location: https://git.openstack.org/openstack/openstack-helm
+        location: https://opendev.org/openstack/openstack-helm
         reference: f22f53030335121a6019a603910deef0a759b1de
         subpath: keystone
         type: git
       keystone-htk:
-        location: https://git.openstack.org/openstack/openstack-helm-infra
+        location: https://opendev.org/openstack/openstack-helm-infra
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: helm-toolkit
         type: git
       ingress-htk:
-        location: https://git.openstack.org/openstack/openstack-helm-infra
+        location: https://opendev.org/openstack/openstack-helm-infra
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: helm-toolkit
         type: git
       neutron-htk:
-        location: https://git.openstack.org/openstack/openstack-helm-infra
+        location: https://opendev.org/openstack/openstack-helm-infra
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: helm-toolkit
         type: git
