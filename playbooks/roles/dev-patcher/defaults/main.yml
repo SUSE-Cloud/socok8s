@@ -20,9 +20,3 @@ dev_patcher_patches:
   - 639861
   # osh-infra: Add support for mulitple VIPS
   - 640115
-  # osh: Remove remaining test pods before new test run
-  - 634936
-  # osh: Allow more generic overrides for nova placement-api
-  - 642067
-  # osh: Add an option to the health probe to test all pids
-  - 644907
