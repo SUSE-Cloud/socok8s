@@ -52,7 +52,8 @@ contains the following deployment artifacts:
 Configure the inventory
 -----------------------
 
-You can create an inventory based on the example located in the `examples` folder.
+You can create an inventory based on the example located in the `examples`
+folder.
 
 .. literalinclude:: ../../../examples/workdir/inventory/hosts.yml
 
@@ -103,9 +104,9 @@ Configure for SES Integration
 -----------------------------
 
 The file `ses_config.yml`, the output from :ref: `ses_integration` should be
-present in the worksapce. 
+present in the worksapce.
 
-The Ceph admin keyring, in **base64**, should be present in the file
+The Ceph admin keyring and user keyring, in **base64**, should be present in the file
 `env/extravars` in your workspace.
 
 For example:
@@ -113,6 +114,7 @@ For example:
 .. code-block:: yaml
 
   ceph_admin_keyring_b64key: QVFDMXZ6dGNBQUFBQUJBQVJKakhuYkY4VFpublRPL1RXUEROdHc9PQo=
+  ceph_user_keyring_b64key: QVFDMXZ6dGNBQUFBQUJBQVJKakhuYkY4VFpublRPL1RXUEROdHc9PQo=
 
 Configure for Kubernetes
 ------------------------
@@ -156,7 +158,7 @@ Configure Cloud Scale Profile
 -----------------------------
 
 The pod scale profile in socok8s allows you to specify the desired number of
-pods that each Airship and Openstack service should run. 
+pods that each Airship and Openstack service should run.
 
 There are two built-in scale profiles: `minimal` and `ha`. `minimal` will
 deploy exactly one pod for each service, making it suitble for demo or tryout
@@ -164,7 +166,8 @@ on a resource limited system. `ha`, as you have guessed, ensures at least two
 instances of pods for all services, and three or more pods for services that
 require quorum and are more heavily used.
 
-To specify the scale profile to use, add `scale_profile:` in the `env/extravars`.
+To specify the scale profile to use, add `scale_profile:` in the
+`env/extravars`.
 
 For example:
 
@@ -173,8 +176,8 @@ For example:
 
    scale_profile: ha
 
-The definitions of the pod scale prolfile can be found in this repository: 
-playbooks/roles/airship-deploy-ucp/files/profiles. 
+The definitions of the pod scale prolfile can be found in this repository:
+playbooks/roles/airship-deploy-ucp/files/profiles.
 
 You can customize the built-in profile or create your own profile following
 the file name convention.
