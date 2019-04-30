@@ -36,7 +36,7 @@ pipeline {
     }
 
     post {
-        failure {
+        always {
             script {
                 if (env.hold_instance_for_debug == 'true') {
                     echo "You can reach this node by connecting to its floating IP as root user, with the default password of your image."
