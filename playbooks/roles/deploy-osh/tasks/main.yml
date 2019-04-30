@@ -132,15 +132,6 @@
   tags:
     - run
 
-- name: Updated wait for pods logic to account for stuck k8s jobs
-  copy:
-    src: wait-for-pods.sh
-    dest: /opt/openstack/openstack-helm/tools/deployment/common/wait-for-pods.sh
-    mode: '0755'
-  tags:
-    - horizon
-    - run
-
 - name: Install OpenStack client packages
   package:
     name: "{{ suse_osh_openstackclient_packages }}"
