@@ -88,10 +88,10 @@ Platform worker node.
 .. note ::
 
   1. To generate the key, you can use ssh-keygen -t rsa
-  
-  2. To copy the ssh key to each node, use the ssh-copy-id command, 
+
+  2. To copy the ssh key to each node, use the ssh-copy-id command,
      for example: ssh-copy-id root@192.168.122.1
-     
+
   Test this by ssh’ing to the node and then executing a command with ‘sudo’.
   Neither operation should require a password.
 
@@ -152,4 +152,5 @@ You might want to improve SSH connections by enabling pipelining:
    EOF
 
 
-With this done, continue your deployment by reading the :ref:`configuredeployment` page.
+With this done, continue your deployment by reading the
+:ref:`configuredeployment` page.
