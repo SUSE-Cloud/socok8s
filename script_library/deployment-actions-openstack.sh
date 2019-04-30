@@ -81,6 +81,10 @@ function clean_airship(){
     fi
 }
 function teardown(){
+    if [[ ${SOCOK8S_GATHER_LOGS:-"NO"} == "YES" ]]
+    then
+        gather_logs
+    fi
     clean_openstack
     clean_userfiles
 }
@@ -107,4 +111,9 @@ function clean_userfiles(){
         extra_arg="-e delete_anyway='yes'"
     fi
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_userfiles.yml ${extra_arg:-}
+}
+
+function gather_logs(){
+    echo "Gathering kubernetes logs"
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-collect-logs.yml
 }
