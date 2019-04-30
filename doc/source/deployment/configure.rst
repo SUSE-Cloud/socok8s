@@ -177,7 +177,8 @@ on a resource limited system. `ha`, as you have guessed, ensures at least two
 instances of pods for all services, and three or more pods for services that
 require quorum and are more heavily used.
 
-To specify the scale profile to use, add `scale_profile:` in the `env/extravars`.
+To specify the scale profile to use, add `scale_profile:` in the
+`env/extravars`.
 
 For example:
 

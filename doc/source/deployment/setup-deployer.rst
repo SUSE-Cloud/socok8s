@@ -42,11 +42,6 @@ Base software
 
 Install the following software on your `deployer`:
 
-<<<<<<< HEAD
-=======
-  * git
-  * jq
->>>>>>> Add missing package needed on deployer.
   * ansible>=2.7.0
   * gcc
   * git
@@ -75,15 +70,9 @@ Create SUSE Containerized Openstack Workspace
 
 All the deployment artifacts are stored in a :term:`workspace`. The workspace
 by default is a directory located in the users home directory on the deployer.
-Create a directory in your home that ends in -workspace then export
-SOCOK8S_ENVNAME=<directory name prefix> to set your workspace. To change your
-workspace parent directory, export `SOCOK8S_WORKSPACE_BASEDIR` with the base
-directory your workspace is located.
-
-.. code-block:: console
-
-  mkdir ~/socok8s-workspace
-  export SOCOK8S_ENVNAME=socok8s
+Create a directory in your home then export SOCOK8S_ENVNAME=<directory name>
+to set your workspace. To change your workspace parent directory, export
+`SOCOK8S_WORKSPACE_BASEDIR` with the base directory your workspace is located.
 
 
 Cloning repository
