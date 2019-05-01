@@ -70,15 +70,15 @@ data:
       tenant-ceph-rgw: {}
     osh:
       barbican:
-        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        scripted_test: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        barbican_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_osh_image_version }}"
-        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        barbican_api: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_osh_image_version }}"
+        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        scripted_test: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        barbican_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_openstack_image_version }}"
+        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        barbican_api: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_openstack_image_version }}"
       cinder:
         db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
         cinder_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
@@ -189,8 +189,8 @@ data:
         nova_spiceproxy_assets: "{{ suse_osh_registry_location }}/kolla/ubuntu-source-nova-spicehtml5proxy:{{ suse_osh_image_version }}"
         nova_service_cleaner: "{{ suse_osh_registry_location }}/openstackhelm/ceph-config-helper:{{ suse_infra_image_version }}"
       openvswitch:
-        openvswitch_db_server: "{{ suse_osh_registry_location }}/openstackhelm/openvswitch:{{ suse_ovs_image_version }}"
-        openvswitch_vswitchd: "{{ suse_osh_registry_location }}/openstackhelm/openvswitch:{{ suse_ovs_image_version }}"
+        openvswitch_db_server: "{{ suse_osh_registry_location }}/openstackhelm/openvswitch:{{ suse_infra_image_version }}"
+        openvswitch_vswitchd: "{{ suse_osh_registry_location }}/openstackhelm/openvswitch:{{ suse_infra_image_version }}"
       rabbitmq:
         # NOTE: was using {{ suse_osh_image_version }} in upstream
         prometheus_rabbitmq_exporter_helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
@@ -232,15 +232,15 @@ data:
         ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
         ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
       barbican:
-        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        scripted_test: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        barbican_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_osh_image_version }}"
-        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        barbican_api: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_osh_image_version }}"
+        bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        scripted_test: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        barbican_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_openstack_image_version }}"
+        db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        barbican_api: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_openstack_image_version }}"
       deckhand:
         deckhand: "{{ suse_airship_registry_location }}/airshipit/deckhand:{{ suse_airship_components_image_tag }}"
         db_sync: "{{ suse_airship_registry_location }}/airshipit/deckhand:{{ suse_airship_components_image_tag }}"
