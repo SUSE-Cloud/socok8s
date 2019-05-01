@@ -125,7 +125,7 @@ ansible configuration:
 .. we need parsed-literal instead of code-block here. Otherwise the variable substitute does not work
 .. parsed-literal::
 
-   cat < EOF >> ~/.ansible.cfg
+   cat << EOF >> ~/.ansible.cfg
    strategy_plugins=${HOME}\ |socok8s_workspace_default|\ /.ansiblevenv/lib/python3.6/site-packages/ansible_mitogen/plugins/strategy
    strategy = mitogen_linear
    EOF
@@ -140,7 +140,7 @@ You might want to improve SSH connections by enabling pipelining:
 
 .. code-block:: console
 
-   cat < EOF >> ~/.ansible.cfg
+   cat << EOF >> ~/.ansible.cfg
    [ssh_connection]
    pipelining = True
    EOF
