@@ -71,8 +71,8 @@ docker_images: []
 #     tags:
 #       libvirt: "{{ registry_location }}openstackhelm/libvirt:latest-opensuse_15"
 
-# This is the default dockerfile name in OSH images for leap15/SLE15 images.
-docker_dockerfile: "Dockerfile.suse_15"
+# This is the default dockerfile name in OSH images for OpenSUSE Leap15 images.
+docker_dockerfile: "Dockerfile.opensuse_leap_15"
 
 loci_build_projects: []
 # List of projects to build with LOCI.
