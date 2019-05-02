@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  post_tasks:
+    - name: Load generic vars
+      include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+    - name: Load openstack vars
+      include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+
+    - name: Delete openstack network
+      block:
+        - name: delete network stack
+          os_stack:
+            cloud: "{{ deploy_on_openstack_cloudname }}"
+            state: "absent"
+            name: "{{ deploy_on_openstack_network_stackname }}"
+

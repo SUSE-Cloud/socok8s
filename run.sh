@@ -11,7 +11,7 @@ socok8s_absolute_dir="$( cd "$(dirname "$0")" ; pwd -P )"
 
 # USE an env var to setup where to deploy to
 # by default, ccp will deploy on openstack for inception style fun (and CI).
-DEPLOYMENT_MECHANISM=${DEPLOYMENT_MECHANISM:-"openstack"}
+DEPLOYMENT_MECHANISM=${DEPLOYMENT_MECHANISM:-"kvm"}
 
 # The base directory where workspace(s) are created in
 SOCOK8S_WORKSPACE_BASEDIR=${SOCOK8S_WORKSPACE_BASEDIR:-~}
@@ -38,6 +38,9 @@ source ${scripts_absolute_dir}/deployment-actions-${DEPLOYMENT_MECHANISM}.sh
 deployment_action=${1:-"setup_everything"}
 
 case "$deployment_action" in
+    "deploy_network")
+        deploy_network
+        ;;
     "deploy_ses")
         deploy_ses
         ;;
@@ -71,6 +74,7 @@ case "$deployment_action" in
         setup_caasp_workers_for_openstack
         ;;
     "setup_hosts")
+        deploy_network
         deploy_ses
         deploy_caasp
         deploy_ccp_deployer
@@ -94,6 +98,7 @@ case "$deployment_action" in
         deploy_airship update_airship_osh_site
         ;;
     "setup_everything")
+        deploy_network
         deploy_ses
         deploy_caasp
         deploy_ccp_deployer

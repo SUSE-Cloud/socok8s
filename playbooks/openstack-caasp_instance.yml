@@ -15,8 +15,6 @@
         stackname: "{{ socok8s_envname }}-{{ stackname_suffix }}"
 
     - name: Handle creation if not exists
-      when:
-        - not ((caasp_stack_delete | default('false'))| bool)
       block:
         - name: Create stack
           os_stack:
@@ -32,21 +30,6 @@
               security_group: "{{ deploy_on_openstack_caasp_securitygroup }}"
               keypair: "{{ deploy_on_openstack_keypairname }}"
               worker_count: "{{ deploy_on_openstack_caasp_workers }}"
-
-        # TODO(evrardjp) Remove this when all the nodes have floating IPs in the template
-        - name: Get all the node with no floating ips
-          command: openstack server list --name {{ stackname | quote }}-worker -c ID -f json --noindent
-          changed_when: false
-          register: _workernodeswithnofloating
-        # Do not reuse to prevent ssh issues or race conditions when running
-        # multiple of those jobs at the same time.
-        - name: Get a floating ip for the workers
-          loop: "{{ _workernodeswithnofloating.stdout | from_json }}"
-          os_floating_ip:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            server: "{{ item.ID }}"
-            reuse: no
-            network: "{{ deploy_on_openstack_external_network }}"
 
         # TODO(evrardjp): Replace this with stack output
         - name: Get workers details
@@ -105,35 +88,6 @@
             chdir: "{{ playbook_dir }}/../files/"
             executable: /bin/bash
 
-        - name: Create a VIP port for OSH
-          os_port:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            state: present
-            name: "{{ stackname }}-vip"
-            no_security_groups: True
-            network: "{{ deploy_on_openstack_internal_network }}"
-          register: _oshclustervip
-
-        - name: Show VIP port creation results
-          debug:
-            var: _oshclustervip
-            verbosity: 1
-
-        # TODO(evrardjp): Use os_port to get that information
-        # Environment variables don't work as part of command, therefore
-        # shell has to be used, which causes lint to worry too much.
-        - name: Display VIP ip
-          shell: |
-            portdetails=$(openstack port show {{ stackname }}-vip -c fixed_ips -f value | cut -f 1 -d ',')
-            vip=$(eval ${portdetails} && echo $ip_address)
-            echo $vip
-          args:
-            executable: /bin/bash
-          register: _vipip
-          changed_when: false
-          tags:
-            - skip_ansible_lint
-
         - name: Extend inventory in workspace with newly created caasp nodes
           copy:
             content: "{{ caasp_overrides }}"
@@ -190,12 +144,6 @@
               airship-kube-system-workers:
                 hosts: *firsttwoworkers
 
-        - name: Add vip with cidr in extravars
-          lineinfile:
-            path: "{{ socok8s_extravars }}"
-            regexp: "^socok8s_ext_vip.*"
-            line: "socok8s_ext_vip: {{ _vipip.stdout }}"
-
         - meta: refresh_inventory
 
         - name: Get pubkey, and add it to known hosts
@@ -213,32 +161,3 @@
             name: "{{ hostvars[item.item]['ansible_host'] }}"
             key: "{{ item.stdout }}"
           loop: "{{ _caaspsshkeys.results }}"
-
-    - name: Handle deletion
-      when:
-        - ((caasp_stack_delete | default('false'))| bool)
-      block:
-        - name: Delete stack
-          os_stack:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
-            name: "{{ stackname }}"
-            state: absent
-
-        - name: Delete extra vip
-          os_port:
-            name: "{{ stackname }}-vip"
-            state: absent
-
-        - name: Remove host from known hosts
-          known_hosts:
-            state: absent
-            name: "{{ hostvars[item]['ansible_host'] }}"
-          loop: "{{ groups['caasp-admin'] + groups['caasp-masters'] + groups['caasp-workers'] }}"
-
-        - name: Remove caasp files
-          file:
-            state: absent
-            path: "{{ item }}"
-          loop:
-            - "{{ socok8s_caasp_environment_details }}"
-            - "{{ socok8s_workspace }}/inventory/caasp.yml"

@@ -16,6 +16,11 @@ parameters:
     description: >
       Name or ID of private network for which the worker will be attached
     default: floating
+  external_net:
+    type: string
+    description: >
+      Name or ID of public network for which floating IP addresses will be allocated
+    default: floating
   secgroup_base:
     type: string
     description: >
@@ -60,10 +65,7 @@ resources:
       key_name: { get_param: keypair }
       flavor: { get_param: flavor }
       networks:
-        - network: { get_param: internal_net }
-      security_groups:
-        - { get_param: secgroup_base }
-        - { get_param: secgroup_worker }
+        - port: { get_resource: worker_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -95,3 +97,22 @@ resources:
         properties:
           instance_id: { get_resource: worker }
           volume_size: { get_param: volume_size }
+
+  worker_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: internal_net }
+      security_groups:
+        - { get_param: secgroup_base }
+        - { get_param: secgroup_worker }
+
+  worker_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_param: external_net }
+
+  worker_floating_ip_association:
+    type: OS::Neutron::FloatingIPAssociation
+    properties:
+      floatingip_id: { get_resource: worker_floating_ip }
+      port_id: { get_resource: worker_port }

@@ -10,8 +10,11 @@ function install_ansible (){
     local socok8s_workspace=${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace
     if [[ ! -d ${socok8s_workspace}/.ansiblevenv/ ]]; then
         virtualenv ${socok8s_workspace}/.ansiblevenv/
+        source ${socok8s_workspace}/.ansiblevenv/bin/activate
+        pip install --upgrade -r $(dirname "$0")/script_library/requirements.txt
+        python -m ara.setup.env > ${socok8s_workspace}/.ansiblevenv/ara.rc
+    else
+        echo "Found virtualenv at ${socok8s_workspace}/.ansiblevenv . Using that"
+        source ${socok8s_workspace}/.ansiblevenv/bin/activate
     fi
-    source ${socok8s_workspace}/.ansiblevenv/bin/activate
-    pip install --upgrade -r $(dirname "$0")/script_library/requirements.txt
-    python -m ara.setup.env > ${socok8s_workspace}/.ansiblevenv/ara.rc
 }

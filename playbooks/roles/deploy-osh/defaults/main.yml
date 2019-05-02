@@ -25,8 +25,9 @@ suse_osh_deploy_packages:
   - nfs-utils
   - bridge-utils
 
-suse_osh_client_packages:
-  - kubectl
+suse_osh_openstackclient_packages:
+  - python3-openstackclient
+  - python3-barbicanclient
 
 # Keep this until helm is packaged as rpm
 helm_download_url: "https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"
@@ -34,10 +35,10 @@ helm_download_url: "https://raw.githubusercontent.com/kubernetes/helm/master/scr
 # OpenStack-Helm repos, frozen on 9th November 2018
 osh_repos:
   openstack-helm-infra:
-    src: https://git.openstack.org/openstack/openstack-helm-infra.git
+    src: https://opendev.org/openstack/openstack-helm-infra.git
     version: b55e9b10a72ce5531ae22f15f953b2eb71e6f623
   openstack-helm:
-    src: https://git.openstack.org/openstack/openstack-helm.git
+    src: https://opendev.org/openstack/openstack-helm.git
     version: 4f94593e870ac879b2d01300cb02485ace58b3ac
 
 suse_osh_deploy_require_ha: True
@@ -88,6 +89,7 @@ suse_osh_deploy_always_redeploy: True
 suse_osh_image_version: "ocata"
 
 # Default overrides
+suse_osh_deploy_barbican_yaml_overrides: {}
 suse_osh_deploy_cinder_yaml_overrides: {}
 suse_osh_deploy_glance_yaml_overrides: {}
 suse_osh_deploy_ingress_kube_system_yaml_overrides: {}

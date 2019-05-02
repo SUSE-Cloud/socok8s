@@ -4,7 +4,8 @@ socok8s_envname: "{{ lookup('env','SOCOK8S_ENVNAME') | default('socok8s', true) 
 upstream_repos_clone_folder: "/opt"
 developer_mode: "{{ (lookup('env','SOCOK8S_DEVELOPER_MODE') | default('False', true) ) | bool }}"
 # configure the workspace base directory (where workspace(s) are created in)
-socok8s_workspace_basedir: "{{ lookup('env','SOCOK8S_WORKSPACE_BASEDIR') | default('~', true) }}"
+socok8s_default_basedir: "{{ lookup('env','HOME') | default('/tmp', true) }}"
+socok8s_workspace_basedir: "{{ lookup('env','SOCOK8S_WORKSPACE_BASEDIR') | default(socok8s_default_basedir, true) }}"
 # configure the full path to the current workspace
 socok8s_workspace: "{{ socok8s_workspace_basedir }}/{{ socok8s_envname }}-workspace"
 socok8s_extravars: "{{ socok8s_workspace }}/env/extravars"
@@ -54,7 +55,12 @@ suse_airship_registry_location: "{%- if suse_airship_build_local_images or suse_
 suse_airship_components_image_build_tag: "master"
 
 # Complete distro specific published image tag
-suse_airship_components_image_tag: "{{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}"
+# Interim solution till we don't publish suse images on quay.io
+suse_airship_components_image_tag: "{%- if suse_airship_build_local_images or suse_airship_use_local_images -%}
+                                     {{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}
+                                    {%- else -%}
+                                      master
+                                    {%- endif -%}"
 
 socok8s_site_name: "soc"
 

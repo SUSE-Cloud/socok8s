@@ -1,0 +1,40 @@
+---
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  post_tasks:
+    - name: Load generic vars
+      include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+    - name: Load openstack vars
+      include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+
+    - name: Create/Update openstack network
+      block:
+        - name: create network stack
+          register: network_stack_create_output
+          os_stack:
+            cloud: "{{ deploy_on_openstack_cloudname }}"
+            state: "present"
+            name: "{{ deploy_on_openstack_network_stackname }}"
+            template: "{{ playbook_dir }}/../heat-templates/openstack-network.yml"
+            parameters:
+              prefix: "{{ socok8s_envname }}"
+              network_external: "{{ deploy_on_openstack_external_network }}"
+
+        - name: show network stack output
+          debug:
+            var: network_stack_create_output
+
+    - name: Get the VIP from the network stack
+      command: openstack stack output show {{ deploy_on_openstack_network_stackname }} vip -c output_value -f value
+      changed_when: false
+      register: _network_stack_vip_output
+
+    - name: Add vip with cidr in extravars
+      delegate_to: localhost
+      blockinfile:
+        path: "{{ socok8s_extravars }}"
+        create: yes
+        marker: "# {mark} ANSIBLE MANAGED BLOCK FOR VIP"
+        block: |
+          socok8s_ext_vip: {{ _network_stack_vip_output.stdout }}

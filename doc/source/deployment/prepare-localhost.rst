@@ -125,7 +125,7 @@ ansible configuration:
 .. we need parsed-literal instead of code-block here. Otherwise the variable substitute does not work
 .. parsed-literal::
 
-   cat < EOF >> ~/.ansible.cfg
+   cat << EOF >> ~/.ansible.cfg
    strategy_plugins=${HOME}\ |socok8s_workspace_default|\ /.ansiblevenv/lib/python3.6/site-packages/ansible_mitogen/plugins/strategy
    strategy = mitogen_linear
    EOF
@@ -140,7 +140,7 @@ You might want to improve SSH connections by enabling pipelining:
 
 .. code-block:: console
 
-   cat < EOF >> ~/.ansible.cfg
+   cat << EOF >> ~/.ansible.cfg
    [ssh_connection]
    pipelining = True
    EOF
@@ -241,30 +241,12 @@ Set this for **all** the following scripts in a deployment:
 
 .. code-block:: console
 
+   export SOCOK8S_ENVNAME='foctodoodle'
+   # 'engcloud' is the name in the `clouds.yaml`
    export OS_CLOUD=engcloud
-   # 'engcloud' is the name in the `clouds.yaml`,
    # Set the name of the keypair you created
    export KEYNAME=foctodoodle-key
-   # Set the name of the network you will use in the deployment
-   export INTERNAL_NETWORK=foctodoodle-net
-   # Set the name of the subnet you will use in the deployment
-   export INTERNAL_SUBNET=foctodoodle-subnet
-   # Set the name of the floating ip network you will use in the deployment
    export EXTERNAL_NETWORK=floating
-
-If you haven't created the internal networks/subnets and appropriate routers
-already, do it now (you only have to do it once):
-
-.. code-block:: console
-
-   openstack network create ${INTERNAL_NETWORK}
-   openstack subnet create --network ${INTERNAL_NETWORK} --subnet-range 192.168.100.0/24 ${INTERNAL_SUBNET}
-   openstack router create ${INTERNAL_NETWORK}-router
-   openstack router set --external-gateway floating ${INTERNAL_NETWORK}-router
-   openstack router add subnet ${INTERNAL_NETWORK}-router ${INTERNAL_SUBNET}
-
-Reconfirming that you’ve done all the previous steps to set up now will
-save you some time later.
 
 With this done, proceed to next section of the documentation,
 :ref:`targethosts`.
