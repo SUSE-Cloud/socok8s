@@ -25,6 +25,10 @@ suse_osh_deploy_packages:
   - nfs-utils
   - bridge-utils
 
+suse_osh_openstackclient_packages:
+  - python3-openstackclient
+  - python3-barbicanclient
+
 # Keep this until helm is packaged as rpm
 helm_download_url: "https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"
 
@@ -85,6 +89,7 @@ suse_osh_deploy_always_redeploy: True
 suse_osh_image_version: "ocata"
 
 # Default overrides
+suse_osh_deploy_barbican_yaml_overrides: {}
 suse_osh_deploy_cinder_yaml_overrides: {}
 suse_osh_deploy_glance_yaml_overrides: {}
 suse_osh_deploy_ingress_kube_system_yaml_overrides: {}
