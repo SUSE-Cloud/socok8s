@@ -45,6 +45,7 @@ Install the following software on your `deployer`:
   * git
   * jq
   * ansible>=2.7.0
+  * python-virtualenv
 
 Create SUSE Containerized Openstack Workspace
 ---------------------------------------------
