@@ -16,3 +16,4 @@
 
 ---
 - import_playbook: openstack-caasp_instance.yml
+- import_playbook: openstack-update_and_reboot_caasp.yml
