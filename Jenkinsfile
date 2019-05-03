@@ -3,6 +3,7 @@ pipeline {
     options {
         timestamps()
         timeout(time: 45, unit: 'MINUTES', activity: true)
+        parallelsAlwaysFailFast()
     }
 
     agent {
@@ -28,9 +29,53 @@ pipeline {
             }
         }
 
-        stage('Deploy everything') {
+        stage('Setup network') {
             steps {
-                sh "./run.sh"
+                sh "./run.sh deploy_network"
+            }
+        }
+        stage('Setup hosts') {
+            parallel {
+                stage('Setup CaaSP') {
+                    steps {
+                        sh "./run.sh deploy_caasp"
+                    }
+                }
+                stage('Setup SES') {
+                    steps {
+                        sh "./run.sh deploy_ses"
+                    }
+                }
+                stage('Setup Deployer') {
+                    steps {
+                        sh "./run.sh deploy_ccp_deployer"
+                    }
+                }
+            }
+        }
+        stage('Enroll CaaSP workers') {
+            steps {
+                sh "./run.sh enroll_caasp_workers"
+            }
+        }
+        stage('Setup CaaSP workers and apply upstream patches') {
+            parallel {
+                stage('Setup CaaSP workes for OpenStack Helm') {
+                    steps {
+                        sh "./run.sh setup_caasp_workers_for_openstack"
+                    }
+                }
+                stage('Apply upstream patches') {
+                    steps {
+                        sh "./run.sh patch_upstream"
+                    }
+                }
+            }
+        }
+        stage('Deploy OpenStack Helm') {
+            steps {
+                sh "./run.sh build_images"
+                sh "./run.sh deploy_osh"
             }
         }
     }

@@ -1,3 +1,2 @@
 ---
-- import_playbook: openstack-update_and_reboot_caasp.yml
 - import_playbook: openstack-enroll_caasp_workers.yml
