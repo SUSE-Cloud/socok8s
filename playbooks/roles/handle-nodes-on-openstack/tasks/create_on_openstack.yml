@@ -9,6 +9,11 @@
     network: "{{ network }}"
     security_groups: "{{ securitygroups }}"
     auto_ip: True
+    # This is needed as we want to run deployments in parallel
+    # reuse_ips: True is racy according to:
+    # https://docs.ansible.com/ansible/latest/modules/os_server_module.html
+    reuse_ips: False
+    delete_fip: True
     state: present
     timeout: 300
     userdata: "{{ userdata | default(omit) }}"
