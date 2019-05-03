@@ -3,6 +3,7 @@ pipeline {
     options {
         timestamps()
         timeout(time: 45, unit: 'MINUTES', activity: true)
+        parallelsAlwaysFailFast()
     }
 
     agent {
