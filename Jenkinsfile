@@ -36,26 +36,30 @@ pipeline {
         }
         stage('Setup hosts') {
             parallel {
-                stage('Setup CaaSP') {
-                    steps {
-                        sh "./run.sh deploy_caasp"
-                    }
-                }
                 stage('Setup SES') {
                     steps {
                         sh "./run.sh deploy_ses"
                     }
                 }
-                stage('Setup Deployer') {
-                    steps {
-                        sh "./run.sh deploy_ccp_deployer"
+                stage('Setup CaaSP and deployer') {
+                  parallel {
+                    stage('Setup CaaSP') {
+                      steps {
+                          sh "./run.sh deploy_caasp"
+                      }
                     }
+                    stage('Setup Deployer') {
+                      steps {
+                          sh "./run.sh deploy_ccp_deployer"
+                      }
+                    }
+                  }
+                  stage('Enroll CaaSP workers') {
+                    steps {
+                      sh "./run.sh enroll_caasp_workers"
+                    }
+                  }
                 }
-            }
-        }
-        stage('Enroll CaaSP workers') {
-            steps {
-                sh "./run.sh enroll_caasp_workers"
             }
         }
         stage('Setup CaaSP workers and apply upstream patches') {
