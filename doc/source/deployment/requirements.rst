@@ -33,7 +33,7 @@ Infrastructure
 If you don't bring your own deployer, CaaS Platform cluster and SES, this
 tooling can create one for you if you have an OpenStack environment. However,
 this should be treated as experimental. More details can be found at
-:ref:'provisioninfra'.
+:ref:`provisioninfra`.
 
 Minimum Node Specification
 --------------------------
