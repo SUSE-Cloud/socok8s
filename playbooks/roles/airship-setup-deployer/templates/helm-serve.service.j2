@@ -3,7 +3,7 @@ Description=Helm Server
 After=network.target
 
 [Service]
-User=root
+User={{ ansible_user }}
 Restart=always
 ExecStart=/usr/local/bin/helm serve
 
