@@ -53,7 +53,7 @@ Configure the inventory
 -----------------------
 
 You can create an inventory based on the example located in the `examples`
-folder.
+folder.  (*examples/workdir/inventory/hosts.yml*)
 
 .. literalinclude:: ../../../examples/workdir/inventory/hosts.yml
 
@@ -106,8 +106,14 @@ Configure for SES Integration
 The file `ses_config.yml`, the output from :ref: `ses_integration` should be
 present in the worksapce.
 
-The Ceph admin keyring and user keyring, in **base64**, should be present in the file
-`env/extravars` in your workspace.
+The Ceph admin keyring and user keyring, in **base64**, should be present in
+the file `env/extravars` in your workspace.
+
+The Ceph admin keyring can be obtained by running the following on ceph host.
+
+.. code-block:: yaml
+
+  sudo ceph auth get-key client.admin | base64
 
 For example:
 
