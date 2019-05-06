@@ -110,7 +110,6 @@ case "$deployment_action" in
         ;;
     "setup_airship")
         setup_caasp_workers_for_openstack
-        airship_prepare
         deploy_airship
         ;;
     "deploy")

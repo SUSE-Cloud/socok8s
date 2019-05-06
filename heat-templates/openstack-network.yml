@@ -46,11 +46,20 @@ resources:
       router_id: { get_resource: router }
       subnet_id: { get_resource: subnet }
 
-  vip_port:
+  dcm_vip_port:
     type: OS::Neutron::Port
     properties:
       name:
-        list_join: ['-', [ { get_param: prefix }, 'vip']]
+        list_join: ['-', [ { get_param: prefix }, 'dcm-vip']]
+      network: { get_resource: network }
+      port_security_enabled: False
+
+  # TODO: This should be improved in the future by creating two seperate networks for the two vip ports
+  ext_vip_port:
+    type: OS::Neutron::Port
+    properties:
+      name:
+        list_join: ['-', [ { get_param: prefix }, 'ext-vip']]
       network: { get_resource: network }
       port_security_enabled: False
 
@@ -64,5 +73,7 @@ outputs:
   router_name:
     description: Router name
     value: { get_resource: router }
-  vip:
-    value: {get_attr: [vip_port, fixed_ips, 0, ip_address]}
+  dcm_vip:
+    value: {get_attr: [dcm_vip_port, fixed_ips, 0, ip_address]}
+  ext_vip:
+    value: {get_attr: [ext_vip_port, fixed_ips, 0, ip_address]}

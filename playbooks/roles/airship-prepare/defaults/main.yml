@@ -1,7 +1,0 @@
----
-
-# defaults file for prepare airship
-extravars_scale_profile: "ha"
-extravars_redeploy_osh_only: "false"
-extravars_suse_osh_registry_location: "docker.io"
-extravars_suse_osh_image_version: "pike"
