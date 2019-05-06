@@ -100,6 +100,11 @@ See also
    machine, add your machine's hostname inside your inventory,
    and specify this host variable: **ansible_connection: local**
 
+.. note ::
+
+   If deployer is running as a non root user, replace ansible_user: value for
+   the soc-deployer entry with your logged in user.
+
 Configure for SES Integration
 -----------------------------
 
