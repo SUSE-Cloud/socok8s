@@ -97,6 +97,25 @@ Platform worker node.
   Test this by ssh’ing to the node and then executing a command with ‘sudo’.
   Neither operation should require a password.
 
+Passwordless sudo
+-----------------
+
+If installing as a non root user you will need to give your user passwordless
+sudo on the deployer.
+
+.. code-block:: console
+
+   sudo visudo
+
+Add the following.
+
+.. code-block:: console
+
+   <username> ALL=(ALL) NOPASSWD: ALL
+
+Add the above line after "#includedir /etc/sudoers.d". replace <username> with
+your username.
+
 
 Configure Ansible
 -----------------
