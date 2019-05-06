@@ -11,6 +11,7 @@ function install_ansible (){
     if [[ ! -d ${socok8s_workspace}/.ansiblevenv/ ]]; then
         virtualenv ${socok8s_workspace}/.ansiblevenv/
         source ${socok8s_workspace}/.ansiblevenv/bin/activate
+        pip install --upgrade pip
         pip install --upgrade -r $(dirname "$0")/script_library/requirements.txt
         python -m ara.setup.env > ${socok8s_workspace}/.ansiblevenv/ara.rc
     else
