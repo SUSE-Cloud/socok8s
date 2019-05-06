@@ -42,9 +42,10 @@ Base software
 
 Install the following software on your `deployer`:
 
+  * ansible>=2.7.0
+  * gcc
   * git
   * jq
-  * ansible>=2.7.0
   * python-virtualenv
 
 Create SUSE Containerized Openstack Workspace
