@@ -18,7 +18,6 @@ To add a compute node, the node must be running SUSE CaaS Platform v3.0 and have
    ./run.sh add_compute
 
 .. note::
-=======
 
    Multiple new compute nodes can be added to the inventory at the same time.
 
