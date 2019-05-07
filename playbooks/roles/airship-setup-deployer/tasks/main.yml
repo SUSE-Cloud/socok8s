@@ -18,6 +18,7 @@
     - install
 
 - name: Pip install python libraries
+  become: yes
   pip:
     name: "{{ suse_airship_deploy_python_libs }}"
   register: install_python_libs
@@ -37,6 +38,7 @@
     - install
 
 - name: Add the user to the group 'docker'
+  become: yes
   user:
     name: "{{ lookup('env','USER') }}"
     groups: docker
