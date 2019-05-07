@@ -20,6 +20,7 @@ pipeline {
         SOCOK8S_DEVELOPER_MODE = "True"
         DEPLOYMENT_MECHANISM = "openstack"
         ANSIBLE_STDOUT_CALLBACK = "yaml"
+        ANSIBLE_DEBUG = "True"
     }
 
     stages {
