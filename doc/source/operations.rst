@@ -46,6 +46,11 @@ SUSE Containerized OpenStack provides two built-in scale profiles: "minimal," wh
 
 The built-in profiles are defined in playbooks/roles/airship-deploy-ucp/files/profiles and can be modified to suit custom use cases. Additional profiles can also be created and added to this directory following the same file naming convention.
 
+Once the appropriate profile has been selected, it can be applied by running the following command from the root of the socok8s directory:
+
+.. code-block:: console
+
+   ./run.sh deploy_airship
 
 Updates
 =======
