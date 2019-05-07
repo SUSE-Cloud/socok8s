@@ -2,6 +2,7 @@
 # handlers file for registry-server-setup
 
 - name: restart docker
+  become: yes
   service:
     name: docker
     state: restarted
