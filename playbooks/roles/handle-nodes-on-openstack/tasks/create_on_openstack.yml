@@ -1,7 +1,6 @@
 ---
 - name: Create server
   os_server:
-    cloud: "{{ deploy_on_openstack_cloudname }}"
     flavor: "{{ flavor }}"
     image: "{{ image }}"
     key_name: "{{ deploy_on_openstack_keypairname }}"

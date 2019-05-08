@@ -12,7 +12,6 @@
       block:
         - name: delete network stack
           os_stack:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
             state: "absent"
             name: "{{ deploy_on_openstack_network_stackname }}"
 
