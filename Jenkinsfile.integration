@@ -23,6 +23,22 @@ pipeline {
     }
 
     stages {
+        stage('Git Clone') {
+            steps {
+                checkout([$class: 'GitSCM',
+                          branches: [[name: "*/pr/${CHANGE_ID}"], [name: '*/master']],
+                          doGenerateSubmoduleConfigurations: false,
+                          extensions: [[$class: 'LocalBranch'],
+                                       [$class: 'WipeWorkspace'],
+                                       [$class: 'PreBuildMerge', options: [mergeRemote: 'origin', mergeTarget: 'master']],
+                                       [$class: 'RelativeTargetDirectory', relativeTargetDir: 'socok8s']],
+                          submoduleCfg: [],
+                          userRemoteConfigs: [[refspec: '+refs/pull/*/head:refs/remotes/origin/pr/*',
+                                               credentialsId: 'c2350527-476a-45df-b406-84f028614682',
+                                               url: 'https://github.com/SUSE-Cloud/socok8s']]])
+            }
+        }
+
         stage('Show environment information') {
             steps {
                 sh 'printenv'
