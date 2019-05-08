@@ -1,0 +1,20 @@
+pipeline {
+    options {
+        timestamps()
+        timeout(time: 5, unit: 'MINUTES', activity: true)
+    }
+
+    agent {
+        node {
+            label "cloud-ccp-ci"
+        }
+    }
+
+    stages {
+        stage('Lint') {
+            steps {
+                sh "tox -e lint"
+            }
+        }
+    }
+}
