@@ -118,29 +118,4 @@ data:
         consoleauth: 1
         scheduler: 1
         novncproxy: 1
-  dependencies:
-    - nova-htk
-...
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name:  nova-htk
-  layeringDefinition:
-    abstract: false
-    layer: site
-  storagePolicy: cleartext
-  substitutions:
-    - src:
-        schema: pegleg/SoftwareVersions/v1
-        name: software-versions
-        path: .charts.osh.nova-htk
-      dest:
-        path: .source
-data:
-  chart_name: nova-htk
-  release: nova-htk
-  namespace: nova-htk
-  values: {}
-  dependencies: []
 ...
