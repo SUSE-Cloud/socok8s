@@ -373,18 +373,20 @@
 
 # TODO(evrardjp): Check if need to have our own dummy overrides
 # In that case, try to split the shell script upstream in two scripts.
-# Compute kit deploys nova and neutron but only nova needs overrides
 - name: Deploy compute kit
   import_tasks: component-install.yml
   vars:
     _component_runcommand: "./tools/deployment/multinode/140-compute-kit.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_NEUTRON: >
+        --values=./neutron/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-neutron.yaml
         --values=/tmp/socok8s-useroverrides-neutron.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NEUTRON') | default('', True) }}
       OSH_OPENSTACK_RELEASE: "rocky"
       OSH_EXTRA_HELM_ARGS_NOVA: >
+        --values=./nova/values_overrides/opensuse_15.yaml
+        --values=./nova/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-nova.yaml
         --values=/tmp/socok8s-useroverrides-nova.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NOVA') | default('', True) }}
@@ -404,6 +406,7 @@
     _component_runcommand: "./tools/deployment/multinode/150-heat.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_HEAT: >
+        --values=./heat/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-heat.yaml
         --values=/tmp/socok8s-useroverrides-heat.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_HEAT') | default('', True) }}
