@@ -35,6 +35,10 @@ data:
       replicas:
         ingress: 1
         error_page: 1
+    network:
+      ingress:
+        annotations:
+          nginx.ingress.kubernetes.io/ssl-redirect: "false"
   source:
     type: local
     location: /armada/airship-components/openstack-helm-infra

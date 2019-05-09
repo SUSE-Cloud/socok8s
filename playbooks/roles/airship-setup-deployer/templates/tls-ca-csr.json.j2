@@ -1,0 +1,17 @@
+{
+  "hosts": [
+    "127.0.0.1",
+    "*.cluster.local",
+    "*.{{ cluster_domain_suffix }}",
+    "*.{{ openstack_namespace_name }}.{{ cluster_domain_suffix }}",
+    "*.{{ ucp_namespace_name }}.{{ cluster_domain_suffix }}"
+  ],
+  "CN": "{{ suse_tls_cert_CA_common_name }}",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [{
+    "O": "Airship"
+  }]
+}

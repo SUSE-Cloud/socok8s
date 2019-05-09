@@ -48,6 +48,10 @@ data:
     network:
       interface:
         tunnel: docker0
+      server:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
     conf:
       neutron:
         DEFAULT:

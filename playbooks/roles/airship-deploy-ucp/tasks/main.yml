@@ -5,6 +5,11 @@
   tags:
     - always
 
+- name: Read tls certs generated in earlier steps
+  include: read-certs.yml
+  when:
+    - (not (disable_tls_ucp | bool) or not (disable_tls_osh | bool) )
+
 - name: Set site path
   set_fact:
     site_path: "{{ upstream_repos_clone_folder }}/airship/treasuremap/site/{{ socok8s_site_name }}"
@@ -40,7 +45,6 @@
     dest: '{{ site_path }}'
   loop:
     - '{{ playbook_dir }}/../site/soc/profiles'
-    - '{{ playbook_dir }}/../site/soc/networks'
     - '{{ playbook_dir }}/../site/soc/baremetal'
     - '{{ playbook_dir }}/../site/soc/deployment'
   tags:
@@ -51,6 +55,17 @@
   template:
     src: '{{ playbook_dir }}/../site/soc/site-definition.yaml'
     dest: '{{ site_path }}'
+  tags:
+    - install
+    - update_airship_osh_site
+
+- name: Create site network manifests
+  become: yes
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ site_path }}/networks/{{ item.path }}'
+  with_filetree: '{{ playbook_dir }}/../site/soc/networks/'
+  when: item.state == 'file'
   tags:
     - install
     - update_airship_osh_site

@@ -1,0 +1,27 @@
+---
+
+- name: Check for TLS cert files presence
+  stat:
+    path: "{{ item }}"
+  register: _tls_cert_files_stat
+  with_items:
+    - "{{ suse_tls_certs_dir }}/server_cert.crt"
+    - "{{ suse_tls_certs_dir }}/ca_cert.crt"
+    - "{{ suse_tls_certs_dir }}/server_privkey.key"
+  tags:
+    - always
+
+- name: Check that all cert files needed for TLS ingress are present
+  assert:
+    that: item.exists == true
+  with_items: "{{ _tls_cert_files_stat.results | map(attribute='stat') | list }}"
+  tags:
+    - always
+
+- name: Read generated certs for ingress usage in earlier steps
+  set_fact:
+    ingress_cert_content: "{{ lookup('file', suse_tls_certs_dir + '/server_cert.crt') }}"
+    ingress_ca_cert_content: "{{ lookup('file', suse_tls_certs_dir + '/ca_cert.crt') }}"
+    ingress_cert_key_content: "{{ lookup('file', suse_tls_certs_dir + '/server_privkey.key') }}"
+  tags:
+    - always

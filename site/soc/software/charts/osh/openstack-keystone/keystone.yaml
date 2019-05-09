@@ -58,4 +58,9 @@ data:
             Allow from all
           </IfModule>
         </Directory>
+    network:
+      api:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
 ...

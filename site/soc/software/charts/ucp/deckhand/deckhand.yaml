@@ -29,4 +29,9 @@ data:
     pod:
       replicas:
         deckhand: 1
+    network:
+      api:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
 ...

@@ -1,4 +1,8 @@
 ---
+- name: Load standard variables
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+  tags:
+    - always
 
 - name: Subvolumes setup on Openstack controller and compute nodes
   include: subvolumes-setup.yml
@@ -74,3 +78,8 @@
     - _enrollforopenstackcp.stderr.find("already has a value (primary)") == -1
   tags:
     - skip_ansible_lint
+
+- name: Add Ingress CA Cert on worker node for CLI usage
+  include: apply-tls-cert.yml
+  when:
+    - (not (disable_tls_ucp | bool) or not (disable_tls_osh | bool) )

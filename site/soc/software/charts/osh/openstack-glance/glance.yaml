@@ -53,4 +53,9 @@ data:
         glance_store:
           rbd_store_user: {{ ses_cluster_configuration.glance.rbd_store_user }}
           rbd_store_pool: {{ ses_cluster_configuration.glance.rbd_store_pool }}
+    network:
+      api:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
 ...

@@ -148,6 +148,7 @@ data:
         keystone_fernet_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
         keystone_credential_setup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
         keystone_credential_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        keystone_credential_cleanup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
         keystone_api: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
         keystone_domain_manage: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
       libvirt:
@@ -259,6 +260,7 @@ data:
         keystone_fernet_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
         keystone_credential_setup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
         keystone_credential_rotate: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
+        keystone_credential_cleanup: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
         keystone_api: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
         keystone_domain_manage: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
       maas: {}

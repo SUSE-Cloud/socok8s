@@ -50,3 +50,9 @@ data:
             Allow from all
           </IfModule>
           </Directory>
+    network:
+      dashboard:
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/ssl-redirect: "false"
+...

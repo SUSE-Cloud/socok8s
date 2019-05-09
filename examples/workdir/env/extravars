@@ -19,6 +19,12 @@ redeploy_osh_only: false
 #suse_osh_registry_location: "docker.io"
 #suse_openstack_image_version: "rocky-opensuse_15"
 
+# For TLS CA cert: common name used by default
+#suse_tls_cert_CA_common_name: "ca.cluster.local"
+
+# For TLS cert: common name used by default
+#suse_tls_cert_common_name: "server.cluster.local"
+
 # List of extra patches for the dev-patcher
 # instead of waiting for patch numbers to be added on the main repo
 # you can add patches in your extravars to be applied and they will be
