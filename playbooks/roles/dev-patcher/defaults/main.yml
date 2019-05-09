@@ -20,6 +20,4 @@ dev_patcher_patches:
   - 639861
   # osh-infra: Add support for mulitple VIPS
   - 640115
-  # Enable service specific version of helm toolkit used in OSH services
-  - 657638
 
