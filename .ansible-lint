@@ -5,3 +5,4 @@ exclude_paths:
 # Allow warning 204, which means we are enabling longer than 120 chars lines.
 skip_list:
   - '204'
+parseable: true
