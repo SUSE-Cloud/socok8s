@@ -55,7 +55,7 @@ data:
         type: git
       nova:
         location: https://opendev.org/openstack/openstack-helm
-        reference: 6d7a90944725a398064ac19c9137e228cc0c6e98
+        reference: baf5356a4fb61590a95f64a63c0dcabfebb3baaa
         subpath: nova
         type: git
       nova-htk:
