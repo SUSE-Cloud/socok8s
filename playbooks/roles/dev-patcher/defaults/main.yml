@@ -20,4 +20,3 @@ dev_patcher_patches:
   - 639861
   # osh-infra: Add support for mulitple VIPS
   - 640115
-
