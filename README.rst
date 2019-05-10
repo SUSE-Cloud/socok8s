@@ -1,9 +1,9 @@
 Intro
 =====
 
-This project automates the deployment of OpenStack-Helm (OSH) on SUSE
-Container as a Service Platform (CaaSP) and SUSE Enterprise Storage
-(SES) via a series of shell scripts and Ansible playbooks.
+This project automates the SUSE Openstack Cloud provisioning and lifecycle
+management on Airship, SUSE Container as a Service Platform and SUSE
+Enterprise Storage (SES) via a series of shell scripts and Ansible playbooks.
 
 Cloning this repository
 =======================
@@ -25,10 +25,10 @@ running:
 
 Please see the rest of the documentation in docs/ for:
 
-* A deployment guide
-* A reference documentation for more detailed information
-* User stories and tips
-* Operational information.
+* socok8s Deployment guide
+* socok8s Administration guide
+* Guide for Openstack Helm Developers
+* Guide for Airship developers
 
 Rendering this page
 ===================
@@ -38,3 +38,9 @@ To build this page just run:
 .. code-block:: console
 
    tox -e docs
+
+To build technical preview docs run:
+
+.. code-block:: console
+
+   tox -e docs_tech_preview
