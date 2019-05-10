@@ -58,7 +58,11 @@ pipeline {
                 sh "./run.sh enroll_caasp_workers"
             }
         }
+
         stage('Setup CaaSP workers and apply upstream patches') {
+            when {
+                expression { params.deployment == "helm" }
+            }
             parallel {
                 stage('Setup CaaSP workes for OpenStack Helm') {
                     steps {
@@ -73,9 +77,21 @@ pipeline {
             }
         }
         stage('Deploy OpenStack Helm') {
+            when {
+                expression { params.deployment == "helm" }
+            }
             steps {
                 sh "./run.sh build_images"
                 sh "./run.sh deploy_osh"
+            }
+        }
+
+        stage('Deploy Airship') {
+            when {
+                expression { params.deployment == "airship" }
+            }
+            steps {
+                sh "./run.sh setup_airship"
             }
         }
     }
