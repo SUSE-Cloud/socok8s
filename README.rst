@@ -38,3 +38,9 @@ To build this page just run:
 .. code-block:: console
 
    tox -e docs
+
+To build technical preview docs run:
+
+.. code-block:: console
+
+   tox -e docs_tech_preview
