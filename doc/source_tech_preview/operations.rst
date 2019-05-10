@@ -7,6 +7,8 @@ Administration and Operations Guide
 In this section, you will find information on the adminsitration and
 operations of SUSE Containerized Openstack.
 
+Using ruh.sh
+============
 
 Scaling in/out
 ==============
@@ -33,9 +35,6 @@ To remove a compute node, run the following command from the root of the socok8s
 
    Although multiple compute nodes can be added at the same time, they must be removed individually. Once the node has been successfully removed, the host details must be removed from "airship-openstack-compute-workers" group in the inventory.
 
-Adding or removing network nodes
---------------------------------
-
 Change control plane scale profile
 ----------------------------------
 SUSE Containerized OpenStack provides two built-in scale profiles: "minimal," which deploys a single pod for each service, and "ha," which is the default profile and deploys a minimum of 2 pods for each service, or 3 or more pods for services that will be heavily utilized or require a quorum. Changing scale profiles can be accomplished by adding a "scale_profile" key to ${WORKSPACE}/env/extravars and specifying a profile value:
@@ -55,23 +54,60 @@ Once the appropriate profile has been selected, it can be applied by running the
 Updates
 =======
 
-Update Airship UCP Services
----------------------------
+SUSE Containerized OpenStack is delivered as an rpm package, so performing updates is generally accomplished by simply updating the rpm package to the latest version and redeploying the cloud using the steps outlined in the installation procedures. This is the typical update path and will incorporate all recent changes, as well as automatically updating component chart and image versions. However, it is also possible to update services and components directly using the procedures outlined below.
 
-Update OpenStack Services
--------------------------
+Updating OpenStack Version
+--------------------------
 
-Update secrets, passwords and certificates
+To make a global change to the OpenStack version used by all component images, create a key in ${WORKSPACE}/env/extravars called "suse_openstack_image_version" and set it to the desired value. For example, to use the "stein" version, add the following line to the extravars file:
+
+.. code-block:: yaml
+
+   suse_openstack_image_version: "stein"
+
+It is also possible to update an individual image or subset of images to a different version, rather than making a global change. To do this, it will be necessary to manually edit the versions.yaml file located in socok8s/site/soc/software/config/. Locate the images that need to be changed in the "images" section of the file and modify the line to include the desired version. For example, to use the "stein" version for the heat_api image, change the following line in versions.yaml from
+
+.. code-block:: yaml
+
+   heat_api: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+
+to
+
+.. code-block:: yaml
+
+   heat_api: "{{ suse_osh_registry_location }}/openstackhelm/heat:stein"
+
+Updating Individual Images and Helm Charts
 ------------------------------------------
 
-Update this repository
-----------------------
+The versions.yaml file can also be used for more advanced update configurations such as using a specific image or Helm chart source version. 
 
-The SUSE Containerized OpenStack repository can be updated by performing the git pull command from the socok8s directory:
+.. note::
+   
+   Changing the image registry location from its default value or using a custom or non-default image will lose any product support by SUSE.
 
-.. code-block:: console
+To specify the use of an updated or customized image, locate the appropriate image name in socok8s/site/soc/software/config/versions.yaml and modify the line to include the desired image location and tag. For example, to use a new heat_api image, modify its entry with the new image location:
 
-   git pull origin master
+.. code-block:: yaml
+
+   heat_api: "registry_location/image_directory/image_name:tag"
+
+Similarly, the versions.yaml file can be used to retrieve a specific version of any Helm chart being deployed. To do so, it will be necessary to provide a repository location, type, and a reference. The reference can be a branch, commit ID, or a reference in the repository and will default to "master" if not specified. As an example, to use a specific version of the Helm chart for Heat, add the following information to the "osh" section under "charts":
+
+.. code-block:: yaml
+
+     heat:
+       location: https://git.openstack.org/openstack/openstack-helm
+       reference: ${REFERENCE}
+       subpath: heat
+       type: git
+
+.. note::
+
+   When specifying a particular version of a Helm chart, it may be necessary to first create the appropriate subsection under "charts". Airship components such as Deckhand and Shipyard belong under "ucp", OpenStack services belong under "osh", and infrastructure components belong under "osh_infra".
+
+Update Certificates
+-------------------
 
 Troubleshooting
 ===============
