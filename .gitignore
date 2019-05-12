@@ -21,3 +21,5 @@ develop-eggs
 
 # Sphinx
 doc/build
+doc/build_tech_preview
+
