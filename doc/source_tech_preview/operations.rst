@@ -10,6 +10,40 @@ operations of SUSE Containerized Openstack.
 Using ruh.sh
 ============
 
+The primary means for running deployment, update, and cleanup actions in SUSE Containerized OpenStack is run.sh, a bash script that acts as a convenient wrapper around Ansible playbook execution. All of the commands below should be run from the root of the socok8s directory.
+
+Deployment Actions
+------------------
+
+To perform all necessary setup actions and deploy all Airship UCP components and OpenStack services, configure the inventory, extravars file, and appropriate environment variables as described in the deployment guide, then run
+
+.. code-block:: console
+
+   ./run.sh deploy_airship
+
+In some use cases, it may be desirable to redeploy only OpenStack services while leaving all Airship components in the UCP untouched. This can be accomplished by running
+
+.. code-block:: console
+
+   ./run.sh update_airship_osh
+
+Cleanup Actions
+---------------
+
+In addition to deployment, run.sh can also be used to perform a variety of environment cleanup actions. To ensure all resources get removed, the following environment variable should be set before running any of the below commands:
+
+.. code-block:: console
+
+   export DELETE_ANYWAY='YES'
+
+To clean up the deployment and remove SUSE Containerized OpenStack in its entirety, run the following from the root of the socok8s directory:
+
+.. code-block:: console
+
+   ./run.sh clean_airship
+
+This will delete all Helm releases, all Kubernetes resources in the ucp and openstack namespaces, and all persistent volumes that were provisioned for use in the deployment. After this operation is complete, only the original Kubernetes services deployed by the SUSE CaaS Platform will remain. 
+
 Scaling in/out
 ==============
 
@@ -105,9 +139,6 @@ Similarly, the versions.yaml file can be used to retrieve a specific version of 
 .. note::
 
    When specifying a particular version of a Helm chart, it may be necessary to first create the appropriate subsection under "charts". Airship components such as Deckhand and Shipyard belong under "ucp", OpenStack services belong under "osh", and infrastructure components belong under "osh_infra".
-
-Update Certificates
--------------------
 
 Troubleshooting
 ===============
@@ -248,6 +279,71 @@ Check the next run:
 
    systemctl list-timers
 
+Recovering from Node Failure
+============================
+
+Kubernetes clusters are generally able to recover from node failures by performing a number of self-healing actions, but it may be occasionally necessary to manually intervene. Recovery actions vary depending on the type of failure, and some common scenarios and their solutions are outlined below.
+
+Pod Status of NodeLost or Unknown
+---------------------------------
+
+If a large number of pods show a status of NodeLost or Unknown, first determine which nodes may be causing the problem by running 
+
+.. code-block:: console
+
+   kubectl get nodes
+
+If any of the nodes show a status of NotReady but they still respond to ping and can be accessed via ssh, it may be that either the kubelet or docker service has stopped running. This can often be confirmed by checking the "Conditions" section in the output of 
+
+.. code-block:: console
+
+   kubectl describe node ${NODE_NAME}
+
+for the message "Kubelet has stopped posting node status." Log into the affected nodes and check the status of these services by running
+
+.. code-block:: console
+
+   systemctl status kubelet
+   systemctl status docker
+
+If either service has stopped, start it by running
+
+.. code-block:: console
+
+   systemctl start ${SERVICE_NAME}
+
+.. note::
+
+   The kubelet service requires docker to be running, so if both services are stopped, docker should be restarted first.
+
+These services should start automatically each time a node boots up and should be running at all times. If either has stopped, it may be useful to examine the system logs to determine the root cause of the failure. This can be done by using the journalctl command as follows:
+
+.. code-block:: console
+
+   journalctl -u kubelet
+
+Frequent Pod Evictions
+----------------------
+
+If pods are frequently being evicted from a particular node, it may be a sign that the node is unhealthy and requires maintenance. Check that node's conditions and events by running 
+
+.. code-block:: console
+
+   kubectl describe node ${NODE_NAME}
+
+If the cause of the pod evictions is determined to be resource exhaustion, such as NodeHasDiskPressure or NodeHasMemoryPressure, it may be necessary to remove the node from the cluster temporarily to perform maintenance. To gracefully remove all pods from the affected node and mark it as not schedulable, run
+
+.. code-block:: console
+
+   kubectl drain ${NODE_NAME}
+
+Once maintenance work is complete, the node can be brought back into the cluster by running
+
+.. code-block:: console
+
+   kubectl uncordon ${NODE_NAME}
+
+which will allow normal pod scheduling operations to resume. If the node was decommissioned permanently while offline and a new node was brought into the CaaSP cluster as a replacement, it is not necessary to run the uncordon command--a new schedulable resource will be created automatically.
 
 .. _kubernetesoperations:
 
