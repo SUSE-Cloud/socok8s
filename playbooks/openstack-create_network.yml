@@ -13,7 +13,6 @@
         - name: create network stack
           register: network_stack_create_output
           os_stack:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
             state: "present"
             name: "{{ deploy_on_openstack_network_stackname }}"
             template: "{{ playbook_dir }}/../heat-templates/openstack-network.yml"

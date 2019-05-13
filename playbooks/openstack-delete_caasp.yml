@@ -18,7 +18,6 @@
       block:
         - name: Delete stack
           os_stack:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
             name: "{{ stackname }}"
             state: absent
 
