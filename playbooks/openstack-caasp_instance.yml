@@ -18,7 +18,6 @@
       block:
         - name: Create stack
           os_stack:
-            cloud: "{{ deploy_on_openstack_cloudname }}"
             state: "present"
             name: "{{ stackname }}"
             template: "{{ playbook_dir }}/../files/caasp-stack.yaml"

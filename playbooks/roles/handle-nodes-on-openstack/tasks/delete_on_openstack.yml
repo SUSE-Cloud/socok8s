@@ -1,7 +1,6 @@
 ---
 - name: Delete server
   os_server:
-    cloud: "{{ deploy_on_openstack_cloudname }}"
     delete_fip: yes
     name: "{{ servername }}"
     state: absent

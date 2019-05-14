@@ -1,5 +1,4 @@
 ---
-deploy_on_openstack_cloudname: "{{ lookup('env','OS_CLOUD') | default('engcloud-cloud-ci', true) }}"
 deploy_on_openstack_external_network: "{{ lookup('env', 'EXTERNAL_NETWORK') | default('floating', true) }}"
 deploy_on_openstack_internal_network: "{{ socok8s_envname }}-net"
 deploy_on_openstack_internal_subnet: "{{ socok8s_envname }}-subnet"
