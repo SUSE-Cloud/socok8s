@@ -1,12 +1,4 @@
 ---
-# Inspired by https://github.com/openstack/openstack-helm-infra/blob/master/roles/build-helm-packages/tasks/setup-helm-serve.yaml
-- name: Copy systemd unit into place for helm server if it is not present
-  become: yes
-  template:
-    src: helm-serve.service.j2
-    dest: /etc/systemd/system/helm-serve.service
-    mode: 0640
-
 - name: Ensure helm serve service is running
   become: yes
   systemd:
