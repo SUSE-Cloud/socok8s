@@ -4,30 +4,30 @@
 System Requirements
 ===================
 
-Before you begin the installation, please make sure your system meets all the
-requirements listed below.
+Before you begin the installation, your system must meet the following
+requirements.
 
 Infrastructure
 --------------
 
-* The `deployer` must run openSUSE Leap 15 or SLE 15. See more details on the
-  page :ref:`setupdeployer` for required deployment tools and packages.
+* The `deployer` must run openSUSE Leap 15 or SLE 15. See the page
+  :ref:`setupdeployer` for required deployment tools and packages.
 
   .. note::
-     To install openSUSE Leap 15, you can follow the instructions from the page
+     To install openSUSE Leap 15, follow the instructions at
      https://software.opensuse.org/distributions/leap.
 
-* The :term:`CaaS Platform` cluster must run :term:`CaaS Platform` version 3.
-  :term:`CaaS Platform` must be updated to its latest 3 version.
+* The :term:`CaaS Platform` cluster must run the latest :term:`CaaS Platform`
+  version 3.
 
   .. note::
-     CaaS Platform Installation Quick Start guide can be found here:
+     The CaaS Platform Installation Quick Start guide is available at:
      https://www.suse.com/documentation/suse-caasp-3/singlehtml/book_caasp_installquick/book_caasp_installquick.html
 
 * The :term:`SES` cluster must run :term:`SES` version 5.5.
 
   .. note::
-     SES deployment guide can be found here:
+     The SES deployment guide is available at:
      https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_storage_deployment/book_storage_deployment.html
 
 If you don't bring your own deployer, CaaS Platform cluster and SES, this

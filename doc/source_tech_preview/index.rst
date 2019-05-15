@@ -1,12 +1,9 @@
-Welcome to socok8s repo
+Welcome to SUSE OpenStack Cloud on Kubernetes
 =======================
 
-This project automates the SUSE Openstack Cloud provisioning and lifecycle
-management on SUSE Container as a Service Platform and SUSE Enterprise 
-Storage (SES) via Airship and a series of shell scripts and Ansible playbooks.
-
-Please check on the left sidebar for content. If you are interested to install
-this software, follow the deployment guide.
+The socok8s project automates SUSE OpenStack Cloud provisioning and lifecycle
+management on SUSE Container as a Service Platform (CaaSP) and SUSE Enterprise
+Storage (SES), using Airship, shell scripts, and Ansible playbooks.
 
 .. toctree::
    :hidden:
