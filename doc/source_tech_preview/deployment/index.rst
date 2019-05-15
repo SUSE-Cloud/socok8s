@@ -4,8 +4,8 @@
 Deployment Guide
 ================
 
-This guide provides instruction to install SUSE Containerized Openstack on
-on top of SUSE CaaS Platform and SUSE Enterprise Storage.
+This guide provides instructions for installing SUSE Containerized Openstack on
+top of SUSE CaaS Platform and SUSE Enterprise Storage.
 
 .. toctree::
    :maxdepth: 1
