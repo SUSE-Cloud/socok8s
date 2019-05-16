@@ -3,12 +3,11 @@ Installation Overview
 
 This guide refers to the following types of hosts:
 
-* A `deployer` with dual roles. This is the starting point for invoking the
-  deployment socok8s scripts and Ansible playbooks, and the access point to your
-  Kubernetes cluster. A deployer can be a continuous integration (CI) node,
+* A `deployer` with dual roles. It is the starting point for invoking the
+  deployment socok8s scripts and Ansible playbooks. And it is the access point
+  to your Kubernetes cluster. A deployer can be a continuous integration (CI) node,
   a laptop, or a dedicated VM.
-* A series of :term:`CaaS Platform` nodes: `workers`, `administration node`,
-  `master`.
+* A series of :term:`CaaS Platform` nodes: `administration node`, `master`, `workers`.
 * A series of :term:`SES` nodes.
 
 The following diagram shows the general workflow of a SUSE Containerized
@@ -21,7 +20,7 @@ SUSE Enterprise Storage.
      default_fontsize = 11;
      deployer [label="Setup deployer"]
      ses_integration [label="SES Integration"]
-     configure_soc [label="Configure\n Cloud"]
+     configure [label="Configure\n Cloud"]
      setup_caasp_workers [label="Setup CaaS Platform\nworker nodes"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build Docker images\n(for developers)"]
@@ -29,8 +28,8 @@ SUSE Enterprise Storage.
      deploy_openstack [label="Deploy OpenStack"]
 
      deployer -> ses_integration;
-     ses_integration -> configure_soc;
-     configure_soc -> setup_caasp_workers;
+     ses_integration -> configure;
+     configure -> setup_caasp_workers;
 
      group {
        color = "#EEEEEE"
@@ -45,5 +44,5 @@ SUSE Enterprise Storage.
 
 Users who do not have SUSE CaaS Platform and SES can still try out the technical
 preview. An experimental tool is included to install a minimal SUSE CaaS Platform
-cluster and a SES all-in-one (AIO) for bootstrapping the Containerized Openstack
-deployment. The instructions can be found on the page :ref:`provisioninfra`.
+cluster and an SES all-in-one (AIO) for bootstrapping the SUSE Containerized
+Openstack deployment. The instructions can be found on the page :ref:`provisioninfra`.

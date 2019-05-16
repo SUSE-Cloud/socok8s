@@ -10,7 +10,7 @@ requirements.
 Infrastructure
 --------------
 
-* The `deployer` must run openSUSE Leap 15 or SLE 15. See the page
+* The `Deployer` must run openSUSE Leap 15 or SUSE Linux Enterprise 15. See the page
   :ref:`setupdeployer` for required deployment tools and packages.
 
   .. note::
@@ -32,13 +32,13 @@ Infrastructure
 
 If you don't bring your own deployer, CaaS Platform cluster and SES, this
 tooling can create one for you if you have an OpenStack environment. However,
-this should be treated as experimental. More details can be found at
+this is experimental. More details can be found at
 :ref:`provisioninfra`.
 
 Minimum Node Specification
 --------------------------
 
-:term:`deployer` node
+:term:`Deployer` node
 +++++++++++++++++++++
 
 * (v)CPU: 4
@@ -73,36 +73,36 @@ different purposes: control plane where the Airship and Openstack services
 run and compute nodes where customer workloads are hosted.
 
 For a minimal cloud, you should plan one worker node for the control plane,
-and one or more worker nodes as Openstck compute nodes.
+and one or more worker nodes as Openstack compute nodes.
 
 To ensure high availability, we recommend three worker nodes designated for
-the Airship and Openstack contol plane, and additonal number of worker nodes
+the Airship and Openstack control plane, and additional number of worker nodes
 allocated for compute.
 
 Network Requirements
 --------------------
 
 * CaaS Platform networking and spec
-    Create CaaS Platform networks needed before deploying Containerized
-    Openstack. Seperating traffic by function is recomended but not required.
+    Create necessary CaaS Platform networks before deploying Containerized
+    Openstack. Separating traffic by function is recommended but not required.
 
 * Storage Network and spec
-    A seperate storage network can be created to isolate storage traffic. This
-    seperate network should be present on the Caas Platform and ses_config.yml
+    A separate storage network can be created to isolate storage traffic. This
+    separate network should be present on the Caas Platform and ses_config.yml
     mon_host: section.
 
 * VIP for Airship and Openstack
     Virtual IP address will be assigned to pods allowing ingress to Airship
-    and Openstack services. The ingress IP assingments for these services must
-    be on a subnet that is present on the Caas Platform nodes and an IP that is
-    not currently in use. VIP's are configured in env/extravars
+    and Openstack services. The ingress IP assignments for these services must
+    be on a subnet present on the Caas Platform nodes and an IP that is
+    not currently in use. VIPs are configured in env/extravars
 
 * DNS
     Installing Containerized Openstack updates /etc/hosts on all Caas Platform
     nodes and Deployer. If expanding testing beyond these devices, it is
-    recomended to use DNS for sharing this data. It is possible to configure
-    deployer with dnsmasq to supply DNS functionality but beyond the scope of
-    this preview.
+    reccomended to use DNS for sharing this data. It is possible to configure
+    the Deployer with dnsmasq to supply DNS functionality, but this is beyond
+    the scope of this preview.
 
   .. note::
      Network configuration examples can be found in :ref:`userscenarios`
