@@ -303,6 +303,7 @@
     _component_runcommand: "./tools/deployment/multinode/100-glance.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_GLANCE: >
+        --values=./glance/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-glance.yaml
         --values=/tmp/socok8s-useroverrides-glance.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_GLANCE') | default('', True) }}
