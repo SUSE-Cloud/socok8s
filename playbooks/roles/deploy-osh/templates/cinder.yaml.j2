@@ -16,20 +16,3 @@ conf:
       rbd_user: {{ ses_cluster_configuration['cinder']['rbd_store_user'] }}
       rbd_pool: {{ ses_cluster_configuration['cinder']['rbd_store_pool'] }}
       rbd_secret_uuid: {{ libvirt_ceph_cinder_secret_uuid }}
-images:
-  tags:
-    db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
-    cinder_db_sync: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
-    db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
-    rabbit_init: docker.io/rabbitmq:3.7-management
-    ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
-    ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
-    ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
-    cinder_api: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
-    bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
-    cinder_scheduler: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
-    cinder_volume: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
-    cinder_volume_usage_audit: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
-    cinder_storage_init: "{{ suse_osh_registry_location }}/openstackhelm/ceph-config-helper:{{ suse_infra_image_version }}"
-    cinder_backup: "{{ suse_osh_registry_location }}/openstackhelm/cinder:{{ suse_openstack_image_version }}"
-    cinder_backup_storage_init: "{{ suse_osh_registry_location }}/openstackhelm/ceph-config-helper:{{ suse_infra_image_version }}"

@@ -332,6 +332,7 @@
     _component_runcommand: "./tools/deployment/multinode/110-cinder.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_CINDER: >
+        --values=./cinder/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-cinder.yaml
         --values=/tmp/socok8s-useroverrides-cinder.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_CINDER') | default('', True) }}
