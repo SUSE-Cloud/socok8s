@@ -38,18 +38,18 @@ SUSE Enterprise Storage Integration
 
 
 For SES deployments that have version 5.5 and higher, there is a Salt runner
-that can create all the users and pools Openstack services require. It will
-also generate a yaml configuration that is needed to integrate with SUSE
-Containerized OpenStack Cloud. The integration runner will create separate
-users for Cinder, Cinder backup, and Glance. Both the Cinder and Nova services
+that can create all the users and pools Openstack services require. It also
+generates a yaml configuration that is needed to integrate with SUSE
+Containerized OpenStack Cloud. The integration runner creates separate users
+for Cinder, Cinder backup, and Glance. Both the Cinder and Nova services
 will have the same user, as Cinder needs access to create objects that Nova
 uses.
 
-Login in as root to run the SES 5.5 Salt runner on the salt admin host.
+Log in as root to run the SES 5.5 Salt runner on the salt admin host.
 root #
 
-.. code-block:: bash 
-  
+.. code-block:: bash
+
   salt-run --out=yaml openstack.integrate prefix=mycloud
 
 The prefix parameter allows pools to be created with the specified prefix.
@@ -85,4 +85,4 @@ The sample yaml output:
     - http://10.84.56.8:80/swift/v1
 
 After you have run the openstack.integrate runner, copy the yaml into the
-ses_config.yml file in the root of the workspace on the deployer node.
+ses_config.yml file in the root of the workspace on the Deployer node.
