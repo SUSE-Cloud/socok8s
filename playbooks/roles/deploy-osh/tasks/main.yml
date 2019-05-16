@@ -351,6 +351,7 @@
     _component_runcommand: "./tools/deployment/multinode/120-openvswitch.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_OPENVSWITCH: >
+        --values=../openstack-helm-infra/openvswitch/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-ovs.yaml
         --values=/tmp/socok8s-useroverrides-ovs.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_OPENVSWITCH') | default('', True) }}
