@@ -239,6 +239,8 @@
     _component_runcommand: "./tools/deployment/multinode/080-keystone.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_KEYSTONE: >
+        --values=./keystone/values_overrides/opensuse_15.yaml
+        --values=./keystone/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-keystone.yaml
         --values=/tmp/socok8s-useroverrides-keystone.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_KEYSTONE') | default('', True) }}
