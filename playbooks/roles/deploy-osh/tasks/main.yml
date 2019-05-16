@@ -368,6 +368,7 @@
     _component_runcommand: "./tools/deployment/multinode/130-libvirt.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_LIBVIRT: >
+        --values=../openstack-helm-infra/libvirt/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-libvirt.yaml
         --values=/tmp/socok8s-useroverrides-libvirt.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_LIBVIRT') | default('', True) }}

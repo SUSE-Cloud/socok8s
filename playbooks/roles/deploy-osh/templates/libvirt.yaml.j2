@@ -6,6 +6,3 @@ conf:
       user: {{ ses_cluster_configuration['cinder']['rbd_store_user'] }}
       keyring: {{ suse_ses_cinder_pool_key | default(ceph_admin_keyring_key) }}
       secret_uuid: {{ libvirt_ceph_cinder_secret_uuid }}
-images:
-  tags:
-    libvirt: "{{ suse_osh_registry_location }}/openstackhelm/libvirt:{{ suse_infra_image_version }}"
