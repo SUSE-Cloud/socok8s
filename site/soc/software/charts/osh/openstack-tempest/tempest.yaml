@@ -1,0 +1,90 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-tempest-soc
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: tempest-global
+      component: tempest
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  wait:
+    timeout: 3000
+  test:
+    enabled: true
+    timeout: 3000
+  values:
+    conf:
+      tempest:
+        compute:
+          flavor_ref: "{{ tempest_test_flavor_id }}"
+          image_ref: "{{ tempest_test_image_id }}"
+          image_ref_alt: "{{ tempest_test_image_id }}"
+          hypervisor_type: "{{ tempest_test_hypervisor_type }}"
+        network:
+          default_network: 10.0.0.0/8
+          project_network_cidr: 172.0.4.0/16
+          floating_network_name: "public"
+          public_network_id: "{{ tempest_test_public_network_id }}"
+        validation:
+          image_ssh_user: "cirros"
+          image_ssh_password: "gocubsgo"
+          network_for_ssh: "public"
+          floating_ip_range: 172.24.4.1/24
+        service_available:
+          cinder: "{{ tempest_enable_cinder_service }}"
+          glance: "{{ tempest_enable_glance_service }}"
+          nova: "{{ tempest_enable_nova_service }}"
+          neutron: "{{ tempest_enable_neutron_service }}"
+    endpoints:
+      cluster_domain_suffix: cluster.local
+      local_image_registry:
+        name: docker-registry
+        namespace: docker-registry
+        hosts:
+          default: localhost
+          internal: docker-registry
+          node: localhost
+        host_fqdn_override:
+          default: null
+        port:
+          registry:
+            node: 5000
+      identity:
+        name: keystone
+        auth:
+          admin:
+            region_name: RegionOne
+            username: admin
+            password: {{ lookup('password', secrets_location + '/osh_keystone_admin_password ' + password_opts) }}
+            project_name: admin
+            user_domain_name: default
+            project_domain_name: default
+          tempest:
+            role: admin
+            region_name: RegionOne
+            username: tempest
+            password: {{ lookup('password', secrets_location + '/osh_tempest_password ' + password_opts) }}
+            project_name: service
+            user_domain_name: service
+            project_domain_name: service
+        hosts:
+          default: identity
+          internal: identity-api
+        host_fqdn_override:
+          default: null
+        path:
+          default: /v3
+        scheme:
+          default: http
+        port:
+          api:
+            default: 80
+            internal: 5000
+...

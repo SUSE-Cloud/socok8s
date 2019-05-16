@@ -26,4 +26,7 @@ data:
     - openstack-compute-kit-soc
     - openstack-heat-soc
     - openstack-horizon-soc
+{% if deploy_tempest %}
+    - openstack-tempest-soc
+{% endif %}
 ...

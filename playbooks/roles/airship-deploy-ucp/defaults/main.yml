@@ -2,3 +2,14 @@
 scale_profile: "{{ lookup('env','scale_profile') | default('minimal', true) }}"
 airship_pegleg_image: "{{ suse_airship_registry_location }}/airshipit/pegleg:{{ suse_airship_components_image_tag }}"
 suse_osh_image_version: "pike"
+
+# Required flags for tempest deployment
+deploy_tempest: false
+tempest_test_flavor_id: null
+tempest_test_image_id: null
+tempest_test_hypervisor_type: null
+tempest_test_public_network_id: null
+tempest_enable_glance_service: true
+tempest_enable_cinder_service: true
+tempest_enable_nova_service: false
+tempest_enable_neutron_service: false
