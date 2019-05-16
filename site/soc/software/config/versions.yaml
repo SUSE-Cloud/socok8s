@@ -30,7 +30,7 @@ data:
         type: git
       horizon-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e 
+        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: helm-toolkit
         type: git
       keystone:
@@ -152,10 +152,8 @@ data:
         keystone_domain_manage: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
       libvirt:
         libvirt: "{{ suse_osh_registry_location }}/openstackhelm/libvirt:{{ suse_libvirt_image_version }}"
-      #TODO JG add suse image support
       mariadb:
-        # NOTE: was using {{ suse_osh_image_version }} in upstream
-        prometheus_mysql_exporter_helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        prometheus_mysql_exporter_helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       memcached: {}
       neutron:
         bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
@@ -199,45 +197,37 @@ data:
         openvswitch_db_server: "{{ suse_osh_registry_location }}/openstackhelm/openvswitch:{{ suse_infra_image_version }}"
         openvswitch_vswitchd: "{{ suse_osh_registry_location }}/openstackhelm/openvswitch:{{ suse_infra_image_version }}"
       rabbitmq:
-        # NOTE: was using {{ suse_osh_image_version }} in upstream
-        prometheus_rabbitmq_exporter_helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        prometheus_rabbitmq_exporter_helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
     osh_infra:
       elasticsearch:
-        # NOTE: was using {{ suse_osh_image_version }} in upstream
-        memory_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        snapshot_repository: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        memory_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        snapshot_repository: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       fluent_logging:
-        # NOTE: was using {{ suse_osh_image_version }} in upstream
-        helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        elasticsearch_template: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        elasticsearch_template: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       grafana:
-        # NOTE: was using {{ suse_osh_image_version }} in upstream
-        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        grafana_db_session_sync: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        db_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        grafana_db_session_sync: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       kibana:
-        # NOTE: was using {{ suse_osh_image_version }} in upstream
-        register_kibana_indexes: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        register_kibana_indexes: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       nagios: {}
       prometheus:
-        # NOTE: was using {{ suse_osh_image_version }} in upstream
-        helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       prometheus_alertmanager: {}
       prometheus_kube_state_metrics: {}
       prometheus_node_exporter: {}
-      # NOTE JG the image is in att namespace
       prometheus_openstack_exporter:
-        # NOTE: was using {{ suse_osh_image_version }} in upstream
-        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       prometheus_process_exporter: {}
     # the ucp section is not used in socok8s deployment.
     ucp:
       armada:
-        api: "{{ suse_airship_registry_location }}/airshipit/armada:{{ suse_airship_components_image_tag }}"
-        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        api: "{{ suse_airship_registry_location }}/airshipit/armada:{{ suse_airship_components_image_tag['armada'] }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       barbican:
         bootstrap: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
         scripted_test: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
@@ -249,11 +239,11 @@ data:
         ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
         barbican_api: "{{ suse_osh_registry_location }}/openstackhelm/barbican:{{ suse_openstack_image_version }}"
       deckhand:
-        deckhand: "{{ suse_airship_registry_location }}/airshipit/deckhand:{{ suse_airship_components_image_tag }}"
-        db_sync: "{{ suse_airship_registry_location }}/airshipit/deckhand:{{ suse_airship_components_image_tag }}"
-        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        deckhand: "{{ suse_airship_registry_location }}/airshipit/deckhand:{{ suse_airship_components_image_tag['deckhand'] }}"
+        db_sync: "{{ suse_airship_registry_location }}/airshipit/deckhand:{{ suse_airship_components_image_tag['deckhand'] }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       divingbell: {}
       drydock: {}
       ingress:
@@ -278,13 +268,13 @@ data:
       promenade: {}
       rabbitmq: {}
       shipyard:
-        shipyard: "{{ suse_airship_registry_location }}/airshipit/shipyard:{{ suse_airship_components_image_tag }}"
-        shipyard_db_sync: "{{ suse_airship_registry_location }}/airshipit/shipyard:{{ suse_airship_components_image_tag }}"
-        airflow: "{{ suse_airship_registry_location }}/airshipit/airflow:{{ suse_airship_components_image_tag }}"
-        airflow_db_sync: "{{ suse_airship_registry_location }}/airshipit/airflow:{{ suse_airship_components_image_tag }}"
-        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
-        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_osh_image_version }}"
+        shipyard: "{{ suse_airship_registry_location }}/airshipit/shipyard:{{ suse_airship_components_image_tag['shipyard'] }}"
+        shipyard_db_sync: "{{ suse_airship_registry_location }}/airshipit/shipyard:{{ suse_airship_components_image_tag['shipyard'] }}"
+        airflow: "{{ suse_airship_registry_location }}/airshipit/airflow:{{ suse_airship_components_image_tag['airflow'] }}"
+        airflow_db_sync: "{{ suse_airship_registry_location }}/airshipit/airflow:{{ suse_airship_components_image_tag['airflow'] }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_service: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        ks_endpoints: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       tiller: {}
     kubernetes:
       ingress:
