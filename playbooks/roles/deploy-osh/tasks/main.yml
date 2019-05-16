@@ -266,6 +266,8 @@
     _component_runcommand: "./tools/deployment/multinode/085-horizon.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_HORIZON: >
+        --values=./horizon/values_overrides/opensuse_15.yaml
+        --values=./horizon/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-horizon.yaml
         --values=/tmp/socok8s-useroverrides-horizon.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_HORIZON') | default('', True) }}
