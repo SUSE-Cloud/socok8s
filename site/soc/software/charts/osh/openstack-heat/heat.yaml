@@ -42,8 +42,8 @@ metadata:
         path: .values.pod.replicas.engine
 data:
   test:
-    enabled: {{ run_tests | default('true') }}
-    timeout: {{ test_timeout | default(300) }}
+    enabled: {{ run_tests }}
+    timeout: {{ test_timeout }}
   values:
     pod:
       replicas:
