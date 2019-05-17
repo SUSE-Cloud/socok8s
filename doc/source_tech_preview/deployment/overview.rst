@@ -3,15 +3,15 @@ Installation Overview
 
 This guide refers to the following types of hosts:
 
-* A `deployer`, which has dual roles, the starting point to invoke the
-  socok8s scripts and Ansible playbooks, and point of the access to your
-  Kubernetes cluster. This can be your CI node, a laptop or a dedicted VM.
-* A series of :term:`CaaS Platform` nodes: `workers`, `administration node`,
-  `master`.
+* A `deployer` with dual roles. It is the starting point for invoking the
+  deployment socok8s scripts and Ansible playbooks. And it is the access point
+  to your Kubernetes cluster. A deployer can be a continuous integration (CI) node,
+  a laptop, or a dedicated VM.
+* A series of :term:`CaaS Platform` nodes: `administration node`, `master`, `workers`.
 * A series of :term:`SES` nodes.
 
 The following diagram shows the general workflow of a SUSE Containerized
-Openstack deployment on an already installed  SUSE CaaS Platform cluster and
+Openstack deployment on an installed SUSE CaaS Platform cluster and
 SUSE Enterprise Storage.
 
 .. blockdiag::
@@ -26,10 +26,10 @@ SUSE Enterprise Storage.
      build_images [label="Build Docker images\n(for developers)"]
      deploy_airship [label="Deploy Airship"]
      deploy_openstack [label="Deploy OpenStack"]
-     
+
      deployer -> ses_integration;
-     ses_integration -> configure_soc;
-     configure_soc -> setup_caasp_workers;
+     ses_integration -> configure;
+     configure -> setup_caasp_workers;
 
      group {
        color = "#EEEEEE"
@@ -42,8 +42,7 @@ SUSE Enterprise Storage.
      }
    }
 
-For users who don't have SUSE CaaS Platform and SES but are interested to try
-out the technical preview, an experiemental tool is included to install a
-minimal SUSE CaaS Platform cluster and a SES AIO when bootstraping for the
-Containerized Openstack deployment. The instructions can be found on the page
-:ref:`provisioninfra`.
+Users who do not have SUSE CaaS Platform and SES can still try out the technical
+preview. An experimental tool is included to install a minimal SUSE CaaS Platform
+cluster and an SES all-in-one (AIO) for bootstrapping the SUSE Containerized
+Openstack deployment. The instructions can be found on the page :ref:`provisioninfra`.

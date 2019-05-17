@@ -37,7 +37,7 @@ Configure Cloud
    }
 
 
-This :term: `workspace`, structured like an `ansible-runner` directory,
+This :term:`workspace`, structured like an `ansible-runner` directory,
 contains the following deployment artifacts:
 
 | socok8s-workspace
@@ -49,18 +49,16 @@ contains the following deployment artifacts:
 | └── kubeconfig
 
 
-Configure the inventory
+Configure the Inventory
 -----------------------
 
-You can create an inventory based on the example located in the `examples`
+You can create an inventory based on the hosts.yml file in the `examples`
 folder.  (*examples/workdir/inventory/hosts.yml*)
 
 .. literalinclude:: ../../../examples/workdir/inventory/hosts.yml
 
-As you can see, this inventory example only contains the group names.
-
-For each group, a `hosts:` key should be added, with, as value, each
-of the hosts you will need. For example:
+For each group, a `hosts:` key should be added for each of the hosts you are
+using. For example:
 
 .. code-block:: yaml
 
@@ -72,21 +70,21 @@ of the hosts you will need. For example:
 The group `airship-ucp-workers` specifies the list of CaaS Platform worker
 nodes to which the Airship Under Cloud Platform (UCP) services will be
 deployed. The UCP services in socok8s include Armada, Shipyard, Deckhand,
-Pegleg, keystone, Barbican, and core infrastructure services such as
-MariaDB, RabbitMQ, PostgreSQL etc.
+Pegleg, Keystone, Barbican, and core infrastructure services such as
+MariaDB, RabbitMQ, and PostgreSQL.
 
 The group `airship-openstack-control-workers` specifies the list of CaaS
-Platform worker nodes that will make up the Openstack control plane. The
-Opestack control plane includes Keystone, Glance, Cinder, Nova, Neutron,
+Platform worker nodes that make up the Openstack control plane. The
+Openstack control plane includes Keystone, Glance, Cinder, Nova, Neutron,
 Horizon, Heat, MariaDB, RabbitMQ and so on.
 
 The group `airship-openstack-compute-workers` defines the CaaS Platform worker
-nodes will be used as Openstack Compute Nodes. Nova compute, Libvirt, Open
-vSwitch are deployed to these nodes.
+nodes used as Openstack Compute Nodes. Nova Compute, Libvirt, Open vSwitch are
+deployed to these nodes.
 
 For most users, UCP and Openstack control planes can share the same worker
-nodes. The Openstack compute nodes should be dedicated worker nodes unless
-only very light workload is expected.
+nodes. The Openstack Compute Nodes should be dedicated worker nodes unless
+a light workload is expected.
 
 See also
 `Ansible Inventory Hosts and Groups
@@ -102,17 +100,17 @@ See also
 
 .. note ::
 
-   If deployer is running as a non root user, replace ansible_user: value for
+   If Deployer is running as a non-root user, replace ansible_user: value for
    the soc-deployer entry with your logged in user.
 
 Configure for SES Integration
 -----------------------------
 
-The file `ses_config.yml`, the output from :ref: `ses_integration` should be
-present in the worksapce.
+The file `ses_config.yml` is the output from :ref: `ses_integration`, and must
+be present in the workspace.
 
-The Ceph admin keyring and user keyring, in **base64**, should be present in
-the file `env/extravars` in your workspace.
+The Ceph admin keyring and user keyring, in **base64**, must be present in the
+file `env/extravars` in your workspace.
 
 The Ceph admin keyring can be obtained by running the following on ceph host.
 
@@ -140,7 +138,7 @@ Configure the VIP that will be used for OpenStack service public endpoints
 
 Add `socok8s_ext_vip:` with its appropriate value for your
 environment in your `env/extravars`. This should be an available IP
-on the external network (in development environment, it can be the same as
+on the external network (in a development environment, it can be the same as
 CaaSP cluster network).
 
 For example:
@@ -172,8 +170,8 @@ The pod scale profile in socok8s allows you to specify the desired number of
 pods that each Airship and Openstack service should run.
 
 There are two built-in scale profiles: `minimal` and `ha`. `minimal` will
-deploy exactly one pod for each service, making it suitble for demo or tryout
-on a resource limited system. `ha`, as you have guessed, ensures at least two
+deploy exactly one pod for each service, making it suitable for demo or trial
+on a resource-limited system. `ha` (High Availability) ensures at least two
 instances of pods for all services, and three or more pods for services that
 require quorum and are more heavily used.
 
@@ -187,30 +185,30 @@ For example:
 
    scale_profile: ha
 
-The definitions of the pod scale prolfile can be found in this repository:
+The definitions of the pod scale profile can be found in this repository:
 playbooks/roles/airship-deploy-ucp/files/profiles.
 
 You can customize the built-in profile or create your own profile following
 the file name convention.
 
 
-Advanced configuration
+Advanced Configuration
 ----------------------
 
 socok8s deployment variables respects Ansible general precedence.
-All the variables can therefore be adapted.
+Therefore all the variables can be adapted.
 
-Keep in mind you can override most user facing variables with host vars and
+You can override most user-facing variables with host vars and
 group vars.
 
 .. note ::
 
-   You can also use extravars, as extravars always win.
-   That can be used to override any deployment code.
+   You can also use extravars, as they always win.
+   extravars can be used to override any deployment code.
    Use it at your own risk.
 
-socok8s is very flexible, and allows you to override any upstream helm chart's
-value with the appropriate overrides.
+socok8s is flexible, and allows you to override the value of any upstream helm
+chart value with the appropriate overrides.
 
 .. note ::
 
