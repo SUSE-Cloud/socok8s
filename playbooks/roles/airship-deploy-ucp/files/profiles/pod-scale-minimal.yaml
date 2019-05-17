@@ -1,5 +1,5 @@
 ---
-# The HA pod sacle profile for Airship
+# The minimal pod scale profile for Airship
 #
 schema: pegleg/PodScaleProfile/v1
 metadata:

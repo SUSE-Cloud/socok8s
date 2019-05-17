@@ -4,7 +4,7 @@
 Build and consume your own images
 =================================
 
-Build non-openstack images
+Build non-OpenStack images
 ==========================
 
 If you want to build your own image, for example, for libvirt, set
@@ -68,4 +68,3 @@ Set the following variable (for example for libvirt image override) in your
      images:
        tags:
          libvirt: "{{ myregistry }}openstackhelm/libvirt:latest-opensuse_15"
-
