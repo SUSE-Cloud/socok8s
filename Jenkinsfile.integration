@@ -11,6 +11,12 @@ pipeline {
             label "cloud-ccp-ci"
         }
     }
+
+    parameters {
+        /* first value in the list is the default */
+        choice(choices: ['airship', 'osh'], description: 'Which deployment mechanism?', name: 'deployment')
+    }
+
     environment {
         /* use lowercase SOCOK8S_ENVNAME. CaaSP Velum doesn't like it otherwise */
         SOCOK8S_ENVNAME = "cloud-socok8s-${env.BRANCH_NAME.toLowerCase()}-${env.BUILD_NUMBER}"
@@ -61,7 +67,7 @@ pipeline {
 
         stage('Setup CaaSP workers and apply upstream patches') {
             when {
-                expression { params.deployment == "helm" }
+                expression { params.deployment == "osh" }
             }
             parallel {
                 stage('Setup CaaSP workes for OpenStack Helm') {
@@ -78,7 +84,7 @@ pipeline {
         }
         stage('Deploy OpenStack Helm') {
             when {
-                expression { params.deployment == "helm" }
+                expression { params.deployment == "osh" }
             }
             steps {
                 sh "./run.sh build_images"
