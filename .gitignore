@@ -21,3 +21,6 @@ develop-eggs
 
 # Sphinx
 doc/build
+
+# log artifacts
+logs/

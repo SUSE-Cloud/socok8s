@@ -112,11 +112,16 @@ pipeline {
                     }
                 }
             }
-        }
-        always {
             script {
-                sh './run.sh teardown'
+                sh './run.sh gather_logs'
             }
+            zip archive: true, dir: 'logs/', zipFile: 'logs.zip'
+            archiveArtifacts artifacts: 'logs.zip'
+        }
+        cleanup {
+            script {
+                    sh './run.sh teardown'
+                }
         }
     }
 }
