@@ -1,0 +1,484 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Administration and Operations Guide &#8212; socok8s  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Advanced Users" href="user/index.html" />
+    <link rel="prev" title="Next steps" href="deployment/next-steps.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="deployment/next-steps.html" title="Previous document">Next steps</a>
+        </li>
+        <li>
+          <a href="user/index.html" title="Next document">Advanced Users</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="administration-and-operations-guide">
+<span id="operationsdocumentation"></span><h1>Administration and Operations Guide<a class="headerlink" href="#administration-and-operations-guide" title="Permalink to this headline">¶</a></h1>
+<p>In this section, you will find information on the adminsitration and
+operations of SUSE Containerized Openstack.</p>
+<div class="section" id="using-ruh-sh">
+<h2>Using ruh.sh<a class="headerlink" href="#using-ruh-sh" title="Permalink to this headline">¶</a></h2>
+<p>The primary means for running deployment, update, and cleanup actions in SUSE Containerized OpenStack is run.sh, a bash script that acts as a convenient wrapper around Ansible playbook execution. All of the commands below should be run from the root of the socok8s directory.</p>
+<div class="section" id="deployment-actions">
+<h3>Deployment Actions<a class="headerlink" href="#deployment-actions" title="Permalink to this headline">¶</a></h3>
+<p>To perform all necessary setup actions and deploy all Airship UCP components and OpenStack services, configure the inventory, extravars file, and appropriate environment variables as described in the deployment guide, then run</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./run.sh deploy_airship</span>
+</pre></div>
+</div>
+<p>In some use cases, it may be desirable to redeploy only OpenStack services while leaving all Airship components in the UCP untouched. This can be accomplished by running</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./run.sh update_airship_osh</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cleanup-actions">
+<h3>Cleanup Actions<a class="headerlink" href="#cleanup-actions" title="Permalink to this headline">¶</a></h3>
+<p>In addition to deployment, run.sh can also be used to perform a variety of environment cleanup actions. To ensure all resources get removed, the following environment variable should be set before running any of the below commands:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export DELETE_ANYWAY=&#39;YES&#39;</span>
+</pre></div>
+</div>
+<p>To clean up the deployment and remove SUSE Containerized OpenStack in its entirety, run the following from the root of the socok8s directory:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./run.sh clean_airship</span>
+</pre></div>
+</div>
+<p>This will delete all Helm releases, all Kubernetes resources in the ucp and openstack namespaces, and all persistent volumes that were provisioned for use in the deployment. After this operation is complete, only the original Kubernetes services deployed by the SUSE CaaS Platform will remain.</p>
+</div>
+</div>
+<div class="section" id="scaling-in-out">
+<h2>Scaling in/out<a class="headerlink" href="#scaling-in-out" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="adding-or-removing-compute-nodes">
+<h3>Adding or removing compute nodes<a class="headerlink" href="#adding-or-removing-compute-nodes" title="Permalink to this headline">¶</a></h3>
+<p>To add a compute node, the node must be running SUSE CaaS Platform v3.0 and have been accepted into the cluster and bootstrapped using the Velum dashboard. Once the node is bootstrapped, add its host details to the “airship-openstack-compute-workers” group in your inventory in ${WORKSPACE}/inventory/hosts.yaml, then run the following command from the root of the socok8s directory:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./run.sh add_compute</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Multiple new compute nodes can be added to the inventory at the same time.</p>
+</div>
+<p>To remove a compute node, run the following command from the root of the socok8s directory:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./run.sh remove_compute ${NODE_HOSTNAME}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although multiple compute nodes can be added at the same time, they must be removed individually. Once the node has been successfully removed, the host details must be removed from “airship-openstack-compute-workers” group in the inventory.</p>
+</div>
+</div>
+<div class="section" id="change-control-plane-scale-profile">
+<h3>Change control plane scale profile<a class="headerlink" href="#change-control-plane-scale-profile" title="Permalink to this headline">¶</a></h3>
+<p>SUSE Containerized OpenStack provides two built-in scale profiles: “minimal,” which deploys a single pod for each service, and “ha,” which is the default profile and deploys a minimum of 2 pods for each service, or 3 or more pods for services that will be heavily utilized or require a quorum. Changing scale profiles can be accomplished by adding a “scale_profile” key to ${WORKSPACE}/env/extravars and specifying a profile value:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">scale_profile</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minimal</span>
+</pre></div>
+</div>
+<p>The built-in profiles are defined in playbooks/roles/airship-deploy-ucp/files/profiles and can be modified to suit custom use cases. Additional profiles can also be created and added to this directory following the same file naming convention.</p>
+<p>Once the appropriate profile has been selected, it can be applied by running the following command from the root of the socok8s directory:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./run.sh deploy_airship</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="updates">
+<h2>Updates<a class="headerlink" href="#updates" title="Permalink to this headline">¶</a></h2>
+<p>SUSE Containerized OpenStack is delivered as an rpm package, so performing updates is generally accomplished by simply updating the rpm package to the latest version and redeploying the cloud using the steps outlined in the installation procedures. This is the typical update path and will incorporate all recent changes, as well as automatically updating component chart and image versions. However, it is also possible to update services and components directly using the procedures outlined below.</p>
+<div class="section" id="updating-openstack-version">
+<h3>Updating OpenStack Version<a class="headerlink" href="#updating-openstack-version" title="Permalink to this headline">¶</a></h3>
+<p>To make a global change to the OpenStack version used by all component images, create a key in ${WORKSPACE}/env/extravars called “suse_openstack_image_version” and set it to the desired value. For example, to use the “stein” version, add the following line to the extravars file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">suse_openstack_image_version</span><span class="p">:</span> <span class="s">&quot;stein&quot;</span>
+</pre></div>
+</div>
+<p>It is also possible to update an individual image or subset of images to a different version, rather than making a global change. To do this, it will be necessary to manually edit the versions.yaml file located in socok8s/site/soc/software/config/. Locate the images that need to be changed in the “images” section of the file and modify the line to include the desired version. For example, to use the “stein” version for the heat_api image, change the following line in versions.yaml from</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">heat_api</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">suse_osh_registry_location</span><span class="nv"> </span><span class="s">}}/openstackhelm/heat:{{</span><span class="nv"> </span><span class="s">suse_openstack_image_version</span><span class="nv"> </span><span class="s">}}&quot;</span>
+</pre></div>
+</div>
+<p>to</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">heat_api</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">suse_osh_registry_location</span><span class="nv"> </span><span class="s">}}/openstackhelm/heat:stein&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="updating-individual-images-and-helm-charts">
+<h3>Updating Individual Images and Helm Charts<a class="headerlink" href="#updating-individual-images-and-helm-charts" title="Permalink to this headline">¶</a></h3>
+<p>The versions.yaml file can also be used for more advanced update configurations such as using a specific image or Helm chart source version.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Changing the image registry location from its default value or using a custom or non-default image will lose any product support by SUSE.</p>
+</div>
+<p>To specify the use of an updated or customized image, locate the appropriate image name in socok8s/site/soc/software/config/versions.yaml and modify the line to include the desired image location and tag. For example, to use a new heat_api image, modify its entry with the new image location:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">heat_api</span><span class="p">:</span> <span class="s">&quot;registry_location/image_directory/image_name:tag&quot;</span>
+</pre></div>
+</div>
+<p>Similarly, the versions.yaml file can be used to retrieve a specific version of any Helm chart being deployed. To do so, it will be necessary to provide a repository location, type, and a reference. The reference can be a branch, commit ID, or a reference in the repository and will default to “master” if not specified. As an example, to use a specific version of the Helm chart for Heat, add the following information to the “osh” section under “charts”:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">heat</span><span class="p">:</span>
+  <span class="nt">location</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://git.openstack.org/openstack/openstack-helm</span>
+  <span class="nt">reference</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${REFERENCE}</span>
+  <span class="nt">subpath</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">heat</span>
+  <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">git</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When specifying a particular version of a Helm chart, it may be necessary to first create the appropriate subsection under “charts”. Airship components such as Deckhand and Shipyard belong under “ucp”, OpenStack services belong under “osh”, and infrastructure components belong under “osh_infra”.</p>
+</div>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="viewing-shipyard-logs">
+<h3>Viewing Shipyard Logs<a class="headerlink" href="#viewing-shipyard-logs" title="Permalink to this headline">¶</a></h3>
+<p>Since the deployment of OpenStack components in SUSE Containerized OpenStack is directed by Shipyard, the Airship platform’s DAG controller, it is often one of the best places to begin troubleshooting deployment problems. The Shipyard CLI client authenticates with Keystone, so it is necessary to set the following environment variables before running any commands:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export OS_USERNAME=shipyard</span>
+<span class="go">export OS_PASSWORD=$(kubectl get secret -n ucp shipyard-keystone-user -o json | jq -r &#39;.data.OS_PASSWORD&#39; | base64 -d)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Alternatively, the shipyard user’s password can be obtained from the contents of ${WORKSPACE}/secrets/ucp_shipyard_keystone_password</p>
+</div>
+<p>The following commands are all run from the /opt/airship/shipyard/tools directory. If no Shipyard image is found when the first command is executed, it will be downloaded automatically.</p>
+<p>To view the status of all Shipyard actions, run</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./shipyard.sh get actions</span>
+</pre></div>
+</div>
+<p>Example output:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Name                   Action                                   Lifecycle        Execution Time             Step Succ/Fail/Oth        Footnotes</span>
+<span class="go">update_software        action/01D9ZSVG70XS9ZMF4Z6QFF32A6        Complete         2019-05-03T21:33:27        13/0/1                    (1)</span>
+<span class="go">update_software        action/01DAB3ETP69MGN7XHVVRHNPVCR        Failed           2019-05-08T06:52:58        7/0/7                     (2)</span>
+</pre></div>
+</div>
+<p>To view the status of the individual steps of a particular action, copy its action ID and run the following command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./shipyard.sh describe action/01DAB3ETP69MGN7XHVVRHNPVCR</span>
+</pre></div>
+</div>
+<p>Example output:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Name:                  update_software</span>
+<span class="go">Action:                action/01DAB3ETP69MGN7XHVVRHNPVCR</span>
+<span class="go">Lifecycle:             Failed</span>
+<span class="go">Parameters:            {}</span>
+<span class="go">Datetime:              2019-05-08 06:52:55.366919+00:00</span>
+<span class="go">Dag Status:            failed</span>
+<span class="go">Context Marker:        18993f2c-1cfa-4d42-9320-3fbd70e75c21</span>
+<span class="go">User:                  shipyard</span>
+
+<span class="go">Steps                                                                Index        State            Footnotes</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/action_xcom                          1            success</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/dag_concurrency_check                2            success</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/deployment_configuration             3            success</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/validate_site_design                 4            success</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_build                         5            failed</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/decide_airflow_upgrade               6            None</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_get_status                    7            success</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_post_apply                    8            upstream_failed</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/skip_upgrade_airflow                 9            upstream_failed</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/upgrade_airflow                      10           None</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/deckhand_validate_site_design        11           success</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_validate_site_design          12           upstream_failed</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_get_releases                  13           failed</span>
+<span class="go">step/01DAB3ETP69MGN7XHVVRHNPVCR/create_action_tag                    14           None</span>
+</pre></div>
+</div>
+<p>To view the logs from a particular step such as armada_build, which has failed in the above example, run</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./shipyard.sh logs step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_build</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="viewing-logs-from-kubernetes-pods">
+<h3>Viewing Logs From Kubernetes Pods<a class="headerlink" href="#viewing-logs-from-kubernetes-pods" title="Permalink to this headline">¶</a></h3>
+<p>To view the logs from any pod in the Running or Completed state, run</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kubectl logs -n ${NAMESPACE} ${POD_NAME}</span>
+</pre></div>
+</div>
+<p>To view logs from a specific container within a pod in the Running or Completed state, run</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kubectl logs -n ${NAMESPACE} ${POD_NAME} -c ${CONTAINER_NAME}</span>
+</pre></div>
+</div>
+<p>If logs cannot be retrieved due to the pod entering the Error or CrashLoopBackoff state, it may be necessary to use the -p option to retrieve logs from the previous instance:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kubectl logs -n ${NAMESPACE} ${POD_NAME} -p</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="caas-platform-operations">
+<span id="caaspoperations"></span><h2>CaaS Platform Operations<a class="headerlink" href="#caas-platform-operations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="disable-transactional-update-for-development-purposes">
+<h3>Disable transactional update for development purposes<a class="headerlink" href="#disable-transactional-update-for-development-purposes" title="Permalink to this headline">¶</a></h3>
+<p>CaaSP has a documentation for <a class="reference external" href="https://www.suse.com/documentation/suse-caasp-3/book_caasp_admin/data/sec_admin_software_transactional-updates.html">transactional updates</a>.</p>
+<p>It is not recommended to disable transactional updates.</p>
+<p>Run the following to prevent a cluster from being updated:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">systemctl --now disable transactional-update.timer</span>
+</pre></div>
+</div>
+<p>Run the following if you only want to override once a week, instead of daily:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mkdir /etc/systemd/system/transactional-update.timer.d</span>
+<span class="go">cat &lt;&lt; EOF &gt; /etc/systemd/system/transactional-update.timer.d/override.conf</span>
+<span class="go">[Timer]</span>
+<span class="go">OnCalendar=</span>
+<span class="go">OnCalendar=weekly</span>
+<span class="go">EOF</span>
+<span class="go">systemctl daemon-reload</span>
+</pre></div>
+</div>
+<p>Or use the traditional systemctl commands:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">systemctl edit transactional-update.timer</span>
+<span class="go">systemctl restart transactional-update.timer</span>
+<span class="go">systemctl status transactional-update.timer</span>
+</pre></div>
+</div>
+<p>Check the next run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">systemctl list-timers</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="recovering-from-node-failure">
+<h2>Recovering from Node Failure<a class="headerlink" href="#recovering-from-node-failure" title="Permalink to this headline">¶</a></h2>
+<p>Kubernetes clusters are generally able to recover from node failures by performing a number of self-healing actions, but it may be occasionally necessary to manually intervene. Recovery actions vary depending on the type of failure, and some common scenarios and their solutions are outlined below.</p>
+<div class="section" id="pod-status-of-nodelost-or-unknown">
+<h3>Pod Status of NodeLost or Unknown<a class="headerlink" href="#pod-status-of-nodelost-or-unknown" title="Permalink to this headline">¶</a></h3>
+<p>If a large number of pods show a status of NodeLost or Unknown, first determine which nodes may be causing the problem by running</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kubectl get nodes</span>
+</pre></div>
+</div>
+<p>If any of the nodes show a status of NotReady but they still respond to ping and can be accessed via ssh, it may be that either the kubelet or docker service has stopped running. This can often be confirmed by checking the “Conditions” section in the output of</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kubectl describe node ${NODE_NAME}</span>
+</pre></div>
+</div>
+<p>for the message “Kubelet has stopped posting node status.” Log into the affected nodes and check the status of these services by running</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">systemctl status kubelet</span>
+<span class="go">systemctl status docker</span>
+</pre></div>
+</div>
+<p>If either service has stopped, start it by running</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">systemctl start ${SERVICE_NAME}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The kubelet service requires docker to be running, so if both services are stopped, docker should be restarted first.</p>
+</div>
+<p>These services should start automatically each time a node boots up and should be running at all times. If either has stopped, it may be useful to examine the system logs to determine the root cause of the failure. This can be done by using the journalctl command as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">journalctl -u kubelet</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="frequent-pod-evictions">
+<h3>Frequent Pod Evictions<a class="headerlink" href="#frequent-pod-evictions" title="Permalink to this headline">¶</a></h3>
+<p>If pods are frequently being evicted from a particular node, it may be a sign that the node is unhealthy and requires maintenance. Check that node’s conditions and events by running</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kubectl describe node ${NODE_NAME}</span>
+</pre></div>
+</div>
+<p>If the cause of the pod evictions is determined to be resource exhaustion, such as NodeHasDiskPressure or NodeHasMemoryPressure, it may be necessary to remove the node from the cluster temporarily to perform maintenance. To gracefully remove all pods from the affected node and mark it as not schedulable, run</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kubectl drain ${NODE_NAME}</span>
+</pre></div>
+</div>
+<p>Once maintenance work is complete, the node can be brought back into the cluster by running</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kubectl uncordon ${NODE_NAME}</span>
+</pre></div>
+</div>
+<p>which will allow normal pod scheduling operations to resume. If the node was decommissioned permanently while offline and a new node was brought into the CaaSP cluster as a replacement, it is not necessary to run the uncordon command–a new schedulable resource will be created automatically.</p>
+</div>
+</div>
+<div class="section" id="kubernetes-operations">
+<span id="kubernetesoperations"></span><h2>Kubernetes Operations<a class="headerlink" href="#kubernetes-operations" title="Permalink to this headline">¶</a></h2>
+<p>Kubernetes has documentation for <a class="reference external" href="https://kubernetes.io/docs/tasks/debug-application-cluster/troubleshooting//">troubleshooting typical problems with applications and clusters</a>.</p>
+</div>
+<div class="section" id="tips-and-tricks">
+<span id="id1"></span><h2>Tips and Tricks<a class="headerlink" href="#tips-and-tricks" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="display-all-images-used-by-a-component">
+<h3>Display all images used by a component<a class="headerlink" href="#display-all-images-used-by-a-component" title="Permalink to this headline">¶</a></h3>
+<p>Use neutron as n example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kubectl get pods -n openstack -l application=neutron -o jsonpath=&quot;{.items[*].spec.containers[*].image}&quot;|tr -s &#39;[[:space:]]&#39; &#39;\n&#39; | sort | uniq -c</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="remove-dangling-docker-images">
+<h3>Remove dangling Docker images<a class="headerlink" href="#remove-dangling-docker-images" title="Permalink to this headline">¶</a></h3>
+<p>Useful after building local images:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">docker rmi $(docker images -f &quot;dangling=true&quot; -q)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setting-the-default-context">
+<h3>Setting the default context<a class="headerlink" href="#setting-the-default-context" title="Permalink to this headline">¶</a></h3>
+<p>So you do not have to pass “-n openstack” all the time</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kubectl config set-context $(kubectl config current-context) --namespace=openstack</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="deployment/next-steps.html" title="Previous document">Next steps</a>
+        </li>
+        <li>
+          <a href="user/index.html" title="Next document">Advanced Users</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/suse_logo_w-tag_color.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">socok8s</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=SUSE-Cloud&repo=socok8s&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="deployment/index.html">Deployment Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Administration and Operations Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#using-ruh-sh">Using ruh.sh</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deployment-actions">Deployment Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cleanup-actions">Cleanup Actions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scaling-in-out">Scaling in/out</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adding-or-removing-compute-nodes">Adding or removing compute nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#change-control-plane-scale-profile">Change control plane scale profile</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#updates">Updates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#updating-openstack-version">Updating OpenStack Version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#updating-individual-images-and-helm-charts">Updating Individual Images and Helm Charts</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#viewing-shipyard-logs">Viewing Shipyard Logs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#viewing-logs-from-kubernetes-pods">Viewing Logs From Kubernetes Pods</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#caas-platform-operations">CaaS Platform Operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#disable-transactional-update-for-development-purposes">Disable transactional update for development purposes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#recovering-from-node-failure">Recovering from Node Failure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pod-status-of-nodelost-or-unknown">Pod Status of NodeLost or Unknown</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#frequent-pod-evictions">Frequent Pod Evictions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#kubernetes-operations">Kubernetes Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tips-and-tricks">Tips and Tricks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#display-all-images-used-by-a-component">Display all images used by a component</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#remove-dangling-docker-images">Remove dangling Docker images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-the-default-context">Setting the default context</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user/index.html">Advanced Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributor.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="deployment/next-steps.html" title="previous chapter">Next steps</a></li>
+      <li>Next: <a href="user/index.html" title="next chapter">Advanced Users</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SUSE.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/operations.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/SUSE-Cloud/socok8s" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

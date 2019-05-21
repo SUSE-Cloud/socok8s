@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Deploy Airship and OpenStack &#8212; socok8s  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Verify OpenStack operation" href="verify.html" />
+    <link rel="prev" title="Configure Cloud" href="configure.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="configure.html" title="Previous document">Configure Cloud</a>
+        </li>
+        <li>
+          <a href="verify.html" title="Next document">Verify OpenStack operation</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="deploy-airship-and-openstack">
+<h1>Deploy Airship and OpenStack<a class="headerlink" href="#deploy-airship-and-openstack" title="Permalink to this headline">¶</a></h1>
+<div><img height="200" src="../_images/blockdiag-4f2bb211c28848848ef236bffee17132a9154c44.png" width="1216" /></div><p>To deploy SUSE OpenStack cloud using Airship, run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./run.sh deploy_airship</span>
+</pre></div>
+</div>
+<p>Those steps may take a while to finish.</p>
+<div class="section" id="track-deployment-progress">
+<h2>Track Deployment Progress<a class="headerlink" href="#track-deployment-progress" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="using-kubectl">
+<h3>Using kubectl<a class="headerlink" href="#using-kubectl" title="Permalink to this headline">¶</a></h3>
+<p>To check the deployment progress of the Airship UCP services:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kubectl get po -n ucp</span>
+</pre></div>
+</div>
+<p>To check the deployment progress of the Openstack services:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kubectl get po -n openstack</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-k8s-dashboard">
+<h3>Using K8s dashboard<a class="headerlink" href="#using-k8s-dashboard" title="Permalink to this headline">¶</a></h3>
+<p>To deploy the Kubernetes Dashboard UI, follow the page <a class="reference external" href="https://github.com/kubernetes/dashboard">https://github.com/kubernetes/dashboard</a>.</p>
+</div>
+<div class="section" id="using-shipyard-cli">
+<h3>Using Shipyard CLI<a class="headerlink" href="#using-shipyard-cli" title="Permalink to this headline">¶</a></h3>
+<p>Airship Shipyard CLI allows you to retrieve the progress an status of
+deployment actions.</p>
+<p>To use the CLI, you first need to set up two environment varibles:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export OS_CLOUD=airship</span>
+<span class="go">export OS_PASSWORD=PEdLb_RgyDXJUJ7VgeRy</span>
+</pre></div>
+</div>
+<p>The <cite>OS_PASSWORD</cite> is the Shipyard service pssword in the UCP keystone. It can
+be found in the <cite>secrets/ucp_shipyard_keystone_password</cite> file in your
+workspace on the deployer node.</p>
+<p>To check the workflow status of the deployment action, run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">/opt/airship-shipyard/tools/shipyard.sh describe action/01D821AZ27H6NCSPV01RXQPDST</span>
+</pre></div>
+</div>
+<p>The last argument is the action key in Shipyard. Its value is stored in the
+<cite>soc-keys.yaml</cite> file in your workspace, for example,</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">Site</span><span class="p">:</span>
+<span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">soc</span>
+<span class="nt">action_key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">action/01D963GH0B621TBQHZAH8MW9JE</span>
+</pre></div>
+</div>
+<p>Here is a sample output of the Shipyard <cite>describe</cite> command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Name:                  update_software</span>
+<span class="go">Action:                action/01D963GH0B621TBQHZAH8MW9JE</span>
+<span class="go">Lifecycle:             Complete</span>
+<span class="go">Parameters:            {}</span>
+<span class="go">Datetime:              2019-04-23 22:01:57.003504+00:00</span>
+<span class="go">Dag Status:            success</span>
+<span class="go">Context Marker:        b2157815-e993-4333-b881-4937084441dd</span>
+<span class="go">User:                  shipyard</span>
+
+<span class="go">Steps                                                                Index        State          Footnotes</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/action_xcom                          1            success</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/dag_concurrency_check                2            success</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/deployment_configuration             3            success</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/validate_site_design                 4            success</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/armada_build                         5            success</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/decide_airflow_upgrade               6            success</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/armada_get_status                    7            success</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/armada_post_apply                    8            success</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/upgrade_airflow                      9            skipped</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/skip_upgrade_airflow                 10           success</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/deckhand_validate_site_design        11           success</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/armada_validate_site_design          12           success</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/armada_get_releases                  13           success</span>
+<span class="go">step/01D963GH0B621TBQHZAH8MW9JE/create_action_tag                    14           success</span>
+
+<span class="go">Commands        User            Datetime</span>
+<span class="go">invoke          shipyard        2019-04-23 22:01:57.752593+00:00</span>
+
+<span class="go">Validations: None</span>
+
+<span class="go">Action Notes:</span>
+<span class="gp">&gt;</span> action metadata:01D963GH0B621TBQHZAH8MW9JE<span class="o">(</span><span class="m">2019</span>-04-23 <span class="m">22</span>:01:57.736165+00:00<span class="o">)</span>: Configdoc revision <span class="m">1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="logs">
+<h3>Logs<a class="headerlink" href="#logs" title="Permalink to this headline">¶</a></h3>
+<p>To check Airship logs, you can run Shipyard logs CLI command, for example,</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">/opt/airship-shipyard/tools/shipyard.sh logs step/01D963GH0B621TBQHZAH8MW9JE/armada_build</span>
+</pre></div>
+</div>
+<p>To check logs from a running container, you can use the kubectl logs command.
+For exmample, to retrieve the test output form the Keystone Rally test, run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">kubectl logs airship-keystone-test -n openstack</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="run-developer-mode">
+<h2>Run Developer Mode<a class="headerlink" href="#run-developer-mode" title="Permalink to this headline">¶</a></h2>
+<p>If you want to patch upstream Helm charts and/or build your own container
+images, you need to set the following environment variables before deployment:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export SOCOK8S_DEVELOPER_MODE=&#39;True&#39;</span>
+<span class="go">export AIRSHIP_BUILD_LOCAL_IMAGES=&#39;true&#39;</span>
+<span class="go">./run.sh deploy_airship</span>
+</pre></div>
+</div>
+<p>Alternatively, you can add the following two lines to the <cite>env/extrvars</cite> file:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">SOCOK8S_DEVELOPER_MODE: true</span>
+<span class="go">AIRSHIP_BUILD_LOCAL_IMAGES: true</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="configure.html" title="Previous document">Configure Cloud</a>
+        </li>
+        <li>
+          <a href="verify.html" title="Next document">Verify OpenStack operation</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/suse_logo_w-tag_color.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">socok8s</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=SUSE-Cloud&repo=socok8s&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Deployment Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Installation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup-deployer.html">Set Up Deployer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ses-integration.html">SUSE Enterprise Storage Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configure.html">Configure Cloud</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Deploy Airship and OpenStack</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#track-deployment-progress">Track Deployment Progress</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-kubectl">Using kubectl</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-k8s-dashboard">Using K8s dashboard</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-shipyard-cli">Using Shipyard CLI</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#logs">Logs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#run-developer-mode">Run Developer Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">Verify OpenStack operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="next-steps.html">Next steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../operations.html">Administration and Operations Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">Advanced Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Deployment Guide</a><ul>
+      <li>Previous: <a href="configure.html" title="previous chapter">Configure Cloud</a></li>
+      <li>Next: <a href="verify.html" title="next chapter">Verify OpenStack operation</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SUSE.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/deployment/deploy.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/SUSE-Cloud/socok8s" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

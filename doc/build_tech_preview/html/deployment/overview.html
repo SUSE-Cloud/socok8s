@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Installation Overview &#8212; socok8s  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="System Requirements" href="requirements.html" />
+    <link rel="prev" title="Deployment Guide" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="index.html" title="Previous document">Deployment Guide</a>
+        </li>
+        <li>
+          <a href="requirements.html" title="Next document">System Requirements</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="installation-overview">
+<h1>Installation Overview<a class="headerlink" href="#installation-overview" title="Permalink to this headline">¶</a></h1>
+<p>This guide refers to the following types of hosts:</p>
+<ul class="simple">
+<li><p>A <cite>deployer</cite> with dual roles. It is the starting point for invoking the
+deployment socok8s scripts and Ansible playbooks. And it is the access point
+to your Kubernetes cluster. A deployer can be a continuous integration (CI) node,
+a laptop, or a dedicated VM.</p></li>
+<li><p>A series of <a class="reference internal" href="../glossary.html#term-caas-platform"><span class="xref std std-term">CaaS Platform</span></a> nodes: <cite>administration node</cite>, <cite>master</cite>, <cite>workers</cite>.</p></li>
+<li><p>A series of <a class="reference internal" href="../glossary.html#term-ses"><span class="xref std std-term">SES</span></a> nodes.</p></li>
+</ul>
+<p>The following diagram shows the general workflow of a SUSE Containerized
+Openstack deployment on an installed SUSE CaaS Platform cluster and
+SUSE Enterprise Storage.</p>
+<div><img height="200" src="../_images/blockdiag-cd7e49c1c81024a23b20de574818dc623e6f49b5.png" width="1216" /></div><p>Users who do not have SUSE CaaS Platform and SES can still try out the technical
+preview. An experimental tool is included to install a minimal SUSE CaaS Platform
+cluster and an SES all-in-one (AIO) for bootstrapping the SUSE Containerized
+Openstack deployment. The instructions can be found on the page <span class="xref std std-ref">provisioninfra</span>.</p>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="index.html" title="Previous document">Deployment Guide</a>
+        </li>
+        <li>
+          <a href="requirements.html" title="Next document">System Requirements</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/suse_logo_w-tag_color.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">socok8s</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=SUSE-Cloud&repo=socok8s&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Deployment Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Installation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup-deployer.html">Set Up Deployer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ses-integration.html">SUSE Enterprise Storage Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configure.html">Configure Cloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deploy.html">Deploy Airship and OpenStack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">Verify OpenStack operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="next-steps.html">Next steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../operations.html">Administration and Operations Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">Advanced Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Deployment Guide</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Deployment Guide</a></li>
+      <li>Next: <a href="requirements.html" title="next chapter">System Requirements</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SUSE.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/deployment/overview.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/SUSE-Cloud/socok8s" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

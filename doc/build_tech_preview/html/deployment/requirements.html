@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>System Requirements &#8212; socok8s  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Set Up Deployer" href="setup-deployer.html" />
+    <link rel="prev" title="Installation Overview" href="overview.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="overview.html" title="Previous document">Installation Overview</a>
+        </li>
+        <li>
+          <a href="setup-deployer.html" title="Next document">Set Up Deployer</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="system-requirements">
+<span id="requirements"></span><h1>System Requirements<a class="headerlink" href="#system-requirements" title="Permalink to this headline">¶</a></h1>
+<p>Before you begin the installation, your system must meet the following
+requirements.</p>
+<div class="section" id="infrastructure">
+<h2>Infrastructure<a class="headerlink" href="#infrastructure" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>The <cite>Deployer</cite> must run openSUSE Leap 15 or SUSE Linux Enterprise 15. See the page
+<a class="reference internal" href="setup-deployer.html#setupdeployer"><span class="std std-ref">Set Up Deployer</span></a> for required deployment tools and packages.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To install openSUSE Leap 15, follow the instructions at
+<a class="reference external" href="https://software.opensuse.org/distributions/leap">https://software.opensuse.org/distributions/leap</a>.</p>
+</div>
+</li>
+<li><p>The <a class="reference internal" href="../glossary.html#term-caas-platform"><span class="xref std std-term">CaaS Platform</span></a> cluster must run the latest <a class="reference internal" href="../glossary.html#term-caas-platform"><span class="xref std std-term">CaaS Platform</span></a>
+version 3.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The CaaS Platform Installation Quick Start guide is available at:
+<a class="reference external" href="https://www.suse.com/documentation/suse-caasp-3/singlehtml/book_caasp_installquick/book_caasp_installquick.html">https://www.suse.com/documentation/suse-caasp-3/singlehtml/book_caasp_installquick/book_caasp_installquick.html</a></p>
+</div>
+</li>
+<li><p>The <a class="reference internal" href="../glossary.html#term-ses"><span class="xref std std-term">SES</span></a> cluster must run <a class="reference internal" href="../glossary.html#term-ses"><span class="xref std std-term">SES</span></a> version 5.5.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The SES deployment guide is available at:
+<a class="reference external" href="https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_storage_deployment/book_storage_deployment.html">https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_storage_deployment/book_storage_deployment.html</a></p>
+</div>
+</li>
+</ul>
+<p>If you don’t bring your own deployer, CaaS Platform cluster and SES, this
+tooling can create one for you if you have an OpenStack environment. However,
+this is experimental. More details can be found at
+<span class="xref std std-ref">provisioninfra</span>.</p>
+</div>
+<div class="section" id="minimum-node-specification">
+<h2>Minimum Node Specification<a class="headerlink" href="#minimum-node-specification" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="deployer-node">
+<h3><a class="reference internal" href="../glossary.html#term-deployer"><span class="xref std std-term">Deployer</span></a> node<a class="headerlink" href="#deployer-node" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>(v)CPU: 4</p></li>
+<li><p>Memory: 4GB</p></li>
+<li><p>Storage: 40GB</p></li>
+</ul>
+</div>
+<div class="section" id="caas-platform-worker-node">
+<h3><a class="reference internal" href="../glossary.html#term-caas-platform"><span class="xref std std-term">CaaS Platform</span></a> worker node<a class="headerlink" href="#caas-platform-worker-node" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p>(v)CPU: 6</p></li>
+<li><p>Memory: 16GB</p></li>
+<li><p>Storage: 80GB</p>
+<p>If the work node is used as Compute node, sizing shall be determined by
+the target workloads on the compute node.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="ses-aio-node-experimental-only">
+<h3><a class="reference internal" href="../glossary.html#term-ses"><span class="xref std std-term">SES</span></a> AIO node (Experimental only)<a class="headerlink" href="#ses-aio-node-experimental-only" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>(v)CPU: 6</p></li>
+<li><p>Memory: 16GB</p></li>
+<li><p>Storage: 80GB</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="cluster-size">
+<h2>Cluster size<a class="headerlink" href="#cluster-size" title="Permalink to this headline">¶</a></h2>
+<p>A minimal <a class="reference internal" href="../glossary.html#term-caas-platform"><span class="xref std std-term">CaaS Platform</span></a> cluster requires one administration node, one
+master node and two worker nodes.</p>
+<p>SUSE Containerized Openstack enrolls <a class="reference internal" href="../glossary.html#term-caas-platform"><span class="xref std std-term">CaaS Platform</span></a> work nodes for two
+different purposes: control plane where the Airship and Openstack services
+run and compute nodes where customer workloads are hosted.</p>
+<p>For a minimal cloud, you should plan one worker node for the control plane,
+and one or more worker nodes as Openstack compute nodes.</p>
+<p>To ensure high availability, we recommend three worker nodes designated for
+the Airship and Openstack control plane, and additional number of worker nodes
+allocated for compute.</p>
+</div>
+<div class="section" id="network-requirements">
+<h2>Network Requirements<a class="headerlink" href="#network-requirements" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="simple">
+<dt>CaaS Platform networking and spec</dt><dd><p>Create necessary CaaS Platform networks before deploying Containerized
+Openstack. Separating traffic by function is recommended but not required.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Storage Network and spec</dt><dd><p>A separate storage network can be created to isolate storage traffic. This
+separate network should be present on the Caas Platform and ses_config.yml
+mon_host: section.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>VIP for Airship and Openstack</dt><dd><p>Virtual IP address will be assigned to pods allowing ingress to Airship
+and Openstack services. The ingress IP assignments for these services must
+be on a subnet present on the Caas Platform nodes and an IP that is
+not currently in use. VIPs are configured in env/extravars</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>DNS</dt><dd><p>Installing Containerized Openstack updates /etc/hosts on all Caas Platform
+nodes and Deployer. If expanding testing beyond these devices, it is
+reccomended to use DNS for sharing this data. It is possible to configure
+the Deployer with dnsmasq to supply DNS functionality, but this is beyond
+the scope of this preview.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Network configuration examples can be found in <a class="reference internal" href="../user/index.html#userscenarios"><span class="std std-ref">Advanced Users</span></a></p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="overview.html" title="Previous document">Installation Overview</a>
+        </li>
+        <li>
+          <a href="setup-deployer.html" title="Next document">Set Up Deployer</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/suse_logo_w-tag_color.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">socok8s</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=SUSE-Cloud&repo=socok8s&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Deployment Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Installation Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">System Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#infrastructure">Infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#minimum-node-specification">Minimum Node Specification</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deployer-node"><span class="xref std std-term">Deployer</span> node</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#caas-platform-worker-node"><span class="xref std std-term">CaaS Platform</span> worker node</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ses-aio-node-experimental-only"><span class="xref std std-term">SES</span> AIO node (Experimental only)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#cluster-size">Cluster size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#network-requirements">Network Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="setup-deployer.html">Set Up Deployer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ses-integration.html">SUSE Enterprise Storage Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configure.html">Configure Cloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deploy.html">Deploy Airship and OpenStack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">Verify OpenStack operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="next-steps.html">Next steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../operations.html">Administration and Operations Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">Advanced Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Deployment Guide</a><ul>
+      <li>Previous: <a href="overview.html" title="previous chapter">Installation Overview</a></li>
+      <li>Next: <a href="setup-deployer.html" title="next chapter">Set Up Deployer</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SUSE.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/deployment/requirements.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/SUSE-Cloud/socok8s" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

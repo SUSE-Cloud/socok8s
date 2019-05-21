@@ -120,6 +120,9 @@ case "$deployment_action" in
     "clean_airship")
         clean_airship
         ;;
+    "gather_logs")
+        gather_logs
+        ;;
     *)
         echo "Parameter unknown, read run.sh code."
         ;;

@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>SUSE Enterprise Storage Integration &#8212; socok8s  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Configure Cloud" href="configure.html" />
+    <link rel="prev" title="Set Up Deployer" href="setup-deployer.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="setup-deployer.html" title="Previous document">Set Up Deployer</a>
+        </li>
+        <li>
+          <a href="configure.html" title="Next document">Configure Cloud</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="suse-enterprise-storage-integration">
+<span id="ses-integration"></span><h1>SUSE Enterprise Storage Integration<a class="headerlink" href="#suse-enterprise-storage-integration" title="Permalink to this headline">¶</a></h1>
+<div><img height="200" src="../_images/blockdiag-441c862ec35c246b574e33ebcf3af53dc65f6a33.png" width="1216" /></div><p>For SES deployments that have version 5.5 and higher, there is a Salt runner
+that can create all the users and pools Openstack services require. It also
+generates a yaml configuration that is needed to integrate with SUSE
+Containerized OpenStack Cloud. The integration runner creates separate users
+for Cinder, Cinder backup, and Glance. Both the Cinder and Nova services
+will have the same user, as Cinder needs access to create objects that Nova
+uses.</p>
+<p>Log in as root to run the SES 5.5 Salt runner on the salt admin host.
+root #</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>salt-run --out<span class="o">=</span>yaml openstack.integrate <span class="nv">prefix</span><span class="o">=</span>mycloud
+</pre></div>
+</div>
+<p>The prefix parameter allows pools to be created with the specified prefix.
+In this way, multiple cloud deployments can use different users and pools on
+the same SES deployment.</p>
+<p>The sample yaml output:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ceph_conf</span><span class="p">:</span>
+  <span class="nt">cluster_network</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10.84.56.0/21</span>
+  <span class="nt">fsid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">d5d7c7cb-5858-3218-a36f-d028df7b0673</span>
+  <span class="nt">mon_host</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10.84.56.8, 10.84.56.9, 10.84.56.7</span>
+  <span class="nt">mon_initial_members</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ses-osd1, ses-osd2, ses-osd3</span>
+  <span class="nt">public_network</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10.84.56.0/21</span>
+<span class="nt">cinder</span><span class="p">:</span>
+  <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">AQCdfIRaxefEMxAAW4zp2My/5HjoST2Y8mJg8A==</span>
+  <span class="nt">rbd_store_pool</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mycloud-cinder</span>
+  <span class="nt">rbd_store_user</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cinder</span>
+<span class="nt">cinder-backup</span><span class="p">:</span>
+  <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">AQBb8hdbrY2bNRAAqJC2ZzR5Q4yrionh7V5PkQ==</span>
+  <span class="nt">rbd_store_pool</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mycloud-backups</span>
+  <span class="nt">rbd_store_user</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cinder-backup</span>
+<span class="nt">glance</span><span class="p">:</span>
+  <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">AQD9eYRachg1NxAAiT6Hw/xYDA1vwSWLItLpgA==</span>
+  <span class="nt">rbd_store_pool</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mycloud-glance</span>
+  <span class="nt">rbd_store_user</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">glance</span>
+<span class="nt">nova</span><span class="p">:</span>
+  <span class="nt">rbd_store_pool</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mycloud-nova</span>
+<span class="nt">radosgw_urls</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">http://10.84.56.7:80/swift/v1</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">http://10.84.56.8:80/swift/v1</span>
+</pre></div>
+</div>
+<p>After you have run the openstack.integrate runner, copy the yaml into the
+ses_config.yml file in the root of the workspace on the Deployer node.</p>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="setup-deployer.html" title="Previous document">Set Up Deployer</a>
+        </li>
+        <li>
+          <a href="configure.html" title="Next document">Configure Cloud</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/suse_logo_w-tag_color.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">socok8s</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=SUSE-Cloud&repo=socok8s&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Deployment Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Installation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup-deployer.html">Set Up Deployer</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SUSE Enterprise Storage Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configure.html">Configure Cloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deploy.html">Deploy Airship and OpenStack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">Verify OpenStack operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="next-steps.html">Next steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../operations.html">Administration and Operations Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">Advanced Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Deployment Guide</a><ul>
+      <li>Previous: <a href="setup-deployer.html" title="previous chapter">Set Up Deployer</a></li>
+      <li>Next: <a href="configure.html" title="next chapter">Configure Cloud</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SUSE.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/deployment/ses-integration.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/SUSE-Cloud/socok8s" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

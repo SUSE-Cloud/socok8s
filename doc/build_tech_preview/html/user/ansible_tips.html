@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ansible tips &#8212; socok8s  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Build and consume your own images" href="build-images.html" />
+    <link rel="prev" title="Advanced Users" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="index.html" title="Previous document">Advanced Users</a>
+        </li>
+        <li>
+          <a href="build-images.html" title="Next document">Build and consume your own images</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="ansible-tips">
+<h1>Ansible tips<a class="headerlink" href="#ansible-tips" title="Permalink to this headline">¶</a></h1>
+<p>There are several variables for extra debugging from the Ansible playbooks as
+shown in <a class="reference external" href="https://docs.ansible.com/ansible/latest/reference_appendices/config.html">https://docs.ansible.com/ansible/latest/reference_appendices/config.html</a></p>
+<p>Some examples:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export ANSIBLE_VERBOSITY=3</span>
+<span class="go">export ANSIBLE_STDOUT_CALLBACK=debug</span>
+</pre></div>
+</div>
+<p>Both of these environment variables will enable verbosity and debug for all the
+playbooks being run.</p>
+<p>You can enable the debugger for failed tasks as shown in
+<a class="reference external" href="https://docs.ansible.com/ansible/latest/user_guide/playbooks_debugger.html">https://docs.ansible.com/ansible/latest/user_guide/playbooks_debugger.html</a></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export ANSIBLE_ENABLE_TASK_DEBUGGER=True</span>
+</pre></div>
+</div>
+<p>This launches the debugger when a task fails so you can examine the task, vars,
+and retry the task. Check the Ansible docs link for all available options</p>
+<p>The debug task allows you to print to stdout while playbooks are executed
+without necessarily halting the playbook. Detailed information is available at:
+<a class="reference external" href="https://docs.ansible.com/ansible/latest/modules/debug_module.html">https://docs.ansible.com/ansible/latest/modules/debug_module.html</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These settings can be also set in your ~/.ansible.cfg file</p>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="index.html" title="Previous document">Advanced Users</a>
+        </li>
+        <li>
+          <a href="build-images.html" title="Next document">Build and consume your own images</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/suse_logo_w-tag_color.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">socok8s</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=SUSE-Cloud&repo=socok8s&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../deployment/index.html">Deployment Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../operations.html">Administration and Operations Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Advanced Users</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Ansible tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="build-images.html">Build and consume your own images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cleanup-k8s.html">Clean up Kubernetes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customize-testing-behavior.html">Customizing Helm Testing Behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="discover-helm-charts-overrides.html">Discover Helm charts overrides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minimal-network-example.html">Minimal Network Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multi-network-example.html">Multiple Network Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="select-openstack-services.html">Select OpenStack Services to Run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="teardown-socok8s.html">Deleting SCO from OpenStack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-custom-patches.html">Use custom patches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-your-own-certificates.html">Use Your Own Certificates for Your Local Image Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use-your-own-repositories.html">Use a Personal Fork</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Advanced Users</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Advanced Users</a></li>
+      <li>Next: <a href="build-images.html" title="next chapter">Build and consume your own images</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SUSE.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/user/ansible_tips.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/SUSE-Cloud/socok8s" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

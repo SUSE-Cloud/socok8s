@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Set Up Deployer &#8212; socok8s  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SUSE Enterprise Storage Integration" href="ses-integration.html" />
+    <link rel="prev" title="System Requirements" href="requirements.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="requirements.html" title="Previous document">System Requirements</a>
+        </li>
+        <li>
+          <a href="ses-integration.html" title="Next document">SUSE Enterprise Storage Integration</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="set-up-deployer">
+<span id="setupdeployer"></span><h1>Set Up Deployer<a class="headerlink" href="#set-up-deployer" title="Permalink to this headline">¶</a></h1>
+<div><img height="200" src="../_images/blockdiag-ccb3a9ea125a3ffdbe77576d15e7e363fee2decc.png" width="1216" /></div><div class="section" id="base-software">
+<h2>Base Software<a class="headerlink" href="#base-software" title="Permalink to this headline">¶</a></h2>
+<p>The following software must be installed on your <cite>Deployer</cite>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>ansible&gt;=2.7.0</p></li>
+<li><p>gcc</p></li>
+<li><p>git</p></li>
+<li><p>jq</p></li>
+<li><p>python3-netaddr</p></li>
+<li><p>python-virtualenv</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="create-suse-containerized-openstack-workspace">
+<h2>Create SUSE Containerized Openstack Workspace<a class="headerlink" href="#create-suse-containerized-openstack-workspace" title="Permalink to this headline">¶</a></h2>
+<p>All the deployment artifacts are stored in a <a class="reference internal" href="../glossary.html#term-workspace"><span class="xref std std-term">workspace</span></a>. The workspace
+by default is a directory located in the user’s home directory on the Deployer.
+Create a directory in your home directory that ends in -workspace. Then export
+SOCOK8S_ENVNAME=&lt;directory name prefix&gt; to set your workspace. To change your
+workspace parent directory, export <cite>SOCOK8S_WORKSPACE_BASEDIR</cite> with the base
+directory where your workspace is located.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mkdir ~/socok8s-workspace</span>
+<span class="go">export SOCOK8S_ENVNAME=socok8s</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cloning-repository">
+<h2>Cloning repository<a class="headerlink" href="#cloning-repository" title="Permalink to this headline">¶</a></h2>
+<p>To get started, clone the socok8s GitHub repository. This repository uses
+submodules, so you need to get all the code to make sure the playbooks work.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">recursive</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">SUSE</span><span class="o">-</span><span class="n">Cloud</span><span class="o">/</span><span class="n">socok8s</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+<p>Alternatively, one can fetch/update the tree of the submodules by running:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">submodule</span> <span class="n">update</span> <span class="o">--</span><span class="n">init</span> <span class="o">--</span><span class="n">recursive</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ssh-key-preparation">
+<h2>SSH Key Preparation<a class="headerlink" href="#ssh-key-preparation" title="Permalink to this headline">¶</a></h2>
+<p>Create an SSH key on the Deployer node, and add the public key to each CaaS
+Platform worker node.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>To generate the key, you can use ssh-keygen -t rsa</p></li>
+<li><p>To copy the ssh key to each node, use the ssh-copy-id command,
+for example: ssh-copy-id <a class="reference external" href="mailto:root&#37;&#52;&#48;192&#46;168&#46;122&#46;1">root<span>&#64;</span>192<span>&#46;</span>168<span>&#46;</span>122<span>&#46;</span>1</a></p></li>
+</ol>
+<p>Test this by connecting to the node via SSH and executing a command with ‘sudo’.
+Neither operation should require a password.</p>
+</div>
+</div>
+<div class="section" id="passwordless-sudo">
+<h2>Passwordless sudo<a class="headerlink" href="#passwordless-sudo" title="Permalink to this headline">¶</a></h2>
+<p>If installing as a non-root user, you will need to give your user passwordless
+sudo on the Deployer.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo visudo</span>
+</pre></div>
+</div>
+<p>Add the following.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;username&gt; ALL=(ALL) NOPASSWD: ALL</span>
+</pre></div>
+</div>
+<p>Add the above line after “#includedir /etc/sudoers.d”. replace &lt;username&gt; with
+your username.</p>
+</div>
+<div class="section" id="configure-ansible">
+<h2>Configure Ansible<a class="headerlink" href="#configure-ansible" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="use-ara-recommended">
+<h3>Use ARA (recommended)<a class="headerlink" href="#use-ara-recommended" title="Permalink to this headline">¶</a></h3>
+<p>Ansible Run Analysis (ARA) makes Ansible runs easier to visualize, understand,
+and troubleshoot. To use ARA, set the following environment variable before
+running <cite>run.sh</cite>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export USE_ARA=&#39;True&#39;</span>
+</pre></div>
+</div>
+<p>To set up ARA permanently for your user on <cite>Deployer</cite>, create an Ansible
+configuration file loading ARA plugins:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m ara.setup.ansible | tee ~/.ansible.cfg</span>
+</pre></div>
+</div>
+<p>For more details on the ARA web interface, see
+<a class="reference external" href="https://ara.readthedocs.io/en/stable/webserver.html">https://ara.readthedocs.io/en/stable/webserver.html</a>.</p>
+</div>
+<div class="section" id="enable-mitogen-optional">
+<h3>Enable Mitogen (optional)<a class="headerlink" href="#enable-mitogen-optional" title="Permalink to this headline">¶</a></h3>
+<p>To improve deployment speed, enable the Mitogen strategy and connection plug-in.
+First install Mitogen in your venv (e.g. <cite>~/suse-socok8s-deploy/.ansiblevenv/</cite>
+or your local Ansible environment), then enable it using environment variables.</p>
+<p>Alternatively, enable it for all your Ansible calls by adding it to your
+ansible configuration:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cat &lt;&lt; EOF &gt;&gt; ~/.ansible.cfg</span>
+<span class="go">strategy_plugins=${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}.ansiblevenv/lib/python3.6/site-packages/ansible_mitogen/plugins/strategy</span>
+<span class="go">strategy = mitogen_linear</span>
+<span class="go">EOF</span>
+</pre></div>
+</div>
+<p>For more details on Mitogen, see
+<a class="reference external" href="https://mitogen.readthedocs.io/en/latest/ansible.html">https://mitogen.readthedocs.io/en/latest/ansible.html</a>.</p>
+</div>
+<div class="section" id="enable-pipelining-recommended">
+<h3>Enable Pipelining (recommended)<a class="headerlink" href="#enable-pipelining-recommended" title="Permalink to this headline">¶</a></h3>
+<p>You can improve SSH connections by enabling pipelining:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cat &lt;&lt; EOF &gt;&gt; ~/.ansible.cfg</span>
+<span class="go">[ssh_connection]</span>
+<span class="go">pipelining = True</span>
+<span class="go">EOF</span>
+</pre></div>
+</div>
+<p>With this done, continue your deployment with the
+<a class="reference internal" href="configure.html#configuredeployment"><span class="std std-ref">Configure Cloud</span></a> page.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="requirements.html" title="Previous document">System Requirements</a>
+        </li>
+        <li>
+          <a href="ses-integration.html" title="Next document">SUSE Enterprise Storage Integration</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/suse_logo_w-tag_color.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">socok8s</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=SUSE-Cloud&repo=socok8s&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Deployment Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Installation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html">System Requirements</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Set Up Deployer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#base-software">Base Software</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-suse-containerized-openstack-workspace">Create SUSE Containerized Openstack Workspace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cloning-repository">Cloning repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ssh-key-preparation">SSH Key Preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#passwordless-sudo">Passwordless sudo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configure-ansible">Configure Ansible</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#use-ara-recommended">Use ARA (recommended)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#enable-mitogen-optional">Enable Mitogen (optional)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#enable-pipelining-recommended">Enable Pipelining (recommended)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ses-integration.html">SUSE Enterprise Storage Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configure.html">Configure Cloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deploy.html">Deploy Airship and OpenStack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">Verify OpenStack operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="next-steps.html">Next steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../operations.html">Administration and Operations Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">Advanced Users</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Deployment Guide</a><ul>
+      <li>Previous: <a href="requirements.html" title="previous chapter">System Requirements</a></li>
+      <li>Next: <a href="ses-integration.html" title="next chapter">SUSE Enterprise Storage Integration</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SUSE.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/deployment/setup-deployer.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/SUSE-Cloud/socok8s" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>
