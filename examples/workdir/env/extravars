@@ -17,7 +17,7 @@ redeploy_osh_only: false
 # varibles which can be overriden if needed.
 
 #suse_osh_registry_location: "docker.io"
-#suse_osh_image_version: "pike"
+#suse_openstack_image_version: "rocky-opensuse_15"
 
 # List of extra patches for the dev-patcher
 # instead of waiting for patch numbers to be added on the main repo

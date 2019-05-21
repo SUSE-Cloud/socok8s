@@ -1,3 +1,3 @@
 ---
-shipyard_image: "{{ suse_airship_registry_location }}/airshipit/shipyard:{{suse_airship_components_image_tag}}"
-airship_pegleg_image: "{{ suse_airship_registry_location }}/airshipit/pegleg:{{suse_airship_components_image_tag}}"
+shipyard_image: "{{ suse_airship_registry_location }}/airshipit/shipyard:{{suse_airship_components_image_tag['shipyard']}}"
+airship_pegleg_image: "{{ suse_airship_registry_location }}/airshipit/pegleg:{{suse_airship_components_image_tag['pegleg']}}"
