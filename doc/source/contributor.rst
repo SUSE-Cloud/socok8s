@@ -70,8 +70,8 @@ don't match the :ref:`codeguidelines`.
 Upstream communication channels
 -------------------------------
 
-Most of this project is a thin wrapper around the OpenStack Helm, the OpenStack
-LOCI, and Airship upstream projects.
+Most of this project is a thin wrapper around the Airship, OpenStack Helm,
+OpenStack LOCI upstream projects.
 
 A developer should monitor the **OpenStack-discuss** `openstack mailing lists`_,
 and the **Airship-discuss** `airship mailing lists`_

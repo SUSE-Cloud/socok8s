@@ -1,4 +1,4 @@
-.. _preparelocalhost:
+.. _ose-localhost:
 
 Prepare localhost
 =================
@@ -6,24 +6,26 @@ Prepare localhost
 .. blockdiag::
 
    blockdiag {
-
+     default_fontsize = 11;
      localhost [label="Prepare localhost"]
-     ses [label="Deploy SES\n(optional)"]
-     caasp [label="Deploy CaaSP\n(optional)"]
+     ses [label="Deploy SES"]
+     caasp [label="Deploy CaaS Platform"]
      deployer [label="Deploy deployer\n(optional)"]
-     enroll_caasp [label="Enroll CaaSP\n(optional)"]
-     setup_caasp_workers [label="Setup CaaSP\nfor OpenStack"]
+     enroll_caasp [label="Enroll CaaS Platform Nodes"]
+
+     configure [label="Configure\n Cloud"]
+     setup_caasp_workers [label="Setup CaaS Platform\nworker nodes"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
-     build_images [label="Build docker images\n(for developers)"]
-     deploy [label="Deploy OpenStack"]
-     configure_deployment [label="Configure deployment"]
+     build_images [label="Build Docker images\n(for developers)"]
+     deploy_airship [label="Deploy Airship"]
+     deploy_openstack [label="Deploy OpenStack"]
+
+     localhost -> ses;
 
      group {
        localhost
        color="red"
      }
-
-     localhost -> ses;
 
      group {
        color = "#EEEEEE"
@@ -32,19 +34,22 @@ Prepare localhost
        caasp -> deployer [folded];
        deployer -> enroll_caasp;
      }
-     enroll_caasp -> configure_deployment [folded];
-     localhost -> configure_deployment[folded];
 
-     configure_deployment -> setup_caasp_workers;
+     enroll_caasp -> configure [folded];
+
+     configure -> setup_caasp_workers;
 
      group {
        color = "#EEEEEE"
-       label = "OpenStack deployment"
-       setup_caasp_workers -> deploy, patch_upstream [folded];
+       label = "Cloud Deployment"
+       setup_caasp_workers -> patch_upstream;
        patch_upstream -> build_images;
-       build_images -> deploy;
+       build_images -> deploy_airship [folded];
+       setup_caasp_workers -> deploy_airship;
+       deploy_airship -> deploy_openstack;
      }
    }
+
 
 Base software
 -------------
@@ -150,18 +155,18 @@ You might want to improve SSH connections by enabling pipelining:
 Defining a workspace
 --------------------
 
-`socok8s` might create a :term:`workspace`, install things (eg. ansible in a virtualenv) 
-or create resources (eg. OpenStack Heat stacks if the deployment mechanism is `openstack`).
-For all of theses operations, a environment variable called `SOCOK8S_ENVNAME`
-needs to be set. This variable must be unique if multiple environments are
-installed in parallel.
+`socok8s` might create a :term:`workspace`, install things (eg. Ansible in a
+virtualenv) or create resources (eg. OpenStack Heat stacks if the deployment
+mechanism is `openstack`). For all of theses operations, a environment variable
+called `SOCOK8S_ENVNAME` needs to be set. This variable must be unique if
+multiple environments are installed in parallel.
 
 .. code-block:: console
 
-   export SOCOK8S_ENVNAME='foctodoodle'
+   export SOCOK8S_ENVNAME='soc-west'
 
 
-Set a deployment mechanism
+Set the deployment mechanism
 --------------------------
 
 This tooling can work with two different mechanisms:
@@ -170,38 +175,23 @@ This tooling can work with two different mechanisms:
 * Deploy everything on top of OpenStack (experimental).
 
 This behaviour can be changed by setting the environment variable
-`DEPLOYMENT_MECHANISM`.
-
-For example, if you want to bring your own :term:`CaaSP`/:term:`SES` cluster,
-run:
-
-.. code-block:: console
-
-   export DEPLOYMENT_MECHANISM='KVM'
-
-Alternatively, if you want to deploy :term:`CaaSP`, :term:`SES` and
-OpenStack on top of an OpenStack environment (for CI for example), run:
+`DEPLOYMENT_MECHANISM`. Its default value is "kvm". When you want
+to deploy :term:`CaaSP`, :term:`SES` and Containerized OpenStack on top of an
+OpenStack environment (for CI for example), run:
 
 .. code-block:: console
 
    export DEPLOYMENT_MECHANISM='openstack'
-
-OpenStack is the current default behaviour.
 
 .. _configureopenstackdeploymentmechanism:
 
 Configure OpenStack deployment mechanism (experimental)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the case you are not bringing your own environment, this socok8s tooling can
-deploy :term:`CaaSP`, :term:`SES`, and/or a deployer on its own with the help of
-OpenStack.
-
 Make sure your environment have an openstack client configuration file.
 For that, you can create the ``~/.config/openstack/clouds.yaml``.
 
-Replace the username and password with your appropriate credentials in
-the following example if you are running on engcloud (SUSE employees):
+The following is an example if you are running on a "engcloud":
 
 ::
 
@@ -210,7 +200,7 @@ the following example if you are running on engcloud (SUSE employees):
        region_name: CustomRegion
        auth:
          auth_url: https://keystone_url/v3
-         username: foctodoodle # your username here
+         username: john # your username here
          password: my-super-secret-password # your password here or add it into secure.yaml
          project_name: cloud
          project_domain_name: default
@@ -221,41 +211,25 @@ the following example if you are running on engcloud (SUSE employees):
      expand_hostvars: False
      fail_on_errors: True
 
-SUSE Employees, you can access the engcloud web UI at https://engcloud.prv.suse.net/.
-For more information on how to set up your `clouds.yaml`, see
-https://wiki.microfocus.net/index.php/SUSE/ECP.
-If you don’t have the SUSE root certificate installed, check
-http://ca.suse.de/, install the package, and point to the pem file
-in your clouds.yaml, as described in the procedure linked above.
-
 Now pre-create your environment. It is convention here to use your username
 as part of the name of objects you create.
 
-Create a keypair on your cloud (named further *engcloud*)
-(using either the horizon's web interface or
-OpenStack CLI’s ``openstack keypair create``) for accessing the
-instances created. Remember the name of this keypair (which appears as
-``foctodoodle-key`` in the example below)
+Create a keypair on your cloud (named further *engcloud*) using either the
+horizon's web interface or OpenStack CLI’s ``openstack keypair create`` for
+accessing the instances created. Remember the name of this keypair (which
+appears as ``soc-west-key`` in the example below)
 
 Set this for **all** the following scripts in a deployment:
 
 .. code-block:: console
 
-   export SOCOK8S_ENVNAME='foctodoodle'
+   export SOCOK8S_ENVNAME='soc-west'
    # 'engcloud' is the name in the `clouds.yaml`
    export OS_CLOUD=engcloud
-   # Set the name of the keypair you created
-   export KEYNAME=foctodoodle-key
+   # Set to the name of the keypair you created
+   export KEYNAME=soc-west-key
+   #replace with the actual external network name in your OpenStack environment
    export EXTERNAL_NETWORK=floating
 
 With this done, proceed to next section of the documentation,
-:ref:`targethosts`.
-
-Configure KVM deployment mechanism
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This deployment mechanism is only for "Bring your own cluster" cases.
-There is no additional environment variable to define.
-
-With this done, continue your deployment by reading the
-:ref:`configuredeployment` page.
+:ref:`ose-targethosts`.

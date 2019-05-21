@@ -41,8 +41,3 @@ SUSE Enterprise Storage.
        deploy_airship -> deploy_openstack;
      }
    }
-
-Users who do not have SUSE CaaS Platform and SES can still try out the technical
-preview. An experimental tool is included to install a minimal SUSE CaaS Platform
-cluster and an SES all-in-one (AIO) for bootstrapping the SUSE Containerized
-Openstack deployment. The instructions can be found on the page :ref:`provisioninfra`.
