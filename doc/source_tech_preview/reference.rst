@@ -4,15 +4,16 @@
 Reference
 =========
 
-This chapter contains all the extra reference information (i.e. in more
-details) about the socok8s repository.
+This chapter contains extra reference information (more details) about the
+`socok8s GitHub repository <https://github.com/SUSE-Cloud/socok8s>`_.
 
-For information on how to deploy socok8s, refer to :ref:`deploymentguide`.
+For information on how to deploy SUSE Containerized OpenStack, refer to
+:ref:`deploymentguide`.
 
-For information on how to manage and operate socok8s, refer to
-:ref:`operationsdocumentation`.
+For information on how to manage and operate SUSE Containerized OpenStack, refer
+to :ref:`operationsdocumentation`.
 
-For information on how to contribute to socok8s, refer to
+For information on how to contribute to SUSE Containerized OpenStack, refer to
 :ref:`developerdocumentation`.
 
 
@@ -111,16 +112,16 @@ non-OpenStack images.
 
 For the OpenStack images, `openstack-helm-images` contains shell scripts,
 situated in `openstack/loci/`. The `build.sh` script is a thin wrapper around
-`LOCI`. `LOCI` is the official OpenStack project to build OCI compliant
-images of OpenStack projects. It uses `docker build` to construct images from
-openstack sources and their requirements are expressed in `bindep` files
-(`bindep.txt` for rpm/apt packages, `pydep.txt` for python packages).
-The `build.sh` runs `LOCI` for the master branch. Other branches can be built
-suing `build-{branchname}.sh` where `branchname` is the name of the OpenStack
-branch (for example, `rocky`). See also :ref:`buildlociimages`.
+`LOCI`. `LOCI` is the official OpenStack project to build lightweight Open
+Container Initiative (OCI) compliant images of OpenStack projects. It uses
+`docker build` to construct images from OpenStack sources. Their requirements
+are expressed in `bindep` files (`bindep.txt` for rpm/apt packages, `pydep.txt`
+for python packages). The `build.sh` script runs `LOCI` for the master branch.
+Other branches can be built using `build-{branchname}.sh` where `branchname` is
+the name of the OpenStack release (for example, `rocky`). See also :ref:`buildlociimages`.
 
 In the future, `openstack-helm-images` could theoretically add images for
-OpenStack which would be based on packages, by simply providing the appropriate
+OpenStack that would be based on packages by simply providing the appropriate
 Dockerfiles.
 
 Additionally, some images are not built in `openstack-helm-images`, and they
@@ -148,12 +149,12 @@ OpenStack-Helm chart overrides
 Helm chart values overriding principle
 --------------------------------------
 
-A helm chart installation
+A Helm chart installation
 (See https://helm.sh/docs/using_helm/#customizing-the-chart-before-installing )
 accepts an argument named ``--values`` or ``-f``.
 
 This argument expects the filename of a YAML file present on the
-helm client machine. It can be specified multiple times, and
+Helm client machine. It can be specified multiple times, and
 the rightmost file will take precedence.
 
 For example, in the following example, the different values of
@@ -168,10 +169,10 @@ For example, in the following example, the different values of
 OpenStack-Helm scripts
 ----------------------
 
-The OpenStack-Helm project provides shell scripts to deploy the helm charts,
+The OpenStack-Helm project provides shell scripts to deploy the Helm charts,
 with overrides per context (for example, multinode).
 
-Those shell scripts calling the helm installation include an environment
+Those shell scripts calling the Helm installation include an environment
 variable, to allow users to pass extra arguments.
 
 See for example https://github.com/openstack/openstack-helm/blob/c869b4ef4a0e95272155c5d5dd893c72976753cd/tools/deployment/multinode/100-glance.sh#L49 .
@@ -188,8 +189,8 @@ How deployers can extend a SUSEified OSH chart in OSH only mode
 ---------------------------------------------------------------
 
 Deployers/customers to pass their own YAML overrides, in
-user space (for example by using `extravars`), to extend the helm chart
-behaviour beyond the "SUSE"ification.
+user space (for example by using `extravars`), to extend the Helm chart
+behavior beyond the "SUSE"ification.
 
 To find those overrides, a user can look into
 `playbooks/roles/deploy-osh/defaults/main.yml`.
@@ -330,4 +331,3 @@ OpenStack-Helm environment variables
 OpenStack Helm deployment scripts accepts environment variables to alter their
 behaviour. Read each of the scripts to know more about their override
 mechanisms.
-

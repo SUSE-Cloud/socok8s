@@ -1,13 +1,16 @@
 ==============================
-Discover helm charts overrides
+Discover Helm charts overrides
 ==============================
 
-The upstream helm charts have a large series of values which can be used
-to alter the deployment of a chart to match your needs.
+The upstream Helm charts have values that can be used to alter the deployment
+of a chart to match your needs.
 
-You can generate a list of the available overrides, after building all the
-helm charts (`make all` in each of the /opt/openstack/openstack-helm folders)
-in your environment, by running the following on your `deployer` node:
+Generate a list of the available overrides:
+
+1. Build all the Helm charts (`make all` in each of the
+   /opt/openstack/openstack-helm folders) in your environment
+2. Run the following on your `deployer` node:
+
 
 .. code-block:: console
 
