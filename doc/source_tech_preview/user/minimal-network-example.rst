@@ -3,7 +3,7 @@
 Minimal Network Example
 =======================
 
-* This is the minimal network configuration for CCP.
+This is the minimal network configuration for CCP.
 
 .. nwdiag::
 
@@ -65,7 +65,7 @@ The following configuration files reflect the diagram above.
     soc-deployer:
     hosts:
         deployer:
-        ansible_host:  172.30.0.10
+        ansible_host: 172.30.0.10
     vars:
         ansible_user: root
     ses_nodes:

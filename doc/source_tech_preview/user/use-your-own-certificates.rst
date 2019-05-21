@@ -1,10 +1,10 @@
 =======================================================
-Use your own certificates for your local image registry
+Use Your Own Certificates for Your Local Image Registry
 =======================================================
 
 
-If you want to run developer mode, and want to bring your own registry's SSL
-certificates, you can define, in your extra vars:
+If you want to run developer mode and bring your own registry's SSL
+certificates, define the following in `${WORKDIR}/env/extravars`:
 
 .. code-block:: yaml
 
