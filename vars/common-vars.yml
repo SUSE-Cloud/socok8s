@@ -93,3 +93,7 @@ ucp_deploy_timeout: 1800
 
 #Set timeout for osh deployment
 openstack_helm_deploy_timeout: 3000
+
+#Set volume size for all rabbitmq in openstack deployment and postgresql in ucp deployment.
+rabbitmq_volume_size: 5Gi
+db_volume_size: 5Gi
