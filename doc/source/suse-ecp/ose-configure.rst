@@ -1,4 +1,4 @@
-.. _configuredeployment:
+.. _ose-configure:
 
 Configure the deployment
 ========================
@@ -141,8 +141,6 @@ deployment. You need to provide a `kubeconfig` file on your `localhost`, in
 your workspace. You can fetch this file from the Velum UI on your
 CaaSP cluster.
 
-Configure passwords
--------------------
 
 Advanced configuration
 ----------------------

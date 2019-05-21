@@ -1,4 +1,4 @@
-.. _targethosts:
+.. _ose-targethosts:
 
 Prepare the target hosts
 ========================
