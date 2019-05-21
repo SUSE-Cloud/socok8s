@@ -18,3 +18,4 @@ top of SUSE CaaS Platform and SUSE Enterprise Storage.
    deploy.rst
    verify.rst
    next-steps.rst
+   uninstall.rst
