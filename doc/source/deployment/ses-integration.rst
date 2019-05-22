@@ -9,7 +9,7 @@ SUSE Enterprise Storage Integration
      default_fontsize = 11;
      deployer [label="Setup deployer"]
      ses_integration [label="SES Integration"]
-     configure_soc [label="Configure\nCloud"]
+     configure [label="Configure\nCloud"]
      setup_caasp_workers [label="Setup CaaS Platform\nworker nodes"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build Docker images\n(for developers)"]
@@ -22,8 +22,8 @@ SUSE Enterprise Storage Integration
      }
 
      deployer -> ses_integration;
-     ses_integration -> configure_soc;
-     configure_soc -> setup_caasp_workers;
+     ses_integration -> configure;
+     configure -> setup_caasp_workers;
 
      group {
        color = "#EEEEEE"
@@ -38,7 +38,7 @@ SUSE Enterprise Storage Integration
 
 
 For SES deployments that have version 5.5 and higher, there is a Salt runner
-that can create all the users and pools Openstack services require. It also
+that can create all the users and pools OpenStack services require. It also
 generates a yaml configuration that is needed to integrate with SUSE
 Containerized OpenStack Cloud. The integration runner creates separate users
 for Cinder, Cinder backup, and Glance. Both the Cinder and Nova services

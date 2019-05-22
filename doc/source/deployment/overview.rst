@@ -3,7 +3,7 @@ Installation Overview
 
 This guide refers to the following types of hosts:
 
-* A `deployer` with dual roles. It is the starting point for invoking the
+* A `Deployer` with dual roles. It is the starting point for invoking the
   deployment socok8s scripts and Ansible playbooks. And it is the access point
   to your Kubernetes cluster. A deployer can be a continuous integration (CI) node,
   a laptop, or a dedicated VM.
@@ -11,7 +11,7 @@ This guide refers to the following types of hosts:
 * A series of :term:`SES` nodes.
 
 The following diagram shows the general workflow of a SUSE Containerized
-Openstack deployment on an installed SUSE CaaS Platform cluster and
+OpenStack deployment on an installed SUSE CaaS Platform cluster and
 SUSE Enterprise Storage.
 
 .. blockdiag::
@@ -41,3 +41,8 @@ SUSE Enterprise Storage.
        deploy_airship -> deploy_openstack;
      }
    }
+
+Users who do not have SUSE CaaS Platform and SES can still try out the technical
+preview. An experimental tool is included to install a minimal SUSE CaaS Platform
+cluster and an SES all-in-one (AIO) for bootstrapping the SUSE Containerized
+OpenStack deployment. The instructions can be found on the page :ref:`provisioninfra`.

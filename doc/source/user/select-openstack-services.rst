@@ -2,8 +2,8 @@
 Select OpenStack Services to run
 ================================
 
-socok8s currently deploys OpenStack keystone, heat, nova, neutron, cinder,
-glance.
+SUSE Containerized OpenStack currently deploys OpenStack Keystone, Heat, Nova,
+Neutron, Cinder, Glance.
 
 You can decide which services to deploy by:
 
