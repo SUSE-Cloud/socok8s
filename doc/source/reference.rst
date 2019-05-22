@@ -113,10 +113,10 @@ For the OpenStack images, `openstack-helm-images` contains shell scripts,
 situated in `openstack/loci/`. The `build.sh` script is a thin wrapper around
 `LOCI`. `LOCI` is the official OpenStack project to build OCI compliant
 images of OpenStack projects. It uses `docker build` to construct images from
-openstack sources and their requirements are expressed in `bindep` files
+OpenStack sources and their requirements are expressed in `bindep` files
 (`bindep.txt` for rpm/apt packages, `pydep.txt` for python packages).
 The `build.sh` runs `LOCI` for the master branch. Other branches can be built
-suing `build-{branchname}.sh` where `branchname` is the name of the OpenStack
+using `build-{branchname}.sh` where `branchname` is the name of the OpenStack
 branch (for example, `rocky`). See also :ref:`buildlociimages`.
 
 In the future, `openstack-helm-images` could theoretically add images for
@@ -330,4 +330,3 @@ OpenStack-Helm environment variables
 OpenStack Helm deployment scripts accepts environment variables to alter their
 behaviour. Read each of the scripts to know more about their override
 mechanisms.
-

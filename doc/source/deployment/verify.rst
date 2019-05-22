@@ -2,13 +2,13 @@ Verify OpenStack operation
 ==========================
 
 The cloud deployment includes Rally testing for the core Airship UCP and
-Openstack services by default.
+OpenStack services by default.
 
-Your `deployer` node should now have a configuration file to use OpenStack
-and have Openstack CLI installed.
+At this point, your `Deployer` node should have an OpenStack configuration file,
+and the OpenStackClient (OSC) command line interface should be installed.
 
-To test if you can access the Openstack service via the vip and if the
-services are functioning as expected, you can:
+Test access to the OpenStack service via the VIP and determine that the OpenStack
+services are functioning as expected by running the following commands:
 
 .. code-block:: console
 
