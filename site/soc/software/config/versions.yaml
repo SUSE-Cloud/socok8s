@@ -73,6 +73,11 @@ data:
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: helm-toolkit
         type: git
+      tempest:
+        location: https://opendev.org/openstack/openstack-helm
+        reference: 3811eedefe92f1df6c1d31a366773b9a6dce0b7b
+        subpath: tempest
+        type: git
   images:
     calico:
       calico: {}
@@ -208,6 +213,9 @@ data:
         openvswitch_vswitchd: "{{ suse_osh_registry_location }}/openstackhelm/openvswitch:{{ suse_infra_image_version }}"
       rabbitmq:
         prometheus_rabbitmq_exporter_helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+      tempest:
+        tempest_run_tests: "{{ suse_osh_registry_location }}/openstackhelm/tempest:{{ suse_infra_image_version }}"
+        ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
     osh_infra:
       elasticsearch:
         memory_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
