@@ -9,7 +9,7 @@ Set Up Deployer
      default_fontsize = 11;
      deployer [label="Setup deployer"]
      ses_integration [label="SES Integration"]
-     configure_soc [label="Configure\nCloud"]
+     configure [label="Configure\nCloud"]
      setup_caasp_workers [label="Setup CaaS Platform\nworker nodes"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build Docker images\n(for developers)"]
@@ -22,8 +22,8 @@ Set Up Deployer
      }
 
      deployer -> ses_integration;
-     ses_integration -> configure_soc;
-     configure_soc -> setup_caasp_workers;
+     ses_integration -> configure;
+     configure -> setup_caasp_workers;
 
      group {
        color = "#EEEEEE"
@@ -49,7 +49,7 @@ The following software must be installed on your `Deployer`:
   * python3-netaddr
   * python-virtualenv
 
-Create SUSE Containerized Openstack Workspace
+Create SUSE Containerized OpenStack Workspace
 ---------------------------------------------
 
 All the deployment artifacts are stored in a :term:`workspace`. The workspace

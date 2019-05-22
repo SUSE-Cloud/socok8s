@@ -7,7 +7,7 @@ Deploy Airship and OpenStack
      default_fontsize = 11;
      deployer [label="Setup deployer"]
      ses_integration [label="SES Integration"]
-     configure_soc [label="Configure\nCloud"]
+     configure [label="Configure\nCloud"]
      setup_caasp_workers [label="Setup CaaS Platform\nworker nodes"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build Docker images\n(for developers)"]
@@ -15,8 +15,8 @@ Deploy Airship and OpenStack
      deploy_openstack [label="Deploy OpenStack"]
 
      deployer -> ses_integration;
-     ses_integration -> configure_soc;
-     configure_soc -> setup_caasp_workers;
+     ses_integration -> configure;
+     configure -> setup_caasp_workers;
 
      group {
        color = "red"
@@ -34,9 +34,9 @@ To deploy SUSE OpenStack cloud using Airship, run:
 
 .. code-block:: console
 
-   ./run.sh deploy
+   ./run.sh deploy_airship
 
-Those steps may take a while to finish.
+This script takes several minutes to finish.
 
 Track Deployment Progress
 -------------------------
@@ -56,25 +56,26 @@ To check the deployment progress of the Openstack services:
 
   kubectl get po -n openstack
 
-Using K8s dashboard
+Using Kubernetes Dashboard
 +++++++++++++++++++
 
-To deploy the Kubernetes Dashboard UI, follow the page https://github.com/kubernetes/dashboard.
+Deploy the Kubernetes Dashboard UI with the instructions at
+https://github.com/kubernetes/dashboard.
 
 Using Shipyard CLI
 ++++++++++++++++++
 
-Airship Shipyard CLI allows you to retrieve the progress an status of
+Airship Shipyard CLI allows you to retrieve the progress and status of
 deployment actions.
 
-To use the CLI, you first need to set up two environment varibles:
+To use the CLI, you must set up two environment variables:
 
 .. code-block:: console
 
   export OS_CLOUD=airship
   export OS_PASSWORD=PEdLb_RgyDXJUJ7VgeRy
 
-The `OS_PASSWORD` is the Shipyard service pssword in the UCP keystone. It can
+The `OS_PASSWORD` is the Shipyard service password in the UCP keystone. It can
 be found in the `secrets/ucp_shipyard_keystone_password` file in your
 workspace on the deployer node.
 
@@ -133,14 +134,14 @@ Here is a sample output of the Shipyard `describe` command:
 Logs
 ++++
 
-To check Airship logs, you can run Shipyard logs CLI command, for example,
+To check Airship logs, run the Shipyard logs CLI command, for example,
 
 .. code-block:: console
 
   /opt/airship-shipyard/tools/shipyard.sh logs step/01D963GH0B621TBQHZAH8MW9JE/armada_build
 
-To check logs from a running container, you can use the kubectl logs command.
-For exmample, to retrieve the test output form the Keystone Rally test, run:
+To check logs from a running container, use the kubectl logs command.
+For example, to retrieve the test output from the Keystone Rally test, run:
 
 .. code-block:: console
 
@@ -158,7 +159,7 @@ images, you need to set the following environment variables before deployment:
    export AIRSHIP_BUILD_LOCAL_IMAGES='true'
    ./run.sh deploy_airship
 
-Alternatively, you can add the following two lines to the `env/extrvars` file:
+Alternatively, you can add the following two lines to the `env/extravars` file:
 
 .. code-block:: console
 

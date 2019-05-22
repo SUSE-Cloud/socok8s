@@ -9,7 +9,7 @@ Configure Cloud
      default_fontsize = 11;
      deployer [label="Setup deployer"]
      ses_integration [label="SES Integration"]
-     configure_soc [label="Configure\nCloud"]
+     configure [label="Configure\nCloud"]
      setup_caasp_workers [label="Setup CaaS Platform\nworker nodes"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build Docker images\n(for developers)"]
@@ -17,13 +17,13 @@ Configure Cloud
      deploy_openstack [label="Deploy OpenStack"]
 
      group {
-       configure_soc
+       configure
        color="red"
      }
 
      deployer -> ses_integration;
-     ses_integration -> configure_soc;
-     configure_soc -> setup_caasp_workers;
+     ses_integration -> configure;
+     configure -> setup_caasp_workers;
 
      group {
        color = "#EEEEEE"
@@ -74,16 +74,16 @@ Pegleg, Keystone, Barbican, and core infrastructure services such as
 MariaDB, RabbitMQ, and PostgreSQL.
 
 The group `airship-openstack-control-workers` specifies the list of CaaS
-Platform worker nodes that make up the Openstack control plane. The
-Openstack control plane includes Keystone, Glance, Cinder, Nova, Neutron,
+Platform worker nodes that make up the OpenStack control plane. The
+OpenStack control plane includes Keystone, Glance, Cinder, Nova, Neutron,
 Horizon, Heat, MariaDB, RabbitMQ and so on.
 
 The group `airship-openstack-compute-workers` defines the CaaS Platform worker
-nodes used as Openstack Compute Nodes. Nova Compute, Libvirt, Open vSwitch are
-deployed to these nodes.
+nodes used as OpenStack Compute Nodes. Nova Compute, Libvirt, Open vSwitch (OVS)
+are deployed to these nodes.
 
-For most users, UCP and Openstack control planes can share the same worker
-nodes. The Openstack Compute Nodes should be dedicated worker nodes unless
+For most users, UCP and OpenStack control planes can share the same worker
+nodes. The OpenStack Compute Nodes should be dedicated worker nodes unless
 a light workload is expected.
 
 See also
@@ -106,7 +106,7 @@ See also
 Configure for SES Integration
 -----------------------------
 
-The file `ses_config.yml` is the output from :ref: `ses_integration`, and must
+The file `ses_config.yml` is the output from :ref:`ses_integration`, and must
 be present in the workspace.
 
 The Ceph admin keyring and user keyring, in **base64**, must be present in the
@@ -166,13 +166,13 @@ For example:
 Configure Cloud Scale Profile
 -----------------------------
 
-The pod scale profile in socok8s allows you to specify the desired number of
-pods that each Airship and Openstack service should run.
+The Pod scale profile in socok8s allows you to specify the desired number of
+Pods that each Airship and OpenStack service should run.
 
 There are two built-in scale profiles: `minimal` and `ha`. `minimal` will
-deploy exactly one pod for each service, making it suitable for demo or trial
+deploy exactly one Pod for each service, making it suitable for demo or trial
 on a resource-limited system. `ha` (High Availability) ensures at least two
-instances of pods for all services, and three or more pods for services that
+instances of Pods for all services, and three or more Pods for services that
 require quorum and are more heavily used.
 
 To specify the scale profile to use, add `scale_profile:` in the
@@ -185,7 +185,7 @@ For example:
 
    scale_profile: ha
 
-The definitions of the pod scale profile can be found in this repository:
+The definitions of the Pod scale profile can be found in this repository:
 playbooks/roles/airship-deploy-ucp/files/profiles.
 
 You can customize the built-in profile or create your own profile following
