@@ -128,7 +128,7 @@ For example:
 Configure for Kubernetes
 ------------------------
 
-socok8s relies on kubectl and helm commands to configure your OpenStack
+socok8s relies on kubectl and Helm commands to configure your OpenStack
 deployment. You need to provide a `kubeconfig` file on the `deployer` node,
 in your workspace. You can fetch this file from the Velum UI on your
 SUSE CaaS Platform cluster.
@@ -207,7 +207,7 @@ group vars.
    extravars can be used to override any deployment code.
    Use it at your own risk.
 
-socok8s is flexible, and allows you to override the value of any upstream helm
+socok8s is flexible, and allows you to override the value of any upstream Helm
 chart value with the appropriate overrides.
 
 .. note ::
