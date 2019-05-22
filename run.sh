@@ -2,12 +2,35 @@
 
 set -o errexit
 
-if [[ "${SOCOK8S_DEVELOPER_MODE:-False}" == "True" ]]; then
-    set -x
+usage() {
+    echo "deploy                                         -- Deploy SUSE Containerized OpenStack."
+    echo "update_openstack                               -- Update OpenStack deployment."
+    echo "add_openstack_compute                          -- Add OpenStack compute node. Add compute node host(s) in inventory file."
+    echo "remove_openstack_compute <compute-node-name>   -- Remove OpenStack compute node. Provide compute node host name with option."
+    echo "remove_deployment                              -- Delete all resources related with deployment including images."
+}
+
+if [ -z "${1:-}" ]; then
+    echo "$0 -h, --help          -- Show help message."
+    exit 1
 fi
 
 scripts_absolute_dir="$( cd "$(dirname "$0")/script_library" ; pwd -P )"
 socok8s_absolute_dir="$( cd "$(dirname "$0")" ; pwd -P )"
+
+deployment_action=$1
+
+while true ; do
+    case "$deployment_action" in
+      -h|--help) usage ; exit 0 ;;
+       *) source ${scripts_absolute_dir}/pre-flight-checks.sh "validate_cli_options $1"
+          break ;;
+    esac
+done
+
+if [[ "${SOCOK8S_DEVELOPER_MODE:-False}" == "True" ]]; then
+    set -x
+fi
 
 # USE an env var to setup where to deploy to
 # by default, ccp will deploy on openstack for inception style fun (and CI).
@@ -31,11 +54,6 @@ pushd ${socok8s_absolute_dir}
 # For simplificity, the following script contains each action for a deploy mechanism, and each action should
 # contain a "master" playbook, which should be named playbooks/${DEPLOYMENT_MECHANISM}-${deployment_action}
 source ${scripts_absolute_dir}/deployment-actions-${DEPLOYMENT_MECHANISM}.sh
-
-# When automation is changed to introduce steps,
-# replace this line with the following line:
-# deployment_action=$1
-deployment_action=${1:-"setup_everything"}
 
 case "$deployment_action" in
     "deploy_network")
@@ -64,10 +82,14 @@ case "$deployment_action" in
     "deploy_osh")
         deploy_osh
         ;;
-    "add_compute")
+    "add_openstack_compute")
         add_compute
         ;;
-    "remove_compute")
+    "remove_openstack_compute")
+        if [ -z ${2+x} ];then
+            echo "Please enter compute node host name"
+            exit 1
+        fi
         remove_compute $2
         ;;
     "setup_caasp_workers_for_openstack")
@@ -91,10 +113,10 @@ case "$deployment_action" in
         airship_prepare
         deploy_airship
         ;;
-    "deploy_airship")
+    "deploy")
         deploy_airship
         ;;
-    "update_airship_osh")
+    "update_openstack")
         deploy_airship update_airship_osh_site
         ;;
     "setup_everything")
@@ -117,13 +139,13 @@ case "$deployment_action" in
     "clean_airship_not_images")
         clean_airship clean_openstack_clean_ucp_clean_rest
         ;;
-    "clean_airship")
+    "remove_deployment")
         clean_airship
         ;;
     "gather_logs")
         gather_logs
         ;;
     *)
-        echo "Parameter unknown, read run.sh code."
+        echo "Invalid option, Check --help for valid options"
         ;;
 esac

@@ -32,4 +32,8 @@ data:
     pod:
       replicas:
         server: 1
+    volume:
+      size: {{ db_volume_size }}
+      backup:
+        size: {{ db_volume_size }}
 ...

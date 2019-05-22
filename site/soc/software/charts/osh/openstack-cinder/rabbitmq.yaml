@@ -28,4 +28,6 @@ data:
     monitoring:
       prometheus:
         enabled: false
+    volume:
+      size: {{ rabbitmq_volume_size }}
 ...

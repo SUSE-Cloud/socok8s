@@ -27,7 +27,9 @@ the SUSE Enterprise Storage (SES).
 
 It started as a series of shell scripts and ansible playbooks, choosing the
 simplest and fastest way to bring a test infrastructure for the upstream
-charts.
+charts.  It was easier to start with a shell script
+than writing a CLI in <insert language here>, mostly because
+the shell script organically grew out of its usage and CI needs.
 
 However, the mechanism of deployment was very flexible from day one, to allow
 developers to test independently their changes. It would allow them to, like any
@@ -46,6 +48,9 @@ Project goals
 Design considerations
 =====================
 
+Workspace
+---------
+
 In order to not pollute the developer/CI machine (called `localhost`),
 all the data relevant for a deployment (like any eventual override) is stored
 in a user-space |socok8s_workspace_default| folder, with unprivileged access.
@@ -53,6 +58,45 @@ in a user-space |socok8s_workspace_default| folder, with unprivileged access.
 This also helps the story of running behind
 a corporate firewall: the `localhost` can be (connecting to)
 a bastion host with the "deployment" actions happening behind the firewall.
+
+run.sh
+------
+
+Instead of running a series of scripts, unrelated to each other, and
+hard to remember for a deployer, SOCok8s takes the approach of a
+single shell script to drive from A to Z a deployment.
+
+The single point of access brings multiple features:
+
+* It's now possible to always ensure shell environment
+  variables are always set, while keeping the functional
+  behaviour in its own dedicated shell script.
+* It's now possible to ensure `localhost` have all the
+  system requirements before deploying, without asking
+  for user intervention.
+
+run.sh is a bash script, because it is a very commonly
+installed software on the 'localhost' node, independent
+of the distribution or of its version.
+It allows to install higher level requirements,
+like ansible, until we package socok8s differently.
+
+Each of the steps in `run.sh` are written in a way they represent a
+user facing feature. While what happens behind the scenes could
+change, the user interface is, in theory, stable.
+It therefore allows a 'swap and replace' of any of the user facing
+functions.
+
+The current interface of `run.sh` is flexible enough to work for many
+different cases, and is semantically close to the actions that will happen
+to deploy OpenStack. `run.sh` itself is just an interface, behind the
+scenes, it runs a `DEPLOYMENT_MECHANISM` dependant script starting the
+appropriate ansible playbooks for the step called.
+
+Technology stack
+----------------
+
+See project goals.
 
 Why...
 ======
@@ -74,18 +118,6 @@ Why...
 
 ... OpenStack on top of Kubernetes?
    Long story short: Robustness.
-
-... Splitting `run.sh` in so many steps?
-   The current interface of `run.sh` is flexible enough to work for many
-   different cases, and is semantically close to the actions that will happen
-   to deploy OpenStack. `run.sh` itself is just an interface, behind the
-   scenes, it runs a `DEPLOYMENT_MECHANISM` dependant script starting the
-   appropriate ansible playbooks for the step called.
-
-... A shell script for this interface?
-   It was easier to start with a shell script than writing a CLI in <insert
-   language here>, mostly because the shell script grew out of usage and
-   CI needs.
 
 ... Installing from sources?
    Neither the socok8s repo nor the OpenStack-Helm project's repositories

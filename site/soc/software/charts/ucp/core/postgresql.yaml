@@ -31,7 +31,7 @@ data:
   values:
     storage:
       pvc:
-        size: 2Gi
+        size: {{ db_volume_size }}
     pod:
       replicas:
         server: 1
