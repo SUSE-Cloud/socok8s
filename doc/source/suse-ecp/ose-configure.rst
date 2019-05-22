@@ -12,7 +12,7 @@ Configure the deployment
      caasp [label="Deploy CaaSP\n(optional)"]
      deployer [label="Deploy deployer\n(optional)"]
      enroll_caasp [label="Enroll CaaSP\n(optional)"]
-     setup_caasp_workers [label="Setup CaaSP\nfor OpenStack"]
+     setup_caasp_workers [label="Set up CaaSP\nfor OpenStack"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build docker images\n(for developers)"]
      deploy [label="Deploy OpenStack"]
@@ -22,7 +22,7 @@ Configure the deployment
 
      group {
        color = "#EEEEEE"
-       label = "Setup hosts"
+       label = "Set up hosts"
        ses -> caasp;
        caasp -> deployer [folded];
        deployer -> enroll_caasp;
@@ -50,34 +50,32 @@ All the files for the deployment are in a :term:`workspace`, whose default locat
 is |socok8s_workspace_default| on `localhost`.
 The default name can be changed via the environment variable `SOCOK8S_ENVNAME`
 
-This workspace is structured like an `ansible-runner` directory.
-
-It therefore contains:
+This workspace is structured like an `ansible-runner` directory. It contains:
 
 * an `inventory` folder
 * an `env` folder.
 
-Additionally, this folder must contain extra files necessary for the
-deployment, like the `ses_config.yml` and the `kubeconfig` files.
+This folder must also contain extra files necessary for the deployment, such as
+the `ses_config.yml` and the `kubeconfig` files.
 
 Configure the inventory
 -----------------------
 
 If you are bringing your own cluster, create an inventory based on our
-example, located in the `examples` folder.
+example located in the `examples` folder.
 
 .. literalinclude:: ../../../examples/workdir/inventory/hosts.yml
 
-As you can see, this inventory only contains the group names.
+This inventory only contains the group names.
 
-For each group, a `hosts:` key should be added, with, as value, each
+For each group, a `hosts:` key must be added, with, as value, each
 of the hosts you will need. For example:
 
 .. code-block:: yaml
 
    caasp-admin:
      hosts:
-       jevrard-57997-admin-x6sugiws4g34:
+       my_user-57997-admin-x6sugiws4g34:
          ansible_host: 10.86.1.144
 
 See also
@@ -86,16 +84,15 @@ See also
 
 .. tip::
 
-   Do not add `localhost` as a host in your inventory.
-   It is a host specially considered by Ansible.
-   If you want to create an inventory node for your local
-   machine, add your machine's hostname inside your inventory,
-   and specify this host variable: **ansible_connection: local**
+   Do not add `localhost` as a host in your inventory. It is a host specially
+   considered by Ansible. If you want to create an inventory node for your local
+   machine, add your machine's hostname inside your inventory, and specify this
+   host variable: **ansible_connection: local**
 
 Make the SES pools known by Ansible
 -----------------------------------
 
-Currently, we rely on two things to know the :term:`SES` pools created for the
+Ansible relies on two things to know the :term:`SES` pools created for the
 Airship/OpenStack deployment:
 
 * a `ses_config.yml` file present in the workspace
@@ -104,13 +101,12 @@ Airship/OpenStack deployment:
 
 You can find an example `ses_config.yml` in `examples/workdir`.
 
-Configure the VIP that will be used for OpenStack service public endpoints
+Configure the VIP that will be used for OpenStack service public endpoints.
 --------------------------------------------------------------------------
 
-Add `socok8s_ext_vip:` with its appropriate value for your
-environment in your `env/extravars`. This should be an available IP
-on the external network (in development environment, it can be the same as
-CaaSP cluster network).
+Add `socok8s_ext_vip:` with its appropriate value for your environment in your
+`env/extravars`. This should be an available IP on the external network
+(in a development environment, it can be the same as a CaaSP cluster network).
 
 For example:
 
@@ -120,12 +116,12 @@ For example:
 
 
 Configure the VIP that will be used for Airship UCP service endpoints
---------------------------------------------------------------------------
+---------------------------------------------------------------------
 
-Add `socok8s_dcm_vip:` with its appropriate value for your
-environment in your `env/extravars`. This should be an available IP
-on the data center management (DCM) network (in development environment, it
-can be the same as CaaSP cluster network).
+Add `socok8s_dcm_vip:` with its appropriate value for your environment in your
+`env/extravars`. This should be an available IP on the data center management
+(DCM) network (in a development environment, it can be the same as a CaaSP
+cluster network).
 
 For example:
 
@@ -136,8 +132,8 @@ For example:
 Provide a kubeconfig file
 -------------------------
 
-socok8s relies on kubectl and helm commands to configure your OpenStack
-deployment. You need to provide a `kubeconfig` file on your `localhost`, in
+socok8s relies on kubectl and Helm commands to configure your OpenStack
+deployment. You must provide a `kubeconfig` file on your `localhost` in
 your workspace. You can fetch this file from the Velum UI on your
 CaaSP cluster.
 
@@ -145,20 +141,19 @@ CaaSP cluster.
 Advanced configuration
 ----------------------
 
-socok8s deployment variables respects Ansible general precedence.
-All the variables can therefore be adapted.
+socok8s deployment variables respect Ansible general precedence. All the
+variables can be adapted.
 
-Keep in mind you can override most user facing variables with host vars and
-group vars.
+You can override most user facing variables with host vars and group vars.
 
 .. note ::
 
-   You can also use extravars, as extravars always win.
-   That can be used to override any deployment code.
+   You can also use extravars, as they always win. extravars can be used to
+   override any deployment code.
    Use it at your own risk.
 
-socok8s is very flexible, and allows you to
-override any upstream helm chart's value with the appropriate overrides.
+socok8s is flexible and allows you to override the value of any upstream Helm
+chart value with appropriate overrides.
 
 .. note ::
 
