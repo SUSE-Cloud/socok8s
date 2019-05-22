@@ -4,7 +4,7 @@
 Advanced Users
 ==============
 
-This gives you examples of what can be achieved with socok8s, and how.
+Usage scenarios for SUSE Containerized OpenStack
 
 .. toctree::
    :maxdepth: 1
