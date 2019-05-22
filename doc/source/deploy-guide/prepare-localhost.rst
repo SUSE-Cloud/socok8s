@@ -60,6 +60,7 @@ Optionally, `localhost` can be preinstalled with the following software:
 
   * ansible>=2.7.0
   * python-openstackclient
+  * python-heatclient
   * python-requests
   * python-jmespath
   * python-openstacksdk
@@ -71,6 +72,14 @@ Python 3, so install the "python3-" variant of the packages)
 
 If those optional software aren't installed, they will be installed in a
 venv in |socok8s_workspace_default|\ `/.ansiblevenv` .
+
+.. note ::
+
+   Here are the requirements that will be installed in that workspace:
+
+   .. include :: requirements.txt
+      :code:
+
 
 Cloning this repository
 -----------------------
