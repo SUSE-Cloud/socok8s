@@ -38,6 +38,8 @@ To deploy SUSE OpenStack cloud using Airship, run:
 
 This script takes several minutes to finish.
 
+.. _deploymentprogress:
+
 Track Deployment Progress
 -------------------------
 
@@ -57,7 +59,7 @@ To check the deployment progress of the Openstack services:
   kubectl get po -n openstack
 
 Using Kubernetes Dashboard
-+++++++++++++++++++
+++++++++++++++++++++++++++
 
 Deploy the Kubernetes Dashboard UI with the instructions at
 https://github.com/kubernetes/dashboard.

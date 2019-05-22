@@ -121,7 +121,7 @@ Enable mitogen (optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To improve deployment speed, enable mitogen strategy and connection plugin.
-First install mitogen in your venv (e.g. |socok8s_workspace_default|\ `/.ansiblevenv` 
+First install mitogen in your venv (e.g. |socok8s_workspace_default|\ `/.ansiblevenv`
 or your local ansible environment), then enable it using environment variables.
 
 Alternatively, enable it for all your ansible calls by adding it to your
@@ -158,7 +158,7 @@ Defining a workspace
 `socok8s` might create a :term:`workspace`, install things (eg. Ansible in a
 virtualenv) or create resources (eg. OpenStack Heat stacks if the deployment
 mechanism is `openstack`). For all of theses operations, a environment variable
-called `SOCOK8S_ENVNAME` needs to be set. This variable must be unique if
+called `SOCOK8S_ENVNAME` must be set. This variable must be unique if
 multiple environments are installed in parallel.
 
 .. code-block:: console
@@ -167,14 +167,14 @@ multiple environments are installed in parallel.
 
 
 Set the deployment mechanism
---------------------------
+----------------------------
 
 This tooling can work with two different mechanisms:
 
 * Bring your own environment
 * Deploy everything on top of OpenStack (experimental).
 
-This behaviour can be changed by setting the environment variable
+This behavior can be changed by setting the environment variable
 `DEPLOYMENT_MECHANISM`. Its default value is "kvm". When you want
 to deploy :term:`CaaSP`, :term:`SES` and Containerized OpenStack on top of an
 OpenStack environment (for CI for example), run:
