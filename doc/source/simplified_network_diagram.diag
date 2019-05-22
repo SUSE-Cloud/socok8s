@@ -1,0 +1,14 @@
+nwdiag {
+    cloud [shape = cloud];
+    localhost -- cloud -- deployer;
+    network {
+        group caasp {
+           color = "#EEEEEE";
+           caasp-workers;
+           caasp-admins;
+           caasp-master;
+        }
+    deployer;
+    ses-aio;
+    }
+}

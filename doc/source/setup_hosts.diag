@@ -1,0 +1,18 @@
+seqdiag {
+    localhost; cloud; deployer; CaaSP; ses;
+    activation = none;
+    localhost -> cloud             [label = "Start 12SP3 node"]
+    localhost <- cloud             [label = "SES inventory data"]
+    localhost -> ses               [label = "Deploy SES" ];
+    localhost <- ses               [label = "ses_config data" ];
+
+    localhost -> cloud             [label = "Start CaaSP3 stack"];
+    localhost <- cloud             [label = "CaaSP inventory data"];
+
+    localhost -> cloud             [label = "Start Leap 15 node"];
+    localhost <- cloud             [label = "Deployer inventory data"];
+
+    localhost -> deployer          [label = "Configure deployer" ];
+                 deployer -> CaaSP [label = "Enroll CaaSP nodes"];
+                 deployer <- CaaSP [label = "Kubeconfig data"];
+}

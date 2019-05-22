@@ -25,8 +25,6 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinxcontrib.actdiag',
     'sphinxcontrib.blockdiag',
-    'sphinxcontrib.seqdiag',
-    'sphinxcontrib.nwdiag',
 ]
 
 # Feed configuration for yasfb
