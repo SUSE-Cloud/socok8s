@@ -37,8 +37,6 @@ data:
     enabled: {{ run_tests }}
     timeout: {{ test_timeout }}
   values:
-    bootstrap:
-      enabled: false
     pod:
       replicas:
         api: 1
