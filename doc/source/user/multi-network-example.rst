@@ -1,10 +1,10 @@
 
 =========================
-Multiple Networks Example
+Multiple Network Example
 =========================
 
 This is a multiple network example configuration for CCP. Caas Platform and
-SES network configuration is documented in there respective documentation.
+SES network configuration have their own respective documentation.
 
 .. nwdiag::
 
@@ -83,7 +83,7 @@ The following configuration files reflect the diagram above.
     soc-deployer:
     hosts:
         deployer:
-        ansible_host:  172.30.0.10
+        ansible_host: 172.30.0.10
     vars:
         ansible_user: root
     ses_nodes:

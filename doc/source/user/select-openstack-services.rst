@@ -1,5 +1,5 @@
 ================================
-Select OpenStack Services to run
+Select OpenStack Services to Run
 ================================
 
 SUSE Containerized OpenStack currently deploys OpenStack Keystone, Heat, Nova,
