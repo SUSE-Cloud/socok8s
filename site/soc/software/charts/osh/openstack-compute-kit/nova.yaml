@@ -109,6 +109,7 @@ data:
       nova:
         libvirt:
           virt_type: qemu
+          cpu_mode: host-model
     pod:
       replicas:
         api_metadata: 1 
