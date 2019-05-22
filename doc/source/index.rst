@@ -23,3 +23,4 @@ SUSE Enterprise Storage (SES), using Airship, shell scripts, and Ansible playboo
    operations.rst
    reference.rst
    glossary.rst
+   suse-ecp/index.rst

@@ -1,8 +1,8 @@
-.. _deploymentguide:
+.. _ose-deploymentguide:
 
-==========================================================
-SUSE Engineering Cloud Platform Environment (Experimental)
-==========================================================
+============================================
+SUSE ECP Internal Environment (Experimental)
+============================================
 
 This guide provides instruction for performing a Containerized Openstack
 Cloud deployment in the SUSE Engineering Cloud environment. It bootstraps

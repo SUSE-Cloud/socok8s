@@ -232,7 +232,7 @@ in `playbooks/roles/deploy-osh/templates/` (for example `socok8s-glance.yml`),
 **if they are not part of upstream yet**.
 
 How deployers can extend a custom SUSE OSH chart in OSH-only mode
----------------------------------------------------------------
+-----------------------------------------------------------------
 
 Deployers can pass their own YAML overrides in user space by using `extravars`
 to extend Helm chart behavior beyond the SUSE customizations.
@@ -245,7 +245,7 @@ Customizing OSH charts for SUSE when deploying with Airship
 ...
 
 How deployers can extend a custom SUSE OSH chart with Airship
------------------------------------------------------------
+-------------------------------------------------------------
 
 ...
 
