@@ -78,7 +78,6 @@ html_theme_options = {
     'github_banner': True,
     'page_width': '1280px',
     'sidebar_width': '340px',
-    'show_relbars': 'true',
 }
 
 html_logo = 'suse_logo_w-tag_color.png'
