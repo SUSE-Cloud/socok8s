@@ -37,12 +37,17 @@
   tags:
     - install
 
+- name: Set the user name
+  set_fact:
+    user_name: "{{ lookup('env','USER') }}"
+
 - name: Add the user to the group 'docker'
   become: yes
   user:
-    name: "{{ lookup('env','USER') }}"
+    name: user_name
     groups: docker
     append: yes
+  when: user_name
 
 - name: Ensure kubectl is properly configured
   include_role:
