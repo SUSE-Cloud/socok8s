@@ -26,6 +26,7 @@ pipeline {
         SOCOK8S_DEVELOPER_MODE = "True"
         DEPLOYMENT_MECHANISM = "openstack"
         ANSIBLE_STDOUT_CALLBACK = "yaml"
+        USER = "jenkins" /* Why isn't this set in the jenkins environment? */
     }
 
     stages {
