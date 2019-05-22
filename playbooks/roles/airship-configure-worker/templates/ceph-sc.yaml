@@ -8,7 +8,7 @@ parameters:
   adminId: admin
   adminSecretName: pvc-ceph-conf-combined-storageclass
   adminSecretNamespace: ceph
-  pool: rbd
+  pool: "{{ airship_ses_pools_prefix | default('') }}rbd"
   userId: admin
   userSecretName: pvc-ceph-client-key
 ---

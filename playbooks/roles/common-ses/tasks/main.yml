@@ -1,28 +1,12 @@
 ---
-#
-# (c) Copyright 2019 SUSE LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License"); you may
-# not use this file except in compliance with the License. You may obtain
-# a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-# License for the specific language governing permissions and limitations
-# under the License.
-#
+- name: Include global vars
+  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
 
-- name: Install SES 5
-  hosts: ses_nodes
-  remote_user: root
-  gather_facts: true
-  roles:
-    - ses
-  vars_files:
-    - "{{ playbook_dir }}/../vars/common-vars.yml"
+- name: Create pools in SES for socok8s usage
+  become: yes
+  include_role:
+    name: ses
+    tasks_from: openstack_config
   vars:
     ses_openstack_config: True
     ses_openstack_glance_pool:
@@ -47,9 +31,5 @@
       - "{{ ses_openstack_cinder_backup_pool }}"
       - "{{ ses_osh_rbd_pool }}"
 
-- name: Import SES configs
-  hosts: ses_nodes[0]
-  remote_user: root
-  gather_facts: false
-  tasks:
-    - include: roles/common-ses/tasks/ses_config.yml
+- name: Import SES configs to deployer
+  import_tasks: ses_config.yml

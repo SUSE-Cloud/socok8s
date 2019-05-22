@@ -54,6 +54,11 @@ suse_airship_registry_location: "{%- if suse_airship_build_local_images or suse_
 # Tag passed to image building step
 suse_airship_components_image_build_tag: "master"
 
+# Provide prefix passed to salt runner openstack.integrate for creating
+# openstack pools e.g. "socok8s_" . If runner script is used and prefix is not
+# provided, then don't set it here.
+# airship_ses_pools_prefix: ""
+
 # Complete distro specific published image tag
 suse_airship_components_image_tag: |
                                    {% if suse_airship_build_local_images or suse_airship_use_local_images %}

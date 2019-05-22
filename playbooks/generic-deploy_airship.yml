@@ -8,6 +8,13 @@
       tags:
         - install
 
+- name: Create SES pools for socok8s and import SES config to deployer
+  hosts: ses_nodes[0]
+  remote_user: root
+  gather_facts: true
+  roles:
+    - common-ses
+
 - hosts: soc-deployer:caasp-workers
   gather_facts: false
   any_errors_fatal: true
