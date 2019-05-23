@@ -33,6 +33,7 @@ pipeline {
         stage('Show environment information') {
             steps {
                 sh 'printenv'
+                echo "Deployment parameter: ${params.deployment}"
             }
         }
 
