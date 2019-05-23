@@ -60,45 +60,6 @@ This also supports the use case of running behind a corporate firewall. The
 `localhost` can connect to a bastion host with the "deployment" actions
 happening behind the firewall.
 
-run.sh
-------
-
-Instead of running a series of scripts, unrelated to each other, and
-hard to remember for a deployer, SOCok8s takes the approach of a
-single shell script to drive from A to Z a deployment.
-
-The single point of access brings multiple features:
-
-* It's now possible to always ensure shell environment
-  variables are always set, while keeping the functional
-  behaviour in its own dedicated shell script.
-* It's now possible to ensure `localhost` have all the
-  system requirements before deploying, without asking
-  for user intervention.
-
-run.sh is a bash script, because it is a very commonly
-installed software on the 'localhost' node, independent
-of the distribution or of its version.
-It allows to install higher level requirements,
-like ansible, until we package socok8s differently.
-
-Each of the steps in `run.sh` are written in a way they represent a
-user facing feature. While what happens behind the scenes could
-change, the user interface is, in theory, stable.
-It therefore allows a 'swap and replace' of any of the user facing
-functions.
-
-The current interface of `run.sh` is flexible enough to work for many
-different cases, and is semantically close to the actions that will happen
-to deploy OpenStack. `run.sh` itself is just an interface, behind the
-scenes, it runs a `DEPLOYMENT_MECHANISM` dependant script starting the
-appropriate ansible playbooks for the step called.
-
-Technology stack
-----------------
-
-See project goals.
-
 Why...
 ======
 
@@ -118,6 +79,18 @@ Why...
 
 ... OpenStack on top of Kubernetes?
    Robust structure
+
+... Splitting `run.sh` in so many steps?
+   The current interface of `run.sh` is flexible enough to work for many
+   different cases. It is semantically close to the actions that deploy
+   OpenStack. `run.sh` itself is just an interface. Behind the scenes,
+   it runs a `DEPLOYMENT_MECHANISM`-dependent script, starting the
+   appropriate Ansible playbooks for the step called.
+
+... A shell script for this interface?
+   It was easier to start with a shell script rather than writing a CLI in
+   <insert your favorite language here>, mostly because the shell script grew
+   organically out of actual use and CI needs.
 
 ... Installing from sources?
    Neither the socok8s repo nor the OpenStack-Helm project's repositories
@@ -144,19 +117,6 @@ non-OpenStack images.
 
 For the OpenStack images, `openstack-helm-images` contains shell scripts,
 situated in `openstack/loci/`. The `build.sh` script is a thin wrapper around
-<<<<<<< HEAD
-`LOCI`. `LOCI` is the official OpenStack project to build OCI compliant
-images of OpenStack projects. It uses `docker build` to construct images from
-OpenStack sources and their requirements are expressed in `bindep` files
-(`bindep.txt` for rpm/apt packages, `pydep.txt` for python packages).
-The `build.sh` runs `LOCI` for the master branch. Other branches can be built
-using `build-{branchname}.sh` where `branchname` is the name of the OpenStack
-branch (for example, `rocky`). See also :ref:`buildlociimages`.
-
-In the future, `openstack-helm-images` could theoretically add images for
-OpenStack which would be based on packages, by simply providing the appropriate
-Dockerfiles.
-=======
 `LOCI`. `LOCI` is the official OpenStack project to build lightweight Open
 Container Initiative (OCI) compliant images of OpenStack projects. It uses
 `docker build` to construct images from OpenStack sources. Their requirements
@@ -168,7 +128,6 @@ the name of the OpenStack release (for example, `rocky`). See also :ref:`buildlo
 In the future, `openstack-helm-images` could add images for OpenStack that
 would be based on packages by simply providing the appropriate Dockerfiles.
 There is no announced plan to offer such a resource.
->>>>>>> doc: transfer edits from source_tech_preview to source
 
 Additionally, some images are not built in `openstack-helm-images`, and they
 are directly consumed/fetched from upstream projects official dockerfiles,

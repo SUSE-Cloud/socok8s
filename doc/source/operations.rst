@@ -41,7 +41,7 @@ Cleanup Actions
 
 In addition to deployment, run.sh can be used to perform a variety of environment
 cleanup actions. To ensure all resources are removed, the following environment
-variable should be set before running any cleanup commands:
+git checkout airship_doc, git merge mastervariable should be set before running any cleanup commands:
 
 .. code-block:: console
 
@@ -158,18 +158,10 @@ to
 Updating Individual Images and Helm Charts
 ------------------------------------------
 
-<<<<<<< HEAD
-The versions.yaml file can also be used for more advanced update configurations such as using a specific image or Helm chart source version.
-
-.. note::
-
-   Changing the image registry location from its default value or using a custom or non-default image will lose any product support by SUSE.
-=======
 The versions.yaml file can also be used for more advanced update configurations
 such as using a specific image or Helm chart source version.
 
 .. note::
->>>>>>> doc: transfer to doc/source
 
    Changing the image registry location from its default value or using a custom
    or non-default image will void any product support by SUSE.
@@ -281,12 +273,8 @@ Example output:
    step/01DAB3ETP69MGN7XHVVRHNPVCR/armada_get_releases                  13           failed
    step/01DAB3ETP69MGN7XHVVRHNPVCR/create_action_tag                    14           None
 
-<<<<<<< HEAD
-To view the logs from a particular step such as armada_build, which has failed in the above example, run
-=======
 To view the logs from a particular step such as armada_build, which has failed
 in the above example, run:
->>>>>>> doc: transfer to doc/source
 
 .. code-block:: console
 
@@ -371,25 +359,17 @@ common scenarios and their solutions are outlined below.
 Pod Status of NodeLost or Unknown
 ---------------------------------
 
-<<<<<<< HEAD
-If a large number of pods show a status of NodeLost or Unknown, first determine which nodes may be causing the problem by running
-=======
 If a large number of Pods show a status of NodeLost or Unknown, first determine
 which nodes may be causing the problem by running:
->>>>>>> doc: transfer to doc/source
 
 .. code-block:: console
 
    kubectl get nodes
 
-<<<<<<< HEAD
-If any of the nodes show a status of NotReady but they still respond to ping and can be accessed via ssh, it may be that either the kubelet or docker service has stopped running. This can often be confirmed by checking the "Conditions" section in the output of
-=======
 If any of the nodes show a status of NotReady but they still respond to ping and
 can be accessed via SSH, it may be that either the kubelet or docker service has
 stopped running. This can be confirmed by checking the "Conditions" section for
 the message "Kubelet has stopped posting node status" after running:
->>>>>>> doc: transfer to doc/source
 
 .. code-block:: console
 
@@ -425,13 +405,9 @@ the journalctl command:
 Frequent Pod Evictions
 ----------------------
 
-<<<<<<< HEAD
-If pods are frequently being evicted from a particular node, it may be a sign that the node is unhealthy and requires maintenance. Check that node's conditions and events by running
-=======
 If Pods are frequently being evicted from a particular node, it may be a sign
 that the node is unhealthy and requires maintenance. Check that node's conditions
 and events by running:
->>>>>>> doc: transfer to doc/source
 
 .. code-block:: console
 
