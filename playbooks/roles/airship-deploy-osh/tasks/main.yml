@@ -86,6 +86,24 @@
     - install
     - always
 
+# The first time you run shipyard, it will download its docker image
+- name: Download Shipyard image
+  command: '{{ shipyard }} help'
+  args:
+    chdir: '{{ upstream_repos_clone_folder }}/airship/shipyard'
+  environment:
+    SHIPYARD_IMAGE: "{{ shipyard_image }}"
+    OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
+  register: shipyard_help
+  failed_when:
+    - shipyard_help.stdout.find('Error') == 0
+# The download may fail on the first attempt
+  retries: 3
+  tags:
+    - install
+    - skip_ansible_lint
+    - update_airship_osh_site
+
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Create config docs in Shipyard
   command: '{{ shipyard }} create configdocs {{ socok8s_site_name }}-design --replace --directory=/target/{{ pegleg_output }}'
