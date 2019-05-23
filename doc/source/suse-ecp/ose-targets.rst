@@ -12,7 +12,7 @@ Prepare the target hosts
      caasp [label="Deploy CaaSP\n(optional)"]
      deployer [label="Deploy deployer\n(optional)"]
      enroll_caasp [label="Enroll CaaSP\n(optional)"]
-     setup_caasp_workers [label="Setup CaaSP\nfor OpenStack"]
+     setup_caasp_workers [label="Set up CaaSP\nfor OpenStack"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build docker images\n(for developers)"]
      deploy [label="Deploy OpenStack"]
@@ -22,7 +22,7 @@ Prepare the target hosts
 
      group {
        color = "red"
-       label = "Setup hosts"
+       label = "Set up hosts"
        ses -> caasp;
        caasp -> deployer [folded];
        deployer -> enroll_caasp;
@@ -51,9 +51,9 @@ your environment from scratch.
 
 .. warning::
 
-   You still need to export the right environment variables for `run.sh`
-   to work with the `openstack` deployment mechanism. Check if you have set
-   them appropriately. See also :ref:`configureopenstackdeploymentmechanism`.
+   You must export the right environment variables for `run.sh` to work with
+   the `openstack` deployment mechanism. Verify that they are set
+   appropriately. See :ref:`configureopenstackdeploymentmechanism`.
 
 In separate steps
 -----------------
