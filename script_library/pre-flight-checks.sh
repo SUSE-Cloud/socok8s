@@ -36,18 +36,38 @@ check_openstack_environment_is_ready_for_deploy (){
     openstack keypair list | grep ${KEYNAME} > /dev/null || (echo "keyname not found. export KEYNAME=" && exit 2)
 }
 
+check_python_requirement (){
+    if ! python -c "import ${1}" > /dev/null 2>&1; then
+        echo "Missing python requirement ${1}."
+        echo "Install from your system packages or set SOCOK8S_USE_VIRTUALENV=True to install requirements into a virtualenv."
+        exit 1
+    fi
+}
+
 check_ansible_requirements (){
+    if [[ "${SOCOK8S_USE_VIRTUALENV:-False}" == "True" ]]; then
+        install_ansible
+    fi
     # Ansible is required
-    which ansible-playbook > /dev/null || install_ansible
+    if ! which ansible-playbook > /dev/null 2>&1; then
+        echo "Ansible is not installed."
+        echo "Install from your system packages or set SOCOK8S_USE_VIRTUALENV=True to install ansible and other requirements into a virtualenv."
+        exit 1
+    fi
     # We need ansible version 2.7 minimum
-    [[ $(ansible --version | awk 'NR==1 { gsub(/[.]/,""); print substr($2,0,2); }' ) -lt "27" ]] && install_ansible
+    if [[ $(ansible --version | awk 'NR==1 { gsub(/[.]/,""); print substr($2,0,2); }' ) -lt "27" ]]; then
+        echo "Insufficent version of ansible: 2.7 or greater is required."
+        echo "Install from your system packages or set SOCOK8S_USE_VIRTUALENV=True to install ansible and other requirements into a virtualenv."
+        exit 1
+    fi
     # In the ansible venv, we should have jmespath and netaddr
-    python -c 'import jmespath' || install_ansible
-    python -c 'import netaddr' || install_ansible
-    python -c 'import openstack' || install_ansible
-    # If ara is required, install it.
+    check_python_requirement 'jmespath'
+    check_python_requirement 'netaddr'
+    check_python_requirement 'openstack'
+    # If ara is requested
     if [[ ${USE_ARA:-False} == "True" ]]; then
-        python -c 'import ara' || install_ansible
+        check_python_requirement 'ara'
+        python -m ara.setup.env > ${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace/ara.rc
     fi
 }
 

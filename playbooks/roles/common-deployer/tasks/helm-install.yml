@@ -1,6 +1,4 @@
 ---
-# TODO(evrardjp): Handle the case of tiller not installed
-# TODO(evrardjp): Remove this task when helm is packaged as rpm
 - name: Check versions
   # the awk extracts the sha of both the helm client and server.
   # uniq means same version or not
@@ -16,7 +14,7 @@
     helm_state: 'to_install'
   when:  _helmcheck.stdout == '0'
 
-- name: Helm has to be updated
+- name: Helm is up to date
   set_fact:
     helm_state: 'ready'
   when:  _helmcheck.stdout == '1'
@@ -31,15 +29,15 @@
     msg: "Unknown helm state"
   when: _helmcheck.stdout not in ['0','1','2']
 
-# TODO(evrardjp): Move this to get_url or to a package install (to be decided)
-# error of linting: not using get_url.
-- name: Installing helm client
-  shell: "curl {{ helm_download_url }} | bash"
-  args:
-    executable: /bin/bash
-  when: helm_state == 'to_update' or helm_state == 'to_install'
+- name: Install helm package
+  become: yes
+  package:
+    name: helm
+    state: present
+  retries: 5
+  delay: 2
   tags:
-    - skip_ansible_lint
+    - install
 
 - name: Install tiller
   command: helm init
