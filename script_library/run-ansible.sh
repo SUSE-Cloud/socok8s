@@ -27,7 +27,7 @@ function run_ansible(){
 
     if [[ ${USE_ARA:-False} == "True" ]]; then
         echo "Loading ARA"
-        source ${socok8s_workspace}/.ansiblevenv/ara.rc
+        source ${socok8s_workspace}/ara.rc
     fi
 
     pushd ${socok8s_absolute_dir}
