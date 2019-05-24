@@ -28,7 +28,9 @@ the SUSE Enterprise Storage (SES).
 
 It started as a series of shell scripts and Ansible playbooks, choosing the
 simplest and fastest way to bring a test infrastructure for the upstream
-charts.
+charts.  It was easier to start with a shell script
+than writing a CLI in <insert language here>, mostly because
+the shell script organically grew out of its usage and CI needs.
 
 The mechanism of deployment was flexible from the beginning to allow developers
 to test their changes independently. It would allow them to override specific
@@ -46,6 +48,9 @@ Project goals
 
 Design considerations
 =====================
+
+Workspace
+---------
 
 In order to not pollute the developer/CI machine (called `localhost`),
 all the data relevant for a deployment (like any eventual override) is stored
@@ -313,6 +318,12 @@ include a ``baremetal`` and ``kvm``.
 ``SOCOK8S_DEVELOPER_MODE`` determines if you want to enter developer mode or
 not. This adds a step for patching upstream code, builds images and then
 continues the deployment.
+
+``SOCOK8S_USE_VIRTUALENV`` determines if the script should set up and use a
+virtualenv for python and ansible requirements. Without this it is expected
+that ansible and the requirements are installed via system packages.
+When ``SOCOK8S_DEVELOPER_MODE`` is set to True, this defaults to True, otherwise
+this defaults to False.
 
 ``USE_ARA`` determines if you want to store records in ARA. Set its
 value to 'True' for using ARA.

@@ -36,18 +36,38 @@ check_openstack_environment_is_ready_for_deploy (){
     openstack keypair list | grep ${KEYNAME} > /dev/null || (echo "keyname not found. export KEYNAME=" && exit 2)
 }
 
+check_python_requirement (){
+    if ! python -c "import ${1}" > /dev/null 2>&1; then
+        echo "Missing python requirement ${1}."
+        echo "Install from your system packages or set SOCOK8S_USE_VIRTUALENV=True to install requirements into a virtualenv."
+        exit 1
+    fi
+}
+
 check_ansible_requirements (){
+    if [[ "${SOCOK8S_USE_VIRTUALENV:-False}" == "True" ]]; then
+        install_ansible
+    fi
     # Ansible is required
-    which ansible-playbook > /dev/null || install_ansible
+    if ! which ansible-playbook > /dev/null 2>&1; then
+        echo "Ansible is not installed."
+        echo "Install from your system packages or set SOCOK8S_USE_VIRTUALENV=True to install ansible and other requirements into a virtualenv."
+        exit 1
+    fi
     # We need ansible version 2.7 minimum
-    [[ $(ansible --version | awk 'NR==1 { gsub(/[.]/,""); print substr($2,0,2); }' ) -lt "27" ]] && install_ansible
+    if [[ $(ansible --version | awk 'NR==1 { gsub(/[.]/,""); print substr($2,0,2); }' ) -lt "27" ]]; then
+        echo "Insufficent version of ansible: 2.7 or greater is required."
+        echo "Install from your system packages or set SOCOK8S_USE_VIRTUALENV=True to install ansible and other requirements into a virtualenv."
+        exit 1
+    fi
     # In the ansible venv, we should have jmespath and netaddr
-    python -c 'import jmespath' || install_ansible
-    python -c 'import netaddr' || install_ansible
-    python -c 'import openstack' || install_ansible
-    # If ara is required, install it.
+    check_python_requirement 'jmespath'
+    check_python_requirement 'netaddr'
+    check_python_requirement 'openstack'
+    # If ara is requested
     if [[ ${USE_ARA:-False} == "True" ]]; then
-        python -c 'import ara' || install_ansible
+        check_python_requirement 'ara'
+        python -m ara.setup.env > ${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace/ara.rc
     fi
 }
 
@@ -63,6 +83,29 @@ check_git_submodules_are_present (){
 
 check_jq_present (){
     which jq > /dev/null || (echo "Please install jq"; exit 7)
+}
+
+validate_cli_options (){
+   if [ -z ${1+x} ];then
+       echo "Please provide valid option."
+       exit 1
+   fi
+
+   OPTIONS=(deploy update_openstack add_openstack_compute remove_openstack_compute remove_deployment deploy_network deploy_ses deploy_caasp deploy_ccp_deployer enroll_caasp_workers patch_upstream build_images deploy_osh setup_caasp_workers_for_openstack setup_hosts setup_openstack setup_airship setup_everything teardown clean_k8s clean_airship_not_images gather_logs)
+
+   action=$1
+   isvalid=false
+   for value in ${OPTIONS[@]} ; do
+      if [[ "$value" == "$action" ]]; then
+         isvalid=true
+         break;
+      fi
+   done
+   if [[ "$isvalid" == "false" ]]; then
+      echo "Invalid option, Check --help for valid options"
+      exit 1
+   fi
+   return 0
 }
 
 if [ -z ${1+x} ]; then

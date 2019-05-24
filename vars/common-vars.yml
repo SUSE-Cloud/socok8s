@@ -55,12 +55,27 @@ suse_airship_registry_location: "{%- if suse_airship_build_local_images or suse_
 suse_airship_components_image_build_tag: "master"
 
 # Complete distro specific published image tag
-# Interim solution till we don't publish suse images on quay.io
-suse_airship_components_image_tag: "{%- if suse_airship_build_local_images or suse_airship_use_local_images -%}
-                                     {{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}
-                                    {%- else -%}
-                                      master
-                                    {%- endif -%}"
+suse_airship_components_image_tag: |
+                                   {% if suse_airship_build_local_images or suse_airship_use_local_images %}
+                                   {% set _img_tag = {
+                                     'armada': "{{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}",
+                                     'shipyard': "{{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}",
+                                     'airflow' : "{{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}",
+                                     'deckhand': "{{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}",
+                                     'pegleg': "{{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}"
+                                    }
+                                   %}
+                                   {% else %}
+                                   {% set _img_tag = {
+                                     'armada': '1110c23cd192ea5eff77629d10924b290140d6e2-opensuse_15',
+                                     'shipyard': 'cd6f154da56079ba408b922ed748a80b622c3592-opensuse_15',
+                                     'airflow': 'cd6f154da56079ba408b922ed748a80b622c3592-opensuse_15',
+                                     'deckhand': 'master',
+                                     'pegleg': '652c3abefd0f647cfc45096aa76cb76bfaf8a805-opensuse_15'
+                                   }
+                                   %}
+                                   {% endif %}
+                                   {{ _img_tag }}
 
 socok8s_site_name: "soc"
 
@@ -78,3 +93,7 @@ ucp_deploy_timeout: 1800
 
 #Set timeout for osh deployment
 openstack_helm_deploy_timeout: 3000
+
+#Set volume size for all rabbitmq in openstack deployment and postgresql in ucp deployment.
+rabbitmq_volume_size: 5Gi
+db_volume_size: 5Gi

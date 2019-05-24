@@ -19,8 +19,8 @@ data:
   wait:
     timeout: {{ openstack_helm_deploy_timeout }}
   test:
-    enabled: {{ run_tests | default('true') }}
-    timeout: {{ test_timeout | default(300) }}
+    enabled: {{ run_tests }}
+    timeout: {{ test_timeout }}
   values:
     pod:
       replicas:
@@ -28,4 +28,6 @@ data:
     monitoring:
       prometheus:
         enabled: false
+    volume:
+      size: {{ rabbitmq_volume_size }}
 ...

@@ -1,5 +1,4 @@
 ---
-deploy_on_openstack_cloudname: "{{ lookup('env','OS_CLOUD') | default('engcloud-cloud-ci', true) }}"
 deploy_on_openstack_external_network: "{{ lookup('env', 'EXTERNAL_NETWORK') | default('floating', true) }}"
 deploy_on_openstack_internal_network: "{{ socok8s_envname }}-net"
 deploy_on_openstack_internal_subnet: "{{ socok8s_envname }}-subnet"
@@ -18,14 +17,11 @@ deploy_on_openstack_sesnode_userdata: |
 deploy_on_openstack_repos_to_configure:
   SLE12SP3-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Pool/
   SLE12SP3-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Updates/
-  SLE12SP3SDK-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-Pool/
-  SLE12SP3SDK-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLE12-SP3-SDK-Updates/
   SUSE-CA: http://download.suse.de/ibs/SUSE:/CA/SLE_12_SP3/
-  OpenStack-Cloud8-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-OpenStack-Cloud-8-Pool/
   SES5-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Pool/
   SES5-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Updates/
-  SLE12Containers: http://ibs-mirror.prv.suse.net/dist/ibs/SUSE/Updates/SLE-Module-Containers/12/x86_64/update/
   Leap15develtools: https://download.opensuse.org/repositories/devel:/tools/openSUSE_Leap_15.0/
+  socok8s: https://download.opensuse.org/repositories/Cloud:/socok8s/openSUSE_Leap_15.0/
   CAASP30-update: http://ibs-mirror.prv.suse.net/dist/ibs/SUSE/Updates/SUSE-CAASP/3.0/x86_64/update/
   CAASP30-pool: http://ibs-mirror.prv.suse.net/dist/ibs/SUSE/Products/SUSE-CAASP/3.0/x86_64/product/
 deploy_on_openstack_ses_repos_per_imagename:
@@ -38,14 +34,7 @@ deploy_on_openstack_ses_repos_per_imagename:
 deploy_on_openstack_osh_repos_per_imagename:
   openSUSE-Leap-15.0:
     - Leap15develtools
-  SLES12-SP3:
-    - SLE12SP3-product
-    - SLE12SP3-update
-    - SLE12SP3SDK-product
-    - SLE12SP3SDK-update
-    - SUSE-CA
-    - OpenStack-Cloud8-product
-    - SLE12Containers
+    - socok8s
 deploy_on_openstack_caasp_repos_per_imagename:
   caasp-3.0.0-GM-OpenStack-qcow:
     - CAASP30-update

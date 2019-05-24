@@ -8,14 +8,8 @@ dev_patcher_packages:
 #unrelated patches will fail (because not cloned)
 #conflicting patches will fail (because need resolving)
 dev_patcher_patches:
-  # Adding opensuse support in image building of airflow and shipyard
-  - 636229
-  # armada: Support armada to run on opensuse image leap15
-  - 637327
   # deckhand: Adding opensuse image build for deckhand
   - 638301
-  # pegleg: Support pegleg to run on opensuse leap15 image
-  - 639495
   # treasuremap: Add a preliminary draft of schema for the pod scale policy/profile in Airship.
   - 639861
   # osh-infra: Add support for mulitple VIPS

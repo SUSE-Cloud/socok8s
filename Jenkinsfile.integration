@@ -11,6 +11,12 @@ pipeline {
             label "cloud-ccp-ci"
         }
     }
+
+    parameters {
+        /* first value in the list is the default */
+        choice(choices: ['airship', 'osh'], description: 'Which deployment mechanism?', name: 'deployment')
+    }
+
     environment {
         /* use lowercase SOCOK8S_ENVNAME. CaaSP Velum doesn't like it otherwise */
         SOCOK8S_ENVNAME = "cloud-socok8s-${env.BRANCH_NAME.toLowerCase()}-${env.BUILD_NUMBER}"
@@ -20,6 +26,7 @@ pipeline {
         SOCOK8S_DEVELOPER_MODE = "True"
         DEPLOYMENT_MECHANISM = "openstack"
         ANSIBLE_STDOUT_CALLBACK = "yaml"
+        USER = "jenkins" /* Why isn't this set in the jenkins environment? */
     }
 
     stages {
@@ -61,7 +68,7 @@ pipeline {
 
         stage('Setup CaaSP workers and apply upstream patches') {
             when {
-                expression { params.deployment == "helm" }
+                expression { params.deployment == "osh" }
             }
             parallel {
                 stage('Setup CaaSP workes for OpenStack Helm') {
@@ -78,7 +85,7 @@ pipeline {
         }
         stage('Deploy OpenStack Helm') {
             when {
-                expression { params.deployment == "helm" }
+                expression { params.deployment == "osh" }
             }
             steps {
                 sh "./run.sh build_images"
@@ -106,11 +113,16 @@ pipeline {
                     }
                 }
             }
-        }
-        always {
             script {
-                sh './run.sh teardown'
+                sh './run.sh gather_logs'
             }
+            zip archive: true, dir: 'logs/', zipFile: 'logs.zip'
+            archiveArtifacts artifacts: 'logs.zip'
+        }
+        cleanup {
+            script {
+                    sh './run.sh teardown'
+                }
         }
     }
 }

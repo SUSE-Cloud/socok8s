@@ -239,6 +239,8 @@
     _component_runcommand: "./tools/deployment/multinode/080-keystone.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_KEYSTONE: >
+        --values=./keystone/values_overrides/opensuse_15.yaml
+        --values=./keystone/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-keystone.yaml
         --values=/tmp/socok8s-useroverrides-keystone.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_KEYSTONE') | default('', True) }}
@@ -264,6 +266,8 @@
     _component_runcommand: "./tools/deployment/multinode/085-horizon.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_HORIZON: >
+        --values=./horizon/values_overrides/opensuse_15.yaml
+        --values=./horizon/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-horizon.yaml
         --values=/tmp/socok8s-useroverrides-horizon.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_HORIZON') | default('', True) }}
@@ -301,6 +305,7 @@
     _component_runcommand: "./tools/deployment/multinode/100-glance.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_GLANCE: >
+        --values=./glance/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-glance.yaml
         --values=/tmp/socok8s-useroverrides-glance.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_GLANCE') | default('', True) }}
@@ -329,6 +334,7 @@
     _component_runcommand: "./tools/deployment/multinode/110-cinder.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_CINDER: >
+        --values=./cinder/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-cinder.yaml
         --values=/tmp/socok8s-useroverrides-cinder.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_CINDER') | default('', True) }}
@@ -345,6 +351,7 @@
     _component_runcommand: "./tools/deployment/multinode/120-openvswitch.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_OPENVSWITCH: >
+        --values=../openstack-helm-infra/openvswitch/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-ovs.yaml
         --values=/tmp/socok8s-useroverrides-ovs.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_OPENVSWITCH') | default('', True) }}
@@ -361,6 +368,7 @@
     _component_runcommand: "./tools/deployment/multinode/130-libvirt.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_LIBVIRT: >
+        --values=../openstack-helm-infra/libvirt/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-libvirt.yaml
         --values=/tmp/socok8s-useroverrides-libvirt.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_LIBVIRT') | default('', True) }}
@@ -373,18 +381,20 @@
 
 # TODO(evrardjp): Check if need to have our own dummy overrides
 # In that case, try to split the shell script upstream in two scripts.
-# Compute kit deploys nova and neutron but only nova needs overrides
 - name: Deploy compute kit
   import_tasks: component-install.yml
   vars:
     _component_runcommand: "./tools/deployment/multinode/140-compute-kit.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_NEUTRON: >
+        --values=./neutron/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-neutron.yaml
         --values=/tmp/socok8s-useroverrides-neutron.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NEUTRON') | default('', True) }}
       OSH_OPENSTACK_RELEASE: "rocky"
       OSH_EXTRA_HELM_ARGS_NOVA: >
+        --values=./nova/values_overrides/opensuse_15.yaml
+        --values=./nova/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-nova.yaml
         --values=/tmp/socok8s-useroverrides-nova.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NOVA') | default('', True) }}
@@ -404,6 +414,7 @@
     _component_runcommand: "./tools/deployment/multinode/150-heat.sh"
     _component_run_env:
       OSH_EXTRA_HELM_ARGS_HEAT: >
+        --values=./heat/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-heat.yaml
         --values=/tmp/socok8s-useroverrides-heat.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_HEAT') | default('', True) }}

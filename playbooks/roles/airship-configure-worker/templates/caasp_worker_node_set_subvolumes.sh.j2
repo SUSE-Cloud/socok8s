@@ -22,8 +22,10 @@ init(){
 
 create_subvolume(){
   if [ ! -d "$1" ]; then
-    init 
+    init
     mksubvolume "$1"
+    # make sure that directory related to volume is already created
+    mkdir -p "$1"
   fi
 }
 

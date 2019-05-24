@@ -41,7 +41,7 @@ Cleanup Actions
 
 In addition to deployment, run.sh can be used to perform a variety of environment
 cleanup actions. To ensure all resources are removed, the following environment
-variable should be set before running any cleanup commands:
+git checkout airship_doc, git merge mastervariable should be set before running any cleanup commands:
 
 .. code-block:: console
 
