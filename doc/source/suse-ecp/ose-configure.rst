@@ -101,7 +101,7 @@ Airship/OpenStack deployment:
 
 You can find an example `ses_config.yml` in `examples/workdir`.
 
-Configure the VIP that will be used for OpenStack service public endpoints.
+Configure the VIP that will be used for OpenStack service public endpoints
 --------------------------------------------------------------------------
 
 Add `socok8s_ext_vip:` with its appropriate value for your environment in your

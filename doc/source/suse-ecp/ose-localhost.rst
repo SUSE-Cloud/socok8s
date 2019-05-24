@@ -64,18 +64,27 @@ Install the following software on your `localhost`:
 Optionally, `localhost` can be preinstalled with the following software:
 
   * ansible>=2.7.0
-  * python-openstackclient
-  * python-requests
-  * python-jmespath
-  * python-openstacksdk
-  * python-netaddr
+  * python/python3-openstackclient
+  * python/python3-requests
+  * python/python3-jmespath
+  * python/python3-openstacksdk
+  * python/python3-netaddr
 
 Make sure to install the variant of the packages that matches the Python
-release that Ansible is using. (e.g. on openSUSE Tumbleweed, Ansible is using
-Python 3, so install the "python3-" variant of the packages)
+release that Ansible is using. (for example, on openSUSE Tumbleweed, Ansible uses
+Python 3, so install the "python3-" variant of the packages).
 
 If the optional software packages are not installed, they will be installed in a
-venv in |socok8s_workspace_default|\ `/.ansiblevenv` .
+venv in |socok8s_workspace_default|\ `/.ansiblevenv`.
+
+.. note ::
+
+   The requirements that will be installed in that workspace are:
+
+   .. include :: requirements.txt
+      :code:
+
+
 
 Cloning this repository
 -----------------------
@@ -121,7 +130,7 @@ Enable Mitogen (optional)
 
 To improve deployment speed, enable the Mitogen strategy and connection plugin.
 First install Mitogen in your venv (e.g. |socok8s_workspace_default|\ `/.ansiblevenv`
-or your local ansible environment). Then enable it using environment variables.
+or your local Ansible environment). Then enable it using environment variables.
 
 Alternatively, enable Mitogen for all your Ansible calls by adding it to your
 Ansible configuration:
@@ -134,7 +143,7 @@ Ansible configuration:
    strategy = mitogen_linear
    EOF
 
-For more details on mitogen, please read
+For more details on Mitogen, please read
 https://mitogen.readthedocs.io/en/latest/ansible.html .
 
 Enable pipelining (recommended)
@@ -155,10 +164,10 @@ Defining a workspace
 --------------------
 
 `socok8s` can create a :term:`workspace`, install things (eg. Ansible in a
-virtualenv), or create resources (for example, OpenStack Heat stacks if the deployment
-mechanism is `openstack`). For all of these operations, an environment variable
-called `SOCOK8S_ENVNAME` must be set. This variable must be unique if
-multiple environments are installed in parallel.
+virtualenv), or create resources (for example, OpenStack Heat stacks if the
+deployment mechanism is `openstack`). For all of these operations, an
+environment variable called `SOCOK8S_ENVNAME` must be set. This variable must
+be unique if multiple environments are installed in parallel.
 
 .. code-block:: console
 
@@ -190,7 +199,7 @@ Configure OpenStack deployment mechanism (experimental)
 Your environment must have an OpenStack client configuration file. For that,
 create the ``~/.config/openstack/clouds.yaml`` file.
 
-The following is an example if you are running on a "engcloud":
+The following is an example if you are running on an "engcloud":
 
 ::
 
@@ -215,8 +224,8 @@ as part of the name of objects you create.
 
 Create a keypair on your cloud (named further *engcloud*) using either the
 Horizon web interface or the OpenStackClient (OSC) ``openstack keypair create``
-command for accessing the instances created. Remember the name of this keypair (which
-appears as ``soc-west-key`` in the example below).
+command for accessing the instances created. Remember the name of this keypair
+(which appears as ``soc-west-key`` in the example below).
 
 Set this for **all** the following scripts in a deployment:
 

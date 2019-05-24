@@ -1,3 +1,5 @@
+.. _verifyinstallation:
+
 Verify OpenStack operation
 ==========================
 

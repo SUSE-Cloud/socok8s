@@ -4,14 +4,14 @@ Deploy in SUSE ECP Overview
 ============================
 
 SUSE Engineering Cloud Platform is an OpenStack environment. An experimental
-tool is provided for you to bootstrap the `deployer` VM, `CaaS Platform` nodes
+tool is provided for you to bootstrap the `Deployer` VM, `CaaS Platform` nodes
 and SES on the OpenStack infrastructure before deploying Airship and
 Containerized Openstack.
 
-In this scenario, we introduce a new type of host called `localhost`.
-`localhost` runs shell scripts and Ansible playbooks. This can be your CI node,
-or your development laptop. It can be the same as the `deployer`, but that is
-not a requirement.
+In this scenario, we introduce a new type of host called `localhost`, which
+runs shell scripts and Ansible playbooks. This can be your CI node or your
+development laptop. It can be the same as the `Deployer`, but that is not a
+requirement.
 
 The following diagram shows the general workflow of a SUSE Containerized
 Openstack deployment on an Openstack environment.
@@ -27,7 +27,7 @@ Openstack deployment on an Openstack environment.
      enroll_caasp [label="Enroll CaaS Platform Nodes"]
 
      configure [label="Configure\n Cloud"]
-     setup_caasp_workers [label="Setup CaaS Platform\nworker nodes"]
+     setup_caasp_workers [label="Set up CaaS Platform\nworker nodes"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build Docker images\n(for developers)"]
      deploy_airship [label="Deploy Airship"]
@@ -37,7 +37,7 @@ Openstack deployment on an Openstack environment.
 
      group {
        color = "#EEEEEE"
-       label = "Setup hosts"
+       label = "Set up hosts"
        ses -> caasp;
        caasp -> deployer [folded];
        deployer -> enroll_caasp;

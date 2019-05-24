@@ -116,7 +116,7 @@ The Ceph admin keyring can be obtained by running the following on ceph host.
 
 .. code-block:: yaml
 
-  sudo ceph auth get-key client.admin | base64
+  echo $( sudo ceph auth get-key client.admin ) | base64
 
 For example:
 

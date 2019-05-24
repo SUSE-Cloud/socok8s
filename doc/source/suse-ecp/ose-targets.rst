@@ -46,7 +46,7 @@ Prepare the target hosts
    Skip this step if you are bringing your own :term:`SES`,
    :term:`CaaSP`, and deployer environment (recommended).
 
-Apply these commands if you are running on OpenStack, and want to construct
+Apply these commands if you are running on OpenStack and want to construct
 your environment from scratch.
 
 .. warning::

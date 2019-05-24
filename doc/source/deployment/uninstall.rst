@@ -1,3 +1,5 @@
+.. _uninstall:
+
 Uninstall
 =========
 
@@ -9,5 +11,5 @@ From the socok8s directory...
 
    run.sh remove_deployment
 
-The first time you run this command, it will display a warning and instruct you to set an
-environment variable if you really want to remove your deployment.
+The first time you run this command, it will display a warning and instruct you
+to set an environment variable if you really want to remove your deployment.

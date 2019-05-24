@@ -1,5 +1,5 @@
-Setup OpenStack
-===============
+Set Up OpenStack
+================
 
 .. blockdiag::
 
@@ -54,12 +54,12 @@ Run the following to configure the CaaSP nodes for OpenStack:
 
    ./run.sh setup_caasp_workers_for_openstack
 
-This will update your caasp workers to:
+This will update your CaaSP workers to:
 
 * Point to your `deployer` host in `/etc/hosts`
 * Copy your registry certificates (if developer mode is enabled)
 * Create some directories of your workers with read/write mode for OpenStack
-  software.
+  software
 
 Run developer plays
 ~~~~~~~~~~~~~~~~~~~
@@ -141,3 +141,14 @@ run the following:
 
    export SOCOK8S_DEVELOPER_MODE='True'
    ./run.sh setup_openstack
+
+Verify the installation
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The :ref:`verifyinstallation` page has information for testing your SUSE
+Containerized OpenStack installation.
+
+Uninstalling SUSE Containerized OpenStack
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+See the :ref:`uninstall` page for instructions.

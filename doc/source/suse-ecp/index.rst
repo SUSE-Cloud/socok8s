@@ -1,15 +1,14 @@
 .. _ose-deploymentguide:
 
-============================================
-SUSE ECP Internal Environment (Experimental)
-============================================
+================================
+SUSE ECP Internal (Experimental)
+================================
 
-This guide provides instruction for performing a Containerized Openstack
+This guide provides instructions for performing a Containerized Openstack
 Cloud deployment in the SUSE Engineering Cloud environment. It bootstraps
-a minimal SUSE CaaSP cluster, a SES-AIO, and a deployer VM.
+a minimal SUSE CaaSP cluster, an SES-AIO, and a deployer VM.
 
-This feature is considered to be experimental and is intended for SUSE
-developers.
+This feature is experimental and is intended for SUSE developers.
 
 .. toctree::
    :maxdepth: 1
