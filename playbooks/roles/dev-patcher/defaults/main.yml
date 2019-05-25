@@ -10,7 +10,5 @@ dev_patcher_packages:
 dev_patcher_patches:
   # deckhand: Adding opensuse image build for deckhand
   - 638301
-  # treasuremap: Add a preliminary draft of schema for the pod scale policy/profile in Airship.
-  - 639861
   # osh-infra: Add support for mulitple VIPS
   - 640115
