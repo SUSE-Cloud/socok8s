@@ -653,8 +653,6 @@ data:
         default: null
         public:
           host: image.DOMAIN
-        admin: 
-          host: image-api.DOMAIN
       path:
         default: null
       scheme:
