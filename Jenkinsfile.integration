@@ -50,7 +50,9 @@ pipeline {
                 }
                 stage('Setup SES') {
                     steps {
-                        sh "./run.sh deploy_ses"
+                        retry(3) {
+                            sh "./run.sh deploy_ses"
+                        }
                     }
                 }
                 stage('Setup Deployer') {
