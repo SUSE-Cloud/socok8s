@@ -1,5 +1,4 @@
 ---
-scale_profile: "{{ lookup('env','scale_profile') | default('minimal', true) }}"
 airship_pegleg_image: "{{ suse_airship_registry_location }}/airshipit/pegleg:{{ suse_airship_components_image_tag['pegleg'] }}"
 run_tests: true
 test_timeout: 2700

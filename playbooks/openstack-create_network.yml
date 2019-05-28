@@ -24,10 +24,15 @@
           debug:
             var: network_stack_create_output
 
-    - name: Get the VIP from the network stack
-      command: openstack stack output show {{ deploy_on_openstack_network_stackname }} vip -c output_value -f value
+    - name: Get the internal VIP from the network stack
+      command: openstack stack output show {{ deploy_on_openstack_network_stackname }} dcm_vip -c output_value -f value
       changed_when: false
-      register: _network_stack_vip_output
+      register: _network_stack_dcm_vip_output
+
+    - name: Get the external VIP from the network stack
+      command: openstack stack output show {{ deploy_on_openstack_network_stackname }} ext_vip -c output_value -f value
+      changed_when: false
+      register: _network_stack_ext_vip_output
 
     - name: Add vip with cidr in extravars
       delegate_to: localhost
@@ -36,4 +41,5 @@
         create: yes
         marker: "# {mark} ANSIBLE MANAGED BLOCK FOR VIP"
         block: |
-          socok8s_ext_vip: {{ _network_stack_vip_output.stdout }}
+          socok8s_dcm_vip: {{ _network_stack_dcm_vip_output.stdout }}
+          socok8s_ext_vip: {{ _network_stack_ext_vip_output.stdout }}
