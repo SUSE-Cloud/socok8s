@@ -7,7 +7,7 @@ clean_action=${1:-"clean_images_clean_openstack_clean_ucp_clean_rest"}
 
 if [[ ${clean_action} == *"clean_ucp"* ]]; then
     #delete ucp helm charts
-    helm ls -a | grep ucp | awk 'NR >= 1 {print $1 }' | xargs helm delete $line --purge
+    helm ls -a | grep ucp | awk 'NR >= 1 {print $1 }' | xargs -r helm delete $line --purge
 fi
 
 if [[ ${clean_action} == *"clean_rest"* ]]; then
@@ -16,7 +16,7 @@ fi
 
 if [[ ${clean_action} == *"clean_openstack"* ]]; then
     #delete opennstack helm charts
-    helm ls -a | grep openstack | awk 'NR >= 1 {print $1 }' | xargs helm delete $line --purge
+    helm ls -a | grep openstack | awk 'NR >= 1 {print $1 }' | xargs -r helm delete $line --purge
 fi
 
 sleep 30
@@ -46,7 +46,7 @@ if [[ ${clean_action} == *"clean_rest"* ]]; then
     kubectl delete pod -n kube-system --ignore-not-found -l app=ingress-api,application=ingress,component=server
     kubectl delete pod -n kube-system --ignore-not-found -l application=ingress,component=error-pages
 
-    kubectl --ignore-not-found delete configmap --namespace kube-system airship-ingress-kube-system-nginx-cluster
+    kubectl delete configmap --namespace kube-system --ignore-not-found airship-ingress-kube-system-nginx-cluster
 fi
 
 if [[ ${clean_action} == *"clean_ucp"* ]]; then
@@ -78,8 +78,8 @@ fi
 if [[ ${clean_action} == *"clean_openstack"* ]]; then
     # DO NOT USE clusterrolebinding, else you will delete all rolebindings, even the suse: and system: ones,
     # even when scoped in the namespace.
-    kubectl get -n openstack rolebinding.rbac.authorization.k8s.io -o name | xargs kubectl -n openstack delete
-    kubectl get jobs -n openstack -o name | xargs kubectl delete -n openstack
+    kubectl get -n openstack rolebinding.rbac.authorization.k8s.io -o name | xargs -r kubectl -n openstack delete
+    kubectl get jobs -n openstack -o name | xargs -r kubectl delete -n openstack
     kubectl delete namespace --ignore-not-found openstack
     kubectl label node --all openstack-control-plane-
     kubectl label node --all ucp-control-plane-
@@ -93,7 +93,7 @@ if [[ ${clean_action} == *"clean_rest"* ]]; then
 fi
 
 if [[ ${clean_action} == *"clean_ucp"* ]]; then
-    kubectl get jobs -n ucp -o name | xargs kubectl delete -n ucp
+    kubectl get jobs -n ucp -o name | xargs -r kubectl delete -n ucp
     kubectl delete namespace --ignore-not-found ucp
     kubectl label node --all ucp-control-plane-
     kubectl label node --all kube-ingress-
@@ -102,7 +102,7 @@ fi
 if [[ ${clean_action} == *"clean_images"* ]]; then
     # Need to keep them idempotent
     if [[ $(docker images -a | grep "airship" | wc -c) > 0 ]]; then
-        docker images -a | grep "airship" | awk '{print $3}' | xargs docker rmi -f
+        docker images -a | grep "airship" | awk '{print $3}' | xargs -r docker rmi -f
     fi
 fi
 
