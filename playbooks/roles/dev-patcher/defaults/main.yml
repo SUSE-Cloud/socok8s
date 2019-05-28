@@ -9,6 +9,8 @@ dev_patcher_packages:
 #conflicting patches will fail (because need resolving)
 dev_patcher_patches:
   # deckhand: Adding opensuse image build for deckhand
-  - 638301
+  - - 638301
+    - 3eee2f196820e0502fcbfb5234cc338f6a6611e6
   # osh-infra: Add support for mulitple VIPS
-  - 640115
+  - - 640115
+    - acdab0cd7f7c4c718d09029e4fb2722f616ecf4b

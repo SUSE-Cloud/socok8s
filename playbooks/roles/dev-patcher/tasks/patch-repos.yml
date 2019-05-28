@@ -1,7 +1,15 @@
 ---
+- name: Fetch patch number
+  set_fact:
+    patchnumber: "{{ patch[0] }}"
+
+- name: Fetch patch revision
+  set_fact:
+    patchrevision: "{{ patch[1] | default('current') }}"
+
 - name: Get patch {{ patchnumber }} details
   uri:
-    url: "{{ dev_patcher_baseurl }}/?q=is:open+{{ patchnumber }}&o=CURRENT_REVISION"
+    url: "{{ dev_patcher_baseurl }}/?q=is:open+{{ patchnumber }}&o=ALL_REVISIONS"
     return_content: yes
     body_format: json
   register: thispatch
@@ -16,12 +24,13 @@
 - name: Apply {{ patchnumber }} - {{ jsoncontent[0]['subject'] }}
   shell: |
     set -o errexit
-    git fetch {{ jsoncontent[0]['revisions'][current_revision]['fetch']['anonymous http']['url'] }} {{ jsoncontent[0]['revisions'][current_revision]['fetch']['anonymous http']['ref'] }}
+    git fetch {{ jsoncontent[0]['revisions'][revision]['fetch']['anonymous http']['url'] }} {{ jsoncontent[0]['revisions'][revision]['fetch']['anonymous http']['ref'] }}
     git cherry-pick FETCH_HEAD
   args:
     chdir: "{{ upstream_repos_clone_folder }}/{{ project }}"
   vars:
-    current_revision: "{{ jsoncontent[0]['current_revision'] }}"
+    # Use latest revision of no revision was specified
+    revision: "{{ (patchrevision != 'current') | ternary(patchrevision, jsoncontent[0]['current_revision']) }}"
     project: "{{ jsoncontent[0]['project'] }}"
   when:
     # Do not apply patches if they are already merged
