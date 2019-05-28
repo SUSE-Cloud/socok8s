@@ -61,11 +61,9 @@ docker_images: []
 #   tags:
 #     libvirt: "{{ build_registry }}openstack/libvirt:latest-opensuse_15"
 ## Which is possible by passing an override file to the libvirt shell script
-## happening in deploy-osh. That override file is generated using
-## config_template and passed as /tmp/socok8s-libvirt.yaml.
-## This config_template takes the _cmpnt_override named:
-## ``suse_osh_deploy_libvirt_yaml_overrides``.
-## Therefore the following should be set in your extravars:
+## happening in deploy-osh. That override file is templated,
+## and passed as /tmp/socok8s-libvirt.yaml.
+## For example, to override libvirt,  set in your extravars:
 # suse_osh_deploy_libvirt_yaml_overrides:
 #   images:
 #     tags:
