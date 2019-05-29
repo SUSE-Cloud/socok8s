@@ -1,15 +1,15 @@
-================================
-Cleanup k8s of socok8s artifacts
-================================
+===================
+Clean up Kubernetes
+===================
 
-If you want to simply cleanup your kubernetes environment of all the
-traces of a socok8s deployment, run:
-
-.. warning::
-
-   You will lose all your k8s data.
+To remove all traces of a Kubernetes deployment in your SUSE Containerized
+OpenStack environment, run:
 
 .. code-block:: console
 
    export DELETE_ANYWAY='YES'
    ./run.sh clean_k8s
+
+.. warning::
+
+   You will lose all your Kubernetes data.

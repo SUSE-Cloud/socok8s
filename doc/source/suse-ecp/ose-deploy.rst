@@ -1,5 +1,5 @@
-Setup OpenStack
-===============
+Set Up OpenStack
+================
 
 .. blockdiag::
 
@@ -10,7 +10,7 @@ Setup OpenStack
      caasp [label="Deploy CaaSP\n(optional)"]
      deployer [label="Deploy deployer\n(optional)"]
      enroll_caasp [label="Enroll CaaSP\n(optional)"]
-     setup_caasp_workers [label="Setup CaaSP\nfor OpenStack"]
+     setup_caasp_workers [label="Set up CaaSP\nfor OpenStack"]
      patch_upstream [label="Apply patches\nfrom upstream\n(for developers)"]
      build_images [label="Build docker images\n(for developers)"]
      deploy [label="Deploy OpenStack"]
@@ -20,7 +20,7 @@ Setup OpenStack
 
      group {
        color = "#EEEEEE"
-       label = "Setup hosts"
+       label = "Set up hosts"
        ses -> caasp;
        caasp -> deployer [folded];
        deployer -> enroll_caasp;
@@ -39,8 +39,8 @@ Setup OpenStack
      }
    }
 
-You can either run these steps separately, or run them
-all in one go.
+You can either run the following steps separately or run them in a single step
+all at the same time.
 
 In separate steps
 -----------------
@@ -54,11 +54,12 @@ Run the following to configure the CaaSP nodes for OpenStack:
 
    ./run.sh setup_caasp_workers_for_openstack
 
-This will update your caasp workers to:
+This will update your CaaSP workers to:
 
 * Point to your `deployer` host in `/etc/hosts`
-* Copy your registry certificates (should developer mode be enabled)
-* Create some directories of your workers with rw mode for OpenStack software.
+* Copy your registry certificates (if developer mode is enabled)
+* Create some directories of your workers with read/write mode for OpenStack
+  software
 
 Run developer plays
 ~~~~~~~~~~~~~~~~~~~
@@ -83,7 +84,7 @@ Deploy OpenStack
 
 .. tip::
 
-   If you are a helm chart developer, you can run OpenStack-Helm deployment
+   If you are a Helm chart developer, you can run OpenStack-Helm deployment
    on top of CaaSP without Airship:
 
    .. code-block:: console
@@ -100,7 +101,7 @@ In a single step
 ----------------
 
 All of the above steps can be summarized in a single command (Do not run
-both!).
+both separate and single step).
 
 For Airship deployment
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -111,8 +112,8 @@ Run the following to deploy Airship:
 
    ./run.sh setup_airship
 
-If you want to patch upstream helm charts and/or build your own images,
-you need to run the following:
+If you want to patch upstream Helm charts or build your own images, run the
+following:
 
 .. code-block:: console
 
@@ -121,9 +122,8 @@ you need to run the following:
 
 .. note::
 
-   Those steps might take a while to finish.
-   If you want to know what is happening, check out the operations' guide
-   page on :ref:`deploymentprogress`.
+   Those steps might take several minutes to finish. If you want to know what
+   is happening, check out the operations guide page on :ref:`deploymentprogress`.
 
 For OpenStack-Helm only (developers)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -134,10 +134,21 @@ Run the following to deploy OpenStack-Helm only:
 
    ./run.sh setup_openstack
 
-If you want to patch upstream helm charts and/or build your own images,
-you need to run the following:
+If you want to patch upstream Helm charts and/or build your own images, run the
+run the following:
 
 .. code-block:: console
 
    export SOCOK8S_DEVELOPER_MODE='True'
    ./run.sh setup_openstack
+
+Verify the installation
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The :ref:`verifyinstallation` page has information for testing your SUSE
+Containerized OpenStack installation.
+
+Uninstalling SUSE Containerized OpenStack
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+See the :ref:`uninstall` page for instructions.

@@ -1,15 +1,15 @@
 ===================
-Use a personal fork
+Use a Personal Fork
 ===================
 
-socok8s allows you to use your own fork, instead of relying solely on
-OpenStack-Helm repositories.
+SUSE Containerized OpenStack allows you to use your own fork instead of relying
+on OpenStack-Helm repositories.
 
 .. note ::
 
-   You will be on your own if you are using different helm charts.
+   If you choose to use different Helm charts, you are on your own.
 
-To override the helm charts sources, or fork any other code, override the
+To override the Helm chart sources or fork any other code, override the
 content of the file `vars/manifest.yml` inside your extravars by defining
 your own `upstream_repos` variable.
 

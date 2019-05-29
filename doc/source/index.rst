@@ -1,19 +1,17 @@
-Welcome to socok8s repo
-=======================
+Welcome to SUSE Containerized OpenStack (SCO)
+=============================================
 
-This project automates the deployment of OpenStack on SUSE
-Container as a Service Platform (CaaSP) and SUSE Enterprise Storage
-(SES) via a series of shell scripts and Ansible playbooks.
-
-Please check on the left sidebar for content. If you
-are interested to deploy this software, follow the deployment guide.
+The socok8s project automates SUSE Containerized OpenStack (SCO) provisioning
+and lifecycle management on SUSE Container as a Service Platform (CaaSP) and
+SUSE Enterprise Storage (SES), using Airship, shell scripts, and Ansible playbooks.
 
 .. toctree::
    :hidden:
 
-   deploy-guide/index.rst
-   contributor.rst
-   user/index.rst
+   deployment/index.rst
    operations.rst
+   user/index.rst
+   contributor.rst
    reference.rst
    glossary.rst
+   suse-ecp/index.rst
