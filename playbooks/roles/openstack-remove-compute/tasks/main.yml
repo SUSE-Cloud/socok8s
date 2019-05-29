@@ -8,11 +8,24 @@
   failed_when: false
   changed_when: false
 
-- name: Validate the compute node id.
+- name: Validate compute node id.
   debug:
     msg: "Compute node {{ compute_node_name }} does not exists in openstack."
   delegate_to: localhost
   when: compute_id.stdout | length | int == 0
+
+- name: Get VM list from compute node.
+  command: "openstack server list --host {{ compute_node_name }}"
+  register: vm_exist
+  delegate_to: localhost
+  failed_when: false
+  changed_when: false
+
+- name: Validate VM(s) exists on compute node.
+  fail:
+    msg: "VM(s) exists on compute node {{ compute_node_name }}."
+  delegate_to: localhost
+  when: vm_exist.stdout | length | int != 0
 
 - name: Check for control-plane label.
   shell: |

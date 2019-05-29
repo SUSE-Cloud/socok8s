@@ -91,7 +91,12 @@ case "$deployment_action" in
             echo "Please enter compute node host name"
             exit 1
         fi
-        remove_compute $2
+        read -r -p "WARNING: Please remove all VM(s) from the compute host. Are you sure to continue? [y/n] " user_input
+        if [[ $user_input == "y" ]]; then
+            remove_compute $2
+        else
+            exit 0
+        fi
         ;;
     "setup_caasp_workers_for_openstack")
         setup_caasp_workers_for_openstack
@@ -140,7 +145,12 @@ case "$deployment_action" in
         clean_airship clean_openstack_clean_ucp_clean_rest
         ;;
     "remove_deployment")
-        clean_airship
+        read -r -p "WARNING: Please remove all VM(s) from all compute host(s). Are you sure to continue? [y/n] " user_input
+        if [[ $user_input == "y" ]]; then
+            clean_airship
+        else
+            exit 0
+        fi
         ;;
     "gather_logs")
         gather_logs
