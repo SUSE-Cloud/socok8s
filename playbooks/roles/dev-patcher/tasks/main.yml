@@ -50,7 +50,7 @@
   include_tasks: patch-repos.yml
   loop: "{{ (dev_patcher_patches) + (dev_patcher_user_patches | default([])) }}"
   loop_control:
-    loop_var: patchnumber
+    loop_var: patch
 
 - name: Check if there is local code change to cloned repos on deployer
   stat:
