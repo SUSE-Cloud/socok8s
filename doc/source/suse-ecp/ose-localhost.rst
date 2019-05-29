@@ -1,6 +1,6 @@
 .. _ose-localhost:
 
-Prepare localhost
+Prepare Localhost
 =================
 
 .. blockdiag::

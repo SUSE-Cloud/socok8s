@@ -1,5 +1,5 @@
 ===================
-Use a Personal Fork
+Use a personal fork
 ===================
 
 SUSE Containerized OpenStack allows you to use your own fork instead of relying

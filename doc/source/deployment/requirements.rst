@@ -30,10 +30,6 @@ Infrastructure
      The SES deployment guide is available at:
      https://www.suse.com/documentation/suse-enterprise-storage-5/singlehtml/book_storage_deployment/book_storage_deployment.html
 
-If you don't bring your own deployer, CaaS Platform cluster and SES, this
-tooling can create one for you if you have an OpenStack environment. However,
-this is experimental. More details can be found at
-:ref:`provisioninfra`.
 
 Minimum Node Specification
 --------------------------
