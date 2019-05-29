@@ -251,15 +251,6 @@
     - keystone
     - run
 
-- name: Use a different horizon script as missing a multinode version without node port requirement
-  copy:
-    src: 085-horizon.sh
-    dest: /opt/openstack/openstack-helm/tools/deployment/multinode/085-horizon.sh
-    mode: '0755'
-  tags:
-    - horizon
-    - run
-
 - name: Deploy horizon
   import_tasks: component-install.yml
   vars:
