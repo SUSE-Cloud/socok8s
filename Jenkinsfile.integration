@@ -36,24 +36,24 @@ pipeline {
             }
         }
 
-        stage('Setup network') {
+        stage('Create network') {
             steps {
                 sh "./run.sh deploy_network"
             }
         }
-        stage('Setup hosts') {
+        stage('Create VMs') {
             parallel {
-                stage('Setup CaaSP') {
+                stage('Deploy CaaSP') {
                     steps {
                         sh "./run.sh deploy_caasp"
                     }
                 }
-                stage('Setup SES') {
+                stage('Deploy SES') {
                     steps {
                         sh "./run.sh deploy_ses"
                     }
                 }
-                stage('Setup Deployer') {
+                stage('Deploy CCP Deployer') {
                     steps {
                         sh "./run.sh deploy_ccp_deployer"
                     }
@@ -61,7 +61,7 @@ pipeline {
             }
         }
 
-        stage('Setup CaaSP workers') {
+        stage('Configure CaaSP workers') {
             steps {
                 sh "./run.sh enroll_caasp_workers"
                 sh "./run.sh setup_caasp_workers_for_openstack"
