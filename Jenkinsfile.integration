@@ -60,35 +60,35 @@ pipeline {
                 }
             }
         }
-        stage('Enroll CaaSP workers') {
+
+        stage('Setup CaaSP workers') {
             steps {
                 sh "./run.sh enroll_caasp_workers"
-            }
-        }
-
-        stage('Setup CaaSP workers for Openstack') {
-            steps {
                 sh "./run.sh setup_caasp_workers_for_openstack"
             }
         }
 
-        stage('Deploy OpenStack Helm') {
-            when {
-                expression { params.deployment == "osh" }
-            }
-            steps {
-                sh "./run.sh patch_upstream"
-                sh "./run.sh build_images"
-                sh "./run.sh deploy_osh"
-            }
-        }
+        stage('Deploy') {
+            parallel {
+		stage('Deploy OpenStack Helm') {
+		    when {
+			expression { params.deployment == "osh" }
+		    }
+		    steps {
+			sh "./run.sh patch_upstream"
+			sh "./run.sh build_images"
+			sh "./run.sh deploy_osh"
+		    }
+		}
 
-        stage('Deploy Airship') {
-            when {
-                expression { params.deployment == "airship" }
-            }
-            steps {
-                sh "./run.sh setup_airship"
+		stage('Deploy Airship') {
+		    when {
+			expression { params.deployment == "airship" }
+		    }
+		    steps {
+			sh "./run.sh setup_airship"
+		    }
+		}
             }
         }
     }
