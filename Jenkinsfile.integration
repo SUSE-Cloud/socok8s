@@ -66,28 +66,18 @@ pipeline {
             }
         }
 
-        stage('Setup CaaSP workers and apply upstream patches') {
-            when {
-                expression { params.deployment == "osh" }
-            }
-            parallel {
-                stage('Setup CaaSP workes for OpenStack Helm') {
-                    steps {
-                        sh "./run.sh setup_caasp_workers_for_openstack"
-                    }
-                }
-                stage('Apply upstream patches') {
-                    steps {
-                        sh "./run.sh patch_upstream"
-                    }
-                }
+        stage('Setup CaaSP workers for Openstack') {
+            steps {
+                sh "./run.sh setup_caasp_workers_for_openstack"
             }
         }
+
         stage('Deploy OpenStack Helm') {
             when {
                 expression { params.deployment == "osh" }
             }
             steps {
+                sh "./run.sh patch_upstream"
                 sh "./run.sh build_images"
                 sh "./run.sh deploy_osh"
             }
