@@ -10,7 +10,7 @@ requirements.
 Infrastructure
 --------------
 
-* The `Deployer` must run openSUSE Leap 15 or SUSE Linux Enterprise 15. See the page
+* The `Deployer` must run openSUSE Leap 15 or SUSE Linux Enterprise 15. See
   :ref:`setupdeployer` for required deployment tools and packages.
 
   .. note::
@@ -75,18 +75,19 @@ run and compute nodes where customer workloads are hosted.
 For a minimal cloud, you should plan one worker node for the control plane,
 and one or more worker nodes as OpenStack compute nodes.
 
-To ensure high availability, we recommend three worker nodes designated for
-the Airship and OpenStack control plane, and additional number of worker nodes
-allocated for compute.
+For a high availability (HA) cloud, we recommend three worker nodes designated
+for the Airship and OpenStack control plane, and additional worker nodes
+allocated for compute. For detailed information about scale profiles, see
+:ref:`configurecloudscaleprofile`.
 
 Network Requirements
 --------------------
 
-* CaaS Platform networking and spec
+* CaaS Platform networking
     Create necessary CaaS Platform networks before deploying SUSE Containerized
     OpenStack. Separating traffic by function is recommended but not required.
 
-* Storage Network and spec
+* Storage Network
     A separate storage network can be created to isolate storage traffic. This
     separate network should be present on the Caas Platform and ses_config.yml
     mon_host: section.
