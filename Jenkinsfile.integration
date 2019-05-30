@@ -40,7 +40,7 @@ pipeline {
 
         stage('Create network') {
             options {
-                timeout(time: 45, unit: 'MINUTES', activity: true)
+                timeout(time: 10, unit: 'MINUTES', activity: true)
             }
             steps {
                 sh "./run.sh deploy_network"
@@ -71,7 +71,7 @@ pipeline {
 
         stage('Configure CaaSP workers') {
             options {
-                timeout(time: 45, unit: 'MINUTES', activity: true)
+                timeout(time: 10, unit: 'MINUTES', activity: true)
             }
             steps {
                 sh "./run.sh enroll_caasp_workers"
@@ -81,7 +81,7 @@ pipeline {
 
         stage('Deploy OpenStack Helm') {
             options {
-                timeout(time: 45, unit: 'MINUTES', activity: true)
+                timeout(time: 20, unit: 'MINUTES', activity: true)
             }
             when {
                 expression { params.deployment == "osh" }
