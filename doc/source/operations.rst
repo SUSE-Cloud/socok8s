@@ -64,7 +64,8 @@ Scaling in/out
 
 Adding or removing compute nodes
 --------------------------------
-To add a compute node, the node must be running SUSE CaaS Platform v3.0. It has
+
+To add a compute node, the node must be running SUSE CaaS Platform v3.0, has
 been accepted into the cluster and bootstrapped using the Velum dashboard.
 After the node is bootstrapped, add its host details to the "airship-openstack-compute-workers"
 group in your inventory in ${WORKSPACE}/inventory/hosts.yaml. Run the following
@@ -72,47 +73,58 @@ command from the root of the socok8s directory:
 
 .. code-block:: console
 
-   ./run.sh add_compute
+   ./run.sh add_openstack_compute
 
 .. note::
 
    Multiple new compute nodes can be added to the inventory at the same time.
 
+   It can take a few minutes for the new host to initialize and show in the
+   OpenStack hypervisor list.
+
 To remove a compute node, run the following command from the root of the socok8s directory:
 
 .. code-block:: console
 
-   ./run.sh remove_compute ${NODE_HOSTNAME}
+   ./run.sh remove_openstack_compute ${NODE_HOSTNAME}
 
 .. note::
 
    Compute nodes must be removed individually. When the node has been successfully
-   removed, the host details must be removed from "airship-openstack-compute-workers"
+   removed, the host details must be manually removed from "airship-openstack-compute-workers"
    group in the inventory.
 
-Change control plane scale profile
-----------------------------------
+Control plane horizontal scaling
+--------------------------------
+
 SUSE Containerized OpenStack provides two built-in scale profiles: "minimal",
-which deploys a single Pod for each service, and "ha", which is the default profile
-and deploys a minimum of two Pods for each service. Three or more Pods can be
-deployed for services that will be heavily utilized or require a quorum. Change
-scale profiles by adding a "scale_profile" key to ${WORKSPACE}/env/extravars
-and specifying a profile value:
+which is the default profile, deploys a single Pod for each service, and "ha",
+deploys a minimum of two Pods for each service, three or more Pods for services
+that will be heavily utilized or require a quorum. Change scale profiles by
+adding a "scale_profile" key to ${WORKSPACE}/env/extravars and specifying a
+profile value:
 
 .. code-block:: yaml
 
-   scale_profile: minimal
+   scale_profile: ha
 
 The built-in profiles are defined in playbooks/roles/airship-deploy-ucp/files/profiles
 and can be modified to suit custom use cases. Additional profiles can be created
 and added to this directory following the file naming convention in that directory.
 
-After the appropriate profile has been selected, it can be applied by running
-the following command from the root of the socok8s directory:
+It is recommended to use at least three controller nodes for a highly available
+control plane for both Airship and OpenStack services. To add new controller nodes,
+the nodes must be running SUSE CaaS Platform v3.0, have been accepted into the
+cluster and bootstrapped using the Velum dashboard. After the nodes are bootstrapped,
+add the host entries to the 'airship-ucp-workers', 'airship-openstack-control-workers'
+and 'airship-kube-system-workers' group in your Ansible inventory in 
+${WORKSPACE}/inventory/hosts.yaml.
+
+To apply the changes, run the following command from the root of the socok8s directory:
 
 .. code-block:: console
 
-   ./run.sh deploy_airship
+   ./run.sh deploy
 
 Updates
 =======
