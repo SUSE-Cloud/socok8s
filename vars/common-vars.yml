@@ -111,3 +111,6 @@ db_volume_size: 5Gi
 
 #Set scale profile; options: "minimal" or "ha"
 scale_profile: "{{ lookup('env','scale_profile') | default('minimal', true) }}"
+
+#Set timeout for helm cleanup.
+helm_delete_timeout: 900

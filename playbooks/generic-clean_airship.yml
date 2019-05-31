@@ -14,12 +14,14 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 #
-
 - hosts: soc-deployer
   gather_facts: no
+  pre_tasks:
+    - name: Load generic vars
+      include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
   tasks:
     - name: Running cleanup script
-      script: "{{ playbook_dir }}/../script_library/clean-airship.sh {{ clean_action | default('') }}"
+      script: "{{ playbook_dir }}/../script_library/clean-airship.sh '{{ clean_action | default('') }}' '{{ helm_delete_timeout }}'"
 
 - hosts: caasp-workers
   gather_facts: no
