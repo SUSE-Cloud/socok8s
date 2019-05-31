@@ -5,6 +5,15 @@
 - name: Load vip from user variables
   include_vars: "{{ socok8s_extravars }}"
 
+- name: Add socok8s repository
+  become: yes
+  zypper_repository:
+    name: "socok8s"
+    repo: "{{ socok8s_repos_to_configure['socok8s'] }}"
+    autorefresh: True
+    auto_import_keys: yes
+    state: present
+
 - name: Install system packages
   become: yes
   package:
