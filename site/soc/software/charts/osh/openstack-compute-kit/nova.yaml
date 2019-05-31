@@ -110,6 +110,8 @@ data:
         libvirt:
           virt_type: qemu
           cpu_mode: host-model
+        DEFAULT:
+          mkisofs_cmd: mkisofs
     pod:
       replicas:
         api_metadata: 1 
