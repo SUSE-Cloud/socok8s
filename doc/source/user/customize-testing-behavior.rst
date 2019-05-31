@@ -21,10 +21,10 @@ tests, define the `run_tests` key in `${WORKDIR}/env/extravars` and set it to `f
 
    helm test airship-glance
 
-The default timeout value of 300s for test completion can be customized by
+If needed, the default timeout value of 2700s for test completion can be increased by
 adding the `test_timeout` key in `${WORKDIR}/env/extravars` and
 providing a value, in seconds:
 
 .. code-block:: yaml
 
-   test_timeout: 1200
+   test_timeout: 3000
