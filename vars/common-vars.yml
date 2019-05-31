@@ -81,7 +81,7 @@ suse_airship_components_image_tag: |
                                      'armada': '1110c23cd192ea5eff77629d10924b290140d6e2-opensuse_15',
                                      'shipyard': 'cd6f154da56079ba408b922ed748a80b622c3592-opensuse_15',
                                      'airflow': 'cd6f154da56079ba408b922ed748a80b622c3592-opensuse_15',
-                                     'deckhand': 'master',
+                                     'deckhand': 'd8c8e15074d484c356c03460c0acbaea96705150-opensuse_15',
                                      'pegleg': '652c3abefd0f647cfc45096aa76cb76bfaf8a805-opensuse_15'
                                    }
                                    %}
