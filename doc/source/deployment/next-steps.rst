@@ -1,5 +1,5 @@
 
-Next steps
+Next Steps
 ==========
 
 After you have verified that your OpenStack cloud is working, here are additional

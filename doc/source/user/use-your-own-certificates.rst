@@ -1,5 +1,5 @@
 =======================================================
-Use Your Own Certificates for Your Local Image Registry
+Use your own certificates for your local image registry
 =======================================================
 
 

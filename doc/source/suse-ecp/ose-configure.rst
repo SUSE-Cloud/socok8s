@@ -1,6 +1,6 @@
 .. _ose-configure:
 
-Configure the deployment
+Configure the Deployment
 ========================
 
 .. blockdiag::
