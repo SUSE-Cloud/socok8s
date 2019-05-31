@@ -1,6 +1,6 @@
 .. _ose-targethosts:
 
-Prepare the target hosts
+Prepare the Target Hosts
 ========================
 
 .. blockdiag::

@@ -1,6 +1,6 @@
 .. _verifyinstallation:
 
-Verify OpenStack operation
+Verify OpenStack Operation
 ==========================
 
 The cloud deployment includes Rally testing for the core Airship UCP and

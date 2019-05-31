@@ -2,13 +2,16 @@
 - hosts: soc-deployer
   gather_facts: no
   tasks:
-    - name: Ensure all the vars are loaded
+    - name: Ensure all the common vars are loaded
+      include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
+    - name: Ensure all the openstack mechanism vars are loaded
       include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
 
     - name: Configure host repositories
       zypper_repository:
         name: "{{ item }}"
-        repo: "{{ deploy_on_openstack_repos_to_configure[item] }}"
+        repo: "{{ socok8s_repos_to_configure[item] }}"
         autorefresh: True
         auto_import_keys: yes
         state: present

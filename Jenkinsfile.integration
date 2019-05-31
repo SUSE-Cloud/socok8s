@@ -36,69 +36,59 @@ pipeline {
             }
         }
 
-        stage('Setup network') {
+        stage('Create network') {
             steps {
                 sh "./run.sh deploy_network"
             }
         }
-        stage('Setup hosts') {
+        stage('Create VMs') {
             parallel {
-                stage('Setup CaaSP') {
+                stage('Deploy CaaSP') {
                     steps {
                         sh "./run.sh deploy_caasp"
                     }
                 }
-                stage('Setup SES') {
+                stage('Deploy SES') {
                     steps {
                         sh "./run.sh deploy_ses"
                     }
                 }
-                stage('Setup Deployer') {
+                stage('Deploy CCP Deployer') {
                     steps {
                         sh "./run.sh deploy_ccp_deployer"
                     }
                 }
             }
         }
-        stage('Enroll CaaSP workers') {
+
+        stage('Configure CaaSP workers') {
             steps {
                 sh "./run.sh enroll_caasp_workers"
+                sh "./run.sh setup_caasp_workers_for_openstack"
             }
         }
 
-        stage('Setup CaaSP workers and apply upstream patches') {
-            when {
-                expression { params.deployment == "osh" }
-            }
+        stage('Deploy') {
             parallel {
-                stage('Setup CaaSP workes for OpenStack Helm') {
-                    steps {
-                        sh "./run.sh setup_caasp_workers_for_openstack"
-                    }
-                }
-                stage('Apply upstream patches') {
-                    steps {
-                        sh "./run.sh patch_upstream"
-                    }
-                }
-            }
-        }
-        stage('Deploy OpenStack Helm') {
-            when {
-                expression { params.deployment == "osh" }
-            }
-            steps {
-                sh "./run.sh build_images"
-                sh "./run.sh deploy_osh"
-            }
-        }
+		stage('Deploy OpenStack Helm') {
+		    when {
+			expression { params.deployment == "osh" }
+		    }
+		    steps {
+			sh "./run.sh patch_upstream"
+			sh "./run.sh build_images"
+			sh "./run.sh deploy_osh"
+		    }
+		}
 
-        stage('Deploy Airship') {
-            when {
-                expression { params.deployment == "airship" }
-            }
-            steps {
-                sh "./run.sh setup_airship"
+		stage('Deploy Airship') {
+		    when {
+			expression { params.deployment == "airship" }
+		    }
+		    steps {
+			sh "./run.sh setup_airship"
+		    }
+		}
             }
         }
     }

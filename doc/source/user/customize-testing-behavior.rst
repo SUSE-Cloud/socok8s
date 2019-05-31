@@ -1,5 +1,5 @@
 =================================
-Customizing Helm Testing Behavior
+Customizing Helm testing behavior
 =================================
 
 By default, all tests that have been defined for each Helm chart will be run
@@ -22,7 +22,7 @@ tests, define the `run_tests` key in `${WORKDIR}/env/extravars` and set it to `f
    helm test airship-glance
 
 The default timeout value of 300s for test completion can be customized by
-adding the `test_timeout` key in `${WORKDIR}/env/extravars` and 
+adding the `test_timeout` key in `${WORKDIR}/env/extravars` and
 providing a value, in seconds:
 
 .. code-block:: yaml

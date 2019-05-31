@@ -1,6 +1,6 @@
 
 =========================
-Multiple Network Example
+Multiple network example
 =========================
 
 This is a multiple network example configuration for CCP. Caas Platform and

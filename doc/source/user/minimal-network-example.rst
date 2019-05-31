@@ -1,6 +1,6 @@
 
 =======================
-Minimal Network Example
+Minimal network example
 =======================
 
 This is the minimal network configuration for CCP.
