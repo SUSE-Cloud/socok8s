@@ -41,6 +41,8 @@ metadata:
       dest:
         path: .values.pod.replicas.engine
 data:
+  wait:
+    timeout: {{ openstack_helm_deploy_timeout }}
   test:
     enabled: {{ run_tests }}
     timeout: {{ test_timeout }}
