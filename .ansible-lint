@@ -1,6 +1,5 @@
 exclude_paths:
   - submodules
-  - playbooks/roles/ansible-config_template
   - playbooks/roles/describe-kubernetes-objects
   - playbooks/roles/gather-pod-logs
   - playbooks/roles/helm-release-status
