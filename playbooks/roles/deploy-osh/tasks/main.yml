@@ -89,7 +89,7 @@
       {{ socok8s_ext_vip }} neutron-server.openstack.svc.cluster.local neutron-server
       {{ socok8s_ext_vip }} horizon.openstack.svc.cluster.local horizon
       {{ socok8s_ext_vip }} heat.openstack.svc.cluster.local heat
-      {{ socok8s_ext_vip }} novncproxy.openstack.svc.cluster.local novncproxy
+      {{ socok8s_ext_vip }} nova-novncproxy.openstack.svc.cluster.local nova-novncproxy
       {{ socok8s_ext_vip }} barbican.openstack.svc.cluster.local barbican
 
 # Developers have patched code, and don't need fetching product sources

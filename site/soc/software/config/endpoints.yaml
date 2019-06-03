@@ -960,7 +960,7 @@ data:
       name: nova
       hosts:
         default: nova-novncproxy
-        public: novncproxy
+        public: nova-novncproxy
       host_fqdn_override:
         default: null
         public:
