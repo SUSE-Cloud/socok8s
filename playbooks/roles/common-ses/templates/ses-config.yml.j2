@@ -7,22 +7,22 @@ ceph_conf:
   public_network: {{ hostvars[groups['ses_nodes'][0]].conf_options.stdout_lines.3 }}
 cinder:
   key: {{ client_cinder_file_key }}
-  rbd_store_pool: volumes
-  rbd_store_user: cinder
+  rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}volumes"
+  rbd_store_user: "{{ airship_ses_pools_prefix | default('') }}cinder"
 cinder-backup:
   key: {{ client_cinder_backup_file_key }}
-  rbd_store_pool: cinder_backup
-  rbd_store_user: cinder-backup
+  rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}cinder_backup"
+  rbd_store_user: "{{ airship_ses_pools_prefix | default('') }}cinder-backup"
 nova:
-  rbd_store_pool: nova
+  rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}nova"
 glance:
   key: {{ client_glance_file_key }}
-  rbd_store_pool: images
-  rbd_store_user: glance
+  rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}images"
+  rbd_store_user: "{{ airship_ses_pools_prefix | default('') }}glance"
 libvirt:
   key: {{ client_cinder_file_key }}
-  rbd_store_pool: vms
-  rbd_store_user: cinder
-{% if radosgw_keystone %}
+  rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}vms"
+  rbd_store_user: "{{ airship_ses_pools_prefix | default('') }}cinder"
+{% if ( radosgw_keystone|default(False, true)) %}
 radosgw_urls: "http://{{ hostvars[groups['ses_nodes'][0]].ansible_default_ipv4.address }}:8080/swift/v1"
 {% endif %}

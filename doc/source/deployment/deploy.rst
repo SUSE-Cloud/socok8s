@@ -136,7 +136,7 @@ Here is a sample output of the Shipyard `describe` command:
 Logs
 ++++
 
-To check Airship logs, run the Shipyard logs CLI command, for example,
+To check Airship logs, run the Shipyard logs CLI command, for example:
 
 .. code-block:: console
 
@@ -152,8 +152,8 @@ For example, to retrieve the test output from the Keystone Rally test, run:
 Run Developer Mode
 ------------------
 
-If you want to patch upstream Helm charts and/or build your own container
-images, you need to set the following environment variables before deployment:
+If you want to patch upstream Helm charts or build your own container images,
+you need to set the following environment variables before deployment:
 
 .. code-block:: console
 

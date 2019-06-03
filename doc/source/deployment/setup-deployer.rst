@@ -68,11 +68,12 @@ Deployer. Set up your workspace with the following steps:
   export SOCOK8S_WORKSPACE_BASEDIR=~/socok8s-workspace
 
 
-Cloning repository
------------------------
+Cloning the repository
+----------------------
 
-To get started, clone the socok8s GitHub repository. This repository uses
-submodules, so you need to get all the code to make sure the playbooks work.
+To get started, clone the `socok8s GitHub repository <https://github.com/SUSE-Cloud/socok8s>`_.
+This repository uses submodules, so you need to get all the code to make sure
+the playbooks work.
 
 ::
 
@@ -93,7 +94,7 @@ Platform worker node.
 
 .. note ::
 
-  1. To generate the key, you can use ssh-keygen -t rsa
+  1. To generate the key, use ssh-keygen -t rsa
 
   2. To copy the ssh key to each node, use the ssh-copy-id command,
      for example: ssh-copy-id root@192.168.122.1
@@ -120,7 +121,6 @@ Add the following.
 Add the above line after "#includedir /etc/sudoers.d". replace <username> with
 your username.
 
-
 Configure Ansible
 -----------------
 
@@ -145,26 +145,6 @@ configuration file loading ARA plugins:
 For more details on the ARA web interface, see
 https://ara.readthedocs.io/en/stable/webserver.html.
 
-Enable Mitogen (optional)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To improve deployment speed, enable the Mitogen strategy and connection plug-in.
-First install Mitogen in your venv (e.g. `~/suse-socok8s-deploy/.ansiblevenv/`
-or your local Ansible environment), then enable it using environment variables.
-
-Alternatively, enable it for all your Ansible calls by adding it to your
-ansible configuration:
-
-.. code-block:: console
-
-   cat << EOF >> ~/.ansible.cfg
-   strategy_plugins=${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}.ansiblevenv/lib/python3.6/site-packages/ansible_mitogen/plugins/strategy
-   strategy = mitogen_linear
-   EOF
-
-For more details on Mitogen, see
-https://mitogen.readthedocs.io/en/latest/ansible.html.
-
 Enable Pipelining (recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -176,7 +156,3 @@ You can improve SSH connections by enabling pipelining:
    [ssh_connection]
    pipelining = True
    EOF
-
-
-With this done, continue your deployment with the
-:ref:`configuredeployment` page.

@@ -2,8 +2,10 @@ pipeline {
 
     options {
         timestamps()
-        timeout(time: 45, unit: 'MINUTES', activity: true)
         parallelsAlwaysFailFast()
+        // Note(jhesketh): Unfortunately we can't set a global timeout for the
+        //                 pipeline as it would also apply to the post stages
+        //                 and hence interrupt our cleanup.
     }
 
     agent {
@@ -37,11 +39,17 @@ pipeline {
         }
 
         stage('Create network') {
+            options {
+                timeout(time: 10, unit: 'MINUTES', activity: true)
+            }
             steps {
                 sh "./run.sh deploy_network"
             }
         }
         stage('Create VMs') {
+            options {
+                timeout(time: 45, unit: 'MINUTES', activity: true)
+            }
             parallel {
                 stage('Deploy CaaSP') {
                     steps {
@@ -62,33 +70,38 @@ pipeline {
         }
 
         stage('Configure CaaSP workers') {
+            options {
+                timeout(time: 10, unit: 'MINUTES', activity: true)
+            }
             steps {
                 sh "./run.sh enroll_caasp_workers"
                 sh "./run.sh setup_caasp_workers_for_openstack"
             }
         }
 
-        stage('Deploy') {
-            parallel {
-		stage('Deploy OpenStack Helm') {
-		    when {
-			expression { params.deployment == "osh" }
-		    }
-		    steps {
-			sh "./run.sh patch_upstream"
-			sh "./run.sh build_images"
-			sh "./run.sh deploy_osh"
-		    }
-		}
+        stage('Deploy OpenStack Helm') {
+            options {
+                timeout(time: 20, unit: 'MINUTES', activity: true)
+            }
+            when {
+                expression { params.deployment == "osh" }
+            }
+            steps {
+                sh "./run.sh patch_upstream"
+                sh "./run.sh build_images"
+                sh "./run.sh deploy_osh"
+            }
+        }
 
-		stage('Deploy Airship') {
-		    when {
-			expression { params.deployment == "airship" }
-		    }
-		    steps {
-			sh "./run.sh setup_airship"
-		    }
-		}
+        stage('Deploy Airship') {
+            options {
+                timeout(time: 45, unit: 'MINUTES', activity: true)
+            }
+            when {
+                expression { params.deployment == "airship" }
+            }
+            steps {
+                sh "./run.sh setup_airship"
             }
         }
     }

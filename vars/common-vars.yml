@@ -65,6 +65,11 @@ suse_airship_registry_location: "{%- if suse_airship_build_local_images or suse_
 # Tag passed to image building step
 suse_airship_components_image_build_tag: "master"
 
+# Provide prefix passed to salt runner openstack.integrate for creating
+# openstack pools e.g. "socok8s_" . If runner script is used and prefix is not
+# provided, then don't set it here.
+# airship_ses_pools_prefix: ""
+
 # Complete distro specific published image tag
 suse_airship_components_image_tag: |
                                    {% if suse_airship_build_local_images or suse_airship_use_local_images %}
@@ -81,7 +86,7 @@ suse_airship_components_image_tag: |
                                      'armada': '1110c23cd192ea5eff77629d10924b290140d6e2-opensuse_15',
                                      'shipyard': 'cd6f154da56079ba408b922ed748a80b622c3592-opensuse_15',
                                      'airflow': 'cd6f154da56079ba408b922ed748a80b622c3592-opensuse_15',
-                                     'deckhand': 'master',
+                                     'deckhand': 'd8c8e15074d484c356c03460c0acbaea96705150-opensuse_15',
                                      'pegleg': '652c3abefd0f647cfc45096aa76cb76bfaf8a805-opensuse_15'
                                    }
                                    %}
@@ -111,3 +116,6 @@ db_volume_size: 5Gi
 
 #Set scale profile; options: "minimal" or "ha"
 scale_profile: "{{ lookup('env','scale_profile') | default('minimal', true) }}"
+
+#Set timeout for helm cleanup.
+helm_delete_timeout: 900
