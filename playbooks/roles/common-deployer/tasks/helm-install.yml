@@ -40,12 +40,14 @@
     - install
 
 - name: Install tiller
+  become: yes
   command: helm init
   register: _helminstall
   when: helm_state == 'to_install'
   changed_when: True
 
 - name: Upgrade tiller
+  become: yes
   command: helm init --upgrade
   register: _helmupgrade
   when: helm_state == 'to_update' or helm_state == 'to_install'
