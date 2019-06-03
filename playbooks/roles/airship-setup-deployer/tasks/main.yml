@@ -100,7 +100,7 @@
       {{ socok8s_ext_vip }} compute.openstack.svc.cluster.local
       {{ socok8s_ext_vip }} network.openstack.svc.cluster.local
       {{ socok8s_ext_vip }} dashboard.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} novncproxy.openstack.svc.cluster.local
+      {{ socok8s_ext_vip }} nova-novncproxy.openstack.svc.cluster.local
       {{ socok8s_ext_vip }} orchestration.openstack.svc.cluster.local
 
 - name: Creates /etc/openstack directory
