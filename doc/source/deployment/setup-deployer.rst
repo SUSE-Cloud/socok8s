@@ -68,11 +68,12 @@ Deployer. Set up your workspace with the following steps:
   export SOCOK8S_WORKSPACE_BASEDIR=~/socok8s-workspace
 
 
-Cloning repository
------------------------
+Cloning the repository
+----------------------
 
-To get started, clone the socok8s GitHub repository. This repository uses
-submodules, so you need to get all the code to make sure the playbooks work.
+To get started, clone the `socok8s GitHub repository <https://github.com/SUSE-Cloud/socok8s>`_.
+This repository uses submodules, so you need to get all the code to make sure
+the playbooks work.
 
 ::
 
@@ -93,7 +94,7 @@ Platform worker node.
 
 .. note ::
 
-  1. To generate the key, you can use ssh-keygen -t rsa
+  1. To generate the key, use ssh-keygen -t rsa
 
   2. To copy the ssh key to each node, use the ssh-copy-id command,
      for example: ssh-copy-id root@192.168.122.1

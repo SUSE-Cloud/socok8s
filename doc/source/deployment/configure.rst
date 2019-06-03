@@ -76,7 +76,7 @@ MariaDB, RabbitMQ, and PostgreSQL.
 The group `airship-openstack-control-workers` specifies the list of CaaS
 Platform worker nodes that make up the OpenStack control plane. The
 OpenStack control plane includes Keystone, Glance, Cinder, Nova, Neutron,
-Horizon, Heat, MariaDB, RabbitMQ and so on.
+Horizon, Heat, MariaDB, and RabbitMQ.
 
 The group `airship-openstack-compute-workers` defines the CaaS Platform worker
 nodes used as OpenStack Compute Nodes. Nova Compute, Libvirt, Open vSwitch (OVS)
@@ -93,7 +93,7 @@ See also
 .. tip::
 
    Do not add `localhost` as a host in your inventory.
-   It is a host specially considered by Ansible.
+   It is a host with special meaning to Ansible.
    If you want to create an inventory node for your local
    machine, add your machine's hostname inside your inventory,
    and specify this host variable: **ansible_connection: local**
@@ -128,10 +128,10 @@ For example:
 Configure for Kubernetes
 ------------------------
 
-socok8s relies on kubectl and Helm commands to configure your OpenStack
-deployment. You need to provide a `kubeconfig` file on the `deployer` node,
-in your workspace. You can fetch this file from the Velum UI on your
-SUSE CaaS Platform cluster.
+SUSE Containerized OpenStack relies on kubectl and Helm commands to configure
+your OpenStack deployment. You need to provide a `kubeconfig` file on the
+`deployer` node, in your workspace. You can fetch this file from the Velum UI
+on your SUSE CaaS Platform cluster.
 
 Configure the VIP that will be used for OpenStack service public endpoints
 --------------------------------------------------------------------------
@@ -162,6 +162,7 @@ For example:
 
    socok8s_dcm_vip: "192.168.51.35"
 
+.. _configurecloudscaleprofile:
 
 Configure Cloud Scale Profile
 -----------------------------
@@ -207,8 +208,8 @@ group vars.
    extravars can be used to override any deployment code.
    Use it at your own risk.
 
-socok8s is flexible, and allows you to override the value of any upstream Helm
-chart value with the appropriate overrides.
+SUSE Containerized OpenStack is flexible, and allows you to override the value
+of any upstream Helm chart value with the appropriate overrides.
 
 .. note ::
 

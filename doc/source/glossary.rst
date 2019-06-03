@@ -17,6 +17,10 @@ Glossary
    Deployer
      openSUSE Leap 15 host used to deploy CCP.
 
+   LOCI
+     The official OpenStack project to build Lightweight Open Container
+     Initiative (OCI) compliant images of OpenStack projects.
+
    SES
      SUSE Enterprise Storage
 
