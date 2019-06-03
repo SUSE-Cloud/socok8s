@@ -74,11 +74,11 @@ suse_airship_components_image_build_tag: "master"
 suse_airship_components_image_tag: |
                                    {% if suse_airship_build_local_images or suse_airship_use_local_images %}
                                    {% set _img_tag = {
-                                     'armada': "{{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}",
-                                     'shipyard': "{{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}",
-                                     'airflow' : "{{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}",
-                                     'deckhand': "{{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}",
-                                     'pegleg': "{{suse_airship_components_image_build_tag}}-{{suse_distro_identifier}}"
+                                     'armada': suse_airship_components_image_build_tag ~ '-' ~ suse_distro_identifier,
+                                     'shipyard': suse_airship_components_image_build_tag ~ '-' ~ suse_distro_identifier,
+                                     'airflow' : suse_airship_components_image_build_tag ~ '-' ~ suse_distro_identifier,
+                                     'deckhand': suse_airship_components_image_build_tag ~ '-' ~ suse_distro_identifier,
+                                     'pegleg': suse_airship_components_image_build_tag ~ '-' ~ suse_distro_identifier
                                     }
                                    %}
                                    {% else %}
