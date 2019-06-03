@@ -37,6 +37,14 @@ data:
     enabled: {{ run_tests }}
     timeout: {{ test_timeout }}
   values:
+    bootstrap:
+      structured:
+        images:
+          cirros:
+            name: "Cirros 0.4.0 64-bit"
+            source_url: "http://download.cirros-cloud.net/0.4.0/"
+            image_file: "cirros-0.4.0-x86_64-disk.img"
+            private: false
     pod:
       replicas:
         api: 1
@@ -46,6 +54,32 @@ data:
       software:
         rbd:
           rbd_store_pool_app_name: rbd
+      rally_tests:
+        tests:
+          GlanceImages.create_and_delete_image:
+          - args:
+              container_format: bare
+              disk_format: qcow2
+              image_location: http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
+            runner:
+              concurrency: 1
+              times: 1
+              type: constant
+            sla:
+              failure_rate:
+                max: 0
+          GlanceImages.create_and_list_image:
+          - args:
+              container_format: bare
+              disk_format: qcow2
+              image_location: http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
+            runner:
+              concurrency: 1
+              times: 1
+              type: constant
+            sla:
+              failure_rate:
+                max: 0
       ceph:
         enabled: true
         monitors: {{ ','.join(suse_airship_deploy_ceph_mons) }}
