@@ -125,27 +125,6 @@ configuration file loading ARA plugins:
 For more details on ARA's web interface, please read
 https://ara.readthedocs.io/en/stable/webserver.html .
 
-Enable Mitogen (optional)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To improve deployment speed, enable the Mitogen strategy and connection plugin.
-First install Mitogen in your venv (e.g. |socok8s_workspace_default|\ `/.ansiblevenv`
-or your local Ansible environment). Then enable it using environment variables.
-
-Alternatively, enable Mitogen for all your Ansible calls by adding it to your
-Ansible configuration:
-
-.. we need parsed-literal instead of code-block here. Otherwise the variable substitute does not work
-.. parsed-literal::
-
-   cat << EOF >> ~/.ansible.cfg
-   strategy_plugins=${HOME}\ |socok8s_workspace_default|\ /.ansiblevenv/lib/python3.6/site-packages/ansible_mitogen/plugins/strategy
-   strategy = mitogen_linear
-   EOF
-
-For more details on Mitogen, please read
-https://mitogen.readthedocs.io/en/latest/ansible.html .
-
 Enable pipelining (recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

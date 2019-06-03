@@ -120,7 +120,6 @@ Add the following.
 Add the above line after "#includedir /etc/sudoers.d". replace <username> with
 your username.
 
-
 Configure Ansible
 -----------------
 
@@ -145,26 +144,6 @@ configuration file loading ARA plugins:
 For more details on the ARA web interface, see
 https://ara.readthedocs.io/en/stable/webserver.html.
 
-Enable Mitogen (optional)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To improve deployment speed, enable the Mitogen strategy and connection plug-in.
-First install Mitogen in your venv (e.g. `~/suse-socok8s-deploy/.ansiblevenv/`
-or your local Ansible environment), then enable it using environment variables.
-
-Alternatively, enable it for all your Ansible calls by adding it to your
-ansible configuration:
-
-.. code-block:: console
-
-   cat << EOF >> ~/.ansible.cfg
-   strategy_plugins=${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}.ansiblevenv/lib/python3.6/site-packages/ansible_mitogen/plugins/strategy
-   strategy = mitogen_linear
-   EOF
-
-For more details on Mitogen, see
-https://mitogen.readthedocs.io/en/latest/ansible.html.
-
 Enable Pipelining (recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -176,7 +155,3 @@ You can improve SSH connections by enabling pipelining:
    [ssh_connection]
    pipelining = True
    EOF
-
-
-With this done, continue your deployment with the
-:ref:`configuredeployment` page.
