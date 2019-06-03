@@ -23,7 +23,6 @@ deploy_on_openstack_ses_repos_per_imagename:
     - SES5-update
 deploy_on_openstack_osh_repos_per_imagename:
   openSUSE-Leap-15.0:
-    - Leap15develtools
     - socok8s
 deploy_on_openstack_caasp_repos_per_imagename:
   caasp-3.0.0-GM-OpenStack-qcow:
