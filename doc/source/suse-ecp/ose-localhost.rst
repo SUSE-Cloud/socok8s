@@ -120,7 +120,7 @@ configuration file loading ARA plugins:
 
 .. code-block:: console
 
-   python -m ara.setup.ansible | tee ~/.ansible.cfg
+   python3 -m ara.setup.ansible | tee ~/.ansible.cfg
 
 For more details on ARA's web interface, please read
 https://ara.readthedocs.io/en/stable/webserver.html .
