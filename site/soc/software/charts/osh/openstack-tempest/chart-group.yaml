@@ -1,0 +1,18 @@
+---
+schema: armada/ChartGroup/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-tempest-soc
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: openstack-tempest-chart-group-global
+      component: tempest
+    actions:
+      - method: replace
+        path: .chart_group
+  storagePolicy: cleartext
+data:
+  chart_group:
+    - openstack-tempest-soc

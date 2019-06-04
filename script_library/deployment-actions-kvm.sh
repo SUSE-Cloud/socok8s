@@ -63,6 +63,10 @@ function remove_compute(){
     echo "Now Remove compute"
     run_ansible ${socok8s_absolute_dir}/playbooks/remove_compute.yml -e compute_node_name=$1
 }
+function deploy_tempest(){
+    echo "Deploying Tempest"
+    run_ansible ${socok8s_absolute_dir}/playbooks/deploy_tempest.yml
+}
 function clean_k8s(){
     echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete everything in your userspace."
     if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then

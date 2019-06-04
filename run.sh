@@ -5,6 +5,7 @@ set -o errexit
 usage() {
     echo "deploy                                         -- Deploy SUSE Containerized OpenStack."
     echo "update_openstack                               -- Update OpenStack deployment."
+    echo "test                                           -- Deploy and run OpenStack Tempest tests."
     echo "add_openstack_compute                          -- Add OpenStack compute node. Add compute node host(s) in inventory file."
     echo "remove_openstack_compute <compute-node-name>   -- Remove OpenStack compute node. Provide compute node host name with option."
     echo "remove_deployment                              -- Delete all resources related with deployment including images."
@@ -154,6 +155,9 @@ case "$deployment_action" in
         ;;
     "gather_logs")
         gather_logs
+        ;;
+    "test")
+        deploy_tempest
         ;;
     *)
         echo "Invalid option, Check --help for valid options"
