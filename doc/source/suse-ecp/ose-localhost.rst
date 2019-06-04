@@ -59,20 +59,20 @@ Install the following software on your `localhost`:
   * jq
   * ipcalc
   * git
-  * python-virtualenv
+  * python3-virtualenv
 
 Optionally, `localhost` can be preinstalled with the following software:
 
   * ansible>=2.7.0
-  * python/python3-openstackclient
-  * python/python3-requests
-  * python/python3-jmespath
-  * python/python3-openstacksdk
-  * python/python3-netaddr
+  * python3-openstackclient
+  * python3-requests
+  * python3-jmespath
+  * python3-openstacksdk
+  * python3-netaddr
 
-Install the variant of the packages that matches the Python release that Ansible
-is using. (for example, on openSUSE Tumbleweed, Ansible uses Python 3, so install
-the "python3-" variant of the packages).
+SUSE Containerized OpenStack only supports the Python3 variant of packages.
+Generally, the `python` command invokes Python version 2, which will not work
+with SUSE Containerized OpenStack.
 
 If the optional software packages are not installed, they will be installed in a
 venv in |socok8s_workspace_default|\ `/.ansiblevenv`.
