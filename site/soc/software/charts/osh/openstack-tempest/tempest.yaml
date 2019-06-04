@@ -25,6 +25,8 @@ data:
     conf:
       script: "tempest run --config-file /etc/tempest/tempest.conf -w {{ tempest_workers }} {{ tempest_test_args[tempest_test_type] }}"
       tempest:
+        auth:
+          tempest_roles: []
         identity-feature-enabled:
           api_v2: false
           domain_specific_drivers: true
