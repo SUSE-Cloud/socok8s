@@ -3,6 +3,8 @@
   shell: |
      set -o pipefail
      openstack compute service list | grep {{ compute_node_name }} | awk '{print $2}'
+  environment:
+    OS_CLOUD: openstack
   register: compute_id
   delegate_to: "{{ groups['soc-deployer'][0] }}"
   failed_when: false
@@ -15,6 +17,8 @@
 
 - name: Get VM list from compute node.
   command: "openstack server list --host {{ compute_node_name }}"
+  environment:
+    OS_CLOUD: openstack
   register: vm_exist
   delegate_to: "{{ groups['soc-deployer'][0] }}"
   failed_when: false
@@ -58,6 +62,8 @@
 
 - name: Delete openstack compute service.
   command: "openstack compute service delete {{ compute_id.stdout }}"
+  environment:
+    OS_CLOUD: openstack
   delegate_to: "{{ groups['soc-deployer'][0] }}"
   when: compute_id.stdout | length | int != 0
   failed_when: false
