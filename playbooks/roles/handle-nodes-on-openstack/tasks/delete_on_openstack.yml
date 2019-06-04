@@ -5,6 +5,7 @@
     name: "{{ servername }}"
     state: absent
     timeout: 300
+    auth_type: "{{ os_auth_type }}"
 
 # Looping will avoid the need to create a condition if no hosts
 # exists in the inventory.
