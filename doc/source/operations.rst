@@ -54,8 +54,8 @@ run the following command in the root of the socok8s directory:
 
    ./run.sh remove_deployment
 
-This will delete all Helm releases, all Kubernetes resources in the ucp and
-openstack namespaces, and all persistent volumes that were provisioned for use
+This will delete all Helm releases, all Kubernetes resources in the UCP and
+OpenStack namespaces, and all persistent volumes that were provisioned for use
 in the deployment. After this operation is complete, only the original Kubernetes
 services deployed by the SUSE CaaS Platform will remain.
 
@@ -97,7 +97,8 @@ command from the root of the socok8s directory:
    It can take a few minutes for the new host to initialize and show in the
    OpenStack hypervisor list.
 
-To remove a compute node, run the following command from the root of the socok8s directory:
+To remove a compute node, run the following command from the root of the socok8s
+directory:
 
 .. code-block:: console
 
@@ -106,18 +107,20 @@ To remove a compute node, run the following command from the root of the socok8s
 .. note::
 
    Compute nodes must be removed individually. When the node has been successfully
-   removed, the host details must be manually removed from "airship-openstack-compute-workers"
-   group in the inventory.
+   removed, the host details must be manually removed from
+   "airship-openstack-compute-workers" group in the inventory.
 
 Control plane horizontal scaling
 --------------------------------
 
-SUSE Containerized OpenStack provides two built-in scale profiles: "minimal",
-which is the default profile, deploys a single Pod for each service, and "ha",
-deploys a minimum of two Pods for each service, three or more Pods for services
-that will be heavily utilized or require a quorum. Change scale profiles by
-adding a "scale_profile" key to ${WORKSPACE}/env/extravars and specifying a
-profile value:
+SUSE Containerized OpenStack provides two built-in scale profiles:
+
+- **minimal**, the default profile, deploys a single Pod for each service
+- **ha** deploys a minimum of two Pods for each service. Three or more Pods are
+  suggested for services that will be heavily utilized or require a quorum.
+
+Change scale profiles by adding a "scale_profile" key to ${WORKSPACE}/env/extravars
+and specifying a profile value:
 
 .. code-block:: yaml
 
@@ -127,13 +130,17 @@ The built-in profiles are defined in playbooks/roles/airship-deploy-ucp/files/pr
 and can be modified to suit custom use cases. Additional profiles can be created
 and added to this directory following the file naming convention in that directory.
 
-It is recommended to use at least three controller nodes for a highly available
-control plane for both Airship and OpenStack services. To add new controller nodes,
-the nodes must be running SUSE CaaS Platform v3.0, have been accepted into the
-cluster and bootstrapped using the Velum dashboard. After the nodes are bootstrapped,
-add the host entries to the 'airship-ucp-workers', 'airship-openstack-control-workers'
-and 'airship-kube-system-workers' group in your Ansible inventory in 
-${WORKSPACE}/inventory/hosts.yaml.
+We recommend using at least three controller nodes for a highly available
+control plane for both Airship and OpenStack services. To add new controller
+nodes, the nodes must:
+
+- be running SUSE CaaS Platform v3.0
+- have been accepted into the cluster
+- be bootstrapped using the Velum dashboard.
+
+After the nodes are bootstrapped, add the host entries to the 'airship-ucp-workers',
+'airship-openstack-control-workers', and 'airship-kube-system-workers' group in
+your Ansible inventory in ${WORKSPACE}/inventory/hosts.yaml.
 
 To apply the changes, run the following command from the root of the socok8s directory:
 
@@ -231,15 +238,16 @@ Viewing Shipyard Logs
 ---------------------
 
 The deployment of OpenStack components in SUSE Containerized OpenStack is
-directed by Shipyard, the Airship platform's DAG controller, So Shipyard is one
-of the best places to begin troubleshooting deployment problems. The Shipyard CLI
-client authenticates with Keystone, so the following environment variables must
-be set before running any commands:
+directed by Shipyard, the Airship platform's directed acyclic graph (DAG)
+controller, so Shipyard is one of the best places to begin troubleshooting
+deployment problems. The Shipyard CLI client authenticates with Keystone, so
+the following environment variables must be set before running any commands:
 
 .. code-block:: console
 
    export OS_USERNAME=shipyard
-   export OS_PASSWORD=$(kubectl get secret -n ucp shipyard-keystone-user -o json | jq -r '.data.OS_PASSWORD' | base64 -d)
+   export OS_PASSWORD=$(kubectl get secret -n ucp shipyard-keystone-user \
+   -o json | jq -r '.data.OS_PASSWORD' | base64 -d)
 
 .. note::
 
@@ -349,7 +357,7 @@ Run the following to prevent a cluster from being updated:
 
    systemctl --now disable transactional-update.timer
 
-Run the following if you only want to override once a week, instead of daily:
+If you want to override once a week, instead of daily, run the following:
 
 .. code-block:: console
 
@@ -421,9 +429,9 @@ If either service has stopped, start it by running:
    Docker should be restarted first.
 
 These services should start automatically each time a node boots up and should
-be running at all times. If either has stopped, it may be useful to examine the
-system logs to determine the root cause of the failure. This can be done by using
-the journalctl command:
+be running at all times. If either service has stopped, examine the system logs
+to determine the root cause of the failure. This can be done by using the
+journalctl command:
 
 .. code-block:: console
 
@@ -443,7 +451,7 @@ and events by running:
 If the cause of the Pod evictions is determined to be resource exhaustion, such
 as NodeHasDiskPressure or NodeHasMemoryPressure, it may be necessary to remove
 the node from the cluster temporarily to perform maintenance. To gracefully
-remove all Pods from the affected node and mark it as not schedulable, run:
+remove all Pods from the affected node and mark it as `not schedulable`, run:
 
 .. code-block:: console
 
@@ -478,11 +486,13 @@ Tips and Tricks
 Display all images used by a component
 --------------------------------------
 
-Use Neutron as an example:
+Using Neutron as an example:
 
 .. code-block:: console
 
-   kubectl get pods -n openstack -l application=neutron -o jsonpath="{.items[*].spec.containers[*].image}"|tr -s '[[:space:]]' '\n' | sort | uniq -c
+   kubectl get pods -n openstack -l application=neutron -o \
+   jsonpath="{.items[*].spec.containers[*].image}"|tr -s '[[:space:]]' '\n' \
+   | sort | uniq -c
 
 
 Remove dangling Docker images
