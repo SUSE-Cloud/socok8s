@@ -41,10 +41,11 @@ restore_and_reboot() {
 delete_subvolume(){
   if [ -d "$1" ]; then
     init
-    devpath=$(grep $1 /proc/mounts | awk '{print $1}')
-    mount $devpath $2 -o subvol="/@"
-    btrfs subvolume delete "$2/$1" || true
-    umount "$2" || true
+    if devpath=$(grep $1 /proc/mounts | awk '{print $1}') ; then
+      mount $devpath $2 -o subvol="/@"
+      btrfs subvolume delete "$2/$1" || true
+      umount "$2" || true
+    fi
   fi
 }
 
