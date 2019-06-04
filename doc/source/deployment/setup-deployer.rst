@@ -47,7 +47,7 @@ The following software must be installed on your `Deployer`:
   * git
   * jq
   * python3-netaddr
-  * python-virtualenv
+  * python3-virtualenv
 
 Create SUSE Containerized OpenStack Workspace
 ---------------------------------------------
