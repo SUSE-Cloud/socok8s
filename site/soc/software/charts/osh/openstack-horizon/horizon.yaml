@@ -23,6 +23,8 @@ metadata:
       dest:
         path: .values.pod.replicas.api
 data:
+  wait:
+    timeout: {{ openstack_helm_deploy_timeout }}
   values:
     pod:
       replicas:
