@@ -321,9 +321,8 @@ continues the deployment.
 
 ``SOCOK8S_USE_VIRTUALENV`` determines if the script should set up and use a
 virtualenv for python and ansible requirements. Without this it is expected
-that ansible and the requirements are installed via system packages.
-When ``SOCOK8S_DEVELOPER_MODE`` is set to True, this defaults to True, otherwise
-this defaults to False.
+that ansible and the requirements are installed via system packages. This
+by default is set to True.
 
 ``USE_ARA`` determines if you want to store records in ARA. Set its
 value to 'True' for using ARA.

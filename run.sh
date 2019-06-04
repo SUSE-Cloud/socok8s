@@ -31,9 +31,10 @@ done
 
 if [[ "${SOCOK8S_DEVELOPER_MODE:-False}" == "True" ]]; then
     set -x
-    SOCOK8S_USE_VIRTUALENV=${SOCOK8S_USE_VIRTUALENV:-True}
 fi
 
+# By default use virtualenv during deployment if not set otherwise use environment variable
+SOCOK8S_USE_VIRTUALENV=${SOCOK8S_USE_VIRTUALENV:-True}
 # USE an env var to setup where to deploy to
 # by default, ccp will deploy on openstack for inception style fun (and CI).
 DEPLOYMENT_MECHANISM=${DEPLOYMENT_MECHANISM:-"kvm"}
