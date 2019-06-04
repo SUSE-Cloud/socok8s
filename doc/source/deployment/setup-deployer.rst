@@ -46,7 +46,8 @@ The following software must be installed on your `Deployer`:
   * gcc
   * git
   * jq
-  * python3-netaddr
+  * python-jmespath
+  * python-netaddr
   * python-virtualenv
 
 Create SUSE Containerized OpenStack Workspace
@@ -67,6 +68,11 @@ Deployer. Set up your workspace with the following steps:
   export SOCOK8S_ENVNAME=socok8s
   export SOCOK8S_WORKSPACE_BASEDIR=~/socok8s-workspace
 
+Prepare deployer to use virtualenv.
+
+.. code-block:: console
+
+  export SOCOK8S_USE_VIRTUALENV=True
 
 Cloning the repository
 ----------------------

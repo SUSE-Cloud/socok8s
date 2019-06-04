@@ -34,7 +34,7 @@ To deploy SUSE OpenStack cloud using Airship, run:
 
 .. code-block:: console
 
-   ./run.sh deploy_airship
+   ./run.sh deploy
 
 This script takes several minutes to finish.
 
