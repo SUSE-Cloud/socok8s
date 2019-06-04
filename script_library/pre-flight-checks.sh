@@ -37,7 +37,7 @@ check_openstack_environment_is_ready_for_deploy (){
 }
 
 check_python_requirement (){
-    if ! python -c "import ${1}" > /dev/null 2>&1; then
+    if ! python3 -c "import ${1}" > /dev/null 2>&1; then
         echo "Missing python requirement ${1}."
         echo "Install from your system packages or set SOCOK8S_USE_VIRTUALENV=True to install requirements into a virtualenv."
         exit 1
@@ -67,7 +67,7 @@ check_ansible_requirements (){
     # If ara is requested
     if [[ ${USE_ARA:-False} == "True" ]]; then
         check_python_requirement 'ara'
-        python -m ara.setup.env > ${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace/ara.rc
+        python3 -m ara.setup.env > ${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace/ara.rc
     fi
 }
 
