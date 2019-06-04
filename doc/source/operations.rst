@@ -18,7 +18,7 @@ run from the root of the socok8s directory.
 Deployment Actions
 ------------------
 
-The ``run.sh deploy_airship`` command:
+The ``run.sh deploy`` command:
 
 - Performs all necessary setup actions
 - Deploys all Airship UCP components and OpenStack services
@@ -27,21 +27,21 @@ The ``run.sh deploy_airship`` command:
 
 .. code-block:: console
 
-   ./run.sh deploy_airship
+   ./run.sh deploy
 
 It may be desirable to redeploy only OpenStack services while leaving all Airship
 components in the UCP untouched. In these use cases, run:
 
 .. code-block:: console
 
-   ./run.sh update_airship_osh
+   ./run.sh update_openstack
 
 Cleanup Actions
 ---------------
 
-In addition to deployment, run.sh can be used to perform a variety of environment
-cleanup actions. To ensure all resources are removed, the following environment
-git checkout airship_doc, git merge mastervariable should be set before running any cleanup commands:
+In addition to deployment, run.sh can be used to perform environment cleanup actions.
+To ensure all resources are removed, the following environment variable should be set
+before running the cleanup command:
 
 .. code-block:: console
 
@@ -52,12 +52,27 @@ run the following command in the root of the socok8s directory:
 
 .. code-block:: console
 
-   ./run.sh clean_airship
+   ./run.sh remove_deployment
 
 This will delete all Helm releases, all Kubernetes resources in the ucp and
 openstack namespaces, and all persistent volumes that were provisioned for use
 in the deployment. After this operation is complete, only the original Kubernetes
 services deployed by the SUSE CaaS Platform will remain.
+
+Testing
+-------
+
+The run.sh script also has an option to deploy and run OpenStack Tempest tests. To begin
+testing, run the following command:
+
+.. code-block:: console
+
+   ./run.sh test
+
+.. note::
+
+   Please read the :ref:`deploymentguide` for further information about configuring and
+   running OpenStack Tempest tests in SUSE Containerized OpenStack.
 
 Scaling in/out
 ==============
