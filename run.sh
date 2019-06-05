@@ -146,7 +146,7 @@ case "$deployment_action" in
         clean_airship clean_openstack_clean_ucp_clean_rest
         ;;
     "remove_deployment")
-        read -r -p "WARNING: Please remove all VM(s) from all compute host(s). Are you sure to continue? [y/n] " user_input
+        read -r -p "WARNING: Please remove all VM(s) from all compute host(s). This deletes everything that is deployed. Are you sure to continue? [y/n] " user_input
         if [[ $user_input == "y" ]]; then
             clean_airship
         else
