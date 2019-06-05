@@ -40,12 +40,7 @@ restore_and_reboot() {
 
 delete_subvolume(){
   if [ -d "$1" ]; then
-    init
-    if devpath=$(grep $1 /proc/mounts | awk '{print $1}') ; then
-      mount $devpath $2 -o subvol="/@"
-      btrfs subvolume delete "$2/$1" || true
-      umount "$2" || true
-    fi
+    rm -rf "$1/"*
   fi
 }
 
@@ -56,12 +51,8 @@ if [ $1 == "create_subvolume" ]; then
   restore_and_reboot
 
 elif [ $1 = "delete_subvolume" ]; then
-  tmpdir=$(mktemp -d -p /tmp)
-  if [ -n "$tmpdir" ]; then
-    {% for subvol in caasp_node_subvolumes %}
-    delete_subvolume {{ subvol }} "$tmpdir"
-    {% endfor %}
-    rmdir "$tmpdir"
-    echo "reboot now"
-  fi
+  {% for subvol in caasp_node_subvolumes %}
+  delete_subvolume {{ subvol }}
+  {% endfor %}
+  echo "Deleted subvolume content."
 fi
