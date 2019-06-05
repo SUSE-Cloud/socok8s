@@ -44,6 +44,13 @@ The integration runner creates separate users for Cinder, Cinder backup, and
 Glance. Both the Cinder and Nova services will have the same user, as Cinder
 needs access to create objects that Nova uses.
 
+.. note ::
+
+   This is an optional step in case preference is to use storage pools created
+   with Salt runner. Otherwise, deployment steps will create the necessary pool
+   and configuration files in your workspace. So this whole section can be
+   skipped.
+
 Log in as root to run the SES 5.5 Salt runner on the salt admin host.
 
 .. code-block:: bash
