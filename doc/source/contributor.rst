@@ -138,7 +138,7 @@ Code Comments
 Code comments for variables should be used to explain the purpose of the
 variable.
 
-Code comments for bash/python scripts should give guidance to the purpose of
+Code comments for Bash/Python3 scripts should give guidance to the purpose of
 the code. This is important to provide context for reviewers before the patch
 has merged, and for later modifications to remind the contributors what the
 purpose was and why it was done that way.

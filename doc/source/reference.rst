@@ -121,7 +121,7 @@ situated in `openstack/loci/`. The `build.sh` script is a thin wrapper around
 Container Initiative (OCI) compliant images of OpenStack projects. It uses
 `docker build` to construct images from OpenStack sources. Their requirements
 are expressed in `bindep` files (`bindep.txt` for rpm/apt packages, `pydep.txt`
-for python packages). The `build.sh` script runs `LOCI` for the master branch.
+for Python3 packages). The `build.sh` script runs `LOCI` for the master branch.
 Other branches can be built using `build-{branchname}.sh` where `branchname` is
 the name of the OpenStack release (for example, `rocky`). See also :ref:`buildlociimages`.
 
@@ -320,7 +320,7 @@ not. This adds a step for patching upstream code, builds images and then
 continues the deployment.
 
 ``SOCOK8S_USE_VIRTUALENV`` determines if the script should set up and use a
-virtualenv for python and ansible requirements. Without this it is expected
+virtualenv for Python3 and Ansible requirements. Without this it is expected
 that ansible and the requirements are installed via system packages.
 When ``SOCOK8S_DEVELOPER_MODE`` is set to True, this defaults to True, otherwise
 this defaults to False.
