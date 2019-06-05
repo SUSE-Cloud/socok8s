@@ -54,10 +54,10 @@ run the following command in the root of the socok8s directory:
 
    ./run.sh remove_deployment
 
-This will delete all Helm releases, all Kubernetes resources in the UCP and
-OpenStack namespaces, and all persistent volumes that were provisioned for use
-in the deployment. After this operation is complete, only the original Kubernetes
-services deployed by the SUSE CaaS Platform will remain.
+This will delete all Helm releases, all Kubernetes resources in the ``ucp`` and
+``openstack`` namespaces, and all persistent volumes that were provisioned for
+use in the deployment. After this operation is complete, only the original
+Kubernetes services deployed by the SUSE CaaS Platform will remain.
 
 Testing
 -------
