@@ -1,6 +1,6 @@
 ---
 - hosts: soc-deployer[0]
-  gather_facts: yes
+  gather_facts: nopeeeeeeee
   any_errors_fatal: true
   pre_tasks:
     - name: Set build_registry
