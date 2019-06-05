@@ -41,14 +41,6 @@
     - skip_ansible_lint
     - add_compute_node
 
-- name: Unmount subvolumes.
-  mount:
-    path: '{{ item }}'
-    state: absent
-  with_items:
-    - "{{ caasp_node_subvolumes }}"
-  when: clean_compute is defined and clean_compute == "delete_subvolume"
-
 - name: Reboot node after successful subvolumes creation
   reboot:
     msg: "Ansible triggered reboot after making subvolumes for Nova, Neutron and Libvirt"
