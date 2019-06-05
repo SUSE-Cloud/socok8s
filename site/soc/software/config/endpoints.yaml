@@ -960,7 +960,6 @@ data:
       name: nova
       hosts:
         default: nova-novncproxy
-        public: nova-novncproxy
       host_fqdn_override:
         default: null
         public:
@@ -974,7 +973,7 @@ data:
       port:
         novnc_proxy:
           default: 6080
-          public: 80
+          public: 6080
           #public: 443
     compute_spice_proxy:
       name: nova
