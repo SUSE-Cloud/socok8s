@@ -13,13 +13,7 @@ metadata:
       - method: merge
         path: .
       - method: replace
-        path: .values.labels.agent.l3
-      - method: replace
         path: .values.network
-      - method: replace
-        path: .values.conf.neutron
-      - method: replace
-        path: .values.conf.plugins
   storagePolicy: cleartext
   substitutions:
     - src:
@@ -40,33 +34,12 @@ data:
     pod:
       replicas:
         server: 1
-    labels:
-      agent:
-        l3:
-          node_selector_key: openstack-control-plane
-          node_selector_value: enabled
     network:
+      auto_bridge_add:
+        br-ex: {{ neutron_external_interface }}
       interface:
-        tunnel: docker0
+        tunnel: {{ neutron_tunnel_device }}
     conf:
-      neutron:
-        DEFAULT:
-          l3_ha: False
-          max_l3_agents_per_router: 1
-          l3_ha_network_type: vxlan
-          dhcp_agents_per_network: 1
-      plugins:
-        ml2_conf:
-          ml2_type_flat:
-            flat_networks: public
-        openvswitch_agent:
-          agent:
-            tunnel_types: vxlan
-          ovs:
-            bridge_mappings: public:br-ex
-        linuxbridge_agent:
-          linux_bridge:
-            bridge_mappings: public:br-ex..
       paste:
         app:neutronversions:
           paste.app_factory: neutron.pecan_wsgi.app:versions_factory

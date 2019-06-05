@@ -78,6 +78,10 @@ Platform worker nodes that make up the OpenStack control plane. The
 OpenStack control plane includes Keystone, Glance, Cinder, Nova, Neutron,
 Horizon, Heat, MariaDB, and RabbitMQ.
 
+The group `airship-openstack-l3-agent-workers` specifies the list of CaaS
+Platform worker nodes where OpenStack Neutron L3 agent runs. This nodes have
+a public cidr so that tenant floating IPs can route properly.
+
 The group `airship-openstack-compute-workers` defines the CaaS Platform worker
 nodes used as OpenStack Compute Nodes. Nova Compute, Libvirt, Open vSwitch (OVS)
 are deployed to these nodes.
@@ -153,6 +157,24 @@ SUSE Containerized OpenStack relies on kubectl and Helm commands to configure
 your OpenStack deployment. You need to provide a `kubeconfig` file on the
 `deployer` node, in your workspace. You can fetch this file from the Velum UI
 on your SUSE CaaS Platform cluster.
+
+Configure the Neutron external interface and tunnel device
+----------------------------------------------------------
+
+Add `neutron_tunnel_device:` with its appropriate value for your environment in
+your `env/extravars`. It specifies the overlay network for VM traffic. The
+tunnel device should be available on all OpenStack controllers and compute hosts.
+
+Add `neutron_external_interface:` with its appropriate value for your
+environment in your `env/extravars`. It specifies the bond which the overlay
+is a member of.
+
+For example:
+
+.. code-block:: yaml
+
+   neutron_external_interface: bond0
+   neutron_tunnel_device: bond0.24
 
 Configure the VIP that will be used for OpenStack service public endpoints
 --------------------------------------------------------------------------

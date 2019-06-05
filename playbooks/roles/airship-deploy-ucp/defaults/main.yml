@@ -2,3 +2,5 @@
 airship_pegleg_image: "{{ suse_airship_registry_location }}/airshipit/pegleg:{{ suse_airship_components_image_tag['pegleg'] }}"
 run_tests: true
 test_timeout: 2700
+neutron_external_interface: ""
+neutron_tunnel_device: null
