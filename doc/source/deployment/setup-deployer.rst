@@ -65,7 +65,7 @@ Deployer. Set up your workspace with the following steps:
 
   mkdir ~/socok8s-workspace
   export SOCOK8S_ENVNAME=socok8s
-  export SOCOK8S_WORKSPACE_BASEDIR=~/socok8s-workspace
+  export SOCOK8S_WORKSPACE_BASEDIR=~
 
 
 Cloning the repository

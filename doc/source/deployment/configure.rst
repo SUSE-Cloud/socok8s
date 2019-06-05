@@ -106,11 +106,32 @@ See also
 Configure for SES Integration
 -----------------------------
 
-The file `ses_config.yml` is the output from :ref:`ses_integration`, and must
-be present in the workspace.
+SES integration configuration file `ses_config.yml` is created as part of
+deployment. And needed Ceph admin keyring and user keyring are added in the
+file `env/extravars` in your workspace.  In initial deployment steps, all
+necessary Ceph pools are created and configuration is made available in your
+workspace. Make sure that `env/extravars` file is already present in your
+workspace before deployment step is executed.
 
-The Ceph admin keyring and user keyring, in **base64**, must be present in the
-file `env/extravars` in your workspace.
+If there is a need to differentiate storage resources (pools, users) associated
+with the deployment, then a variable can be set in extravars to add a prefix
+to those resources. Otherwise default with no specific prefix is used.
+
+.. code-block:: yaml
+
+  airship_ses_pools_prefix: "mycloud-"
+
+
+If usage of SES salt runner script is preferred, then you can review next
+sub-section, otherwise skip it.
+
+
+With SES Salt runner usage (Optional)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In case `ses_config.yml` is created as output from :ref:`ses_integration`, then
+it can be copied to workspace. The Ceph admin keyring and user keyring, in
+**base64**, must be present in the file `env/extravars` in your workspace.
 
 The Ceph admin keyring can be obtained by running the following on ceph host.
 
