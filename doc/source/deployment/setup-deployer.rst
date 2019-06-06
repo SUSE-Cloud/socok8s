@@ -68,22 +68,37 @@ Deployer. Set up your workspace with the following steps:
   export SOCOK8S_WORKSPACE_BASEDIR=~
 
 
-Cloning the repository
-----------------------
+Installing the SUSE Containerized OpenStack software
+----------------------------------------------------
 
-To get started, clone the `socok8s GitHub repository <https://github.com/SUSE-Cloud/socok8s>`_.
-This repository uses submodules, so you need to get all the code to make sure
-the playbooks work.
+There are several ways to install the SUSE Containerized OpenStack software.
 
-::
+1. Install from the openSUSE repository including required dependencies:
 
-   git clone --recursive https://github.com/SUSE-Cloud/socok8s.git
+   a. sudo zypper addrepo \\
+      https://download.opensuse.org/repositories/Cloud:/socok8s/openSUSE_Leap_15.0/ socok8s
+   b. sudo zypper install socok8s (installs to /usr/share/socok8s)
 
-Alternatively, one can fetch/update the tree of the submodules by running:
+2. Install with an ISO image including required dependencies:
 
-::
+   a. Download openSUSE-Addon-socok8s-x86_64-Media.iso from
+      https://download.opensuse.org/repositories/Cloud:/socok8s/images/iso/
+   b. sudo zypper addrepo <ISO_IMAGE> socok8s-iso
+   c. sudo zypper install socok8s (installs to /usr/share/socok8s)
 
-   git submodule update --init --recursive
+3. Clone the `socok8s GitHub repository <https://github.com/SUSE-Cloud/socok8s>`_.
+   This repository uses submodules, which have additional code needed for the
+   playbooks to work. Required dependencies must be installed manually.
+
+   ::
+
+      git clone --recursive https://github.com/SUSE-Cloud/socok8s.git
+
+   Fetch or update the tree of the submodules by running:
+
+   ::
+
+      git submodule update --init --recursive
 
 
 SSH Key Preparation
