@@ -10,4 +10,8 @@ metadata:
 data:
   armada:
     manifest: full-site
+    get_releases_timeout: 300
+    get_status_timeout: 300
+    post_apply_timeout: 7200
+    validate_design_timeout: 600
 ...
