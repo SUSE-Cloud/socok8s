@@ -189,6 +189,7 @@
 - name: Print Shipyard update software action status
   debug:
     msg: "{{ shipyard_desc_action.stdout_lines }}"
+  failed_when: "'failed' in shipyard_desc_action.stdout"
   tags:
     - update_airship_osh_site
     - add_compute_node
