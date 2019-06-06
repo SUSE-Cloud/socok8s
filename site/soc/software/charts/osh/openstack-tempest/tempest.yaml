@@ -15,7 +15,7 @@ metadata:
   storagePolicy: cleartext
 data:
   wait:
-    timeout: 6000
+    timeout: 12000
 {% if deploy_tempest is defined and deploy_tempest is sameas true %}
   values:
     jobs:
@@ -27,9 +27,15 @@ data:
       tempest:
         auth:
           tempest_roles: []
+          admin_domain_name: "Default"
+        identity:
+          admin_domain_scope: true
+          default_domain_id: "default"
         identity-feature-enabled:
           api_v2: false
           domain_specific_drivers: true
+        image:
+          http_image: "{{ cirros_test_image_url }}"
         compute:
           flavor_ref: "{{ tempest_test_flavor_id.stdout }}"
           image_ref: "{{ tempest_test_image_id.stdout }}"
@@ -39,7 +45,8 @@ data:
           default_network: "10.0.0.0/8"
           project_network_cidr: "{{ openstack_project_network_cidr }}"
           floating_network_name: "{{ openstack_external_network_name }}"
-          public_network_id: "{{ tempest_test_public_network_id.stdout }}"
+          public_network_id: "{{ tempest_public_network_details.stdout_lines[0] }}"
+          shared_physical_network: "{{ tempest_public_network_details.stdout_lines[1] }}"
         validation:
           image_ssh_user: "cirros"
           image_ssh_password: "gocubsgo"
