@@ -180,7 +180,6 @@
   until: shipyard_desc_action.stdout.find('Processing') < 0 and shipyard_desc_action.stdout.find('running') < 0
   retries: 240
   delay: 15
-  ignore_errors: yes
   tags:
     - skip_ansible_lint
     - update_airship_osh_site
