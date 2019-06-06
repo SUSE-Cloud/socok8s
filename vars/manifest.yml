@@ -2,7 +2,7 @@
 upstream_repos:
   openstack-helm-infra:
     src: https://opendev.org/openstack/openstack-helm-infra
-    version: master
+    version: 3ba03ed8eacdc30098ecb09324b61db0f8e102ac
     dest_subdir: openstack
   openstack-helm:
     src: https://opendev.org/openstack/openstack-helm
