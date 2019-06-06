@@ -80,10 +80,8 @@ function clean_airship(){
         clean_action=" -e clean_action=$1"
         action_desc=$1
     fi
-    echo "DANGER ZONE. Set the env var 'DELETE_ANYWAY' to 'YES' to delete airship artifacts ( ${action_desc} ) in your userspace."
-    if [[ ${DELETE_ANYWAY:-"NO"} == "YES" ]]; then
-        run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_airship.yml ${clean_action}
-    fi
+    echo "Warning: This will delete all airship artifacts ( ${action_desc} ) in your userspace."
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-clean_airship.yml ${clean_action}
 }
 function clean_kvm(){
     echo "Not implemented"
