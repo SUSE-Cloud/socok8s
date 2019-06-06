@@ -52,7 +52,7 @@ Minimum Node Specification
   the target workloads on the compute node.
 
 :term:`SES` All-In-One (AIO) node (Experimental only)
-++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 * (v)CPU: 6
 *  Memory: 16GB
