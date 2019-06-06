@@ -2,7 +2,7 @@
 Deleting SUSE Containerized OpenStack from OpenStack
 ====================================================
 
-If you have built SUSE Containerized OpenStack (SCO) on top of OpenStack, you can
+If you have built SUSE Containerized OpenStack on top of OpenStack, you can
 delete your whole environment by running:
 
 .. code-block:: console
@@ -21,5 +21,5 @@ If you want to delete your WORKDIR too, run:
 
 .. warning::
 
-   You will lose all of your SCO data, your overrides, your certificates,
+   You will lose all of your SUSE Containerized OpenStack data, your overrides, your certificates,
    your inventory.
