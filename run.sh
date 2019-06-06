@@ -21,13 +21,13 @@ socok8s_absolute_dir="$( cd "$(dirname "$0")" ; pwd -P )"
 
 deployment_action=$1
 
-while true ; do
-    case "$deployment_action" in
-      -h|--help) usage ; exit 0 ;;
-       *) source ${scripts_absolute_dir}/pre-flight-checks.sh "validate_cli_options $1"
-          break ;;
-    esac
-done
+# be able to show the help. Later we have the same case (which includes
+# the help) but the pre-flight checks might already abort before
+# being able to show the help
+if [[ ${deployment_action} =~ -h|--help ]] ; then
+    usage
+    exit 0
+fi
 
 if [[ "${SOCOK8S_DEVELOPER_MODE:-False}" == "True" ]]; then
     set -x
@@ -160,6 +160,6 @@ case "$deployment_action" in
         deploy_tempest
         ;;
     *)
-        echo "Invalid option, Check --help for valid options"
+        echo "Invalid option ${deployment_action}, Check --help for valid options"
         ;;
 esac
