@@ -192,7 +192,6 @@
   until: armada_results.stdout.find('armada-') == 0
   retries: 60
   delay: 10
-  ignore_errors: yes
   tags:
     - skip_ansible_lint
 
@@ -208,7 +207,6 @@
   until: armada_pod_status.stdout == "true"
   retries: 30
   delay: 10
-  ignore_errors: yes
   tags:
     - skip_ansible_lint
 
@@ -260,7 +258,6 @@
   until: armada_results.stdout.find('armada-api-') == 0
   retries: 180
   delay: 10
-  ignore_errors: yes
   tags:
     - skip_ansible_lint
 
@@ -277,6 +274,5 @@
   until: armada_api_pod_status.stdout == "true"
   retries: 60
   delay: 10
-  ignore_errors: yes
   tags:
     - skip_ansible_lint
