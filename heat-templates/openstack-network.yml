@@ -68,14 +68,14 @@ resources:
       port_security_enabled: False
 
 outputs:
-  network_name:
-    description: Network name
+  network_id:
+    description: Network ID
     value: { get_resource: network }
-  subnet_name:
-    description: Subnet name
+  subnet_id:
+    description: Subnet ID
     value: { get_resource: subnet }
-  router_name:
-    description: Router name
+  router_id:
+    description: Router ID
     value: { get_resource: router }
   dcm_vip:
     value: {get_attr: [dcm_vip_port, fixed_ips, 0, ip_address]}
