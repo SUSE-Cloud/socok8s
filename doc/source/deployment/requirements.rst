@@ -51,12 +51,16 @@ Minimum Node Specification
   If the work node is used as Compute node, sizing shall be determined by
   the target workloads on the compute node.
 
-:term:`SES` AIO node (Experimental only)
-++++++++++++++++++++++++++++++++++++++++
+:term:`SES` All-In-One (AIO) node (Experimental only)
++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 * (v)CPU: 6
 *  Memory: 16GB
 *  Storage: 80GB
+
+  .. note::
+     When SES is deployed as AIO, then make sure that 2 additional 60GB storage
+     disks are added to node for OSD.
 
 Cluster size
 ------------
