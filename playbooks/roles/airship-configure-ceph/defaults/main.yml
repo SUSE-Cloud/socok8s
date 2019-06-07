@@ -7,7 +7,7 @@ suse_airship_deploy_storage:
   adminId: admin
   adminSecretName: pvc-ceph-conf-combined-storageclass
   adminSecretNamespace: "{{ ceph_namespace_name }} "
-  pool: rbd
+  pool: "{{ airship_ses_pools_prefix | default('') }}rbd"
   userId: admin
   userSecretName: pvc-ceph-client-key
   openstackUserSecretNamespace: "{{ openstack_namespace_name }}"
