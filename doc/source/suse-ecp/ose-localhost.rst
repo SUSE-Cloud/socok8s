@@ -57,6 +57,7 @@ Base software
 Install the following software on your `localhost`:
 
   * jq
+  * which
   * ipcalc
   * git
   * python-virtualenv
