@@ -128,15 +128,13 @@ Use ARA (recommended)
 ~~~~~~~~~~~~~~~~~~~~~
 
 Ansible Run Analysis (ARA) makes Ansible runs easier to visualize, understand,
-and troubleshoot. To use ARA, set the following environment variable before
-running `run.sh`.
+and troubleshoot. To use ARA:
 
-.. code-block:: console
+1. Install ARA and its required dependencies: ``pip install ara[server]``.
+2. Set the ARA environment variable before running `run.sh`: ``export USE_ARA='True'``
 
-   export USE_ARA='True'
-
-To set up ARA permanently for your user on `Deployer`, create an Ansible
-configuration file loading ARA plugins:
+To set up ARA permanently on the `Deployer`, create an Ansible configuration
+file loading ARA plugins:
 
 .. code-block:: console
 

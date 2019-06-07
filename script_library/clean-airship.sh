@@ -27,7 +27,6 @@ sleep 30
 if [[ ${clean_action} == *"clean_ucp"* ]]; then
     kubectl delete --all --ignore-not-found deployments -n ucp --grace-period=0 --force
     kubectl delete --all --ignore-not-found pods -n ucp --grace-period=0 --force
-    kubectl get jobs -n ucp -o name | xargs -r kubectl delete -n ucp --grace-period=0 --force
     kubectl delete --all --ignore-not-found pvc -n ucp --grace-period=0 --force
 fi
 
@@ -35,7 +34,6 @@ fi
 if [[ ${clean_action} == *"clean_openstack"* ]]; then
     kubectl delete --all --ignore-not-found deployments -n openstack --grace-period=0 --force
     kubectl delete --all --ignore-not-found pods -n openstack --grace-period=0 --force
-    kubectl get jobs -n openstack -o name | xargs -r kubectl delete -n openstack --grace-period=0 --force
     kubectl delete --all --ignore-not-found pvc -n openstack --grace-period=0 --force
 fi
 
@@ -55,35 +53,37 @@ fi
 
 if [[ ${clean_action} == *"clean_ucp"* ]]; then
     kubectl delete --all --ignore-not-found configmaps --namespace=ucp --grace-period=0 --force
-    kubectl delete serviceaccount --all --ignore-not-found -n ucp --grace-period=0 --force
-    kubectl delete secret --all --ignore-not-found -n ucp --grace-period=0 --force
+    kubectl delete serviceaccount --all --ignore-not-found -n ucp
+    kubectl delete secret --all --ignore-not-found -n ucp
+    kubectl get jobs -n ucp -o name | xargs -r kubectl delete -n ucp --grace-period=0 --force
 fi
 
 if [[ ${clean_action} == *"clean_openstack"* ]]; then
     kubectl delete --all --ignore-not-found configmaps --namespace=openstack --grace-period=0 --force
-    kubectl delete serviceaccount --all --ignore-not-found -n openstack --grace-period=0 --force
-    kubectl delete secret --all --ignore-not-found -n openstack --grace-period=0 --force
+    kubectl delete serviceaccount --all --ignore-not-found -n openstack
+    kubectl delete secret --all --ignore-not-found -n openstack
+    kubectl get jobs -n openstack -o name | xargs -r kubectl delete -n openstack --grace-period=0 --force
 fi
 
 
 if [[ ${clean_action} == *"clean_rest"* ]]; then
     kubectl delete sc --ignore-not-found general --grace-period=0 --force
-    kubectl delete serviceaccount --all --ignore-not-found -n ceph --grace-period=0 --force
-    kubectl delete secret --all --ignore-not-found -n ceph --grace-period=0 --force
+    kubectl delete serviceaccount --all --ignore-not-found -n ceph
+    kubectl delete secret --all --ignore-not-found -n ceph
 fi
 
 
 if [[ ${clean_action} == *"clean_rest"* ]]; then
     # Remove extra data
-    kubectl delete clusterrolebinding --ignore-not-found PrivilegedRoleBinding --grace-period=0 --force
-    kubectl delete clusterrolebinding --ignore-not-found NonResourceUrlRoleBinding --grace-period=0 --force
+    kubectl delete clusterrolebinding --ignore-not-found PrivilegedRoleBinding
+    kubectl delete clusterrolebinding --ignore-not-found NonResourceUrlRoleBinding
 fi
 
 if [[ ${clean_action} == *"clean_openstack"* ]]; then
     # DO NOT USE clusterrolebinding, else you will delete all rolebindings, even the suse: and system: ones,
     # even when scoped in the namespace.
-    kubectl get -n openstack rolebinding.rbac.authorization.k8s.io -o name | xargs -r kubectl -n openstack delete --grace-period=0 --force
-    kubectl delete namespace --ignore-not-found openstack --grace-period=0 --force
+    kubectl get -n openstack rolebinding.rbac.authorization.k8s.io -o name | xargs -r kubectl -n openstack delete
+    kubectl delete namespace --ignore-not-found openstack
     kubectl label node --all openstack-control-plane-
     kubectl label node --all ucp-control-plane-
     kubectl label node --all openstack-compute-node-
@@ -96,7 +96,7 @@ if [[ ${clean_action} == *"clean_rest"* ]]; then
 fi
 
 if [[ ${clean_action} == *"clean_ucp"* ]]; then
-    kubectl delete namespace --ignore-not-found ucp --grace-period=0 --force
+    kubectl delete namespace --ignore-not-found ucp
     kubectl label node --all ucp-control-plane-
     kubectl label node --all kube-ingress-
 fi
