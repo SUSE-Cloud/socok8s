@@ -6,7 +6,7 @@
     - preinstall
     - add_compute_node
 
-- name: Enroll node for Airship UCP
+- name: Enroll node for Airship kube-system ingress
   shell: "kubectl label nodes {{ inventory_hostname }} kube-ingress=enabled"
   when: ('airship-kube-system-workers' in group_names)
   register: _enrollforucp
@@ -41,6 +41,19 @@
   failed_when:
     - _enrollforopenstackcp.rc != 0
     - _enrollforopenstackcp.stderr.find("already has a value (enabled)") == -1
+  tags:
+    - skip_ansible_lint
+
+- name: Enroll node for Airship Openstack L3 agent
+  shell: |
+    kubectl label nodes {{ inventory_hostname }} openstack-l3-agent=enabled
+  when: ('airship-openstack-l3-agent-workers' in group_names)
+  register: _enrollforopenstackl3agent
+  changed_when:
+    - _enrollforopenstackl3agent.rc == 0
+  failed_when:
+    - _enrollforopenstackl3agent.rc != 0
+    - _enrollforopenstackl3agent.stderr.find("already has a value (enabled)") == -1
   tags:
     - skip_ansible_lint
 
