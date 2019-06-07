@@ -19,6 +19,7 @@
             parameters:
               prefix: "{{ socok8s_envname }}"
               network_external: "{{ deploy_on_openstack_external_network }}"
+              network_internal_cidr: "{{ deploy_on_openstack_internal_subnet_cidr }}"
 
         - name: show network stack output
           debug:

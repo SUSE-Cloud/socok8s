@@ -14,6 +14,11 @@ parameters:
     label: Public network name
     description: The name of the public network
     default: floating
+  network_internal_cidr:
+    type: string
+    label: Internal network CIDR
+    description: The CIDR for the internal network
+    default: 192.168.100.0/24
 
 resources:
   network:
@@ -26,9 +31,8 @@ resources:
     type: OS::Neutron::Subnet
     properties:
       network_id: { get_resource: network }
-      cidr: "192.168.100.0/24"
+      cidr: { get_param: network_internal_cidr }
       ip_version: 4
-      gateway_ip: 192.168.100.1
       name:
         list_join: ['-', [ { get_param: prefix }, 'subnet']]
 

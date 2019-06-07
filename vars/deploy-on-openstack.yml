@@ -2,6 +2,7 @@
 deploy_on_openstack_external_network: "{{ lookup('env', 'EXTERNAL_NETWORK') | default('floating', true) }}"
 deploy_on_openstack_internal_network: "{{ socok8s_envname }}-net"
 deploy_on_openstack_internal_subnet: "{{ socok8s_envname }}-subnet"
+deploy_on_openstack_internal_subnet_cidr: "192.168.100.0/24"
 deploy_on_openstack_keypairname: "{{ lookup('env','KEYNAME') }}"
 # the heat stack name that is used for the network stack (which includes net/subnet/router)
 deploy_on_openstack_network_stackname: "{{ socok8s_envname }}-network"
