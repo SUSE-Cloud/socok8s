@@ -36,3 +36,33 @@
           socok8s_{{ item.output_key }}: {{ item.output_value }}
       with_items: "{{ network_stack_create_output.stack.outputs }}"
       when: ( item.output_key == 'dcm_vip') or ( item.output_key == 'ext_vip' )
+
+    - name: Add internal network ID to group_vars
+      blockinfile:
+        path: "{{ socok8s_workspace }}/inventory/group_vars/all/openstack-network.yml"
+        create: yes
+        marker: "# {mark} ANSIBLE MANAGED BLOCK FOR deploy_on_openstack_internal_network_id"
+        block: |
+          deploy_on_openstack_internal_network_id: {{ item.output_value }}
+      with_items: "{{ network_stack_create_output.stack.outputs }}"
+      when: ( item.output_key == 'network_id')
+
+    - name: Add internal subnet ID to group_vars
+      blockinfile:
+        path: "{{ socok8s_workspace }}/inventory/group_vars/all/openstack-network.yml"
+        create: yes
+        marker: "# {mark} ANSIBLE MANAGED BLOCK FOR deploy_on_openstack_internal_subnet_id"
+        block: |
+          deploy_on_openstack_internal_subnet_id: {{ item.output_value }}
+      with_items: "{{ network_stack_create_output.stack.outputs }}"
+      when: ( item.output_key == 'subnet_id')
+
+    - name: Add router ID to group_vars
+      blockinfile:
+        path: "{{ socok8s_workspace }}/inventory/group_vars/all/openstack-network.yml"
+        create: yes
+        marker: "# {mark} ANSIBLE MANAGED BLOCK FOR deploy_on_openstack_router_id"
+        block: |
+          deploy_on_openstack_router_id: {{ item.output_value }}
+      with_items: "{{ network_stack_create_output.stack.outputs }}"
+      when: ( item.output_key == 'router_id')
