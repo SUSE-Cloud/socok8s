@@ -97,7 +97,7 @@
     chdir: '{{ upstream_repos_clone_folder }}/airship/shipyard'
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
-    OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
+    OS_SHIPYARD_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
   register: shipyard_create_config
   failed_when:
     - shipyard_create_config.stdout.find('Error') == 0
@@ -115,7 +115,7 @@
     chdir: '{{ upstream_repos_clone_folder }}/airship/shipyard'
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
-    OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
+    OS_SHIPYARD_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
   when:
     - "no_revision_error_msg not in shipyard_create_config.stdout"
   register: shipyard_commit_config
@@ -132,7 +132,7 @@
     chdir: '{{ upstream_repos_clone_folder }}/airship/shipyard'
   environment:
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
-    OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
+    OS_SHIPYARD_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
   register: shipyard_update_software
   failed_when: shipyard_update_software.stdout.find('Error') == 0
   tags:
@@ -173,7 +173,6 @@
     - install
     - update_airship_osh_site
 
-# TODO(aagate): Add a changed_when: to help idempotency
 - block:
     - name: "Wait for update software action to complete... it can take up to {{ airship_deploy_openstack_timeout }} minutes"
       command: '{{ shipyard }} describe {{ shipyard_action_key }}'
@@ -181,7 +180,7 @@
         chdir: '{{ upstream_repos_clone_folder }}/airship/shipyard'
       environment:
         SHIPYARD_IMAGE: "{{ shipyard_image }}"
-        OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
+        OS_SHIPYARD_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
       register: shipyard_desc_action
       failed_when:
         - shipyard_desc_action.stdout.find('failed') >= 0
