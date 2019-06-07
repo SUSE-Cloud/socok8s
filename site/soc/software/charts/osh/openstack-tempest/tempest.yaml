@@ -23,7 +23,16 @@ data:
         backoffLimit: 0
         restartPolicy: Never
     conf:
-      script: "tempest run --config-file /etc/tempest/tempest.conf -w {{ tempest_workers }} {{ tempest_test_args[tempest_test_type] }}"
+      script: |
+        tempest run \
+        --config-file /etc/tempest/tempest.conf \
+        -w {{ tempest_workers }} \
+        {{ tempest_test_args[tempest_test_type] }} \
+    {% if use_blacklist %}
+        --blacklist-file /etc/tempest/test-blacklist
+      blacklist:
+        {{ lookup('file', 'tempest_blacklist') | indent(8) }}
+    {% endif %}
       tempest:
         auth:
           tempest_roles: []
