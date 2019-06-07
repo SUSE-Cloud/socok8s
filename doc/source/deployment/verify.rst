@@ -35,7 +35,7 @@ shell on the `Deployer` node.
 .. code-block:: console
 
    export OS_CLOUD=openstack
-   openstack network create --provider-network-type flat --provider-physical-network public \ 
+   openstack network create --provider-network-type flat --provider-physical-network external \ 
      --external public
    openstack subnet create --network public --subnet-range 192.168.100.0/24 --allocation-pool \
      start=192.168.100.10,end=192.168.100.200 --gateway 192.168.100.1 --no-dhcp public-subnet

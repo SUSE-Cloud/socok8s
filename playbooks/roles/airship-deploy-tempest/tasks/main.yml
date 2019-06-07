@@ -23,11 +23,11 @@
     path: "{{ site_path }}/software/charts/osh/openstack-tempest"
     state: directory
 
-- name: Get external network ID
-  shell: "openstack network show {{ openstack_external_network_name }} -f value -c id"
+- name: Get external network details
+  shell: "openstack network show {{ openstack_external_network_name }} -f value -c id -c shared"
   environment:
     OS_CLOUD: openstack
-  register: tempest_test_public_network_id
+  register: tempest_public_network_details
   tags:
     - skip_ansible_lint
 
