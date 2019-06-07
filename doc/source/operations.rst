@@ -339,6 +339,51 @@ instance:
 
    kubectl logs -n ${NAMESPACE} ${POD_NAME} -p
 
+Recover Controller Host Node
+----------------------------
+
+If deployment failed with error of controller host not reachable ( has entered maintenance mode )
+
+Go to maintenance mode on controller host and run following commands:
+
+.. code-block:: console
+
+   mounted_snapshot=$(mount | grep snapshot | gawk  'match($6, /ro.*@\/.snapshots\/(.*)\/snapshot/ , arr1 ) { print arr1[1] }')
+
+   btrfs property set -ts /.snapshots/$mounted_snapshot/snapshot ro false
+
+   mount -o remount, rw /
+
+   mkdir /var/lib/neutron
+
+   btrfs property set -ts /.snapshots/$mounted_snapshot/snapshot ro true
+
+   reboot
+
+Recover Compute Host Node
+-------------------------
+
+If deployment failed with error of compute host not reachable ( has entered maintenance mode )
+
+Go to maintenance mode on compute host and run following commands:
+
+.. code-block:: console
+
+   mounted_snapshot=$(mount | grep snapshot | gawk  'match($6, /ro.*@\/.snapshots\/(.*)\/snapshot/ , arr1 ) { print arr1[1] }')
+
+   btrfs property set -ts /.snapshots/$mounted_snapshot/snapshot ro false
+
+   mount -o remount, rw /
+
+   mkdir /var/lib/libvirt
+   mkdir /var/lib/nova
+   mkdir /var/lib/openstack-helm
+   mkdir /var/lib/neutron
+
+   btrfs property set -ts /.snapshots/$mounted_snapshot/snapshot ro true
+
+   reboot
+
 .. _caaspoperations:
 
 CaaS Platform Operations
