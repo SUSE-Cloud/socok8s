@@ -73,7 +73,7 @@ data:
             # for the migration process
             kill_metadata: KillFilter, root, python, -15, -9
             kill_metadata7: KillFilter, root, python2.7, -15, -9
-            kill_metadata35: KillFilter, root, python3.5, -15, -9
+            # Added socok8s downstream to support python 3.6 in openSUSE Neutron image
             kill_metadata36: KillFilter, root, python3.6, -15, -9
             kill_radvd_usr: KillFilter, root, /usr/sbin/radvd, -15, -9, -HUP
             kill_radvd: KillFilter, root, /sbin/radvd, -15, -9, -HUP
@@ -159,7 +159,7 @@ data:
             # for the migration process
             kill_metadata: KillFilter, root, python, -9
             kill_metadata7: KillFilter, root, python2.7, -9
-            kill_metadata35: KillFilter, root, python3.5, -9
+            # Added in socok8s downstream to support Pythong 3.6 in openSUSE Neuton image
             kill_metadata36: KillFilter, root, python3.6, -9
             
             # ip_lib
