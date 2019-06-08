@@ -17,6 +17,31 @@ metadata:
       - method: delete
         path: .values.ceph_client
   storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.cinder.api.min
+      dest:
+        path: .values.pod.replicas.api
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.cinder.volume.min
+      dest:
+        path: .values.pod.replicas.volume
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.cinder.scheduler.min
+      dest:
+        path: .values.pod.replicas.scheduler
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.cinder.backup.min
+      dest:
+        path: .values.pod.replicas.backup
 data:
   wait:
     timeout: {{ openstack_helm_deploy_timeout }}
@@ -27,7 +52,9 @@ data:
     pod:
       replicas:
         api: 1
-        registry: 1
+        volume: 1
+        scheduler: 1
+        backup: 1
     storage: rbd
     conf:
       software:
