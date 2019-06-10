@@ -6,8 +6,8 @@ clouds:
       username: 'admin'
       password: {{ lookup('password', secrets_location + '/ucp_keystone_admin_password ' + password_opts) }}
       project_name: 'admin'
-      project_domain_name: 'default'
-      user_domain_name: 'default'
+      project_domain_name: 'Default'
+      user_domain_name: 'Default'
       auth_url: 'http://keystone.ucp.svc.cluster.local/v3'
   openstack:
     region_name: RegionOne
@@ -16,6 +16,6 @@ clouds:
       username: 'admin'
       password: {{ lookup('password', secrets_location + '/osh_keystone_admin_password ' + password_opts) }}
       project_name: 'admin'
-      project_domain_name: 'default'
-      user_domain_name: 'default'
+      project_domain_name: 'Default'
+      user_domain_name: 'Default'
       auth_url: 'http://identity.openstack.svc.cluster.local/v3'
