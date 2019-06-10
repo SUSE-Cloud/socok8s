@@ -29,7 +29,10 @@ data:
         -w {{ tempest_workers }} \
         {{ tempest_test_args[tempest_test_type] }} \
 {% if use_blacklist %}
-        --blacklist-file /etc/tempest/test-blacklist
+        --blacklist-file /etc/tempest/test-blacklist \
+{% endif %}
+        || true
+{% if use_blacklist %}
       blacklist:
         {{ lookup('file', 'tempest_blacklist') | indent(8) }}
 {% endif %}
@@ -66,5 +69,7 @@ data:
           glance: "{{ tempest_enable_glance_service }}"
           nova: "{{ tempest_enable_nova_service }}"
           neutron: "{{ tempest_enable_neutron_service }}"
+      cleanup:
+        enabled: false
 {% endif %}  
 ...

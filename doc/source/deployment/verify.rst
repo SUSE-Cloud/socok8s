@@ -35,15 +35,15 @@ shell on the `Deployer` node.
 .. code-block:: console
 
    export OS_CLOUD=openstack
-   openstack network create --provider-network-type flat --provider-physical-network external \ 
+   openstack network create --provider-network-type flat --provider-physical-network external \
      --external public
    openstack subnet create --network public --subnet-range 192.168.100.0/24 --allocation-pool \
      start=192.168.100.10,end=192.168.100.200 --gateway 192.168.100.1 --no-dhcp public-subnet
 
 .. note::
 
-   The external public network is expected to be able to reach the internet. The above values 
-   will vary based on your network environment. 
+   The external public network is expected to be able to reach the internet. The above values
+   will vary based on your network environment.
 
 Once the public network and subnet have been created in OpenStack, their names will need to be
 made known to Tempest by adding the following keys in the ${WORKDIR}/env/extravars file:
@@ -65,7 +65,7 @@ Configuring Tempest Test Parameters
 
 By default, the implementation of Tempest in SUSE Containerized OpenStack will run smoke tests
 for all deployed services including compute, identity, image, network, and volume, using 4
-workers. 
+workers.
 
 To modify the number of workers, add the following key with a value of your choosing to the
 extravars file:
@@ -116,8 +116,8 @@ Example output:
    airship-tempest-run-tests-hq6jg                          1/1     Running       0          33m
 
 A status of 'Running' indicates that testing is still in progress. Once testing is complete, the status
-of the airship-tempest-run-tests pod will change to 'Complete', indicating that all tests passed, or
-'Error', indicating that at least one test has failed.
+of the airship-tempest-run-tests pod will change to 'Complete', indicating that all *enabled* tests
+are executed.
 
 Tempest Test Results
 --------------------
@@ -131,29 +131,31 @@ the following command:
 
 .. note::
 
-   The logs can be viewed at any time, even while a current test batch is still running. 
+   The logs can be viewed at any time, even while a current test batch is still running.
 
 Once testing is complete, the logs will conclude with a summary of all passed, skipped, and failed tests
 similar to the following:
 
 .. code-block:: console
 
-   ======
-   Totals
-   ======
-   Ran: 78 tests in 104.0000 sec.
-    - Passed: 62
-    - Skipped: 16
-    - Expected Fail: 0
-    - Unexpected Success: 0
-    - Failed: 0
-   Sum of execute time for each test: 56.3147 sec.
+  Sample output for smoke tests execution (default value for tempest_test_type)
 
-   ==============
-   Worker Balance
-   ==============
-    - Worker 0 (19 tests) => 0:01:44.140828
-    - Worker 1 (20 tests) => 0:01:02.484599
-    - Worker 2 (18 tests) => 0:00:29.100245
-    - Worker 3 (21 tests) => 0:01:28.449495
-   
+  ======
+  Totals
+  ======
+  Ran: 120 tests in 1043.0000 sec.
+   - Passed: 88
+   - Skipped: 28
+   - Expected Fail: 0
+   - Unexpected Success: 0
+   - Failed: 4
+  Sum of execute time for each test: 1684.2065 sec.
+
+  ==============
+  Worker Balance
+  ==============
+   - Worker 0 (25 tests) => 0:06:17.321190
+   - Worker 1 (39 tests) => 0:15:52.956097
+   - Worker 2 (27 tests) => 0:17:23.015459
+   - Worker 3 (29 tests) => 0:05:19.495695
+
