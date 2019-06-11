@@ -81,7 +81,7 @@ parameters:
   worker_flavor:
     type: string
     description: Worker Flavor
-    default: m1.large
+    default: m1.medlarge
     constraints:
       - custom_constraint: nova.flavor
   worker_count:
