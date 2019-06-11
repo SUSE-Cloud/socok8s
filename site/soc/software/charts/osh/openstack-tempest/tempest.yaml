@@ -56,6 +56,45 @@ data:
           floating_network_name: "{{ openstack_external_network_name }}"
           public_network_id: "{{ tempest_public_network_details.stdout_lines[0] }}"
           shared_physical_network: "{{ tempest_public_network_details.stdout_lines[1] }}"
+        network-feature-enabled:
+          api_extensions:
+            - default-subnetpools
+            - network-ip-availability
+            - network_availability_zone
+            - auto-allocated-topology
+            - ext-gw-mode
+            - binding
+            - agent
+            - subnet_allocation
+            - l3_agent_scheduler
+            - tag
+            - external-net
+            - flavors
+            - net-mtu
+            - availability_zone
+            - quotas
+            - l3-ha
+            - provider
+            - multi-provider
+            - address-scope
+            - extraroute
+            - subnet-service-types
+            - standard-attr-timestamp
+            - service-type
+            - l3-flavors
+            - port-security
+            - extra_dhcp_opt
+            - standard-attr-revisions
+            - pagination
+            - sorting
+            - security-group
+            - dhcp_agent_scheduler
+            - router_availability_zone
+            - rbac-policies
+            - standard-attr-description
+            - router
+            - allowed-address-pairs
+            - project-id
         validation:
           image_ssh_user: "cirros"
           image_ssh_password: "gocubsgo"
