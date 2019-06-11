@@ -91,6 +91,31 @@ file:
 
    tempest_test_type: "all"
 
+Using a Blacklist
+-----------------
+
+To exclude specifc tests from the collection of tests being run against the deployment, they
+can be added to the blacklist file located at
+
+.. code-block:: console
+
+   socok8s/playbooks/roles/airship-deploy-tempest/files/tempest_blacklist
+
+When adding tests to the blacklist, each test should be listed on a new line and should be
+formatted like the following example:
+
+.. code-block:: console
+
+   - (?:tempest\.api\.identity\.v3\.test_domains\.DefaultDomainTestJSON\.test_default_domain_exists)
+
+By default, the blacklist file provided with SUSE Containerized OpenStack will be used when
+running Tempest tests. If desired, use of a blacklist can be disabled by adding the following key
+to ${WORKDIR}/env/extravars:
+
+.. code-block:: yaml
+
+   use_blacklist: false
+
 Running Tempest Tests
 ---------------------
 
