@@ -19,7 +19,7 @@ SES network configuration have their own respective documentation.
            caasp-worker1 [address = "172.30.0.13"];
            caasp-worker2 [address = "172.30.0.14"];
        }
-       ses-aio [address = "172.30.0.15"];
+       ses [address = "172.30.0.15"];
      }
 
      network storage {
@@ -29,7 +29,7 @@ SES network configuration have their own respective documentation.
        caasp-master [address = "172.30.2.12"];
        caasp-worker1 [address = "172.30.2.13"];
        caasp-worker2 [address = "172.30.2.14"];
-       ses-aio [address = "172.30.2.15"];
+       ses [address = "172.30.2.15"];
      }
      network ext {
        address = "172.30.1.x/24"
@@ -88,7 +88,7 @@ The following configuration files reflect the diagram above.
         ansible_user: root
     ses_nodes:
     hosts:
-        ses-aio:
+        ses:
         ansible_host: 172.30.0.15
     vars:
         ansible_user: root
@@ -143,7 +143,7 @@ The following configuration files reflect the diagram above.
     cluster_network: 172.30.2.0/24
     fsid: d40fea38-fcf6-3dd5-8479-dd36e8f53ac5
     mon_host: 172.30.2.15
-    mon_initial_members: ses-aio
+    mon_initial_members: ses
     public_network: 172.30.2.0/24
     cinder:
     key: AQDkeIZcAAAAABAAdTOl4xyDS0/v9B8m1drZmQ==
