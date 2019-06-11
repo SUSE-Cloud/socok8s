@@ -120,3 +120,10 @@
     apply:
       tags:
         - update_airship_osh_site
+
+- name: Check tempest run output
+  debug:
+    msg:
+      - "Tempest job execution is completed. Check the output of this tempest run for details"
+      - "kubectl logs -n openstack <tempest-run_pod_name>"
+
