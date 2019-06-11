@@ -9,7 +9,7 @@
 
 - name: Get patch {{ patchnumber }} details
   uri:
-    url: "{{ dev_patcher_baseurl }}/?q=is:open+{{ patchnumber }}&o=ALL_REVISIONS"
+    url: "{{ dev_patcher_baseurl }}/?q={{ patchnumber }}&o=ALL_REVISIONS"
     return_content: yes
     body_format: json
   register: thispatch
@@ -17,21 +17,19 @@
 # Gerrit starts its http response with ")]}'". Strip that to have a valid json.
 - name: Parse patch details
   set_fact:
-    jsoncontent: "{{ thispatch.content.replace(pattern_to_replace,'') | from_json }}"
+    jsoncontent: "{{ thispatch.content.replace(pattern_to_replace,'') | from_json | first }}"
   vars:
     pattern_to_replace: ")]}'"
 
-- name: Apply {{ patchnumber }} - {{ jsoncontent[0]['subject'] }}
+- name: Apply {{ patchnumber }} - {{ jsoncontent['subject'] }}
   shell: |
     set -o errexit
-    git fetch {{ jsoncontent[0]['revisions'][revision]['fetch']['anonymous http']['url'] }} {{ jsoncontent[0]['revisions'][revision]['fetch']['anonymous http']['ref'] }}
+    git fetch {{ jsoncontent['revisions'][revision]['fetch']['anonymous http']['url'] }} {{ jsoncontent['revisions'][revision]['fetch']['anonymous http']['ref'] }}
     git cherry-pick FETCH_HEAD
   args:
     chdir: "{{ upstream_repos_clone_folder }}/{{ project }}"
   vars:
     # Use latest revision of no revision was specified
-    revision: "{{ (patchrevision != 'current') | ternary(patchrevision, jsoncontent[0]['current_revision']) }}"
-    project: "{{ jsoncontent[0]['project'] }}"
-  when:
-    # Do not apply patches if they are already merged
-    - "jsoncontent | length > 0"
+    revision: "{{ (patchrevision != 'current') | ternary(patchrevision, jsoncontent['current_revision']) }}"
+    project: "{{ jsoncontent['project'] }}"
+  changed_when: true
