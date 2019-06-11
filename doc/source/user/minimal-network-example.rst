@@ -18,7 +18,7 @@ This is the minimal network configuration for CCP.
            caasp-worker1 [address = "172.30.0.13"];
            caasp-worker2 [address = "172.30.0.14"];
        }
-       ses-aio [address = "172.30.0.15"];
+       ses [address = "172.30.0.15"];
      }
    }
 
@@ -70,7 +70,7 @@ The following configuration files reflect the diagram above.
         ansible_user: root
     ses_nodes:
     hosts:
-        ses-aio:
+        ses:
         ansible_host: 172.30.0.15
     vars:
         ansible_user: root
@@ -125,7 +125,7 @@ The following configuration files reflect the diagram above.
     cluster_network: 172.30.0.0/24
     fsid: d40fea38-fcf6-3dd5-8479-dd36e8f53ac5
     mon_host: 172.30.0.15
-    mon_initial_members: ses-aio
+    mon_initial_members: ses
     public_network: 172.30.0.0/24
     cinder:
     key: AQDkeIZcAAAAABAAdTOl4xyDS0/v9B8m1drZmQ==

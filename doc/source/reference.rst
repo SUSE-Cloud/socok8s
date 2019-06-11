@@ -227,7 +227,7 @@ Simplified network diagram
            caasp-master;
        }
        deployer;
-       ses-aio;
+       ses;
      }
    }
 
