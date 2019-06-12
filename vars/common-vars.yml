@@ -21,7 +21,6 @@ suse_infra_image_version: "opensuse_15-20190613"
 socok8s_repos_to_configure:
   SLE12SP3-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Pool/
   SLE12SP3-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Updates/
-  SUSE-CA: http://download.suse.de/ibs/SUSE:/CA/SLE_12_SP3/
   SES5-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Pool/
   SES5-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Updates/
   Leap15develtools: https://download.opensuse.org/repositories/devel:/tools/openSUSE_Leap_15.0/
