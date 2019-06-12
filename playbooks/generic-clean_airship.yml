@@ -13,12 +13,17 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
-#
-- hosts: airship-openstack-compute-workers
+
+- hosts: soc-deployer
   gather_facts: no
   any_errors_fatal: true
-  roles:
-    - { role: openstack-remove-compute, compute_node_name: "{{ inventory_hostname }}" }
+  tasks:
+    - name: Remove compute nodes.
+      include_role:
+         name: openstack-remove-compute
+      loop: "{{ groups['airship-openstack-compute-workers'] }}"
+      loop_control:
+         loop_var: compute_node_name
 
 - hosts: soc-deployer
   gather_facts: no
