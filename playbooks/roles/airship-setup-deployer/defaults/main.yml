@@ -12,14 +12,15 @@ suse_airship_deploy_packages:
   - uuid-runtime
   - docker
   - curl
-  - python2-setuptools
-  - python2-pip
+  - python3-setuptools
+  - python3-pip
+  - python3-cmd2
   - python-devel
 
-suse_airship_deploy_python_libs:
-  - "cmd2<=0.8.7"
-  - python-openstackclient
-  - python-heatclient
+suse_airship_openstackclient_packages:
+  - python3-barbicanclient
+  - python3-heatclient
+  - python3-openstackclient
 
 # Keep this until helm is packaged as rpm
 helm_download_url: "https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"

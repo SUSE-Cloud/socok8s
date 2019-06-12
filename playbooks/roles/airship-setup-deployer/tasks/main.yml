@@ -26,12 +26,11 @@
   tags:
     - install
 
-- name: Pip install python libraries
+- name: Install OpenStack client packages
   become: yes
-  pip:
-    name: "{{ suse_airship_deploy_python_libs }}"
-  register: install_python_libs
-  until: install_python_libs is success
+  package:
+    name: "{{ suse_airship_openstackclient_packages }}"
+    state: present
   retries: 5
   delay: 2
   tags:
