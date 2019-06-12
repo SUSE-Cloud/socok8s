@@ -66,6 +66,8 @@ using. For example:
      hosts:
        caasp-worker-001:
          ansible_host: 10.86.1.144
+     vars:
+       ansible_user: root
 
 The group `airship-ucp-workers` specifies the list of CaaS Platform worker
 nodes to which the Airship Under Cloud Platform (UCP) services will be

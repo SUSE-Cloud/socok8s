@@ -34,7 +34,7 @@ To deploy SUSE OpenStack cloud using Airship, run:
 
 .. code-block:: console
 
-   ./run.sh deploy_airship
+   ./run.sh deploy
 
 This script takes several minutes to finish.
 
@@ -159,7 +159,7 @@ you need to set the following environment variables before deployment:
 
    export SOCOK8S_DEVELOPER_MODE='True'
    export AIRSHIP_BUILD_LOCAL_IMAGES='true'
-   ./run.sh deploy_airship
+   ./run.sh deploy
 
 Alternatively, you can add the following two lines to the `env/extravars` file:
 

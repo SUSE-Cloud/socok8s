@@ -95,7 +95,7 @@ To deploy OpenStack using Airship, run:
 
 .. code-block:: console
 
-   ./run.sh deploy_airship
+   ./run.sh deploy
 
 In a single step
 ----------------
