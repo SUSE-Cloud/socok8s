@@ -106,6 +106,8 @@ directory:
 
 .. note::
 
+   NODE_HOSTNAME must be same as host name in ansible inventory.
+
    Compute nodes must be removed individually. When the node has been successfully
    removed, the host details must be manually removed from
    "airship-openstack-compute-workers" group in the inventory.

@@ -1,5 +1,5 @@
 ---
-- hosts: airship-openstack-compute-workers
+- hosts: soc-deployer
   gather_facts: yes
   any_errors_fatal: true
   roles:
