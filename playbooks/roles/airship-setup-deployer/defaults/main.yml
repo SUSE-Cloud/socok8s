@@ -21,6 +21,3 @@ suse_airship_openstackclient_packages:
   - python3-barbicanclient
   - python3-heatclient
   - python3-openstackclient
-
-# Keep this until helm is packaged as rpm
-helm_download_url: "https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"
