@@ -168,7 +168,7 @@
 - name: Apply Armada cluster role binding
   command: "kubectl apply -f {{ socok8s_deploy_config_location }}/armada-cluster-role-binding.yaml"
   register: armada_cluster_role_binding_result
-  changed_when: "armada_cluster_role_binding_result.stdout|search('created')"
+  changed_when: "armada_cluster_role_binding_result.stdout is search('created')"
   tags:
     - install
 
@@ -182,7 +182,7 @@
 - name: Deploy Armada pod to CaaSP
   command: "kubectl apply -f {{ socok8s_deploy_config_location }}/armada.yaml"
   register: armada_pod_deploy_result
-  changed_when: "armada_pod_deploy_result.stdout|search('created')"
+  changed_when: "armada_pod_deploy_result.stdout is search('created')"
   tags:
     - install
 
