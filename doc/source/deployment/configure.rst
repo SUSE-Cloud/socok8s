@@ -156,7 +156,19 @@ Configure for Kubernetes
 SUSE Containerized OpenStack relies on kubectl and Helm commands to configure
 your OpenStack deployment. You need to provide a `kubeconfig` file on the
 `deployer` node, in your workspace. You can fetch this file from the Velum UI
-on your SUSE CaaS Platform cluster.
+on your SUSE CaaS Platform (CaaSP) cluster.
+
+In case, if DNS is not used for SUSE CaaSP cluster and is not available on
+deployer, add entries for DNS resolution in deployer's /etc/hosts file
+
+.. code-block:: yaml
+
+  # For example, with following master node, add respective entries
+  # caasp_master_node_ip: 192.168.7.231
+  # caasp_master_host_name: pcloud003master
+
+  192.168.7.231 api.infra.caasp.local
+  192.168.7.231 pcloud003master
 
 Configure the Neutron external interface and tunnel device
 ----------------------------------------------------------
