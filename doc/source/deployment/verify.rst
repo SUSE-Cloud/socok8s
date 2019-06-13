@@ -53,12 +53,13 @@ made known to Tempest by adding the following keys in the ${WORKDIR}/env/extrava
    openstack_external_network_name: "public"
    openstack_external_subnet_name: "public-subnet"
 
-Tempest will also need to know the CIDR block from which to allocate project IPv4 subnets. This
-value should be specified with the following key in the extravars file:
+Tempest will create a private network (10.0.0.0/8) to use as the default network, and it will
+need to know the CIDR block from which to allocate project IPv4 subnets. This value should be
+specified with the following key in the extravars file:
 
 .. code-block:: yaml
 
-   openstack_project_network_cidr: "192.0.4.0/24"
+   openstack_project_network_cidr: "10.0.4.0/24"
 
 Configuring Tempest Test Parameters
 -----------------------------------
