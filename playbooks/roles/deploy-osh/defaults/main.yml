@@ -28,9 +28,6 @@ suse_osh_openstackclient_packages:
   - python3-openstackclient
   - python3-barbicanclient
 
-# Keep this until helm is packaged as rpm
-helm_download_url: "https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get"
-
 # OpenStack-Helm repos, frozen on 9th November 2018
 osh_repos:
   openstack-helm-infra:
