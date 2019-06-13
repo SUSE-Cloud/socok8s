@@ -142,7 +142,7 @@ nodes, the nodes must:
 
 After the nodes are bootstrapped, add the host entries to the 'airship-ucp-workers',
 'airship-openstack-control-workers', `airship-openstack-l3-agent-workers`, and
-'airship-kube-system-workers' groups in your Ansible inventory in 
+'airship-kube-system-workers' groups in your Ansible inventory in
 ${WORKSPACE}/inventory/hosts.yaml.
 
 To apply the changes, run the following command from the root of the socok8s directory:
@@ -233,6 +233,24 @@ following information to the "osh" section under "charts":
    first create the appropriate subsection under "charts". Airship components
    such as Deckhand and Shipyard belong under "ucp", OpenStack services belong
    under "osh", and infrastructure components belong under "osh_infra".
+
+Reboot Compute Host
+===================
+
+Before rebooting the compute host, shut down all Nova VMs from that compute
+host.
+
+After rebooting the compute host, it is possible that the Pods come up out of
+order. If this happens, you might see indications of the Nova VM(s) not getting
+an IP address. To address this problem, run the following commands:
+
+.. code-block:: console
+
+   kubectl get pods -o wide | grep ovs-agent | grep <compute name>
+   kubectl delete pod -n openstack <ovs-agent pod name>
+
+This should restart the Neutron OVS agent pod and reconfigure the vxlan tunnel
+network configuration.
 
 Troubleshooting
 ===============
