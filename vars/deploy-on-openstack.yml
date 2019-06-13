@@ -18,7 +18,6 @@ deploy_on_openstack_ses_repos_per_imagename:
   SLES12-SP3:
     - SLE12SP3-product
     - SLE12SP3-update
-    - SUSE-CA
     - SES5-product
     - SES5-update
 deploy_on_openstack_osh_repos_per_imagename:
