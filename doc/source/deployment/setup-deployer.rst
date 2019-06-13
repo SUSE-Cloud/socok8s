@@ -79,7 +79,23 @@ We recommend two ways of installing the SUSE Containerized OpenStack software.
    b. sudo zypper addrepo --refresh iso:///?iso=/home/stack/openSUSE-Addon-socok8s-x86_64-Media.iso socok8s-iso
    c. sudo zypper install socok8s (installs to /usr/share/socok8s)
 
-2. Clone the `socok8s GitHub repository <https://github.com/SUSE-Cloud/socok8s>`_.
+2. (For developers only) Clone the repository.
+
+   The following software must be manually installed on your `Deployer` using zypper or pip install:
+
+     * ansible >= 2.7.8
+     * git-core
+     * jq
+     * python3-virtualenv
+     * python3-jmespath
+     * python3-netaddr
+     * python3-openstacksdk
+     * python3-openstackclient
+     * python3-heatclient
+     * which
+
+   After the required packages are installed, clone
+   `socok8s GitHub repository <https://github.com/SUSE-Cloud/socok8s>`_.
    This repository uses submodules, which have additional code needed for the
    playbooks to work. Required dependencies must be installed manually.
    **Intended for developers**.
