@@ -141,8 +141,9 @@ nodes, the nodes must:
 - be bootstrapped using the Velum dashboard.
 
 After the nodes are bootstrapped, add the host entries to the 'airship-ucp-workers',
-'airship-openstack-control-workers', and 'airship-kube-system-workers' group in
-your Ansible inventory in ${WORKSPACE}/inventory/hosts.yaml.
+'airship-openstack-control-workers', `airship-openstack-l3-agent-workers`, and
+'airship-kube-system-workers' groups in your Ansible inventory in 
+${WORKSPACE}/inventory/hosts.yaml.
 
 To apply the changes, run the following command from the root of the socok8s directory:
 
