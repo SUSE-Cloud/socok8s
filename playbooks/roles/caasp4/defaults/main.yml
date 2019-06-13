@@ -1,0 +1,24 @@
+# A image that is available in the OpenStack cloud. That image is used to deploy
+# CaaSP 4 with the skuba ci terraforms
+skuba_ci_terraform_image_name: "SLE-15-SP1-JeOS-GM"
+# the username to log into the image
+skuba_ci_terraform_image_username: "sles"
+# the password to log into the image
+skuba_ci_terraform_image_password: "linux"
+
+# number of master nodes
+skuba_ci_terraform_master_count: 1
+# number of worker nodes
+skuba_ci_terraform_worker_count: 2
+# the flavor name used for master nodes
+skuba_ci_terraform_master_flavor: "m1.medium"
+# the flavor name used for worker nodes
+skuba_ci_terraform_worker_flavor: "m1.medium"
+
+# A public key file that is used by terraform when setting up nodes
+# Login to the CaaSP 4 nodes is possible with this priv/pub key combination
+skuba_ci_terraform_autorized_keys_files:
+  - "{{ lookup('file', '{{ ansible_env.HOME }}/.ssh/id_rsa.pub', errors='ignore') }}"
+
+# The directory where the skuba CI terraform data will be copied to
+skuba_ci_terraform_workspace: "skuba-terraform-workspace"

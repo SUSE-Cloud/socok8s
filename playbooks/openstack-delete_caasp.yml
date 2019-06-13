@@ -25,7 +25,7 @@
         - name: Remove host from known hosts
           known_hosts:
             state: absent
-            name: "{{ hostvars[item]['ansible_host'] }}"
+            name: "{{ hostvars[item]['ansible_host'] | default('') }}"
           loop: "{{ groups['caasp-admin'] + groups['caasp-masters'] + groups['caasp-workers'] }}"
 
         - name: Remove caasp files

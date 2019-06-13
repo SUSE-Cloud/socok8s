@@ -1,0 +1,53 @@
+---
+#
+# (c) Copyright 2019 SUSE Linux GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+
+- name: Does the terraform state exist
+  stat:
+    path: "{{ skuba_ci_terraform_workspace }}/terraform.tfstate"
+  register: _terraform_state_file
+
+- name: Get current state from terraform
+  command: terraform state list
+  args:
+    chdir: "{{ socok8s_workspace }}/skuba-terraform/"
+  register: _terraform_state_list
+  changed_when: False
+  when: _terraform_state_file.stat.exists
+
+- name: Import internal network resource to terraform
+  command: "terraform import openstack_networking_network_v2.network {{ deploy_on_openstack_internal_network_id }}"
+  args:
+    chdir: "{{ skuba_ci_terraform_workspace }}"
+  when: 'not _terraform_state_file.stat.exists or "openstack_networking_network_v2.network" not in _terraform_state_list.stdout_lines'
+
+- name: Import internal subnet resource to terraform
+  command: "terraform import openstack_networking_subnet_v2.subnet {{ deploy_on_openstack_internal_subnet_id }}"
+  args:
+    chdir: "{{ skuba_ci_terraform_workspace }}"
+  when: 'not _terraform_state_file.stat.exists or "openstack_networking_subnet_v2.subnet" not in _terraform_state_list.stdout_lines'
+
+- name: Import router resource to terraform
+  command: "terraform import openstack_networking_router_v2.router {{ deploy_on_openstack_router_id }}"
+  args:
+    chdir: "{{ skuba_ci_terraform_workspace }}"
+  when: 'not _terraform_state_file.stat.exists or "openstack_networking_router_v2.router" not in _terraform_state_list.stdout_lines'
+
+- name: Import router interface resource to terraform
+  command: "terraform import openstack_networking_router_interface_v2.router_interface {{ deploy_on_openstack_router_interface_id }}"
+  args:
+    chdir: "{{ skuba_ci_terraform_workspace }}"
+  when: 'not _terraform_state_file.stat.exists or "openstack_networking_router_interface_v2.router_interface" not in _terraform_state_list.stdout_lines'
