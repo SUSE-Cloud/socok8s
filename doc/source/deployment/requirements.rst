@@ -103,5 +103,7 @@ Network Requirements
 
 Distributed Virtual Routing (DVR) is not supported in this Technology Preview.
 
+Only flat networks are supported in SUSE Containerized OpenStack Cloud.
+
   .. note::
      Network configuration examples can be found in :ref:`userscenarios`
