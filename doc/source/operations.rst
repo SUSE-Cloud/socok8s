@@ -192,6 +192,46 @@ to
 
    heat_api: "{{ suse_osh_registry_location }}/openstackhelm/heat:stein"
 
+Updating OpenStack Service Configuration
+----------------------------------------
+
+Certain use cases may require the addition or modification of OpenStack service
+configuration parameters. To update the configuration for a particular service,
+parameters can be added or modified in the 'conf' section of that service's chart.
+For example, to change the logging level of the Keystone service to 'debug', locate
+the 'conf' section of the Keystone chart located at 
+socok8s/site/soc/software/charts/osh/openstack-keystone/keystone.yaml and add the
+following lines, beginning with the 'logging' key:
+
+.. code-block:: yaml
+
+   conf:
+     logging:
+       logger_root:
+         level: DEBUG
+       logger_keystone:
+         level: DEBUG
+
+.. note::
+
+   Information about the supported configuration parameters for each service can
+   generally be found in the `OpenStack Configuration Guides <https://docs.openstack.org/rocky/configuration/index.html>`_
+   for each release, but determining the correct keys and values to include in
+   each service's chart may require examining the OpenStack Helm chart's values.yaml
+   file. In the above Keystone logging example, the names and proper locations for
+   the logging keys were determined by studying the 'logging' section in 
+   /opt/openstack/openstack-helm/keystone/values.yaml, then copying those keys
+   to socok8s/site/soc/software/charts/osh/openstack-keystone/keystone.yaml and
+   providing the desired values.
+
+Once the desired parameters have been added to each chart requiring changes, the
+configuration updates can be applied by changing to the root of the socok8s 
+directory and running
+
+.. code-block:: console
+
+   ./run.sh update_openstack
+
 Updating Individual Images and Helm Charts
 ------------------------------------------
 
