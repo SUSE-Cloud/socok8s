@@ -8,4 +8,4 @@
 - name: Apply privileged ClusterRoleBinding
   command: "kubectl apply -f /tmp/privileged-cluster-role-binding.yml --overwrite=true"
   register: create_privileged_cluster_role_binding_result
-  changed_when: "create_privileged_cluster_role_binding_result.stdout|search('created')"
+  changed_when: "create_privileged_cluster_role_binding_result.stdout is search('created')"

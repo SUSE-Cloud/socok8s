@@ -42,7 +42,7 @@
     - name: Perform transactional-update
       command: transactional-update cleanup dup
       register: transactional_update_result
-      changed_when: "transactional_update_result.stdout|search('Please reboot your machine')"
+      changed_when: "transactional_update_result.stdout is search('Please reboot your machine')"
       failed_when: "transactional_update_result.rc != 0"
       notify: Reboot host
 
