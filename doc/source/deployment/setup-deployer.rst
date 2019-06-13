@@ -74,10 +74,9 @@ There are several ways to install the SUSE Containerized OpenStack software.
       https://download.opensuse.org/repositories/Cloud:/socok8s/openSUSE_Leap_15.0/ socok8s
    b. sudo zypper install socok8s (installs to /usr/share/socok8s)
 
-
 3. (For developers only) Clone the repository.
    
-   The following software must be manually installed on your `Deployer`:
+   The following software must be manually installed on your `Deployer` using zypper or pip install:
 
      * ansible >= 2.7.8
      * git-core
