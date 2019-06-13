@@ -1,6 +1,6 @@
-====================================
-Select OpenStack services to install
-====================================
+=========================
+Select OpenStack Services
+=========================
 
 SUSE Containerized OpenStack currently deploys OpenStack Cinder, Glance, Nova,
 Neutron, Heat, Horizon, and Keystone.
