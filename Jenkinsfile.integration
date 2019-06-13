@@ -48,17 +48,17 @@ pipeline {
             }
         }
         stage('Check for updated files') {
-            when { expression { env.BRANCH_NAME != 'master' } }
+            when { expression { env.TARGET_BRANCH != null } } /* This is only set when testing a PR */
             steps {
                 script {
                     /* When doing PRs, make sure we don't test everything by default */
                     TestDocs = false
                     TestFunctional = false
 
-                    /* Need to fetch master to check against it for the proper diff */
-                    sh "git config --add remote.origin.fetch +refs/heads/master:refs/remotes/origin/master"
+                    /* Need to fetch the target branch to check against it for the proper diff */
+                    sh "git config --add remote.origin.fetch +refs/heads/${env.TARGET_BRANCH}:refs/remotes/origin/${env.TARGET_BRANCH}"
                     sh "git fetch --no-tags"
-                    List<String> sourceChanged = sh(returnStdout: true, script: "git diff --name-only origin/master...origin/${env.BRANCH_NAME}").split()
+                    List<String> sourceChanged = sh(returnStdout: true, script: "git diff --name-only origin/${env.TARGET_BRANCH}...origin/${env.BRANCH_NAME}").split()
                     echo "Files changed for this PR:\n${sourceChanged.join('\n')}"
                     TestDocs = sourceChanged.any{it.contains("doc/")} or sourceChanged.any{it.contains("tox.ini")} or sourceChanged.any{it.contains("Jenkinsfile.integration")}
                     /* In the future we could add a conditional to auto TestFunctional if tox.ini or Jenkinsfile is changed */
