@@ -105,5 +105,9 @@ Network Requirements
     Deployer with dnsmasq to supply DNS functionality, but this is beyond the
     scope of this preview.
 
+Distributed Virtual Routing (DVR) is not supported in this Technology Preview.
+
+Only flat networks are supported in SUSE Containerized OpenStack Cloud.
+
   .. note::
      Network configuration examples can be found in :ref:`userscenarios`
