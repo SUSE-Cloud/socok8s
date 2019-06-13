@@ -31,7 +31,9 @@ function run_ansible(){
     fi
 
     pushd ${socok8s_absolute_dir}
-        ansible-playbook ${extra_vars:-} -i ${inventorydir} $@ -v
+        # ANSIBLE_RETRY_FILES_SAVE_PATH sets a location where ansible retry files should be located
+        # We are setting it explicitely to the socok8s_workspace directory which is user-writable
+        ANSIBLE_RETRY_FILES_SAVE_PATH=${socok8s_workspace} ansible-playbook ${extra_vars:-} -i ${inventorydir} $@ -v
     popd
     set +x
 }
