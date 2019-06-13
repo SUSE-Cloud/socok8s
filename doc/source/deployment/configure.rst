@@ -193,13 +193,16 @@ For example:
 Set Up Retry Files Save Path
 ----------------------------
 
-Before beginning deployment, a path must be specified where Ansible retry files
-can be saved in order to avoid potential errors. The path must point to a
+Before beginning deployment, a path can be specified where Ansible retry files
+can be saved in order to avoid potential errors. The path should point to a
 user-writable directory. Set the path in either of the following ways:
 
-- ``export ANSIBLE_RETRY_FILES_SAVE_PATH=<PATH_TO_FILE>`` before deploying with
-  ``run.sh`` commands.
+- ``export ANSIBLE_RETRY_FILES_SAVE_PATH=<PATH_TO_DIRECTORY>`` before deploying
+  with ``run.sh`` commands.
 - Set the value of `retry_files_save_path` in your Ansible configuration file.
+
+There is an option to disable creating these retry files by setting
+``retry_files_enabled = False`` in your Ansible configuration file.
 
 Configure the VIP that will be used for Airship UCP service endpoints
 --------------------------------------------------------------------------
