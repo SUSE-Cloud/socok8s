@@ -1,0 +1,11 @@
+pull_request_rules:
+  - name: backport patches to stable branch
+    conditions:
+      - base=master
+      - label="needs backport"
+    actions:
+      comment:
+        message: "backporting this to stable/1.0"
+      backport:
+        branches:
+          - stable/1.0
