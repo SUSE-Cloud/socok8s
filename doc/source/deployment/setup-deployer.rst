@@ -158,7 +158,7 @@ https://ara.readthedocs.io/en/stable/webserver.html.
 
 
 Ansible Logging
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 Enable Ansible logging with the following steps:
 

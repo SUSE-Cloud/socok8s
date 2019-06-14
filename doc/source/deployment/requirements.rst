@@ -101,11 +101,15 @@ Network Requirements
     not currently in use. VIPs are configured in env/extravars
 
 * DNS
-    Installing SUSE Containerized OpenStack updates /etc/hosts on all Caas Platform
-    nodes and Deployer. If expanding testing beyond these devices, it is
-    recommended to use DNS for sharing this data. It is possible to configure
-    the Deployer with dnsmasq to supply DNS functionality, but this is beyond
-    the scope of this preview.
+    Installing SUSE Containerized OpenStack updates /etc/hosts on all CaaS Platform
+    nodes and Deployer. If expanding testing beyond these devices, we
+    recommend using DNS for sharing this data. It is possible to configure the
+    Deployer with dnsmasq to supply DNS functionality, but this is beyond the
+    scope of this preview.
+
+Distributed Virtual Routing (DVR) is not supported in this Technology Preview.
+
+Only flat networks are supported in SUSE Containerized OpenStack Cloud.
 
 Distributed Virtual Routing (DVR) is not supported in this Technology Preview.
 
