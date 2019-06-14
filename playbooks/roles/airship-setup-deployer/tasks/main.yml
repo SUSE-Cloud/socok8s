@@ -5,6 +5,16 @@
 - name: Load vip from user variables
   include_vars: "{{ socok8s_extravars }}"
 
+# In some cases, people might add iso manually.
+# Let's prevent adding the same product twice.
+- name: Check if socok8s product already present
+  shell: |
+    set -o pipefail
+    zypper products | grep -q openSUSE-Addon-socok8s
+  register: product_present
+  changed_when: "product_present.rc == 1"
+  failed_when: "product_present.rc not in [0,1]"
+
 - name: Add socok8s repository
   become: yes
   zypper_repository:
@@ -13,6 +23,7 @@
     autorefresh: True
     auto_import_keys: yes
     state: present
+  when: product_present is changed
 
 - name: Install system packages
   become: yes
