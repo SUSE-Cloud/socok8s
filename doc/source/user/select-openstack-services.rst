@@ -1,5 +1,5 @@
 =========================
-Select OpenStack Services
+Manage OpenStack Services
 =========================
 
 SUSE Containerized OpenStack currently deploys OpenStack Cinder, Glance, Nova,
