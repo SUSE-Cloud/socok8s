@@ -11,7 +11,11 @@ metadata:
       component: libvirt
     actions:
       - method: replace
-        path: .values
+        path: .values.labels.agent
+      - method: delete
+        path: .values.ceph_client
+      - method: merge
+        path: .
   storagePolicy: cleartext
 data:
   wait:
