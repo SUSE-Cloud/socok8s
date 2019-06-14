@@ -192,16 +192,6 @@ For example:
 
    socok8s_ext_vip: "10.10.10.10"
 
-Set Up Retry Files Save Path
-----------------------------
-
-Before beginning deployment, a path must be specified where Ansible retry files
-can be saved in order to avoid potential errors. The path must point to a
-user-writable directory. Set the path in either of the following ways:
-
-- ``export ANSIBLE_RETRY_FILES_SAVE_PATH=<PATH_TO_FILE>`` before deploying with
-  ``run.sh`` commands.
-- Set the value of `retry_files_save_path` in your Ansible configuration file.
 
 Configure the VIP that will be used for Airship UCP service endpoints
 --------------------------------------------------------------------------
