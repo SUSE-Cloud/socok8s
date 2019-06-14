@@ -31,7 +31,7 @@ check_openstack_env_vars_set (){
 check_openstack_environment_is_ready_for_deploy (){
     echo "Running OpenStack pre-flight checks"
     check_openstack_env_vars_set #Do not try to grep without ensuring the vars are set
-    which openstack > /dev/null  || (echo "Please install openstack and heat CLI in your PATH"; exit 5)
+    type -p openstack > /dev/null  || (echo "Please install openstack and heat CLI in your PATH"; exit 5)
     openstack stack delete --help > /dev/null || (echo "Please install heat client in your PATH"; exit 6)
     openstack keypair list | grep ${KEYNAME} > /dev/null || (echo "keyname not found. export KEYNAME=" && exit 2)
 }
@@ -49,7 +49,7 @@ check_ansible_requirements (){
         install_ansible
     fi
     # Ansible is required
-    if ! which ansible-playbook > /dev/null 2>&1; then
+    if ! type -p ansible-playbook > /dev/null 2>&1; then
         echo "Ansible is not installed."
         echo "Install from your system packages or set SOCOK8S_USE_VIRTUALENV=True to install ansible and other requirements into a virtualenv."
         exit 1
@@ -82,7 +82,7 @@ check_git_submodules_are_present (){
 }
 
 check_jq_present (){
-    which jq > /dev/null || (echo "Please install jq"; exit 7)
+    type -p jq > /dev/null || (echo "Please install jq"; exit 7)
 }
 
 validate_cli_options (){

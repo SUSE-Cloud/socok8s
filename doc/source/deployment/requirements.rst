@@ -22,7 +22,13 @@ Infrastructure
 
   .. note::
      The CaaS Platform Installation Quick Start guide is available at:
-     https://www.suse.com/documentation/suse-caasp-3/singlehtml/book_caasp_installquick/book_caasp_installquick.html
+     https://www.suse.com/documentation/suse-caasp-3/singlehtml/book_caasp_installquick/book_caasp_installquick.html.
+
+     You must register the CaaS Platform product to get access to the update
+     repository. We strongly recommend enabling the auto-update repository
+     during CaaS Platform installation. If auto update is not enabled, you
+     must run ``transactional update`` following the instructions from the
+     `CaaSP documentation <https://www.suse.com/documentation/suse-caasp-3/book_caasp_admin/data/sec_admin_software_transactional-updates.html>`_.
 
 * The :term:`SES` cluster must run :term:`SES` version 5.5.
 
@@ -102,6 +108,8 @@ Network Requirements
     the scope of this preview.
 
 Distributed Virtual Routing (DVR) is not supported in this Technology Preview.
+
+Only flat networks are supported in SUSE Containerized OpenStack Cloud.
 
   .. note::
      Network configuration examples can be found in :ref:`userscenarios`
