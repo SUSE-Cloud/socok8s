@@ -4,6 +4,7 @@
 DocsChanged = false
 PlaybooksChanged = false
 ToxChanged = false
+FullDeploymentNeeded = true
 
 
 pipeline {
@@ -56,12 +57,17 @@ pipeline {
                     sh "git fetch --no-tags"
                     List<String> sourceChanged = sh(returnStdout: true, script: "git diff --name-only origin/master..origin/${env.BRANCH_NAME}").split()
                     echo "Files changed for this PR:\n${sourceChanged.join('\n')}"
+                    FullDeploymentNeeded = false
                     for (int i = 0; i < sourceChanged.size(); i++) {
                         if (sourceChanged[i].contains("playbooks/")) {
                             PlaybooksChanged = true
                         }
                         if (sourceChanged[i].contains("doc/")) {
                             DocsChanged = true
+                        } else {
+                            /* if anything outside the doc dir change we need to
+                               run the socok8s deployment */
+                            FullDeploymentNeeded = true
                         }
                         if (sourceChanged[i].contains("tox.ini")) {
                             ToxChanged = true
@@ -110,6 +116,8 @@ pipeline {
         }
 
         stage('Create network') {
+            when { expression { return FullDeploymentNeeded } }
+
             options {
                 timeout(time: 10, unit: 'MINUTES', activity: true)
             }
@@ -118,6 +126,8 @@ pipeline {
             }
         }
         stage('Create VMs') {
+            when { expression { return FullDeploymentNeeded } }
+
             options {
                 timeout(time: 45, unit: 'MINUTES', activity: true)
             }
@@ -141,6 +151,8 @@ pipeline {
         }
 
         stage('Configure CaaSP workers') {
+            when { expression { return FullDeploymentNeeded } }
+
             options {
                 timeout(time: 10, unit: 'MINUTES', activity: true)
             }
@@ -151,11 +163,15 @@ pipeline {
         }
 
         stage('Deploy OpenStack Helm') {
+            when {
+                allOf {
+                    expression { params.deployment == "osh" }
+                    expression { return FullDeploymentNeeded }
+                }
+            }
+
             options {
                 timeout(time: 20, unit: 'MINUTES', activity: true)
-            }
-            when {
-                expression { params.deployment == "osh" }
             }
             steps {
                 sh "./run.sh patch_upstream"
@@ -165,11 +181,15 @@ pipeline {
         }
 
         stage('Deploy Airship') {
+            when {
+                allOf {
+                    expression { params.deployment == "airship" }
+                    expression { return FullDeploymentNeeded }
+                }
+            }
+
             options {
                 timeout(time: 45, unit: 'MINUTES', activity: true)
-            }
-            when {
-                expression { params.deployment == "airship" }
             }
             steps {
                 sh "./run.sh setup_airship"
@@ -179,6 +199,8 @@ pipeline {
 
     post {
         failure {
+            when { expression { return FullDeploymentNeeded } }
+
             script {
                 if (env.hold_instance_for_debug == 'true') {
                     echo "You can reach this node by connecting to its floating IP as root user, with the default password of your image."
@@ -194,6 +216,8 @@ pipeline {
             archiveArtifacts artifacts: 'logs.zip'
         }
         cleanup {
+            when { expression { return FullDeploymentNeeded } }
+
             script {
                     sh './run.sh teardown'
                 }
