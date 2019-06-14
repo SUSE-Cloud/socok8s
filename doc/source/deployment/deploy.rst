@@ -64,8 +64,8 @@ OpenStack Services
 SUSE Containerized OpenStack deploys OpenStack Cinder, Glance, Heat, Horizon,
 Keystone, Neutron, and Nova.
 
-SUSE Containerized OpenStack deployment automatically adds the following host
-rules to the /etc/hosts file on the deployer as in the following example:
+SUSE Containerized OpenStack deployment automatically adds host rules to the
+/etc/hosts file on the deployer as in the following example:
 
 .. code-block:: console
 
