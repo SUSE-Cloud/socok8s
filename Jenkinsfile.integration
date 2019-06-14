@@ -56,17 +56,9 @@ pipeline {
                     sh "git fetch --no-tags"
                     List<String> sourceChanged = sh(returnStdout: true, script: "git diff --name-only origin/master..origin/${env.BRANCH_NAME}").split()
                     echo "Files changed for this PR:\n${sourceChanged.join('\n')}"
-                    for (int i = 0; i < sourceChanged.size(); i++) {
-                        if (sourceChanged[i].contains("playbooks/")) {
-                            PlaybooksChanged = true
-                        }
-                        if (sourceChanged[i].contains("doc/")) {
-                            DocsChanged = true
-                        }
-                        if (sourceChanged[i].contains("tox.ini")) {
-                            ToxChanged = true
-                        }
-                    }
+                    PlaybooksChanged = sourceChanged.any{it.contains("doc/")}
+                    DocsChanged = sourceChanged.any{it.contains("playbooks/")}
+                    ToxChanged = sourceChanged.any{it.contains("tox.ini")}
                 }
             }
         }
