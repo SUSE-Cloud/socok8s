@@ -75,9 +75,8 @@ We recommend two ways of installing the SUSE Containerized OpenStack software.
 
 1. Install with an ISO image including required dependencies:
 
-   a. Download ``openSUSE-Addon-socok8s-x86_64-Media.iso`` from
-      https://download.opensuse.org/repositories/Cloud:/socok8s:/master/images/iso/
-   b. sudo zypper addrepo --refresh <PATH_TO_ISO_IMAGE> socok8s-iso
+   a. wget https://download.opensuse.org/repositories/Cloud:/socok8s/images/iso/openSUSE-Addon-socok8s-x86_64-Media.iso
+   b. sudo zypper addrepo --refresh iso:///?iso=/home/stack/openSUSE-Addon-socok8s-x86_64-Media.iso socok8s-iso
    c. sudo zypper install socok8s (installs to /usr/share/socok8s)
 
 2. Clone the `socok8s GitHub repository <https://github.com/SUSE-Cloud/socok8s>`_.
