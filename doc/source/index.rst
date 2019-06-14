@@ -6,10 +6,12 @@ lifecycle management on SUSE Container as a Service Platform (CaaSP) and
 SUSE Enterprise Storage (SES), using Airship, OpenStack Helm, shell scripts,
 and Ansible playbooks.
 
-As a technology preview, the included features are not supported. They may be
-functionally incomplete, unstable or in other ways not suitable for production
-use. They are mainly included for customer convenience and give customers a
-chance to test new technologies within an enterprise environment.
+As a technology preview, this is not meant for production use and a typical
+support subscription is not being offered. Some of the functionality currently
+in our generally available SUSE OpenStack Cloud product is not available in
+this tech preview. This technology preview gives users and partners the
+ability to test and see the new technologies that may be offered in SUSE's
+future releases.
 
 This release deploys the following set of core OpenStack services:
 
@@ -21,13 +23,16 @@ This release deploys the following set of core OpenStack services:
   * Heat
   * Horizon
 
-Whether it will be moved to a fully supported product later depends on customer
-and market feedback. A technology preview does not automatically result in
-support at a later point in time. It could be dropped at any time and SUSE is not
-committed to providing a technology preview later in the product cycle.
+This technology preview will not be moved into a production support mode of
+operation. The underlying technology is being considered for the future release
+of SUSE OpenStack Cloud product. There is a possibility of refreshing the
+capabilities of the technology preview later.
 
-Please, give your SUSE representative feedback, including your experience and
-use case.
+This technology preview is provided under the terms of the Apache-2.0 license.
+
+Please provide your feedback using the beta mailing lists that are documented
+on the technology preview download page or your SUSE representative. We are
+very interested in your experience and use cases.
 
 .. toctree::
    :hidden:
