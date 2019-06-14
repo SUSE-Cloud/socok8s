@@ -37,18 +37,6 @@ Set Up Deployer
    }
 
 
-Base Software
--------------
-
-The following software must be installed on your `Deployer`:
-
-  * ansible>=2.7.0
-  * gcc
-  * git
-  * jq
-  * python3-netaddr
-  * python3-virtualenv
-
 Create SUSE Containerized OpenStack Workspace
 ---------------------------------------------
 
@@ -73,7 +61,7 @@ Installing the SUSE Containerized OpenStack software
 
 We recommend two ways of installing the SUSE Containerized OpenStack software.
 
-1. Install with an ISO image including required dependencies:
+1. (Recommended) Install with an ISO image including required dependencies:
 
    a. wget https://download.opensuse.org/repositories/Cloud:/socok8s/images/iso/openSUSE-Addon-socok8s-x86_64-Media.iso
    b. sudo zypper addrepo --refresh iso:///?iso=/home/stack/openSUSE-Addon-socok8s-x86_64-Media.iso socok8s-iso
