@@ -156,6 +156,26 @@ file loading ARA plugins:
 For more details on the ARA web interface, see
 https://ara.readthedocs.io/en/stable/webserver.html.
 
+
+Ansible Logging
+~~~~~~~~~~~~~~~~~~~~~~
+
+Enable Ansible logging with the following steps:
+
+1. Create an Ansible configuration file in the $HOME directory,
+   for example, ``.ansible.cfg``. This configuration file can be used for
+   other Ansible configurations.
+
+2. Add your ``log_path`` to ``.ansible.cfg``. Use a log path and log filename
+   that fit your needs, for example:
+
+   .. code-block:: console
+
+      [defaults]
+
+      log_path=$HOME/.ansible/ansible.log
+
+
 Enable Pipelining (recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
