@@ -40,12 +40,6 @@ Cleanup Actions
 ---------------
 
 In addition to deployment, run.sh can be used to perform environment cleanup actions.
-To ensure all resources are removed, the following environment variable should be set
-before running the cleanup command:
-
-.. code-block:: console
-
-   export DELETE_ANYWAY='YES'
 
 To clean up the deployment and remove SUSE Containerized OpenStack entirely,
 run the following command in the root of the socok8s directory:
@@ -63,7 +57,8 @@ Testing
 -------
 
 The run.sh script also has an option to deploy and run OpenStack Tempest tests. To begin
-testing, run the following command:
+testing, review :ref:`verifyinstallation` in the deployment section and then
+run the following command:
 
 .. code-block:: console
 
@@ -142,7 +137,7 @@ nodes, the nodes must:
 
 After the nodes are bootstrapped, add the host entries to the 'airship-ucp-workers',
 'airship-openstack-control-workers', `airship-openstack-l3-agent-workers`, and
-'airship-kube-system-workers' groups in your Ansible inventory in 
+'airship-kube-system-workers' groups in your Ansible inventory in
 ${WORKSPACE}/inventory/hosts.yaml.
 
 To apply the changes, run the following command from the root of the socok8s directory:
