@@ -58,7 +58,16 @@ your environment from scratch.
 In separate steps
 -----------------
 
-Create your SES node on OpenStack, and configure SES-AIO on it:
+Create your SES node. The SES All-In-One (AIO) node has the following
+requirements:
+
+*  (v)CPU: 6
+*  Memory: 16GB
+*  Storage: 80GB
+*  When SES is deployed as AIO, two additional 60GB storage disks must be added
+   to the node for OSD.
+
+Configure SES-AIO:
 
 .. code-block:: console
 
