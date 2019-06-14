@@ -87,7 +87,6 @@ There are several ways to install the SUSE Containerized OpenStack software.
      * python3-openstacksdk
      * python3-openstackclient
      * python3-heatclient
-     * which
 
    After the required packages are installed, clone
    `socok8s GitHub repository <https://github.com/SUSE-Cloud/socok8s>`.
