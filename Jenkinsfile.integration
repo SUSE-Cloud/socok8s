@@ -4,6 +4,7 @@
 DocsChanged = false
 PlaybooksChanged = false
 ToxChanged = false
+JenkinsfileChanged = false
 
 
 pipeline {
@@ -66,13 +67,21 @@ pipeline {
                         if (sourceChanged[i].contains("tox.ini")) {
                             ToxChanged = true
                         }
+                        if (sourceChanged[i].contains("Jenkinsfile.integration")) {
+                            JenkinsfileChanged = true
+                        }
                     }
                 }
             }
         }
 
         stage('Lint Ansible playbooks') {
-            when { expression { return PlaybooksChanged } }
+            when {
+                anyOf {
+                    expression { return PlaybooksChanged }
+                    expression { return JenkinsfileChanged }
+                }
+            }
 
             options {
                 timeout(time: 5, unit: 'MINUTES', activity: true)
@@ -87,6 +96,7 @@ pipeline {
                 anyOf {
                     expression { return DocsChanged }
                     expression { return ToxChanged }
+                    expression { return JenkinsfileChanged }
                 }
              }
              options {
