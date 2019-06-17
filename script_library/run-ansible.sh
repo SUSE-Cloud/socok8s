@@ -18,6 +18,11 @@ function run_ansible(){
         # Ensure default groupnames exist. It also DRY so that we automatically connect on hosts as root.
         # However don't force this by default if people already have an inventory.
         cp ${socok8s_absolute_dir}/examples/workdir/inventory/hosts.yml ${inventorydir}/default-inventory.yml
+        # create a group_vars dir called all. There you can put extra variables
+        # into files and these vars will be available for all hosts
+        # Note: This is different to extravars - extravars can not be overwritten
+        # but the vars in group_vars/all/ can be overwritten
+        mkdir -p ${inventorydir}/group_vars/all/
     fi
 
     if [[ -f ${extravarsfile} ]]; then
