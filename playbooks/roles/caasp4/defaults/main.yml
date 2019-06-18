@@ -22,3 +22,9 @@ skuba_ci_terraform_autorized_keys_files:
 
 # The directory where the skuba CI terraform data will be copied to
 skuba_ci_terraform_workspace: "skuba-terraform-workspace"
+
+
+# The directory where skuba creates the cluster in
+skuba_cluster_basedir: "."
+# The name that is used for the CaaSP 4 cluster
+skuba_cluster_name: "caasp4-cluster"
