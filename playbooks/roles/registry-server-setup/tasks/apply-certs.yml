@@ -7,7 +7,7 @@
   become: yes
   register: _copy_ssc_result
 
-# TODO(aagate): Add a changed_when: to help idempotency
+# TODO convert to handler and remove skip_ansible_lint
 - name: Update CA certificates on node
   command: >
     update-ca-certificates
