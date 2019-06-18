@@ -32,6 +32,7 @@ pipeline {
            as the names of the heat stacks will be derived from this. Also
            the CaaSP Velum automation has issues with mixed case hostnames. */
         SOCOK8S_ENVNAME = "cloud-socok8s-${env.BRANCH_NAME.replaceAll("[^a-zA-Z0-9-]+", "-").toLowerCase()}-${env.BUILD_NUMBER}"
+        SOCOK8S_OPENSUSE_MIRROR="https://provo-mirror.opensuse.org"
         OS_CLOUD = "engcloud-cloud-ci"
         KEYNAME = "engcloud-cloud-ci"
         DELETE_ANYWAY = "YES"
