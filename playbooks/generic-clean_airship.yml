@@ -17,6 +17,8 @@
 - hosts: soc-deployer
   gather_facts: no
   any_errors_fatal: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   tasks:
     - name: Remove compute nodes.
       include_role:
@@ -27,6 +29,8 @@
 
 - hosts: soc-deployer
   gather_facts: no
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   pre_tasks:
     - name: Load generic vars
       include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
@@ -37,6 +41,8 @@
 - hosts: caasp-workers
   gather_facts: no
   any_errors_fatal: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
   tasks:
     - name: Clean airship related existing images on worker node
       shell: |

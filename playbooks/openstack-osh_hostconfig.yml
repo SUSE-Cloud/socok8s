@@ -28,10 +28,11 @@
         value: "false"
 
     - name: Workaround stupid JeOS image bugs (bsc#1138727)
-      shell: "test -L /etc/resolv.conf || netconfig update -f"
-      args:
-        executable: /bin/sh
-        creates: /var/run/netconfig/resolv.conf
+      file:
+        src: /var/run/netconfig/resolv.conf
+        dest: /etc/resolv.conf
+        state: link
+        force: yes
 
     - name: Configure host repositories
       zypper_repository:
@@ -47,7 +48,7 @@
         path: /etc/zypp/vendors.d/opensuse
         block: |
           [main]
-          vendors = suse,opensuse,obs://build.opensuse.org/Cloud:OpenStack,obs://build.opensuse.org/devel:languages:python
+          vendors = suse,opensuse,obs://build.opensuse.org/Cloud:OpenStack
         create: yes
 
     - name: Zypper dist-upgrade

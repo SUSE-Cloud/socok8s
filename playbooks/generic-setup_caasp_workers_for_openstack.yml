@@ -6,6 +6,8 @@
   hosts: caasp-workers
   gather_facts: yes
   any_errors_fatal: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
   roles:
     - role: setup-caasp-workers
       tags:

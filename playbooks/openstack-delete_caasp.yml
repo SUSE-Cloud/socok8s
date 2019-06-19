@@ -4,6 +4,7 @@
   connection: local
   vars:
     stackname_suffix: "caasp"
+    ansible_python_interpreter: /usr/bin/python3
   post_tasks:
     - name: Load generic vars
       include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"

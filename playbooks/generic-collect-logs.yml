@@ -18,6 +18,7 @@
 - hosts: soc-deployer
   gather_facts: false
   vars:
+    ansible_python_interpreter: /usr/bin/python3
     # this is where on the target machine the logs will be copied
     logs_dir: "/tmp/socok8s_gather_logs"
     zuul:

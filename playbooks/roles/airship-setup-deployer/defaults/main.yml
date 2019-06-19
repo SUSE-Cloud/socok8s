@@ -22,7 +22,8 @@ suse_airship_deploy_packages:
   - python3-setuptools
   - python3-pip
   - python3-cmd2
-  - python-devel
+  - python
+  - python-base
 
 suse_airship_openstackclient_packages:
   - python3-barbicanclient

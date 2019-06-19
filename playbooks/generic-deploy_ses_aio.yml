@@ -24,6 +24,7 @@
   vars_files:
     - "{{ playbook_dir }}/../vars/common-vars.yml"
   vars:
+    ansible_python_interpreter: /usr/bin/python2
     ses_openstack_config: True
     ses_openstack_glance_pool:
       name: "{{ airship_ses_pools_prefix | default('') }}images"
@@ -51,5 +52,7 @@
   hosts: ses_nodes[0]
   remote_user: root
   gather_facts: false
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
   tasks:
     - include: roles/common-ses/tasks/ses_config.yml

@@ -19,12 +19,27 @@
   hosts: ses_nodes[0]
   remote_user: root
   gather_facts: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
   roles:
     - common-ses
 
-- hosts: soc-deployer:caasp-workers
+- hosts: soc-deployer
   gather_facts: false
   any_errors_fatal: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - role: registry-server-setup
+      tags:
+        - install
+        - imagebuilder
+
+- hosts: caasp-workers
+  gather_facts: false
+  any_errors_fatal: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
   roles:
     - role: registry-server-setup
       tags:
@@ -44,6 +59,8 @@
 - hosts: caasp-workers
   gather_facts: yes
   any_errors_fatal: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
   roles:
     - role: airship-configure-worker
       when: redeploy_osh_only is not defined or not redeploy_osh_only

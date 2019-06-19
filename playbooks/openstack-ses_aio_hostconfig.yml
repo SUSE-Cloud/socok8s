@@ -6,6 +6,7 @@
       - rng-tools
     # Domain name to use in the deployment. Default assumes properly configured dns name.
     domainname: "{{ ansible_domain | default('openstack.local', True) }}"
+    ansible_python_interpreter: /usr/bin/python2
   tasks:
     - name: Ensure all the common vars are loaded
       include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"

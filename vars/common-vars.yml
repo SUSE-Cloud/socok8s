@@ -30,8 +30,13 @@ socok8s_repos_to_configure:
   openSUSE-Leap-15.0-Oss: "{{ obs_mirror }}/distribution/leap/15.0/repo/oss/"
   openSUSE-Leap-15.0-Update: "{{ obs_mirror }}/update/leap/15.0/oss/"
   openSUSE-Leap-15.0-Cloud: "{{ obs_mirror }}/repositories/Cloud:/Tools/openSUSE_Leap_15.0/"
+  openSUSE-Leap-15.1-Oss: "{{ obs_mirror }}/distribution/leap/15.1/repo/oss/"
+  openSUSE-Leap-15.1-Update: "{{ obs_mirror }}/update/leap/15.1/oss/"
+  openSUSE-Leap-15.1-Cloud: "{{ obs_mirror }}/repositories/Cloud:/Tools/openSUSE_Leap_15.1/"
   Leap15develtools: "{{ obs_mirror }}/repositories/devel:/tools/openSUSE_Leap_15.0/"
+  develtools-opensuse151: "{{ obs_mirror }}/repositories/devel:/tools/openSUSE_Leap_15.1/"
   socok8s: "{{ obs_mirror }}/repositories/Cloud:/socok8s:/master/openSUSE_Leap_15.0/"
+  socok8s-opensuse151: "{{ obs_mirror }}/repositories/Cloud:/socok8s:/master/openSUSE_Leap_15.1/"
   CAASP30-update: "{{ ibs_mirror }}/dist/ibs/SUSE/Updates/SUSE-CAASP/3.0/x86_64/update/"
   CAASP30-pool: "{{ ibs_mirror }}/dist/ibs/SUSE/Products/SUSE-CAASP/3.0/x86_64/product/"
 
