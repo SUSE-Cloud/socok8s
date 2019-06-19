@@ -19,27 +19,19 @@
             parameters:
               prefix: "{{ socok8s_envname }}"
               network_external: "{{ deploy_on_openstack_external_network }}"
+              network_internal_cidr: "{{ deploy_on_openstack_internal_subnet_cidr }}"
 
         - name: show network stack output
           debug:
             var: network_stack_create_output
-
-    - name: Get the internal VIP from the network stack
-      command: openstack stack output show {{ deploy_on_openstack_network_stackname }} dcm_vip -c output_value -f value
-      changed_when: false
-      register: _network_stack_dcm_vip_output
-
-    - name: Get the external VIP from the network stack
-      command: openstack stack output show {{ deploy_on_openstack_network_stackname }} ext_vip -c output_value -f value
-      changed_when: false
-      register: _network_stack_ext_vip_output
 
     - name: Add vip with cidr in extravars
       delegate_to: localhost
       blockinfile:
         path: "{{ socok8s_extravars }}"
         create: yes
-        marker: "# {mark} ANSIBLE MANAGED BLOCK FOR VIP"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ item.output_key }}"
         block: |
-          socok8s_dcm_vip: {{ _network_stack_dcm_vip_output.stdout }}
-          socok8s_ext_vip: {{ _network_stack_ext_vip_output.stdout }}
+          socok8s_{{ item.output_key }}: {{ item.output_value }}
+      with_items: "{{ network_stack_create_output.stack.outputs }}"
+      when: ( item.output_key == 'dcm_vip') or ( item.output_key == 'ext_vip' )
