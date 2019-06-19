@@ -6,7 +6,7 @@ deploy_on_openstack_keypairname: "{{ lookup('env','KEYNAME') }}"
 # the heat stack name that is used for the network stack (which includes net/subnet/router)
 deploy_on_openstack_network_stackname: "{{ socok8s_envname }}-network"
 deploy_on_openstack_sesnode_image: "SLES12-SP3"
-deploy_on_openstack_sesnode_flavor: "d4.xlarge"
+deploy_on_openstack_sesnode_flavor: "cloud-ses"
 deploy_on_openstack_sesnode_securitygroup: "all-incoming"
 # Userdata to prevent the ephemeral disk being mounted by cloud-init
 deploy_on_openstack_sesnode_userdata: |
