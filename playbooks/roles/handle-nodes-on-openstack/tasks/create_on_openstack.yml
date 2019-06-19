@@ -16,6 +16,7 @@
     state: present
     timeout: 300
     userdata: "{{ userdata | default(omit) }}"
+    auth_type: "{{ os_auth_type }}"
   register: _server_create
 
 - name: Show the server data

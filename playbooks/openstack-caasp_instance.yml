@@ -21,6 +21,7 @@
             state: "present"
             name: "{{ stackname }}"
             template: "{{ playbook_dir }}/../files/caasp-stack.yaml"
+            auth_type: "{{ os_auth_type }}"
             parameters:
               image: "{{ deploy_on_openstack_caasp_image }}"
               external_net: "{{ deploy_on_openstack_external_network }}"

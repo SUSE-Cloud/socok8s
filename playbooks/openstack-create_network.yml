@@ -16,6 +16,7 @@
             state: "present"
             name: "{{ deploy_on_openstack_network_stackname }}"
             template: "{{ playbook_dir }}/../heat-templates/openstack-network.yml"
+            auth_type: "{{ os_auth_type }}"
             parameters:
               prefix: "{{ socok8s_envname }}"
               network_external: "{{ deploy_on_openstack_external_network }}"

@@ -20,6 +20,7 @@
           os_stack:
             name: "{{ stackname }}"
             state: absent
+            auth_type: "{{ os_auth_type }}"
 
         - name: Remove host from known hosts
           known_hosts:

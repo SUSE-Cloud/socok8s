@@ -1,4 +1,5 @@
 ---
+os_auth_type: "{{ lookup('env', 'OS_AUTH_TYPE') | default('password', true) }}"
 deploy_on_openstack_external_network: "{{ lookup('env', 'EXTERNAL_NETWORK') | default('floating', true) }}"
 deploy_on_openstack_internal_network: "{{ socok8s_envname }}-net"
 deploy_on_openstack_internal_subnet: "{{ socok8s_envname }}-subnet"
