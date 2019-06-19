@@ -192,8 +192,7 @@
   until: armada_results.stdout.find('armada-') == 0
   retries: 60
   delay: 10
-  tags:
-    - skip_ansible_lint
+  changed_when: False
 
 - name: Set Armada pod name
   set_fact: armada_pod_name={{ armada_results.stdout }}
@@ -207,8 +206,7 @@
   until: armada_pod_status.stdout == "true"
   retries: 30
   delay: 10
-  tags:
-    - skip_ansible_lint
+  changed_when: False
 
 - name: Set pegleg parameters
   set_fact:
@@ -252,15 +250,13 @@
     - skip_ansible_lint
 
 - block:
-    # TODO(aagate): Add a changed_when: to help idempotency
     - name: Wait until Armada api pod is deployed
       command: 'kubectl get pod -l application=armada,component=api -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
       register: armada_results
       until: armada_results.stdout.find('armada-api-') == 0
       retries: 180
       delay: 10
-      tags:
-        - skip_ansible_lint
+      changed_when: False
 
     - name: Set armada api pod name
       set_fact: armada_api_pod_name={{ armada_results.stdout }}
@@ -268,15 +264,13 @@
     - debug:
         msg: "armada-api pod found: {{ armada_api_pod_name }}"
 
-    # TODO(aagate): Add a changed_when: to help idempotency
     - name: Wait until Airship api becomes ready
       command: "kubectl get pod {{ armada_api_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
       register: armada_api_pod_status
       until: armada_api_pod_status.stdout == "true"
       retries: 60
       delay: 10
-      tags:
-        - skip_ansible_lint
+      changed_when: False
 
   rescue:
     - name: List all ucp pods
