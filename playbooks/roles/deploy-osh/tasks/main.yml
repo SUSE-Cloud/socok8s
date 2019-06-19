@@ -295,6 +295,7 @@
   vars:
     _component_runcommand: "./tools/deployment/multinode/100-glance.sh"
     _component_run_env:
+      OSH_OPENSTACK_RELEASE: "{{ suse_osh_openstack_release }}"
       OSH_EXTRA_HELM_ARGS_GLANCE: >
         --values=./glance/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-glance.yaml
@@ -382,7 +383,7 @@
         --values=/tmp/socok8s-susedefaults-neutron.yaml
         --values=/tmp/socok8s-useroverrides-neutron.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NEUTRON') | default('', True) }}
-      OSH_OPENSTACK_RELEASE: "rocky"
+      OSH_OPENSTACK_RELEASE: "{{ suse_osh_openstack_release }}"
       OSH_EXTRA_HELM_ARGS_NOVA: >
         --values=./nova/values_overrides/opensuse_15.yaml
         --values=./nova/values_overrides/rocky-opensuse_15.yaml
