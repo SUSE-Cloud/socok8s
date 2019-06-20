@@ -246,33 +246,64 @@
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Deploy Airship UCP ... quick coffee break, maybe?
-  command: 'kubectl exec {{ armada_pod_name }} -n ucp -- armada apply /armada/{{ socok8s_site_name }}-ucp.yaml --wait --target-manifest ucp-bootstrap'
+  command: 'kubectl exec {{ armada_pod_name }} -n ucp -- armada apply /armada/{{ socok8s_site_name }}-ucp.yaml --target-manifest ucp-bootstrap'
   tags:
     - install
     - skip_ansible_lint
 
-# TODO(aagate): Add a changed_when: to help idempotency
+- name: Wait until Keystone api pod is deployed
+  command: 'kubectl get pod -l application=keystone,component=api -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
+  register: keystone_results
+  until: keystone_results.stdout.find('keystone-api-') == 0
+  retries: 240
+  delay: 10
+
+- name: Set Keystone api pod name
+  set_fact: keystone_api_pod_name={{ keystone_results.stdout }}
+
+- name: Wait until Keystone api becomes ready
+  command: "kubectl get pod {{ keystone_api_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
+  register: keystone_api_pod_status
+  until: keystone_api_pod_status.stdout == "true"
+  retries: 120
+  delay: 10
+
 - name: Wait until Armada api pod is deployed
   command: 'kubectl get pod -l application=armada,component=api -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
   register: armada_results
   until: armada_results.stdout.find('armada-api-') == 0
-  retries: 180
+  retries: 240
   delay: 10
-  tags:
-    - skip_ansible_lint
 
 - name: Set armada api pod name
   set_fact: armada_api_pod_name={{ armada_results.stdout }}
 
-- debug:
-    msg: "armada-api pod found: {{ armada_api_pod_name }}"
-
-# TODO(aagate): Add a changed_when: to help idempotency
-- name: Wait until Airship api becomes ready
+- name: Wait until Armada api becomes ready
   command: "kubectl get pod {{ armada_api_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
   register: armada_api_pod_status
   until: armada_api_pod_status.stdout == "true"
-  retries: 60
+  retries: 120
   delay: 10
-  tags:
-    - skip_ansible_lint
+
+- name: Wait until Shipyard api pod is deployed
+  command: 'kubectl get pod -l application=shipyard,component=api -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
+  register: shipyard_results
+  until: shipyard_results.stdout.find('shipyard-api-') == 0
+  retries: 240
+  delay: 10
+
+- name: Set shipyard api pod name
+  set_fact: shipyard_api_pod_name={{ shipyard_results.stdout }}
+
+- name: Wait until Shipyard api becomes ready
+  command: "kubectl get pod {{ shipyard_api_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
+  register: shipyard_api_pod_status
+  until: shipyard_api_pod_status.stdout == "true"
+  retries: 120
+  delay: 10
+
+# Wait until all pods are in ready or completed state. In case of site update,
+# some pods can be redeployed while the api pods are ready.
+- name: Wait until all pods to be ready
+  command: "{{ upstream_repos_clone_folder }}/openstack/openstack-helm/tools/deployment/common/wait-for-pods.sh {{ ucp_namespace_name }} 3600"
+
