@@ -1,12 +1,14 @@
 ---
+os_auth_type: "{{ lookup('env', 'OS_AUTH_TYPE') | default('password', true) }}"
 deploy_on_openstack_external_network: "{{ lookup('env', 'EXTERNAL_NETWORK') | default('floating', true) }}"
 deploy_on_openstack_internal_network: "{{ socok8s_envname }}-net"
 deploy_on_openstack_internal_subnet: "{{ socok8s_envname }}-subnet"
+deploy_on_openstack_internal_subnet_cidr: "192.168.100.0/24"
 deploy_on_openstack_keypairname: "{{ lookup('env','KEYNAME') }}"
 # the heat stack name that is used for the network stack (which includes net/subnet/router)
 deploy_on_openstack_network_stackname: "{{ socok8s_envname }}-network"
 deploy_on_openstack_sesnode_image: "SLES12-SP3"
-deploy_on_openstack_sesnode_flavor: "d4.xlarge"
+deploy_on_openstack_sesnode_flavor: "cloud-ses"
 deploy_on_openstack_sesnode_securitygroup: "all-incoming"
 # Userdata to prevent the ephemeral disk being mounted by cloud-init
 deploy_on_openstack_sesnode_userdata: |
@@ -20,10 +22,15 @@ deploy_on_openstack_ses_repos_per_imagename:
     - SLE12SP3-update
     - SES5-product
     - SES5-update
+
 deploy_on_openstack_osh_repos_per_imagename:
   openSUSE-Leap-15.0:
+    - openSUSE-Leap-15.0-Oss
+    - openSUSE-Leap-15.0-Update
+    - openSUSE-Leap-15.0-Cloud
     - Leap15develtools
     - socok8s
+
 deploy_on_openstack_caasp_repos_per_imagename:
   caasp-3.0.0-GM-OpenStack-qcow:
     - CAASP30-update

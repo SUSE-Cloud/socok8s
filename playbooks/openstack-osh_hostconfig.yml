@@ -8,6 +8,25 @@
     - name: Ensure all the openstack mechanism vars are loaded
       include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
 
+    - name: Collect repo files for removal
+      find:
+        paths: "/etc/zypp/repos.d/"
+        patterns: "*.repo"
+      register: repo_files
+
+    - name: Clear existing repo config
+      file:
+        path: "{{ item['path'] }}"
+        state: absent
+      with_items: "{{ repo_files['files'] }}"
+
+    - name: Disable delta rpms
+      ini_file:
+        path: /etc/zypp/zypp.conf
+        section: main
+        option: download.use_deltarpm
+        value: "false"
+
     - name: Configure host repositories
       zypper_repository:
         name: "{{ item }}"
