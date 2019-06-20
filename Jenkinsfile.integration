@@ -114,9 +114,28 @@ pipeline {
                 timeout(time: 45, unit: 'MINUTES', activity: true)
             }
             parallel {
-                stage('Deploy CaaSP') {
-                    steps {
-                        sh "./run.sh deploy_caasp"
+                stage('Deploy CCP deployer and CaaSP') {
+                    parallel {
+                        stage('Deploy CaaSP') {
+                            steps {
+                                sh "./run.sh deploy_caasp"
+                            }
+                        }
+                        stage('Deploy CCP Deployer') {
+                            steps {
+                                sh "./run.sh deploy_ccp_deployer"
+                            }
+                        }
+                    }
+                    stage('Configure CaaSP workers') {
+                        when { expression { return  TestFunctional } }
+                        options {
+                            timeout(time: 10, unit: 'MINUTES', activity: true)
+                        }
+                        steps {
+                            sh "./run.sh enroll_caasp_workers"
+                            sh "./run.sh setup_caasp_workers_for_openstack"
+                        }
                     }
                 }
                 stage('Deploy SES') {
@@ -124,22 +143,6 @@ pipeline {
                         sh "./run.sh deploy_ses"
                     }
                 }
-                stage('Deploy CCP Deployer') {
-                    steps {
-                        sh "./run.sh deploy_ccp_deployer"
-                    }
-                }
-            }
-        }
-
-        stage('Configure CaaSP workers') {
-            when { expression { return  TestFunctional } }
-            options {
-                timeout(time: 10, unit: 'MINUTES', activity: true)
-            }
-            steps {
-                sh "./run.sh enroll_caasp_workers"
-                sh "./run.sh setup_caasp_workers_for_openstack"
             }
         }
 
