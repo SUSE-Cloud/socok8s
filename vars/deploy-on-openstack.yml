@@ -18,13 +18,17 @@ deploy_on_openstack_ses_repos_per_imagename:
   SLES12-SP3:
     - SLE12SP3-product
     - SLE12SP3-update
-    - SUSE-CA
     - SES5-product
     - SES5-update
+
 deploy_on_openstack_osh_repos_per_imagename:
   openSUSE-Leap-15.0:
+    - openSUSE-Leap-15.0-Oss
+    - openSUSE-Leap-15.0-Update
+    - openSUSE-Leap-15.0-Cloud
     - Leap15develtools
     - socok8s
+
 deploy_on_openstack_caasp_repos_per_imagename:
   caasp-3.0.0-GM-OpenStack-qcow:
     - CAASP30-update

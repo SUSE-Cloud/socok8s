@@ -3,7 +3,6 @@
   gather_facts: no
   vars:
     ses_packages:
-      - ca-certificates-suse
       - rng-tools
     # Domain name to use in the deployment. Default assumes properly configured dns name.
     domainname: "{{ ansible_domain | default('openstack.local', True) }}"
