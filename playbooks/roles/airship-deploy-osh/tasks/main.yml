@@ -169,7 +169,7 @@
     - update_airship_osh_site
 
 # TODO(aagate): Add a changed_when: to help idempotency
-- name: Wait for update software action to complete... it can take up from 30-75 minutes
+- name: "Wait for update software action to complete... it can take up to {{ airship_deploy_openstack_timeout }} minutes"
   command: '{{ shipyard }} describe {{ shipyard_action_key }}'
   args:
     chdir: '{{ upstream_repos_clone_folder }}/airship/shipyard'
@@ -178,8 +178,8 @@
     OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
   register: shipyard_desc_action
   until: shipyard_desc_action.stdout.find('Processing') < 0 and shipyard_desc_action.stdout.find('running') < 0
-  retries: 300
-  delay: 15
+  retries: "{{ airship_deploy_openstack_timeout | int * 2 }}"
+  delay: 30
   tags:
     - skip_ansible_lint
     - update_airship_osh_site
