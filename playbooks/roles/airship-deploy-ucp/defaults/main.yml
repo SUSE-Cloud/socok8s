@@ -4,3 +4,5 @@ run_tests: true
 test_timeout: 2700
 neutron_external_interface: ""
 neutron_tunnel_device: null
+ucp_pod_deploy_retries: 240
+ucp_pod_ready_retries: 120

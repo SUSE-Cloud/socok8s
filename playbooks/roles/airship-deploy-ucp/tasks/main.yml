@@ -254,7 +254,7 @@
       command: 'kubectl get pod -l application=keystone,component=api -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
       register: keystone_results
       until: keystone_results.stdout.find('keystone-api-') == 0
-      retries: 240
+      retries: "{{ ucp_pod_deploy_retries }}"
       delay: 10
       changed_when: False
 
@@ -265,7 +265,7 @@
       command: "kubectl get pod {{ keystone_api_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
       register: keystone_api_pod_status
       until: keystone_api_pod_status.stdout == "true"
-      retries: 120
+      retries: "{{ ucp_pod_ready_retries }}"
       delay: 10
       changed_when: False
 
@@ -273,7 +273,7 @@
       command: 'kubectl get pod -l application=shipyard,component=api -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
       register: shipyard_results
       until: shipyard_results.stdout.find('shipyard-api-') == 0
-      retries: 240
+      retries: "{{ ucp_pod_deploy_retries }}"
       delay: 10
       changed_when: False
 
@@ -284,7 +284,7 @@
       command: "kubectl get pod {{ shipyard_api_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
       register: shipyard_api_pod_status
       until: shipyard_api_pod_status.stdout == "true"
-      retries: 120
+      retries: "{{ ucp_pod_ready_retries }}"
       delay: 10
       changed_when: False
 
@@ -292,7 +292,7 @@
       command: 'kubectl get pod -l application=armada,component=api -n {{ ucp_namespace_name }} -o jsonpath="{.items[0].metadata.name}"'
       register: armada_results
       until: armada_results.stdout.find('armada-api-') == 0
-      retries: 240
+      retries: "{{ ucp_pod_deploy_retries }}"
       delay: 10
       changed_when: False
 
@@ -303,7 +303,7 @@
       command: "kubectl get pod {{ armada_api_pod_name }} -n {{ ucp_namespace_name }} -o jsonpath='{.status.containerStatuses[].ready}'"
       register: armada_api_pod_status
       until: armada_api_pod_status.stdout == "true"
-      retries: 120
+      retries: "{{ ucp_pod_ready_retries }}"
       delay: 10
       changed_when: False
 
