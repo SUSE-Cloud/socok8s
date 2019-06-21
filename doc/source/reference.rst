@@ -92,10 +92,6 @@ Why...
    <insert your favorite language here>, mostly because the shell script grew
    organically out of actual use and CI needs.
 
-... Installing from sources?
-   Neither the socok8s repo nor the OpenStack-Helm project's repositories
-   have been packaged for Leap/SLE 15 yet.
-
 Image building process
 ======================
 
