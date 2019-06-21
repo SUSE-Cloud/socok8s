@@ -1,0 +1,47 @@
+---
+#
+# (c) Copyright 2019 SUSE Linux GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+
+- name: Get current state from terraform
+  command: terraform state list
+  args:
+    chdir: "{{ socok8s_workspace }}/skuba-terraform/"
+  register: _terraform_state_list
+  changed_when: False
+
+- name: Remove internal network resource from terraform state
+  command: terraform state rm openstack_networking_network_v2.network
+  args:
+    chdir: "{{ socok8s_workspace }}/skuba-terraform/"
+  when: '"openstack_networking_network_v2.network" in _terraform_state_list.stdout_lines'
+
+- name: Remove internal subnet resource from terraform state
+  command: terraform state rm openstack_networking_subnet_v2.subnet
+  args:
+    chdir: "{{ socok8s_workspace }}/skuba-terraform/"
+  when: '"openstack_networking_subnet_v2.subnet" in _terraform_state_list.stdout_lines'
+
+- name: Remove router interrface resource from terraform state
+  command: terraform state rm openstack_networking_router_interface_v2.router_interface
+  args:
+    chdir: "{{ socok8s_workspace }}/skuba-terraform/"
+  when: '"openstack_networking_router_interface_v2.router_interface" in _terraform_state_list.stdout_lines'
+
+- name: Remove router resource from terraform state
+  command: terraform state rm openstack_networking_router_v2.router
+  args:
+    chdir: "{{ socok8s_workspace }}/skuba-terraform/"
+  when: '"openstack_networking_router_v2.router" in _terraform_state_list.stdout_lines'

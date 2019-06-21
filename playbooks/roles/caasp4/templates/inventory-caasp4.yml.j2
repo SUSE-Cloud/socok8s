@@ -1,0 +1,34 @@
+---
+caasp-masters:
+  hosts:
+{% for master_ip in _terraform_json_output.ip_masters.value %}
+    {{ master_ip }}
+{% endfor %}
+
+caasp-workers:
+  hosts:
+{% for worker_ip in _terraform_json_output.ip_workers.value %}
+    {{ worker_ip }}
+{% endfor %}
+
+airship-openstack-control-workers:
+  hosts: &firsttwoworkers
+{% for worker_ip in _terraform_json_output.ip_workers.value %}
+{% if loop.index <= 2 %}
+    {{ worker_ip }}
+{% endif %}
+{% endfor %}
+
+airship-ucp-workers:
+  hosts: *firsttwoworkers
+
+airship-openstack-compute-workers:
+  hosts:
+{% for worker_ip in _terraform_json_output.ip_workers.value %}
+{% if loop.index > 2 %}
+    {{ worker_ip }}
+{% endif %}
+{% endfor %}
+
+airship-kube-system-workers:
+  hosts: *firsttwoworkers
