@@ -58,6 +58,11 @@ data:
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: helm-toolkit
         type: git
+      neutron:
+        location: https://opendev.org/openstack/openstack-helm
+        reference: 83fbb31192cb9973ba3a503e956c965857ac5b42
+        subpath: neutron
+        type: git
       neutron-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e

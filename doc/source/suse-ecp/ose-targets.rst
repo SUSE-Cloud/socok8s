@@ -85,6 +85,12 @@ Create the deployer node:
 
    ./run.sh deploy_ccp_deployer
 
+Configure the deployer node:
+
+.. code-block:: console
+
+   ./run.sh configure_ccp_deployer
+
 Enroll all the :term:`CaaSP` nodes into their roles (master, admin, and workers):
 
 .. code-block:: console

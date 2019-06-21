@@ -15,4 +15,4 @@
 # under the License.
 #
 
-- import_playbook: openstack-osh_instance.yml
+- import_playbook: openstack-osh_hostconfig.yml

@@ -2,8 +2,16 @@
 - hosts: soc-deployer
   gather_facts: yes
   any_errors_fatal: true
+  vars_files:
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
+    - "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
   roles:
     - role: airship-setup-deployer
+      vars:
+        dcm_vip: "{{ socok8s_dcm_vip }}"
+        ext_vip: "{{ socok8s_ext_vip }}"
+        zypper_extra_repos:
+          socok8s: "{{ socok8s_repos_to_configure['socok8s'] }}"
       when: redeploy_osh_only is not defined or not redeploy_osh_only
       tags:
         - install

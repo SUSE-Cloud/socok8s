@@ -1,18 +1,13 @@
 ---
-- name: Load standard variables
-  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
-
-- name: Load vip from user variables
-  include_vars: "{{ socok8s_extravars }}"
-
-- name: Add socok8s repository
+- name: Add zypper extra repositories
   become: yes
   zypper_repository:
-    name: "socok8s"
-    repo: "{{ socok8s_repos_to_configure['socok8s'] }}"
+    name: "{{ item['key'] }}"
+    repo: "{{ item['value'] }}"
     autorefresh: True
     auto_import_keys: yes
     state: present
+  loop: "{{ zypper_extra_repos | dict2items }}"
 
 - name: Install system packages
   become: yes
@@ -81,26 +76,26 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK for VIP entries"
     block: |
       # UCP service public end points
-      {{ socok8s_dcm_vip }} keystone.ucp.svc.cluster.local keystone-api.ucp.svc.cluster.local
-      {{ socok8s_dcm_vip }} barbican.ucp.svc.cluster.local barbican-api.ucp.svc.cluster.local
-      {{ socok8s_dcm_vip }} shipyard.ucp.svc.cluster.local
+      {{ dcm_vip }} keystone.ucp.svc.cluster.local keystone-api.ucp.svc.cluster.local
+      {{ dcm_vip }} barbican.ucp.svc.cluster.local barbican-api.ucp.svc.cluster.local
+      {{ dcm_vip }} shipyard.ucp.svc.cluster.local
       # Openstack admin service and internal endpoints
-      {{ socok8s_dcm_vip }} identity-api.openstack.svc.cluster.local
-      {{ socok8s_dcm_vip }} image-api.openstack.svc.cluster.local
-      {{ socok8s_dcm_vip }} volume-api.openstack.svc.cluster.local
-      {{ socok8s_dcm_vip }} compute-api.openstack.svc.cluster.local
-      {{ socok8s_dcm_vip }} network-api.openstack.svc.cluster.local
-      {{ socok8s_dcm_vip }} dashboard-api.openstack.svc.cluster.local
-      {{ socok8s_dcm_vip }} orchestration-api.openstack.svc.cluster.local
+      {{ dcm_vip }} identity-api.openstack.svc.cluster.local
+      {{ dcm_vip }} image-api.openstack.svc.cluster.local
+      {{ dcm_vip }} volume-api.openstack.svc.cluster.local
+      {{ dcm_vip }} compute-api.openstack.svc.cluster.local
+      {{ dcm_vip }} network-api.openstack.svc.cluster.local
+      {{ dcm_vip }} dashboard-api.openstack.svc.cluster.local
+      {{ dcm_vip }} orchestration-api.openstack.svc.cluster.local
       # Openstack service public endpoints
-      {{ socok8s_ext_vip }} identity.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} image.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} volume.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} compute.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} network.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} dashboard.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} nova-novncproxy.openstack.svc.cluster.local
-      {{ socok8s_ext_vip }} orchestration.openstack.svc.cluster.local
+      {{ ext_vip }} identity.openstack.svc.cluster.local
+      {{ ext_vip }} image.openstack.svc.cluster.local
+      {{ ext_vip }} volume.openstack.svc.cluster.local
+      {{ ext_vip }} compute.openstack.svc.cluster.local
+      {{ ext_vip }} network.openstack.svc.cluster.local
+      {{ ext_vip }} dashboard.openstack.svc.cluster.local
+      {{ ext_vip }} nova-novncproxy.openstack.svc.cluster.local
+      {{ ext_vip }} orchestration.openstack.svc.cluster.local
 
 - name: Creates /etc/openstack directory
   become: yes
