@@ -33,6 +33,10 @@ function deploy_ccp_deployer() {
     echo "Creating CCP deploy node"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_ccp_deployer.yml
 }
+function configure_ccp_deployer() {
+    echo "Configure CCP deployer node"
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-configure_ccp_deployer.yml
+}
 function enroll_caasp_workers() {
     echo "Enrolling caasp worker nodes into the cluster"
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-enroll_caasp_workers.yml

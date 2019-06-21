@@ -131,6 +131,7 @@ pipeline {
                 stage('Deploy CCP Deployer') {
                     steps {
                         sh "./run.sh deploy_ccp_deployer"
+                        sh "./run.sh configure_ccp_deployer"
                     }
                 }
             }

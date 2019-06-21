@@ -72,6 +72,9 @@ case "$deployment_action" in
         # as we shouldn't do it on caasp cluster (microOS and others)
         deploy_ccp_deployer
         ;;
+    "configure_ccp_deployer")
+        configure_ccp_deployer
+        ;;
     "enroll_caasp_workers")
         enroll_caasp_workers
         ;;
@@ -107,6 +110,7 @@ case "$deployment_action" in
         deploy_ses
         deploy_caasp
         deploy_ccp_deployer
+        configure_ccp_deployer
         enroll_caasp_workers
         ;;
     "setup_openstack")
@@ -130,6 +134,7 @@ case "$deployment_action" in
         deploy_ses
         deploy_caasp
         deploy_ccp_deployer
+        configure_ccp_deployer
         enroll_caasp_workers
         setup_caasp_workers_for_openstack
         patch_upstream
