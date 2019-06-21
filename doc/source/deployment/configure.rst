@@ -190,6 +190,8 @@ For example:
    neutron_external_interface: bond0
    neutron_tunnel_device: bond0.24
 
+.. _configurevips:
+
 Configure the VIP that will be used for OpenStack service public endpoints
 --------------------------------------------------------------------------
 
