@@ -67,36 +67,40 @@ pipeline {
             }
         }
 
-        stage('Lint Ansible playbooks') {
-            when { expression { return  TestFunctional } }
-            options {
-                timeout(time: 5, unit: 'MINUTES', activity: true)
-            }
-            steps {
-                sh "tox -e lint"
-            }
-        }
-
-        stage('Build docs') {
-             when { expression { return TestDocs } }
-             options {
-                timeout(time: 5, unit: 'MINUTES', activity: true)
-             }
-             steps {
-                sh "tox -e docs"
-             }
-             post {
-                success {
-                    publishHTML target: [
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: false,
-                        keepAll: true,
-                        reportDir: 'doc/build/html',
-                        reportFiles: 'index.html',
-                        reportName: 'Built Docs'
-                    ]
+        stage('lint and docs') {
+            parallel {
+                stage('Lint Ansible playbooks') {
+                    when { expression { return  TestFunctional } }
+                    options {
+                        timeout(time: 5, unit: 'MINUTES', activity: true)
+                    }
+                    steps {
+                        sh "tox -e lint"
+                    }
                 }
-             }
+
+                stage('Build docs') {
+                    when { expression { return TestDocs } }
+                    options {
+                        timeout(time: 5, unit: 'MINUTES', activity: true)
+                    }
+                    steps {
+                        sh "tox -e docs"
+                    }
+                    post {
+                        success {
+                            publishHTML target: [
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: 'doc/build/html',
+                                reportFiles: 'index.html',
+                                reportName: 'Built Docs'
+                            ]
+                        }
+                    }
+                }
+            }
         }
 
         stage('Create network') {
