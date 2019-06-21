@@ -28,6 +28,22 @@ check_openstack_env_vars_set (){
     fi
 }
 
+check_caasp4_skuba_available(){
+    echo "Checking for CaaSP 4 that SUSE/skuba is available"
+    if ! [ -d submodules/skuba ]; then
+        echo "submodules/skuba directory not available. Can not deploy CaaSP 4"
+        exit
+    fi
+}
+check_caasp4_terraform_available(){
+    echo "Checking for CaaSP 4 that terraform is available"
+    command -v terraform 1> /dev/null
+    if [ $? -ne 0 ]; then
+        echo "terraform executable not in \$PATH. Can not deploy CaaSP 4"
+        exit
+    fi
+}
+
 check_openstack_environment_is_ready_for_deploy (){
     echo "Running OpenStack pre-flight checks"
     check_openstack_env_vars_set #Do not try to grep without ensuring the vars are set
@@ -91,7 +107,7 @@ validate_cli_options (){
        exit 1
    fi
 
-   OPTIONS=(deploy test update_openstack add_openstack_compute remove_openstack_compute remove_deployment deploy_network deploy_ses deploy_caasp configure_ccp_deployer deploy_ccp_deployer enroll_caasp_workers patch_upstream build_images deploy_osh setup_caasp_workers_for_openstack setup_hosts setup_openstack setup_airship setup_everything teardown clean_k8s clean_airship_not_images gather_logs)
+   OPTIONS=(deploy test update_openstack add_openstack_compute remove_openstack_compute remove_deployment deploy_network deploy_ses deploy_caasp deploy_caasp4 deploy_caasp4 configure_ccp_deployer deploy_ccp_deployer enroll_caasp_workers patch_upstream build_images deploy_osh setup_caasp_workers_for_openstack setup_hosts setup_openstack setup_airship setup_everything teardown clean_caasp4 clean_k8s clean_airship_not_images gather_logs)
 
    action=$1
    isvalid=false

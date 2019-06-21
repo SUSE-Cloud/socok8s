@@ -1,0 +1,39 @@
+---
+#
+# (c) Copyright 2019 SUSE Linux GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+
+# NOTE(toabctl): We import the resources (which are created by the network heat
+# stack in setup_nodes.yml so we need to remove the resources again from
+# terraform state and let heat handle the reource cleanup
+
+- name: Does the terraform state exist
+  stat:
+    path: "{{ skuba_ci_terraform_workspace }}/terraform.tfstate"
+  register: _terraform_state_file
+
+- name: Remove existing networking resources from terraform state
+  include_tasks: _cleanup_nodes_terraform_remove_resources.yml
+  when: _terraform_state_file.stat.exists
+
+- name: Destroy terraform plan
+  terraform:
+    project_path: "{{ skuba_ci_terraform_workspace }}"
+    state: absent
+
+- name: Drop skuba openstack terraform files
+  file:
+    path: "{{ skuba_ci_terraform_workspace }}"
+    state: absent
