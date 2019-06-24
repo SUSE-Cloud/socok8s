@@ -38,9 +38,15 @@ function deploy_caasp4(){
 }
 
 function deploy_ccp_deployer() {
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
+    if [[ ${SOCOK8S_DEPLOYER_DOCKER:-"NO"} == "YES" ]]
     echo "Creating CCP deploy node"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_ccp_deployer.yml
+    then
+        source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
+        run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_ccp_deployer.yml
+    else
+        run_ansible ${socok8s_absolute_dir}/playbooks/docker-deploy_ccp_deployer.yml
+    fi
+
 }
 function configure_ccp_deployer() {
     echo "Configure CCP deployer node"

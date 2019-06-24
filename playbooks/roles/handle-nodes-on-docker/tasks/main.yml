@@ -1,0 +1,20 @@
+---
+- name: Load vars
+  include_vars: "{{ item }}"
+  loop:
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
+    - "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+
+- name: Define servername based on runtime
+  set_fact:
+    servername: "{{ socok8s_envname }}-{{ servername_suffix }}"
+
+- name: Create servers on docker
+  include_tasks: create_on_docker.yml
+  when:
+    - "not ( (delete | default(False)) | bool )"
+
+- name: Delete servers on docker
+  include_tasks: delete_on_docker.yml
+  when:
+    - "( (delete | default(False)) | bool )"

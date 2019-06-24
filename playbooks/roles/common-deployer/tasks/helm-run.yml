@@ -1,4 +1,8 @@
 ---
+- name: Check if running in a container
+  command: grep docker /proc/1/cgroup -qa
+  register: inside_docker
+
 - name: Copy systemd unit into place for helm server if running as non-root
   become: yes
   template:
@@ -14,6 +18,16 @@
     daemon_reload: yes
     name: helm-serve
     enabled: yes
+  when: inside_docker.rc == 1
+
+- name: check if port 8879 is open
+  shell: ss -tp state listening sport = :8879
+  register: helm_port
+
+- name: Run helm in the background
+  command: /usr/bin/helm serve &
+  poll: 0
+  when: inside_docker.rc == 0 and helm_port.rc != 0
 
 - name: Check if helm server is up
   wait_for:

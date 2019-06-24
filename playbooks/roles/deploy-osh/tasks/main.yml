@@ -79,6 +79,7 @@
 
 - name: Ensure VIP is present in /etc/hosts for the services to deploy
   blockinfile:
+    unsafe_writes: yes
     path: /etc/hosts
     block: |
       {{ socok8s_ext_vip }} keystone.openstack.svc.cluster.local keystone

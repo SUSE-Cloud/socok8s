@@ -1,0 +1,65 @@
+---
+- name: Pre-flight checks for the role
+  assert:
+    that:
+      - user_ssh_key is defined
+
+- name: Create server
+  docker_container:
+    name: "{{ servername }}"
+    image: opensuse/leap:15.0
+    command: ["sleep", "infinity"]
+
+# xml needed for zypper repo managemnet, iproute needed so ansible gathers network facts
+- name: Install sshd and python inside the container
+  command: docker exec {{ servername }} zypper --non-interactive in openssh python python-xml iproute tar gzip unzip xz which sudo
+
+- name: Create sshd keys inside the container
+  command: docker exec {{ servername }} ssh-keygen -A
+
+- name: Create ssh dir
+  command: docker exec {{ servername }} mkdir -p /root/.ssh/
+
+- name: Set proper perms for ssh dir
+  command: docker exec {{ servername }} chmod 700 /root/.ssh/
+
+- name: Copy user key into authorized keys
+  command: docker exec {{ servername }} bash -c "echo '{{ user_ssh_key }}' >> /root/.ssh/authorized_keys"
+
+- name: Set proper perms for authorized_keys
+  command: docker exec {{ servername }} chmod 600 /root/.ssh/authorized_keys
+
+- name: Run sshd inside the container
+  command: docker exec {{ servername }} /usr/sbin/sshd
+
+
+- name: Get server floating IP
+  set_fact:
+    floating_ip: "{{ ansible_facts.docker_container.NetworkSettings.IPAddress }}"
+
+- name: Extend inventory in workspace with newly created OSH deployer node
+  copy:
+    content: "{{ soc_aio_overrides }}"
+    dest: "{{ socok8s_workspace }}/inventory/{{ groupname_for_inventory }}.yml"
+  vars:
+    soc_aio_overrides: |
+      {{ groupname_for_inventory }}:
+        hosts:
+          {{ servername }}:
+            ansible_host: {{ floating_ip }}
+
+- meta: refresh_inventory
+
+- name: Get pubkey, and add it to known hosts
+  command: "ssh-keyscan -H {{ floating_ip | quote }}"
+  changed_when: false
+  register: _floatingkey
+  retries: 20
+  delay: 10
+  until: _floatingkey.stdout and _floatingkey.stdout.strip()
+
+- name: Insert known host
+  known_hosts:
+    state: present
+    name: "{{ floating_ip }}"
+    key: "{{ _floatingkey.stdout }}"

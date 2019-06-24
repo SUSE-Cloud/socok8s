@@ -77,10 +77,15 @@
       tags:
         - skip_ansible_lint
 
+    - name: Check if running in a container
+      command: grep docker /proc/1/cgroup -qa
+      register: inside_docker
+
     - name: Reboot host
       reboot:
         reboot_timeout: 900
         connect_timeout: 90
+      when: inside_docker.rc == 1
 
     - name: Store facts
       setup:

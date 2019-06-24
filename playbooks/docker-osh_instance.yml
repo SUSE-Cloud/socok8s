@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  roles:
+    - role: handle-nodes-on-docker
+      vars:
+        servername_suffix: "deployer"
+        groupname_for_inventory: "soc-deployer"
+        delete: "{{ ((osh_node_delete | default('False')) | bool) }}"
