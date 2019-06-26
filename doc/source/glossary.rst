@@ -15,7 +15,7 @@ Glossary
 
 
    Deployer
-     openSUSE Leap 15 host used to deploy CCP.
+     openSUSE Leap 15.0 host used to deploy CCP.
 
    LOCI
      The official OpenStack project to build Lightweight Open Container
