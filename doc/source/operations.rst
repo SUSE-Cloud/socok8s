@@ -439,6 +439,26 @@ Go to maintenance mode on compute host and run following commands:
 
    reboot
 
+``TASK airship-deploy-ucp`` Fatal Error Message
+-----------------------------------------------
+
+When running ``./run.sh``, you may receive the following error message:
+
+.. code-block:: console
+
+   TASK [airship-deploy-ucp : Wait until Armada api pod is deployed]
+   FAILED - RETRYING: Wait until Armada api pod is deployed (# retries left).
+   ...
+   deploy failed: fatal: <DEPLOYER>: FAILED! ...
+
+The Pod is trying to deploy with an ``ha`` scale profile. Normally it does not
+reach the last try, it finishes its work and continues. The most likely cause
+
+Running ``kubectl get pods --all-namespaces`` will report that
+``airship-ucp-rabbitmq-test`` is in ``Error`` state.
+
+To resolve this situation, run ``./run.sh deploy`` again.
+
 Recovering from Node Failure
 ============================
 
