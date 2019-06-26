@@ -59,22 +59,15 @@ Deployer. Set up your workspace with the following steps:
 Installing the SUSE Containerized OpenStack software
 ----------------------------------------------------
 
-There are several ways to install the SUSE Containerized OpenStack software.
+There are two ways to install the SUSE Containerized OpenStack software.
 
 1. (Recommended) Install with an ISO image including required dependencies:
 
-   a. Download ``openSUSE-Addon-socok8s-x86_64-Media.iso`` from
-      https://download.opensuse.org/repositories/Cloud:/socok8s:/master/images/iso/
-   b. sudo zypper addrepo --refresh <PATH_TO_ISO_IMAGE> socok8s-iso
+   a. wget https://download.opensuse.org/repositories/Cloud:/socok8s/images/iso/openSUSE-Addon-socok8s-x86_64-Media.iso
+   b. sudo zypper addrepo --refresh iso:///?iso=/home/stack/openSUSE-Addon-socok8s-x86_64-Media.iso socok8s-iso
    c. sudo zypper install socok8s (installs to /usr/share/socok8s)
 
-2. Install from the openSUSE repository including required dependencies:
-
-   a. sudo zypper addrepo --refresh \\
-      https://download.opensuse.org/repositories/Cloud:/socok8s:/master/openSUSE_Leap_15.0/ socok8s
-   b. sudo zypper install socok8s (installs to /usr/share/socok8s)
-
-3. (For developers only) Clone the repository.
+2. (For developers only) Clone the repository.
 
    The following software must be manually installed on your `Deployer` using zypper or pip install:
 
