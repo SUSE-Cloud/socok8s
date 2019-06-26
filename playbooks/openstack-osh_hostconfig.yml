@@ -27,6 +27,9 @@
         option: download.use_deltarpm
         value: "false"
 
+    - name: Workaround stupid JeOS image bugs (bsc#1138727)
+      shell: "netconfig update -f"
+
     - name: Configure host repositories
       zypper_repository:
         name: "{{ item }}"
