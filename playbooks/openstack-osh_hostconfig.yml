@@ -27,6 +27,12 @@
         option: download.use_deltarpm
         value: "false"
 
+    - name: Workaround stupid JeOS image bugs (bsc#1138727)
+      shell: "test -L /etc/resolv.conf || netconfig update -f"
+      args:
+        executable: /bin/sh
+        creates: /var/run/netconfig/resolv.conf
+
     - name: Configure host repositories
       zypper_repository:
         name: "{{ item }}"
