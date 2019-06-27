@@ -51,7 +51,7 @@ function enroll_caasp_workers() {
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-enroll_caasp_workers.yml
 }
 function clean_caasp4(){
-    if command -v terraform; then
+    if command -v terraform && [ -d submodules/skuba ]; then
         source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_available
         source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_available
         echo "Delete CaaSP 4"
