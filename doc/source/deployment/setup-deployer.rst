@@ -91,7 +91,7 @@ There are several ways to install the SUSE Containerized OpenStack software.
    After the required packages are installed, clone
    `socok8s GitHub repository <https://github.com/SUSE-Cloud/socok8s>`.
    This repository uses submodules, which have additional code needed for the
-   playbooks to work. Required dependencies must be installed manually.
+   playbooks to work.
 
    ::
 
@@ -108,7 +108,7 @@ SSH Key Preparation
 -------------------
 
 Create an SSH key on the Deployer node, and add the public key to each CaaS
-Platform worker node.
+Platform worker node and the Deployer node itself.
 
 .. note ::
 

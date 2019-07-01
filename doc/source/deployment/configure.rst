@@ -53,7 +53,7 @@ Configure the Inventory
 -----------------------
 
 You can create an inventory based on the hosts.yml file in the `examples`
-folder.  (*examples/workdir/inventory/hosts.yml*)
+folder.  (*/usr/share/socok8s/examples/workdir/inventory/hosts.yml*)
 
 .. literalinclude:: ../../../examples/workdir/inventory/hosts.yml
 
