@@ -69,6 +69,7 @@ Optionally, `localhost` can be preinstalled with the following software:
   * python3-jmespath
   * python3-openstacksdk
   * python3-netaddr
+  * python3-ara
 
 SUSE Containerized OpenStack only supports the Python3 variant of packages.
 Generally, the `python` command invokes Python version 2, which will not work
