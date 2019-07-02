@@ -11,6 +11,12 @@ check_common_env_vars_set (){
     fi
 
     echo "Using ${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace as workspace directory"
+
+    # Needed for the Ansible ARA check step
+    if [ ! -d ${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace ]; then
+        echo "Creating workspace directory at ${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace"
+        mkdir -p ${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace
+    fi
 }
 
 check_openstack_env_vars_set (){
