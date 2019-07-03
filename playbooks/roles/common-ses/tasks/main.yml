@@ -3,7 +3,6 @@
   include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
 
 - name: Create pools in SES for socok8s usage
-  become: yes
   include_role:
     name: ses
     tasks_from: openstack_config
