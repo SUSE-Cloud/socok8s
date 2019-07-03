@@ -67,6 +67,12 @@ requirements:
 *  When SES is deployed as AIO, two additional 60GB storage disks must be added
    to the node for OSD.
 
+Create network:
+
+.. code-block:: console
+
+   ./run.sh deploy_network
+
 Configure SES-AIO:
 
 .. code-block:: console
