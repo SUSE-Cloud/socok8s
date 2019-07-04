@@ -39,6 +39,7 @@
           - phantomjs
           - libxml2-devel
           - libxslt-devel
+          - which
 
     - name: Copying velum automation
       unarchive:
