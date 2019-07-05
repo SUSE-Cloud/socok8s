@@ -10,7 +10,7 @@
       vars:
         ext_vip: "{{ socok8s_ext_vip }}"
         zypper_extra_repos:
-          socok8s: "{{ socok8s_repos_to_configure['socok8s'] }}"
+          socok8s: "{{ socok8s_repos_to_configure['socok8s_SLE15SP1'] }}"
       when: redeploy_osh_only is not defined or not redeploy_osh_only
       tags:
         - install

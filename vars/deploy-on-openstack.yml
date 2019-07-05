@@ -30,6 +30,14 @@ deploy_on_openstack_osh_repos_per_imagename:
     - openSUSE-Leap-15.0-Cloud
     - Leap15develtools
     - socok8s
+  SLE-15-SP1-JeOS-GM:
+    - SLE-15-SP1-JeOS-GM-Full
+    - SLE-15-SP1-JeOS-GM-Update
+    - SLE-15-SP1-JeOS-GM-backports
+    - SLE-15-SP1-JeOS-GM-openstack-master
+    - SLE-15-SP1-JeOS-GM-ruby
+    - SLE-15-SP1-JeOS-GM-rubyextensions
+    - socok8s_SLE15SP1
 
 deploy_on_openstack_caasp_repos_per_imagename:
   caasp-3.0.0-GM-OpenStack-qcow:
@@ -39,7 +47,7 @@ deploy_on_openstack_caasp_image: "caasp-3.0.0-GM-OpenStack-qcow"
 deploy_on_openstack_caasp_workers: 3
 deploy_on_openstack_caasp_securitygroup: "{{ deploy_on_openstack_sesnode_securitygroup }}"
 deploy_on_openstack_caasp_stacknamefile: "{{ socok8s_workspace }}/stackname"
-deploy_on_openstack_oshnode_image: "openSUSE-Leap-15.0"
+deploy_on_openstack_oshnode_image: "SLE-15-SP1-JeOS-GM"
 deploy_on_openstack_oshnode_flavor: "m1.large"
 deploy_on_openstack_oshnode_securitygroup: "all-incoming"
 deploy_on_openstack_oshnode_userdata: |
