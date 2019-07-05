@@ -32,6 +32,20 @@ socok8s_repos_to_configure:
   openSUSE-Leap-15.0-Cloud: "{{ obs_mirror }}/repositories/Cloud:/Tools/openSUSE_Leap_15.0/"
   Leap15develtools: "{{ obs_mirror }}/repositories/devel:/tools/openSUSE_Leap_15.0/"
   socok8s: "{{ obs_mirror }}/repositories/Cloud:/socok8s:/master/openSUSE_Leap_15.0/"
+  SLES15-JeOS-OpenStack-Cloud-GM-Pool: http://download.suse.de/ibs/SUSE:/SLE-15:/GA/standard/
+  SLES15-JeOS-OpenStack-Cloud-GM-Update: http://download.suse.de/ibs/SUSE:/SLE-15:/Update/standard/
+  # needed for python-barbicanclient
+  SLES15-JeOS-OpenStack-Cloud-GM-backports: "{{ obs_mirror }}/repositories/openSUSE:/Backports:/SLE-15/standard/"
+  # may not be needed?
+  SLES15-JeOS-OpenStack-Cloud-GM-Cloud:  "{{ obs_mirror }}/repositories/Cloud:/Tools/SLE_15/"
+  # needed for gcc
+  SLES15-JeOS-OpenStack-Cloud-GM-develtools: "{{ ibs_mirror }}/ibs/SUSE/Products/SLE-Module-Development-Tools/15/x86_64/product/"
+  # needed for phantomjs
+  SLES15-JeOS-OpenStack-Cloud-GM-develtools2: "{{ obs_mirror }}/repositories/devel:/tools/SLE_15/"
+  # needed for ruby2.5-devel
+  SLES15-JeOS-OpenStack-Cloud-GM-ruby: "{{ obs_mirror }}/repositories/devel:/languages:/ruby/SLE_15/"
+
+  socok8s_SLE15: "{{ obs_mirror }}/repositories/Cloud:/socok8s:/master/SLE_15/"
   CAASP30-update: "{{ ibs_mirror }}/dist/ibs/SUSE/Updates/SUSE-CAASP/3.0/x86_64/update/"
   CAASP30-pool: "{{ ibs_mirror }}/dist/ibs/SUSE/Products/SUSE-CAASP/3.0/x86_64/product/"
 

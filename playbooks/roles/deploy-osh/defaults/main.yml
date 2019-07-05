@@ -17,7 +17,6 @@ suse_osh_deploy_packages:
   - gcc
   - make
   - jq
-  - rng-tools
   - curl #after this line these are the packages required for osh deploy itself
   - python-selinux
   - ceph-common

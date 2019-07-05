@@ -47,7 +47,7 @@
         path: /etc/zypp/vendors.d/opensuse
         block: |
           [main]
-          vendors = suse,opensuse,obs://build.opensuse.org/Cloud:OpenStack,obs://build.opensuse.org/devel:languages:python
+          vendors = suse,opensuse,obs://build.opensuse.org/Cloud:OpenStack,obs://build.opensuse.org/devel:languages:python, obs://build.opensuse.org/devel:languages:ruby
         create: yes
 
     - name: Zypper dist-upgrade
