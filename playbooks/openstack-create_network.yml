@@ -35,7 +35,7 @@
         block: |
           socok8s_{{ item.output_key }}: {{ item.output_value }}
       with_items: "{{ network_stack_create_output.stack.outputs }}"
-      when: ( item.output_key == 'dcm_vip') or ( item.output_key == 'ext_vip' )
+      when: item.output_key == 'ext_vip'
 
     - name: Add internal network ID to group_vars
       blockinfile:

@@ -26,8 +26,8 @@ data:
         # what type of vip manage machanism will be used
         # possible options: routed, keepalived
         mode: routed
-        interfaces: ext-vip,dcm-vip
-        addrs: {{ socok8s_ext_vip }},{{ socok8s_dcm_vip }}
+        interface: ext-vip
+        addr: {{ socok8s_ext_vip }}
       external_policy_local: true
   source:
     type: local
