@@ -47,6 +47,20 @@
         dest: "{{ upstream_repos_clone_folder }}/ccp/"
 
 
+    # In SLE15SP1 the default bundler is 2.x while the velum Gemfile.lock has been bundled with 1.15.0 so we need to
+    # manually remove the BUNDLED WITH+1.15.0 text of the Gemfile.lock for it to install the dependencies
+    # This is only needed for CAASP3, can be removed once we move to CAASP4
+    - name: Remove "BUNDLED WITH" text from Gemfile.lock
+      lineinfile:
+        path: "{{ upstream_repos_clone_folder }}/ccp/velum-bootstrap/Gemfile.lock"
+        state: absent
+        regexp: "{{ item }}"
+      with_items:
+        - "^BUNDLED WITH$"
+        - "1.15.0$"
+
+
+
     # Ansible velum needs to get given a specific shell, bash, therefore
     # the shell module has to be used (command doesn't accept executable)
     # Skip ansible lint is therefore used, to avoid the warning that this task
