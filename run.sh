@@ -41,6 +41,9 @@ DEPLOYMENT_MECHANISM=${DEPLOYMENT_MECHANISM:-"kvm"}
 # The base directory where workspace(s) are created in
 SOCOK8S_WORKSPACE_BASEDIR=${SOCOK8S_WORKSPACE_BASEDIR:-~}
 
+# The path to the terraform binary
+TERRAFORM_BINARY_PATH=${TERRAFORM_BINARY_PATH:-/usr/bin/terraform}
+
 source ${scripts_absolute_dir}/pre-flight-checks.sh check_common_env_vars_set
 source ${scripts_absolute_dir}/bootstrap-ansible-if-necessary.sh
 source ${scripts_absolute_dir}/pre-flight-checks.sh check_jq_present

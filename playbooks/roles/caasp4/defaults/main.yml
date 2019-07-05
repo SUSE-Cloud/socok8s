@@ -1,3 +1,6 @@
+# path to the terraform binary
+terraform_binary_path: "{{ (lookup('env','TERRAFORM_BINARY_PATH') | default('/usr/bin/terraform', true) ) }}"
+
 # A image that is available in the OpenStack cloud. That image is used to deploy
 # CaaSP 4 with the skuba ci terraforms
 skuba_ci_terraform_image_name: "SLE-15-SP1-JeOS-GM"

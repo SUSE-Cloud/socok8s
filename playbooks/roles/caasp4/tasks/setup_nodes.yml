@@ -54,7 +54,7 @@
   register: _terraform_hidden_dir
 
 - name: Initialize terraform in the workspace dir
-  command: terraform init -input=false
+  command: "{{ terraform_binary_path }} init -input=false"
   args:
     chdir: "{{ skuba_ci_terraform_workspace }}"
   when: not _terraform_hidden_dir.stat.exists
@@ -68,11 +68,12 @@
 
 - name: Apply terraform plan in the workspace dir
   terraform:
+    binary_path: "{{ terraform_binary_path }}"
     project_path: "{{ skuba_ci_terraform_workspace }}"
     state: present
 
 - name: Get terraform output variables
-  command: terraform output -json
+  command: "{{ terraform_binary_path }} output -json"
   args:
     chdir: "{{ skuba_ci_terraform_workspace }}"
   changed_when: False
