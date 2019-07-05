@@ -26,7 +26,7 @@
     msg: "{{ _skuba_version.stdout }}{{ _skuba_version.stderr }}"
 
 - name: Get terraform output variables
-  command: terraform output -json
+  command: "{{ terraform_binary_path }} output -json"
   args:
     chdir: "{{ skuba_ci_terraform_workspace }}"
   changed_when: False

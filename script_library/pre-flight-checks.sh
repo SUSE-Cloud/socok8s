@@ -37,9 +37,9 @@ check_caasp4_skuba_available(){
 }
 check_caasp4_terraform_available(){
     echo "Checking for CaaSP 4 that terraform is available"
-    command -v terraform 1> /dev/null
+    command -v ${TERRAFORM_BINARY_PATH} 1> /dev/null
     if [ $? -ne 0 ]; then
-        echo "terraform executable not in \$PATH. Can not deploy CaaSP 4"
+        echo "${TERRAFORM_BINARY_PATH} executable not in \$PATH. Can not deploy CaaSP 4"
         exit
     fi
 }

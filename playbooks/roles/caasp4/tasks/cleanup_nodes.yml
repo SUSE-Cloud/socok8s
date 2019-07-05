@@ -30,6 +30,7 @@
 
 - name: Destroy terraform plan
   terraform:
+    binary_path: "{{ terraform_binary_path }}"
     project_path: "{{ skuba_ci_terraform_workspace }}"
     state: absent
 
