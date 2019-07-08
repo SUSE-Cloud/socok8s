@@ -56,13 +56,13 @@
 
 # TODO(toabctl): support more than one master
 - name: Bootstrap first master node
-  command: "skuba node bootstrap master-0 -s -t {{ _terraform_json_output.ip_masters.value[0] }} -u {{ skuba_ci_terraform_image_username }}"
+  command: "skuba node bootstrap master-0 -s -t {{ _terraform_json_output.ip_masters.value[0] }} -u {{ image_username }}"
   args:
     chdir: "{{ skuba_cluster_basedir }}/{{ skuba_cluster_name }}"
   when: not _skuba_cluster_status.stdout | regex_search("^master-0.*", multiline=True)
 
 - name: Join worker nodes
-  command: "skuba node join worker-{{ idx }} -r worker -s -t {{ item }} -u {{ skuba_ci_terraform_image_username }}"
+  command: "skuba node join worker-{{ idx }} -r worker -s -t {{ item }} -u {{ image_username }}"
   args:
     chdir: "{{ skuba_cluster_basedir }}/{{ skuba_cluster_name }}"
   loop: "{{ _terraform_json_output.ip_workers.value }}"

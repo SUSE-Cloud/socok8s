@@ -27,9 +27,9 @@
     src: skuba-terraform.tfvars.j2
     dest: "{{ skuba_ci_terraform_workspace }}/terraform.tfvars"
   vars:
-    image_name: "{{ skuba_ci_terraform_image_name }}"
-    image_username: "{{ skuba_ci_terraform_image_username }}"
-    image_password: "{{ skuba_ci_terraform_image_password }}"
+    image_name: "{{ skuba_ci_terraform_openstack_image_name }}"
+    image_username: "{{ skuba_ci_terraform_openstack_image_username }}"
+    image_password: "{{ skuba_ci_terraform_openstack_image_password }}"
     # NOTE(toabctl):  net/subnet/router variable names must match the names from heat-templates/openstack-network
     internal_net: "{{ socok8s_envname }}-net"
     internal_subnet: "{{ socok8s_envname }}-subnet"

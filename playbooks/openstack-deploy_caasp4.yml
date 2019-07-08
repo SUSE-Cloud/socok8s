@@ -34,3 +34,4 @@
         tasks_from: setup_k8s
       vars:
         skuba_cluster_basedir: "{{ socok8s_workspace }}"
+        image_username: "{{ skuba_ci_terraform_openstack_image_username }}"
