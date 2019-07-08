@@ -98,7 +98,8 @@ Network Requirements
     Virtual IP address will be assigned to Pods allowing ingress to Airship
     and OpenStack services. The ingress IP assignments for these services must
     be on a subnet present on the Caas Platform nodes and an IP that is
-    not currently in use. VIPs are configured in env/extravars
+    not currently in use. VIPs are configured in ``env/extravars``. See
+    :ref:`configurevips` for information about vars for VIPs.
 
 * DNS
     Installing SUSE Containerized OpenStack updates /etc/hosts on all CaaS Platform
