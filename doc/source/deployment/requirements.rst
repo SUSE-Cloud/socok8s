@@ -10,8 +10,8 @@ requirements.
 Infrastructure
 --------------
 
-* The `Deployer` must run openSUSE Leap 15.0 (**Neither Leap 15 nor Leap 15.1
-  will work**). See :ref:`setupdeployer` for required deployment tools and packages.
+* The `Deployer` must run openSUSE Leap 15.0 (**Leap 15 and Leap 15.1 will not 
+  work**). See :ref:`setupdeployer` for required deployment tools and packages.
 
   .. note::
      To install openSUSE Leap 15.0, follow the instructions at
