@@ -20,11 +20,11 @@
   any_errors_fatal: true
   vars_files:
     - "{{ playbook_dir }}/../vars/common-vars.yml"
-    - "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+    - "{{ playbook_dir }}/../vars/deploy-on-kvm.yml"
   tasks:
     - import_role:
         name: caasp4
         tasks_from: cleanup_nodes
       vars:
-        import_terraform_resources: true
+        import_terraform_resources: false
         skuba_ci_terraform_workspace: "{{ socok8s_workspace }}/skuba-terraform/"

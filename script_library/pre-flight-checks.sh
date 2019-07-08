@@ -43,7 +43,6 @@ check_caasp4_terraform_available(){
         exit
     fi
 }
-
 check_openstack_environment_is_ready_for_deploy (){
     echo "Running OpenStack pre-flight checks"
     check_openstack_env_vars_set #Do not try to grep without ensuring the vars are set

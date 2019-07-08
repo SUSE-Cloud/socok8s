@@ -33,6 +33,7 @@
         name: caasp4
         tasks_from: setup_nodes
       vars:
+        import_terraform_resources: true
         skuba_ci_terraform_worker_count: "{{ deploy_on_openstack_caasp_workers }}"
         skuba_ci_terraform_workspace: "{{ socok8s_workspace }}/skuba-terraform/"
 

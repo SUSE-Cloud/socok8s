@@ -13,6 +13,17 @@ skuba_ci_terraform_openstack_image_username: "sles"
 skuba_ci_terraform_openstack_image_password: "linux"
 
 ############################################################################
+# skuba terraform libvirt provider specific variables
+############################################################################
+# A image that is use for libvirt. That image is used to deploy
+# CaaSP 4 with the skuba ci terraforms
+skuba_ci_terraform_libvirt_image_uri: "http://download.suse.de/install/SLE-15-SP1-JeOS-GMC/SLES15-SP1-JeOS.x86_64-15.1-OpenStack-Cloud-GMC.qcow2"
+# the username to log into the image
+skuba_ci_terraform_libvirt_image_username: "sles"
+# the password to log into the image
+skuba_ci_terraform_libvirt_image_password: "linux"
+
+############################################################################
 # skuba terraform common variables
 ############################################################################
 # number of master nodes

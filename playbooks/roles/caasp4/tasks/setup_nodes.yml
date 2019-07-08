@@ -32,6 +32,7 @@
 # the same resources again
 - name: Import existing networking resources to terraform
   include_tasks: _setup_nodes_terraform_import_resources.yml
+  when: import_terraform_resources|bool
 
 - name: Apply terraform plan in the workspace dir
   terraform:

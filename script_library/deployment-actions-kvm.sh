@@ -21,6 +21,13 @@ function deploy_ses(){
 function deploy_caasp(){
     echo "This is not supported yet. Check at kubic-automation tooling."
 }
+function deploy_caasp4(){
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_available
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_available
+    echo "Starting CaaSP 4 deploy on libvirt"
+    run_ansible ${socok8s_absolute_dir}/playbooks/kvm-deploy_caasp4.yml
+    echo "CaaSP 4 deployed successfully on libvirt"
+}
 function deploy_ccp_deployer() {
     echo "This is not supported yet. Please create a node with Leap15/SLE15 manually"
 }
@@ -36,6 +43,14 @@ function remove_compute(){
     echo "Now Remove compute"
     run_ansible ${socok8s_absolute_dir}/playbooks/remove_compute.yml -e compute_node_name=$1
 }
+function clean_caasp4(){
+    if command -v ${TERRAFORM_BINARY_PATH} && [ -d submodules/skuba ]; then
+        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_available
+        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_available
+        echo "Delete CaaSP 4"
+        run_ansible ${socok8s_absolute_dir}/playbooks/kvm-delete_caasp4.yml
+    fi
+}
 function clean_kvm(){
     echo "Not implemented"
 }
@@ -44,6 +59,7 @@ function teardown(){
     then
         gather_logs
     fi
+    clean_caasp4
     clean_kvm
     clean_userfiles
 }

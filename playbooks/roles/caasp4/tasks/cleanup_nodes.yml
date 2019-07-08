@@ -26,7 +26,9 @@
 
 - name: Remove existing networking resources from terraform state
   include_tasks: _cleanup_nodes_terraform_remove_resources.yml
-  when: _terraform_state_file.stat.exists
+  when:
+    - _terraform_state_file.stat.exists
+    - import_terraform_resources|bool
 
 - name: Destroy terraform plan
   terraform:
@@ -34,7 +36,7 @@
     project_path: "{{ skuba_ci_terraform_workspace }}"
     state: absent
 
-- name: Drop skuba openstack terraform files
+- name: Drop skuba terraform files
   file:
     path: "{{ skuba_ci_terraform_workspace }}"
     state: absent
