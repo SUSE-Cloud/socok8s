@@ -15,39 +15,6 @@
 # under the License.
 #
 
-- name: Copy skuba openstack terraform files to socok8s workspace
-  copy:
-    src: "{{ playbook_dir }}/../submodules/skuba/ci/infra/openstack/"
-    dest: "{{ skuba_ci_terraform_workspace }}"
-    mode: 0775
-    force: no
-
-- name: Create a terraform variable file
-  template:
-    src: skuba-terraform.tfvars.j2
-    dest: "{{ skuba_ci_terraform_workspace }}/terraform.tfvars"
-  vars:
-    image_name: "{{ skuba_ci_terraform_openstack_image_name }}"
-    image_username: "{{ skuba_ci_terraform_openstack_image_username }}"
-    image_password: "{{ skuba_ci_terraform_openstack_image_password }}"
-    # NOTE(toabctl):  net/subnet/router variable names must match the names from heat-templates/openstack-network
-    internal_net: "{{ socok8s_envname }}-net"
-    internal_subnet: "{{ socok8s_envname }}-subnet"
-    internal_router: "{{ socok8s_envname }}-router"
-    external_net: "{{ deploy_on_openstack_external_network }}"
-    stack_name: "{{ socok8s_envname }}-caasp4"
-    subnet_cidr: "{{ deploy_on_openstack_internal_subnet_cidr }}"
-    master_count: "{{ skuba_ci_terraform_master_count }}"
-    master_flavor: "{{ skuba_ci_terraform_master_flavor }}"
-    worker_count: "{{ skuba_ci_terraform_worker_count }}"
-    worker_flavor: "{{ skuba_ci_terraform_worker_flavor }}"
-    authorized_keys: "{{ skuba_ci_terraform_autorized_keys_files }}"
-    ntp_servers:
-      - "0.novell.pool.ntp.org"
-      - "1.novell.pool.ntp.org"
-      - "2.novell.pool.ntp.org"
-      - "3.novell.pool.ntp.org"
-
 - name: Hidden terraform dir available
   stat:
     path: "{{ skuba_ci_terraform_workspace }}/.terraform"
