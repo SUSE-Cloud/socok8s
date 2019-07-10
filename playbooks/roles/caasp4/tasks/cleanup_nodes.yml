@@ -19,6 +19,11 @@
 # stack in setup_nodes.yml so we need to remove the resources again from
 # terraform state and let heat handle the reource cleanup
 
+- name: Does the terraform workspace exist
+  stat:
+    path: skuba_ci_terraform_workspace
+  register: _terraform_workspace
+
 - name: Does the terraform state exist
   stat:
     path: "{{ skuba_ci_terraform_workspace }}/terraform.tfstate"
@@ -33,6 +38,7 @@
     binary_path: "{{ terraform_binary_path }}"
     project_path: "{{ skuba_ci_terraform_workspace }}"
     state: absent
+  when: _terraform_workspace.stat.exists
 
 - name: Drop skuba openstack terraform files
   file:
