@@ -73,7 +73,7 @@ We recommend two ways of installing the SUSE Containerized OpenStack software.
    b. sudo zypper addrepo --refresh iso:///?iso=/home/stack/openSUSE-Addon-socok8s-x86_64-Media.iso socok8s-iso
    c. sudo zypper install socok8s
 
-2. (For developers only) Clone the repository.
+2. (Intended for developers only) Clone the repository.
 
    The following software must be manually installed on your `Deployer` using zypper or pip install:
 
@@ -91,8 +91,7 @@ We recommend two ways of installing the SUSE Containerized OpenStack software.
    After the required packages are installed, clone
    `socok8s GitHub repository <https://github.com/SUSE-Cloud/socok8s>`_.
    This repository uses submodules, which have additional code needed for the
-   playbooks to work. Required dependencies must be installed manually.
-   **Intended for developers**.
+   playbooks to work.
 
    ::
 
@@ -109,7 +108,7 @@ SSH Key Preparation
 -------------------
 
 Create an SSH key on the Deployer node, and add the public key to each CaaS
-Platform worker node.
+Platform worker node and the Deployer node itself.
 
 .. note ::
 
