@@ -10,11 +10,11 @@ requirements.
 Infrastructure
 --------------
 
-* The `Deployer` must run openSUSE Leap 15 or SUSE Linux Enterprise 15. See
-  :ref:`setupdeployer` for required deployment tools and packages.
+* The `Deployer` must run openSUSE Leap 15.0. See :ref:`setupdeployer` for
+  required deployment tools and packages.
 
   .. note::
-     To install openSUSE Leap 15, follow the instructions at
+     To install openSUSE Leap 15.0, follow the instructions at
      https://software.opensuse.org/distributions/leap.
 
 * The :term:`CaaS Platform` cluster must run the latest :term:`CaaS Platform`
@@ -98,7 +98,8 @@ Network Requirements
     Virtual IP address will be assigned to Pods allowing ingress to Airship
     and OpenStack services. The ingress IP assignments for these services must
     be on a subnet present on the Caas Platform nodes and an IP that is
-    not currently in use. VIPs are configured in env/extravars
+    not currently in use. VIPs are configured in ``env/extravars``. See
+    :ref:`configurevips` for information about vars for VIPs.
 
 * DNS
     Installing SUSE Containerized OpenStack updates /etc/hosts on all CaaS Platform
