@@ -1,0 +1,41 @@
+---
+#
+# (c) Copyright 2019 SUSE Linux GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+
+- name: Copy skuba libvirt terraform files to socok8s workspace
+  copy:
+    src: "{{ playbook_dir }}/../submodules/skuba/ci/infra/libvirt/"
+    dest: "{{ skuba_ci_terraform_workspace }}"
+    mode: 0775
+    force: no
+
+- name: Create a terraform variable file for libvirt
+  template:
+    src: skuba-terraform-libvirt.tfvars.j2
+    dest: "{{ skuba_ci_terraform_workspace }}/terraform.tfvars"
+  vars:
+    image_uri: "{{ skuba_ci_terraform_libvirt_image_uri }}"
+    image_username: "{{ skuba_ci_terraform_libvirt_image_username }}"
+    image_password: "{{ skuba_ci_terraform_libvirt_image_password }}"
+    stack_name: "{{ socok8s_envname }}-caasp4"
+    master_count: "{{ skuba_ci_terraform_master_count }}"
+    worker_count: "{{ skuba_ci_terraform_worker_count }}"
+    authorized_keys: "{{ skuba_ci_terraform_autorized_keys_files }}"
+    ntp_servers:
+      - "0.novell.pool.ntp.org"
+      - "1.novell.pool.ntp.org"
+      - "2.novell.pool.ntp.org"
+      - "3.novell.pool.ntp.org"

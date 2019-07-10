@@ -24,8 +24,16 @@
   tasks:
     - import_role:
         name: caasp4
+        tasks_from: setup_terraform_workspace_openstack
+      vars:
+        skuba_ci_terraform_worker_count: "{{ deploy_on_openstack_caasp_workers }}"
+        skuba_ci_terraform_workspace: "{{ socok8s_workspace }}/skuba-terraform/"
+
+    - import_role:
+        name: caasp4
         tasks_from: setup_nodes
       vars:
+        import_terraform_resources: true
         skuba_ci_terraform_worker_count: "{{ deploy_on_openstack_caasp_workers }}"
         skuba_ci_terraform_workspace: "{{ socok8s_workspace }}/skuba-terraform/"
 
@@ -34,3 +42,4 @@
         tasks_from: setup_k8s
       vars:
         skuba_cluster_basedir: "{{ socok8s_workspace }}"
+        image_username: "{{ skuba_ci_terraform_openstack_image_username }}"

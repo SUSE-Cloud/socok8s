@@ -20,11 +20,26 @@
   any_errors_fatal: true
   vars_files:
     - "{{ playbook_dir }}/../vars/common-vars.yml"
-    - "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+    - "{{ playbook_dir }}/../vars/deploy-on-kvm.yml"
   tasks:
     - import_role:
         name: caasp4
-        tasks_from: cleanup_nodes
+        tasks_from: setup_terraform_workspace_libvirt
       vars:
-        import_terraform_resources: true
+        skuba_ci_terraform_worker_count: "{{ deploy_on_kvm_caasp_workers }}"
         skuba_ci_terraform_workspace: "{{ socok8s_workspace }}/skuba-terraform/"
+
+    - import_role:
+        name: caasp4
+        tasks_from: setup_nodes
+      vars:
+        import_terraform_resources: false
+        skuba_ci_terraform_worker_count: "{{ deploy_on_kvm_caasp_workers }}"
+        skuba_ci_terraform_workspace: "{{ socok8s_workspace }}/skuba-terraform/"
+
+    - import_role:
+        name: caasp4
+        tasks_from: setup_k8s
+      vars:
+        skuba_cluster_basedir: "{{ socok8s_workspace }}"
+        image_username: "{{ skuba_ci_terraform_libvirt_image_username }}"
