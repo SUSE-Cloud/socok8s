@@ -76,17 +76,17 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK for VIP entries"
     block: |
       # UCP service public end points
-      {{ dcm_vip }} keystone.ucp.svc.cluster.local keystone-api.ucp.svc.cluster.local
-      {{ dcm_vip }} barbican.ucp.svc.cluster.local barbican-api.ucp.svc.cluster.local
-      {{ dcm_vip }} shipyard.ucp.svc.cluster.local
+      {{ ext_vip }} keystone.ucp.svc.cluster.local keystone-api.ucp.svc.cluster.local
+      {{ ext_vip }} barbican.ucp.svc.cluster.local barbican-api.ucp.svc.cluster.local
+      {{ ext_vip }} shipyard.ucp.svc.cluster.local
       # Openstack admin service and internal endpoints
-      {{ dcm_vip }} identity-api.openstack.svc.cluster.local
-      {{ dcm_vip }} image-api.openstack.svc.cluster.local
-      {{ dcm_vip }} volume-api.openstack.svc.cluster.local
-      {{ dcm_vip }} compute-api.openstack.svc.cluster.local
-      {{ dcm_vip }} network-api.openstack.svc.cluster.local
-      {{ dcm_vip }} dashboard-api.openstack.svc.cluster.local
-      {{ dcm_vip }} orchestration-api.openstack.svc.cluster.local
+      {{ ext_vip }} identity-api.openstack.svc.cluster.local
+      {{ ext_vip }} image-api.openstack.svc.cluster.local
+      {{ ext_vip }} volume-api.openstack.svc.cluster.local
+      {{ ext_vip }} compute-api.openstack.svc.cluster.local
+      {{ ext_vip }} network-api.openstack.svc.cluster.local
+      {{ ext_vip }} dashboard-api.openstack.svc.cluster.local
+      {{ ext_vip }} orchestration-api.openstack.svc.cluster.local
       # Openstack service public endpoints
       {{ ext_vip }} identity.openstack.svc.cluster.local
       {{ ext_vip }} image.openstack.svc.cluster.local

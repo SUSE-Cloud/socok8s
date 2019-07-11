@@ -1,9 +1,6 @@
 ---
 # defaults file for suse-airship-deploy
 
-# IP on the Data Center Management (DCM) network
-dcm_vip: null
-
 # IP on the external network
 ext_vip: null
 

@@ -8,7 +8,6 @@
   roles:
     - role: airship-setup-deployer
       vars:
-        dcm_vip: "{{ socok8s_dcm_vip }}"
         ext_vip: "{{ socok8s_ext_vip }}"
         zypper_extra_repos:
           socok8s: "{{ socok8s_repos_to_configure['socok8s'] }}"

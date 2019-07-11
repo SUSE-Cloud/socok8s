@@ -30,7 +30,6 @@ The following configuration files reflect the diagram above.
 
     socok8s_deployment_goal: airship
     socok8s_ext_vip: 172.30.0.245
-    socok8s_dcm_vip: 172.30.0.246
     #either "minimal" or "ha"
     scale_profile: minimal
     redeploy_osh_only: false

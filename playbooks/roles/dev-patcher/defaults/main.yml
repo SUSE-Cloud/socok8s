@@ -7,7 +7,4 @@ dev_patcher_packages:
 #merged patches will be skipped
 #unrelated patches will fail (because not cloned)
 #conflicting patches will fail (because need resolving)
-dev_patcher_patches:
-  # osh-infra: Add support for mulitple VIPS
-  - - 640115
-    - acdab0cd7f7c4c718d09029e4fb2722f616ecf4b
+dev_patcher_patches: []

@@ -115,20 +115,6 @@ For example:
    socok8s_ext_vip: "10.10.10.10"
 
 
-Configure the VIP that will be used for Airship UCP service endpoints
----------------------------------------------------------------------
-
-Add `socok8s_dcm_vip:` with its appropriate value for your environment in your
-`env/extravars`. This should be an available IP on the data center management
-(DCM) network (in a development environment, it can be the same as a CaaSP
-cluster network).
-
-For example:
-
-.. code-block:: yaml
-
-   socok8s_dcm_vip: "192.168.51.35"
-
 Provide a kubeconfig file
 -------------------------
 

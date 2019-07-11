@@ -9,18 +9,6 @@ SES network configuration have their own respective documentation.
 .. nwdiag::
 
    nwdiag {
-     network dcm {
-       address = "172.30.0.x/24"
-       deployer [address = "172.30.0.10"];
-       group caasp {
-           color = "#EEEEEE";
-           caasp-admin [address = "172.30.0.11"];
-           caasp-master [address = "172.30.0.12"];
-           caasp-worker1 [address = "172.30.0.13"];
-           caasp-worker2 [address = "172.30.0.14"];
-       }
-       ses [address = "172.30.0.15"];
-     }
 
      network storage {
        address = "172.30.2.x/24"
@@ -48,7 +36,6 @@ The following configuration files reflect the diagram above.
 
     socok8s_deployment_goal: airship
     socok8s_ext_vip: 172.30.1.245
-    socok8s_dcm_vip: 172.30.0.246
     #either "minimal" or "ha"
     scale_profile: minimal
     redeploy_osh_only: false

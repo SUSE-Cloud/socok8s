@@ -8,7 +8,6 @@ suse_osh_deploy_ceph_mons: ['192.168.50.10:6789']
 
 
 socok8s_ext_vip: 10.10.1.100
-socok8s_dcm_vip: 192.168.89.251
 #either "minimal" or "ha"
 scale_profile: ha
 redeploy_osh_only: false
