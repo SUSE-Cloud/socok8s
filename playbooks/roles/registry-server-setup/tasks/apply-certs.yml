@@ -4,6 +4,7 @@
   copy:
     src: "{{ suse_registry_certs_dir }}/domain.crt"
     dest: "/etc/pki/trust/anchors"
+  delegate_to: "{{ groups['soc-deployer'][0] }}"
   become: yes
   register: _copy_ssc_result
 
