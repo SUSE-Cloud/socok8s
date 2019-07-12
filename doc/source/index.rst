@@ -11,7 +11,7 @@ SUSE Enterprise Storage (SES), using Airship, shell scripts, and Ansible playboo
    deployment/index.rst
    operations.rst
    user/index.rst
-   contributor.rst
+   contributor/index.rst
    reference.rst
    glossary.rst
    suse-ecp/index.rst
