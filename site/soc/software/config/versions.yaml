@@ -83,6 +83,12 @@ data:
         reference: 3811eedefe92f1df6c1d31a366773b9a6dce0b7b
         subpath: tempest
         type: git
+    ucp:
+      shipyard:
+        location: https://opendev.org/airship/shipyard
+        reference: 6a54c628281eaad8526ca1a4dd28f79c3ad23405
+        subpath: charts/shipyard
+        type: git
   images:
     calico:
       calico: {}
