@@ -24,6 +24,7 @@ function deploy_caasp(){
 function deploy_caasp4(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_dir_available
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_available
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_ssh_agent_running
     echo "Starting CaaSP 4 deploy on libvirt"
     run_ansible ${socok8s_absolute_dir}/playbooks/kvm-deploy_caasp4.yml
     echo "CaaSP 4 deployed successfully on libvirt"
