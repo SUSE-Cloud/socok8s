@@ -94,6 +94,20 @@ Network Requirements
     separate network should be present on the Caas Platform and ses_config.yml
     mon_host: section.
 
+* Tunnel Network
+    A network defined by its network interface. It must be up and have an IP
+    address defined. This is used for tunneling VXLAN traffic for tenant VMs
+    within the cloud.
+
+* External Network
+    A network defined by its network interface. This interface should not have
+    an IP address defined (will not be accessible when cloud deployed). The
+    network interface should be configured 'BOOTPROTO=none' and active.
+
+  .. note::
+     If installing on VMware infrastructure, make sure this network has
+     security set to allow promiscuous mode and forged transmit.
+
 * VIP for Airship and OpenStack
     Virtual IP address will be assigned to Pods allowing ingress to Airship
     and OpenStack services. The ingress IP assignments for these services must
