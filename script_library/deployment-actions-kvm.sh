@@ -22,7 +22,7 @@ function deploy_caasp(){
     echo "This is not supported yet. Check at kubic-automation tooling."
 }
 function deploy_caasp4(){
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_available
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_dir_available
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_available
     echo "Starting CaaSP 4 deploy on libvirt"
     run_ansible ${socok8s_absolute_dir}/playbooks/kvm-deploy_caasp4.yml
@@ -45,7 +45,7 @@ function remove_compute(){
 }
 function clean_caasp4(){
     if command -v ${TERRAFORM_BINARY_PATH} && [ -d submodules/skuba ]; then
-        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_available
+        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_dir_available
         source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_available
         echo "Delete CaaSP 4"
         run_ansible ${socok8s_absolute_dir}/playbooks/kvm-delete_caasp4.yml

@@ -34,10 +34,17 @@ check_openstack_env_vars_set (){
     fi
 }
 
-check_caasp4_skuba_available(){
+check_caasp4_skuba_dir_available(){
     echo "Checking for CaaSP 4 that SUSE/skuba is available"
     if ! [ -d submodules/skuba ]; then
         echo "submodules/skuba directory not available. Can not deploy CaaSP 4"
+        exit
+    fi
+}
+check_caasp4_skuba_available(){
+    echo "Checking for CaaSP 4 that skuba is available"
+    if ! rpm -q --quiet skuba; then
+        echo "skuba package is not installed. Can not deploy CaaSP 4"
         exit
     fi
 }
