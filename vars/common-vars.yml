@@ -140,3 +140,5 @@ scale_profile: "{{ lookup('env','scale_profile') | default('minimal', true) }}"
 
 #Set timeout for helm cleanup.
 helm_delete_timeout: 900
+
+caasp4_deployed: false

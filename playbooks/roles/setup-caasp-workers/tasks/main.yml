@@ -12,6 +12,8 @@
 
 - name: Subvolumes setup on control plane worker nodes
   import_tasks: subvolumes-setup.yml
+  when:
+    - not caasp4_deployed
   tags:
     - preinstall
 
