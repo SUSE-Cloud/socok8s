@@ -142,3 +142,6 @@ scale_profile: "{{ lookup('env','scale_profile') | default('minimal', true) }}"
 helm_delete_timeout: 900
 
 caasp4_deployed: false
+
+# Location of the kubeconfig file, fetched from velum UI (CaaSP3) or copied from cluster setup dir (CaaSP4)
+kubeconfig_file_path: "{{ socok8s_deploy_config_location }}/kubeconfig"
