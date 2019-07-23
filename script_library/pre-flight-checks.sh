@@ -5,6 +5,12 @@ check_common_env_vars_set (){
     if [ -z ${SOCOK8S_ENVNAME+x} ]; then
         echo "No SOCOK8S_ENVNAME given. export SOCOK8S_ENVNAME=... for setting a env name" && exit 1
     fi
+
+    invalid_chars=" ."
+    if [[ ! "${SOCOK8S_ENVNAME}" =~ ^[^$invalid_chars]+$ ]]; then
+        echo "SOCOK8S_ENVNAME contains one or more of the following invalid characters: \"$invalid_chars\"" && exit 1
+    fi
+
     # NOTE(toabctl): SOCOK8S_WORKSPACE_BASEDIR is always set in run.sh
     if [ -z ${SOCOK8S_WORKSPACE_BASEDIR+x} ]; then
         echo "No SOCOK8S_WORKSPACE_BASEDIR given. export SOCOK8S_WORKSPACE_BASEDIR=... for setting a directory" && exit 1
