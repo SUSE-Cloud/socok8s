@@ -185,6 +185,7 @@ The following is an example if you are running on an "engcloud":
    clouds:
      engcloud:
        region_name: CustomRegion
+       insecure: False
        auth:
          auth_url: https://keystone_url/v3
          username: john # your username here
