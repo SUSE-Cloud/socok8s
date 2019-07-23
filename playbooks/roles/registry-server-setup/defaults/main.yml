@@ -14,4 +14,3 @@ suse_registry_create_certs: true
 
 suse_registry_setup_packages:
   - docker
-  - python-pyOpenSSL

@@ -31,12 +31,17 @@ deploy_on_openstack_osh_repos_per_imagename:
     - Leap15develtools
     - socok8s
   SLE-15-SP1-JeOS-GM:
-    - SLE-15-SP1-JeOS-GM-Full
-    - SLE-15-SP1-JeOS-GM-Update
-    - SLE-15-SP1-JeOS-GM-backports
-    - SLE-15-SP1-JeOS-GM-openstack-master
-    - SLE-15-SP1-JeOS-GM-ruby
-    - SLE-15-SP1-JeOS-GM-rubyextensions
+    - SLES-15-SP1-Product
+    - SLES-15-SP1-Product-Update
+    - SLES-15-SP1-backports
+    - SLE-15-SP1-Module-BaseSystem
+    - SLE-15-SP1-Module-BaseSystem-Update
+    - SLE-15-SP1-Module-Legacy
+    - SLE-15-SP1-Module-Legacy-Update
+    - SLE-15-SP1-Module-Containers
+    - SLE-15-SP1-Module-Containers-Update
+    - SLE-15-SP1-Module-Public-Cloud
+    - SLE-15-SP1-Module-Public-Cloud-Update
     - socok8s_SLE15SP1
 
 deploy_on_openstack_caasp_repos_per_imagename:

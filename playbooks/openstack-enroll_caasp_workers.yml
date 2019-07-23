@@ -30,7 +30,7 @@
       retries: 5
       vars:
         velum_automation_host_packages:
-          - git
+          - git-core
           - gcc
           - make
           - jq

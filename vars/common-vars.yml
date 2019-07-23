@@ -20,7 +20,8 @@ suse_infra_image_version: "latest-opensuse_15"
 suse_osh_openstack_release: "rocky"
 
 obs_mirror: "{{ lookup('env','SOCOK8S_OPENSUSE_MIRROR') | default('https://download.opensuse.org', true) }}"
-ibs_mirror: http://ibs-mirror.prv.suse.net
+ibs_mirror: http://ibs-mirror.prv.suse.net/ibs
+dist_mirror: http://ibs-mirror.prv.suse.net/dist
 
 socok8s_repos_to_configure:
   SLE12SP3-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Pool/
@@ -31,20 +32,23 @@ socok8s_repos_to_configure:
   openSUSE-Leap-15.0-Update: "{{ obs_mirror }}/update/leap/15.0/oss/"
   openSUSE-Leap-15.0-Cloud: "{{ obs_mirror }}/repositories/Cloud:/Tools/openSUSE_Leap_15.0/"
   Leap15develtools: "{{ obs_mirror }}/repositories/devel:/tools/openSUSE_Leap_15.0/"
-  SLE-15-SP1-JeOS-GM-Full: http://download.suse.de/full/full-sle15-sp1-x86_64/
-  SLE-15-SP1-JeOS-GM-Update: http://download.suse.de/ibs/SUSE:/SLE-15-SP1:/Update/standard/
+  SLES-15-SP1-Product: "{{ ibs_mirror }}/SUSE/Products/SLE-Product-SLES/15-SP1/x86_64/product/"
+  SLES-15-SP1-Product-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Product-SLES/15-SP1/x86_64/update/"
+  SLE-15-SP1-Module-BaseSystem: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Basesystem/15-SP1/x86_64/product/"
+  SLE-15-SP1-Module-BaseSystem-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Basesystem/15-SP1/x86_64/update/"
+  # needed for phantomjs, can be removed with CaaSP4
+  SLE-15-SP1-Module-Legacy: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Legacy/15-SP1/x86_64/product/"
+  SLE-15-SP1-Module-Legacy-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Legacy/15-SP1/x86_64/update/"
+  SLE-15-SP1-Module-Containers: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Containers/15-SP1/x86_64/product/"
+  SLE-15-SP1-Module-Containers-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Containers/15-SP1/x86_64/update/"
+  SLE-15-SP1-Module-Public-Cloud: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Public-Cloud/15-SP1/x86_64/product/"
+  SLE-15-SP1-Module-Public-Cloud-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Public-Cloud/15-SP1/x86_64/update/"
   # needed for python-barbicanclient
-  SLE-15-SP1-JeOS-GM-backports: "https://download.opensuse.org/repositories/openSUSE:/Backports:/SLE-15-SP1/standard/"
-  # needed for ruby2.5-devel
-  SLE-15-SP1-JeOS-GM-ruby: "https://download.opensuse.org/repositories/devel:/languages:/ruby/SLE_15_SP1/"
-  # needed for ruby2.5-rubygem-bundler
-  SLE-15-SP1-JeOS-GM-rubyextensions: "https://download.opensuse.org/repositories/devel:languages:ruby:extensions/SLE_15_SP1/"
-  # phantomjs
-  SLE-15-SP1-JeOS-GM-openstack-master: "https://download.opensuse.org/repositories/Cloud:/OpenStack:/Master/SLE_15_SP1/"
+  SLES-15-SP1-backports: "https://download.opensuse.org/repositories/openSUSE:/Backports:/SLE-15-SP1/standard/"
   socok8s: "{{ obs_mirror }}/repositories/Cloud:/socok8s:/master/openSUSE_Leap_15.0/"
   socok8s_SLE15SP1: "https://download.opensuse.org/repositories/Cloud:/socok8s:/master/SLE_15_SP1/"
-  CAASP30-update: "{{ ibs_mirror }}/dist/ibs/SUSE/Updates/SUSE-CAASP/3.0/x86_64/update/"
-  CAASP30-pool: "{{ ibs_mirror }}/dist/ibs/SUSE/Products/SUSE-CAASP/3.0/x86_64/product/"
+  CAASP30-update: "{{ dist_mirror }}/ibs/SUSE/Updates/SUSE-CAASP/3.0/x86_64/update/"
+  CAASP30-pool: "{{ dist_mirror }}/ibs/SUSE/Products/SUSE-CAASP/3.0/x86_64/product/"
 
 ######################################################
 # Following variables are used by airship logic only

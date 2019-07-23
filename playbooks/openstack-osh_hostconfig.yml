@@ -42,7 +42,6 @@
         autorefresh: True
         auto_import_keys: yes
         state: present
-        disable_gpg_check: yes
       loop: "{{ deploy_on_openstack_osh_repos_per_imagename[deploy_on_openstack_oshnode_image] }}"
 
     - name: Add known vendors
@@ -50,7 +49,7 @@
         path: /etc/zypp/vendors.d/opensuse
         block: |
           [main]
-          vendors = suse,opensuse,obs://build.opensuse.org/Cloud:OpenStack,obs://build.opensuse.org/devel:languages:python,obs://build.opensuse.org/Cloud,obs://build.opensuse.org/devel:languages:ruby
+          vendors = suse,opensuse,obs://build.opensuse.org/Cloud:OpenStack,obs://build.opensuse.org/Cloud
         create: yes
 
     - name: Zypper dist-upgrade

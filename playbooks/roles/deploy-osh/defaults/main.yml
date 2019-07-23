@@ -13,7 +13,7 @@ suse_osh_deploy_packages:
   - python3-pip
   - python3-devel
   - autoconf
-  - git
+  - git-core
   - gcc
   - make
   - jq
