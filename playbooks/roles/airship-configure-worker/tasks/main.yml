@@ -7,7 +7,7 @@
     - add_compute_node
 
 - name: Enroll node for Airship kube-system ingress
-  shell: "kubectl label nodes {{ inventory_hostname }} kube-ingress=enabled"
+  command: "kubectl label nodes {{ ansible_hostname }} kube-ingress=enabled"
   when: ('airship-kube-system-workers' in group_names)
   register: _enrollforucp
   changed_when:
@@ -19,7 +19,7 @@
     - skip_ansible_lint
 
 - name: Enroll node for Airship UCP
-  shell: "kubectl label nodes {{ inventory_hostname }} ucp-control-plane=enabled"
+  command: "kubectl label nodes {{ ansible_hostname }} ucp-control-plane=enabled"
   when: ('airship-ucp-workers' in group_names)
   register: _enrollforucp
   changed_when:
@@ -31,9 +31,7 @@
     - skip_ansible_lint
 
 - name: Enroll node for Airship Openstack control plane
-  shell: |
-    kubectl label nodes {{ inventory_hostname }} openstack-control-plane=enabled
-    kubectl label nodes {{ inventory_hostname }} openvswitch=enabled
+  command: "kubectl label nodes {{ ansible_hostname }} openstack-control-plane=enabled openvswitch=enabled"
   when: ('airship-openstack-control-workers' in group_names)
   register: _enrollforopenstackcp
   changed_when:
@@ -45,8 +43,8 @@
     - skip_ansible_lint
 
 - name: Enroll node for Airship Openstack L3 agent
-  shell: |
-    kubectl label nodes {{ inventory_hostname }} openstack-l3-agent=enabled
+  command: |
+    kubectl label nodes {{ ansible_hostname }} openstack-l3-agent=enabled
   when: ('airship-openstack-l3-agent-workers' in group_names)
   register: _enrollforopenstackl3agent
   changed_when:
@@ -58,9 +56,7 @@
     - skip_ansible_lint
 
 - name: Enroll node for Airship Openstack compute plane
-  shell: |
-    kubectl label nodes {{ inventory_hostname }} openstack-compute-node=enabled
-    kubectl label nodes {{ inventory_hostname }} openvswitch=enabled
+  command: "kubectl label nodes {{ ansible_hostname }} openstack-compute-node=enabled openvswitch=enabled"
   when: ('airship-openstack-compute-workers' in group_names)
   register: _enrollforopenstackcomp
   changed_when:
@@ -73,8 +69,8 @@
     - add_compute_node
 
 - name: Enroll node for Airship Openstack control plane primary class
-  shell: |
-    kubectl label nodes {{ inventory_hostname }} openstack-helm-node-class=primary
+  command: |
+    kubectl label nodes {{ ansible_hostname }} openstack-helm-node-class=primary
   when:
     - ('airship-openstack-control-workers' in group_names)
     - hostvars[inventory_hostname].primary is defined
