@@ -21,6 +21,8 @@ repositories = {
     sle15_pool = "http://download.suse.de/ibs/SUSE:/SLE-15:/GA/standard/"
     sle15_update = "http://download.suse.de/ibs/SUSE:/SLE-15:/Update/standard/"
     suse_ca = "http://download.suse.de/ibs/SUSE:/CA/SLE_15_SP1/"
+    # TODO remove once updated ceph-common is present in sle15sp1_update (bsc#1142674)
+    ses_update_sle15sp1 = "http://download.suse.de/ibs/SUSE:/SLE-15-SP1:/Update:/Products:/SES6/standard/"
 }
 
 packages = [
@@ -28,6 +30,7 @@ packages = [
   "-kernel-default-base",
   "ca-certificates-suse",
   "patterns-caasp-Node",
+  "ceph-common"
 ]
 
 authorized_keys = [
