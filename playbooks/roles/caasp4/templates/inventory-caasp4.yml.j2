@@ -22,6 +22,12 @@ airship-openstack-control-workers:
 airship-ucp-workers:
   hosts: *firsttwoworkers
 
+airship-openstack-l3-agent-workers:
+  hosts: *firsttwoworkers
+
+airship-kube-system-workers:
+  hosts: *firsttwoworkers
+
 airship-openstack-compute-workers:
   hosts:
 {% for worker_ip in _terraform_json_output.ip_workers.value %}
@@ -29,6 +35,3 @@ airship-openstack-compute-workers:
     {{ worker_ip }}
 {% endif %}
 {% endfor %}
-
-airship-kube-system-workers:
-  hosts: *firsttwoworkers
