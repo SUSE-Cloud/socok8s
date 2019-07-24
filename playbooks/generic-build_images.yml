@@ -17,19 +17,19 @@
         - upstream_patching
 
     # The certificate generated before also needs to be known by the soc-deployer
-    - name: If developer mode, configure soc-deployer to include certs
-      include_role:
-        name: setup-caasp-workers
-        tasks_from: copy-certificates
-      when:
-        - developer_mode
-
     - name: If developer mode, install docker
       include_role:
         name: install-docker
         apply:
           tags:
             - docker
+      when:
+        - developer_mode
+
+    - name: If developer mode, configure soc-deployer to include certs
+      include_role:
+        name: setup-caasp-workers
+        tasks_from: copy-certificates
       when:
         - developer_mode
 
