@@ -8,16 +8,15 @@ base_env_vars:
   OSH_INFRA_PATH: /opt/openstack/openstack-helm-infra
 
 suse_osh_deploy_packages:
-  - python-setuptools
-  - python-virtualenv
-  - python-pip
-  - python-devel
+  - python3-setuptools
+  - python3-virtualenv
+  - python3-pip
+  - python3-devel
   - autoconf
-  - git
+  - git-core
   - gcc
   - make
   - jq
-  - rng-tools
   - curl #after this line these are the packages required for osh deploy itself
   - python-selinux
   - ceph-common
