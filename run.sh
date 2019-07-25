@@ -35,8 +35,9 @@ if [[ "${SOCOK8S_DEVELOPER_MODE:-False}" == "True" ]]; then
 fi
 
 # USE an env var to setup where to deploy to
-# by default, ccp will deploy on openstack for inception style fun (and CI).
+# by default, ccp will deploy on kvm
 DEPLOYMENT_MECHANISM=${DEPLOYMENT_MECHANISM:-"kvm"}
+export DEPLOYMENT_MECHANISM
 
 # The base directory where workspace(s) are created in
 SOCOK8S_WORKSPACE_BASEDIR=${SOCOK8S_WORKSPACE_BASEDIR:-~}

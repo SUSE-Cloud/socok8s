@@ -5,6 +5,9 @@
   tags:
     - always
 
+- name: Prepare enviroment for running tempest tests
+  include: prepare-tempest.yml
+
 - name: Set site path
   set_fact:
     site_path: "{{ upstream_repos_clone_folder }}/airship/treasuremap/site/{{ socok8s_site_name }}"
@@ -104,16 +107,51 @@
     - "'not found' not in helm_result.stderr"
   changed_when: helm_result.stdout is search('deleted')
 
-- name: Update site software via Shipyard
-  include_role:
-    name: airship-deploy-osh
-    apply:
-      tags:
-        - update_airship_osh_site
+- name: Update site software via Shipyard to configure and execute tempest tests
+  block:
+    - include_role:
+        name: airship-deploy-osh
+        apply:
+          tags:
+            - update_airship_osh_site
 
-- name: Check tempest run output
-  debug:
-    msg:
-      - "Tempest job execution is completed. Check the output of this tempest run for details"
-      - "kubectl logs -n openstack <tempest-run_pod_name>"
+  always:
+    - name: Get latest tempest run pod name if there
+      command: kubectl get pods -n openstack -l application=tempest,component=run-tests --sort-by=.metadata.creationTimestamp --no-headers -o jsonpath="{.items[-1:].metadata.name}"
+      ignore_errors: yes
+      register: _tempest_run_pod_name
 
+    - name: Log if missing tempest run pod
+      debug:
+        msg:
+          - "Tempest test execution pod not found (likely some software update error)."
+          - "Check kubernetes artifact logs for details."
+          - "You can gather artifact logs via following command if needed"
+          - "./run.sh gather_logs"
+      when:
+        - _tempest_run_pod_name.rc != 0
+
+    - name: Gather logs from tempest pods if there
+      command: "kubectl logs -n openstack {{ _tempest_run_pod_name.stdout }}"
+      register: _tempest_logs_out
+      when:
+        - _tempest_run_pod_name.rc == 0
+        - print_tempest_log
+
+    - name: Show command for gathering tempest logs
+      debug:
+        msg:
+          - "Tempest job execution is completed. Check the output of this tempest run for details"
+          - "kubectl logs -n openstack {{ _tempest_run_pod_name.stdout }}"
+      when:
+        - _tempest_run_pod_name.rc == 0
+        - not print_tempest_log
+
+    - name: Show tempest logs after tempest job execution
+      debug:
+        msg:
+          - "Tempest job execution is completed. Check follwing output for any tempest test failures"
+          - "{{ _tempest_logs_out.stdout_lines }}"
+      when:
+        - _tempest_run_pod_name.rc == 0
+        - print_tempest_log

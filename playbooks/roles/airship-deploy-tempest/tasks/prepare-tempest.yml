@@ -1,0 +1,85 @@
+---
+- name: Get deployment mechanism value
+  set_fact:
+    deployment_mechanism: "{{ lookup('env', 'DEPLOYMENT_MECHANISM') }}"
+  tags:
+    - always
+
+- name: Load openstack mechanism variables
+  include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+  when:
+    - deployment_mechanism == 'openstack'
+  tags:
+    - always
+
+- name: Get tempest network cidr and test type for its execution
+  set_fact:
+    openstack_project_network_cidr: "{{ deploy_on_openstack_internal_subnet_cidr }}"
+    # env variable is used to pass test type from CI. If that is not set, then use value via extravars
+    # variable or ansible variable default value
+    tempest_test_type: "{{ lookup('env', 'TEMPEST_TEST_TYPE') | default(tempest_test_type, true) }}"
+  when:
+    - deployment_mechanism == 'openstack'
+
+- name: Print tempest project and external network cidr value
+  debug:
+    msg:
+    - "openstack_project_network_cidr = {{ openstack_project_network_cidr }}"
+    - "openstack_external_network_cidr = {{ openstack_external_network_cidr }}"
+
+- name: Make sure that tempest project network cidr is present and correctly defined
+  assert:
+    that:
+      - openstack_project_network_cidr | default(false, true)
+      - openstack_project_network_cidr.split('/') | length == 2
+      - openstack_project_network_cidr.split('/')[1] | int(-1) != -1
+    fail_msg: "Required tempest network CIDR value for 'openstack_project_network_cidr' is missing or has invalid format"
+
+- name: Make sure that tempest external network cidr is correctly defined if set
+  assert:
+    that:
+      - openstack_external_network_cidr.split('/') | length == 2
+      - openstack_external_network_cidr.split('/')[1] | int(-1) != -1
+    fail_msg: "Provided tempest network CIDR value for 'openstack_external_network_cidr' has invalid format"
+  when:
+    - openstack_external_network_cidr | default(false, true)
+
+- name: Set tempest external network cidr to project network cidr if missing
+  set_fact:
+    openstack_external_network_cidr: "{{ openstack_project_network_cidr }}"
+  when:
+    - not openstack_external_network_cidr | default(false, true)
+
+- name: Get tempest external network details
+  command: "openstack network show {{ openstack_external_network_name }} -f value -c id"
+  environment:
+    OS_CLOUD: openstack
+  register: tempest_network_id_result
+  ignore_errors: yes
+  changed_when: False
+
+- name: Get tempest external subnet CIDR
+  command: "openstack subnet show {{ openstack_external_subnet_name }} -f value -c cidr"
+  environment:
+    OS_CLOUD: openstack
+  register: tempest_subnet_cidr_result
+  ignore_errors: yes
+  changed_when: False
+
+- name: Create tempest external network
+  command: "openstack network create --provider-network-type flat --provider-physical-network {{ tempest_provider_physical_network }} --external {{ openstack_external_network_name }}"
+  environment:
+    OS_CLOUD: openstack
+  register: tempest_network_create_result
+  changed_when: False
+  when:
+    - tempest_network_id_result.rc != 0
+
+- name: Create tempest external sub-network
+  command: "openstack subnet create --network {{ openstack_external_network_name }} --subnet-range {{ openstack_external_network_cidr }} --allocation-pool start={{ openstack_external_network_cidr |  next_nth_usable(tempest_network_address_start_index) }},end={{ openstack_external_network_cidr |  ipaddr('last_usable') }} --gateway {{ openstack_external_network_cidr |  ipaddr('next_usable')  }} --no-dhcp {{ openstack_external_subnet_name }}"
+  environment:
+    OS_CLOUD: openstack
+  register: tempest_network_create_result
+  changed_when: False
+  when:
+    - tempest_subnet_cidr_result.rc != 0

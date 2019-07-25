@@ -23,43 +23,68 @@ OpenStack Tempest Testing
 
 After the deployment of SUSE Containerized OpenStack has completed, it is possible to run
 OpenStack Tempest tests against the core services in the deployment using the `run.sh` script.
-Before running Tempest tests, it will be necessary to manually configure OpenStack network
-resources and provide a few configuration parameters in the ${WORKDIR}/env/extravars file.
+As part of Tempest tests execution, there is need to configure OpenStack network resources
+and provide a few configuration parameters in the `${WORKDIR}/env/extravars file`.
 
-Setting Up An External Network And Subnet in OpenStack
-------------------------------------------------------
+Setting Up Network CIDR(s) in OpenStack
+----------------------------------------
 
-To set up an external network and subnet in OpenStack, the following commands can be run from a
-shell on the `Deployer` node.
+Tempest will create a private network (10.0.0.0/8) to use as the default network, and it will
+need to know the CIDR block from which to allocate project IPv4 subnets. This value should be
+specified with the following key in the `${WORKDIR}/env/extravars` file:
+
+.. code-block:: yaml
+
+   openstack_project_network_cidr: "10.0.4.0/24"
+
+By default, same CIDR block is used for creating external network which is needed by tempest
+tests execution. If that needs to be different in your environment, provide value with
+following key in the `${WORKDIR}/env/extravars` file:
+
+.. code-block:: yaml
+
+   openstack_external_network_cidr: "192.168.100.0/24"
+
+Tempest test execution via `run.sh` script will create the necessary networks as long as
+above CIDR value is correctly identified and specified in extravars.
+
+.. note::
+
+   In **openstack** deployment mechanism, defaults are used from `vars/deploy-on-openstack.yml`
+   file. So setup of above CIDR may not be needed if those defaults can be used for tempest
+   test execution.
+
+Optional External Network Setup
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If for some reason, you prefer to create your own external network, the following commands can
+be run from a shell on the `Deployer` node.
 
 .. code-block:: console
 
    export OS_CLOUD=openstack
    openstack network create --provider-network-type flat --provider-physical-network external \
-     --external public
-   openstack subnet create --network public --subnet-range 192.168.100.0/24 --allocation-pool \
-     start=192.168.100.10,end=192.168.100.200 --gateway 192.168.100.1 --no-dhcp public-subnet
+     --external socok8s-tempest-public
+   openstack subnet create --network socok8s-tempest-public --subnet-range 192.168.100.0/24 \
+   --allocation-pool start=192.168.100.10,end=192.168.100.200 --gateway 192.168.100.1 \
+   --no-dhcp socok8s-tempest-public-subnet
+
+If the external network and subnet have been created in OpenStack manually as mentioned above,
+their names will need to be made known to Tempest by adding the following keys in the
+`${WORKDIR}/env/extravars` file:
+
+.. code-block:: yaml
+
+   openstack_external_network_name: "socok8s-tempest-public"
+   openstack_external_subnet_name: "socok8s-tempest-public-subnet"
+
 
 .. note::
 
    The external public network is expected to be able to reach the internet. The above values
    will vary based on your network environment.
 
-Once the public network and subnet have been created in OpenStack, their names will need to be
-made known to Tempest by adding the following keys in the ${WORKDIR}/env/extravars file:
 
-.. code-block:: yaml
-
-   openstack_external_network_name: "public"
-   openstack_external_subnet_name: "public-subnet"
-
-Tempest will create a private network (10.0.0.0/8) to use as the default network, and it will
-need to know the CIDR block from which to allocate project IPv4 subnets. This value should be
-specified with the following key in the extravars file:
-
-.. code-block:: yaml
-
-   openstack_project_network_cidr: "10.0.4.0/24"
 
 Configuring Tempest Test Parameters
 -----------------------------------
@@ -148,8 +173,10 @@ are executed.
 Tempest Test Results
 --------------------
 
-All test results can be viewed by retrieving the logs from the airship-tempest-run-tests pod by running
-the following command:
+By default, tempest test execution pod logs are displayed on ansible stdout during `test` option.
+
+Later, all test results can be viewed by retrieving the logs from the airship-tempest-run-tests pod by
+running the following command:
 
 .. code-block:: console
 
