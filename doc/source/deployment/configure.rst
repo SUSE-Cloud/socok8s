@@ -93,8 +93,8 @@ nodes. The OpenStack Compute Nodes should be dedicated worker nodes unless
 a light workload is expected.
 
 See also
-`Ansible Inventory Hosts and Groups
-<https://docs.ansible.com/ansible/2.7/user_guide/intro_inventory.html#hosts-and-groups>`_.
+`Ansible: Hosts and Groups
+<https://docs.ansible.com/ansible/2.8/user_guide/intro_inventory.html#inventory-basics-hosts-and-groups>`_.
 
 .. tip::
 

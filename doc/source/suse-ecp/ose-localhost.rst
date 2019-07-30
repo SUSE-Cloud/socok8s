@@ -63,7 +63,7 @@ Install the following software on your `localhost`:
 
 Optionally, `localhost` can be preinstalled with the following software:
 
-  * ansible>=2.7.0
+  * ansible>=2.8.0
   * python3-openstackclient
   * python3-requests
   * python3-jmespath
