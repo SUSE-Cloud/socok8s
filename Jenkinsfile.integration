@@ -36,6 +36,7 @@ pipeline {
         KEYNAME = "engcloud-cloud-ci"
         DELETE_ANYWAY = "YES"
         DEPLOYMENT_MECHANISM = "openstack"
+        ANSIBLE_VERBOSITY = 2
         ANSIBLE_STDOUT_CALLBACK = "yaml"
         USER = "jenkins" /* Why isn't this set in the jenkins environment? */
     }
