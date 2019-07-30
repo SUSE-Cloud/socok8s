@@ -7,6 +7,22 @@ Developer Documentation
 In this section, you will find documentation relevant to developing
 SUSE Containerized OpenStack.
 
+.. _learning:
+
+Learning Materials
+==================
+
+You can find some learning materials for the technologies used by this project
+in the following sections.
+
+.. toctree::
+   :maxdepth: 1
+
+   kubernetes.rst
+   openstack-helm.rst
+   airship.rst
+
+
 .. _contributing:
 
 Contributor Guidelines
