@@ -110,6 +110,7 @@ pipeline {
                 timeout(time: 10, unit: 'MINUTES', activity: true)
             }
             steps {
+                sh 'touch /tmp/${SOCOK8S_ENVNAME}.needcleanup'
                 sh "./run.sh deploy_network"
             }
         }
@@ -200,7 +201,7 @@ pipeline {
         }
         cleanup {
             script {
-                    sh './run.sh teardown'
+                    sh '[ -f /tmp/${SOCOK8S_ENVNAME}.needcleanup ] && ./run.sh teardown && rm /tmp/${SOCOK8S_ENVNAME}.needcleanup'
                 }
         }
     }
