@@ -42,6 +42,8 @@ deploy_on_openstack_osh_repos_per_imagename:
     - SLE-15-SP1-Module-Containers-Update
     - SLE-15-SP1-Module-Public-Cloud
     - SLE-15-SP1-Module-Public-Cloud-Update
+    - SLE-15-SP1-Module-Development-Tools
+    - SLE-15-SP1-Module-Development-Tools-Update
     - socok8s_SLE15SP1
 
 deploy_on_openstack_caasp_repos_per_imagename:
