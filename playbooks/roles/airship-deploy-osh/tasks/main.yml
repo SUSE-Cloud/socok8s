@@ -69,15 +69,15 @@
     - skip_ansible_lint
     - update_airship_osh_site
 
-- name: Copy site to Shipyard
+# TODO(evrardjp): Move this to copy: remote_src: yes when Ansible 2.8 is used.
+- name: copy site to Shipyard
   become: yes
-  delegate_to: '{{ inventory_hostname }}'
-  synchronize:
-    src: '{{ treasuremap_dir }}/{{ pegleg_output }}'
-    dest: '{{ upstream_repos_clone_folder }}/airship/shipyard'
+  command: "cp -r {{ treasuremap_dir }}/{{ pegleg_output }} {{ upstream_repos_clone_folder }}/airship/shipyard"
+  changed_when: true
   tags:
     - install
     - update_airship_osh_site
+    - skip_ansible_lint
 
 - name: Set up shipyard shell script
   set_fact:
