@@ -1,5 +1,4 @@
 ---
-
 - hosts: soc-deployer
   gather_facts: no
   tasks:
@@ -15,11 +14,15 @@
       file:
         path: "{{ upstream_repos_clone_folder }}/ccp"
         state: directory
+      when:
+        - not caasp4_deployed
 
     - name: Copying environment.json
       copy:
         src: "{{ socok8s_caasp_environment_details }}"
         dest: "{{ upstream_repos_clone_folder }}/ccp/environment.json"
+      when:
+        - not caasp4_deployed
 
     - name: Install the necessary packages
       package:
@@ -40,11 +43,15 @@
           - libxml2-devel
           - libxslt-devel
           - which
+      when:
+        - not caasp4_deployed
 
     - name: Copying velum automation
       unarchive:
         src: "{{ playbook_dir }}/../files/velum-bootstrap.tar.xz"
         dest: "{{ upstream_repos_clone_folder }}/ccp/"
+      when:
+        - not caasp4_deployed
 
 
     # In SLE15SP1 the default bundler is 2.x while the velum Gemfile.lock has been bundled with 1.15.0 so we need to
@@ -76,3 +83,5 @@
         chdir: "{{ upstream_repos_clone_folder }}/ccp/velum-bootstrap"
       tags:
         - skip_ansible_lint
+      when:
+        - not caasp4_deployed

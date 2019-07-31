@@ -39,14 +39,22 @@
   tags:
     - install
 
+- name: Create tiller service account
+  include_tasks: apply_on_k8s.yml
+  loop:
+    - action: create tiller ServiceAccount with ClusterRoleBinding
+      template_src_file: k8s-tiller-serviceaccount-and-cluster-role-binding.yml.j2
+      templated_location: /tmp/socok8s-tiller-serviceaccount-and-cluster-role-binding.yml
+  when: caasp4_deployed
+
 - name: Install tiller
-  command: helm init
+  command: helm init {{ (caasp4_deployed | bool) | ternary('--service-account tiller','') }}
   register: _helminstall
   when: helm_state == 'to_install'
   changed_when: True
 
 - name: Upgrade tiller
-  command: helm init --upgrade
+  command: helm init --upgrade {{ (caasp4_deployed | bool) | ternary('--service-account tiller','') }}
   register: _helmupgrade
   when: helm_state == 'to_update' or helm_state == 'to_install'
   changed_when: True
@@ -57,7 +65,3 @@
     verbosity: 1
   when: helm_state == 'to_update' or helm_state == 'to_install'
 
-- name: Create service account
-  debug:
-    msg: "TODO"
-  when: helm_state == 'to_install'

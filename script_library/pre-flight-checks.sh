@@ -34,10 +34,17 @@ check_openstack_env_vars_set (){
     fi
 }
 
-check_caasp4_skuba_available(){
+check_caasp4_skuba_dir_available(){
     echo "Checking for CaaSP 4 that SUSE/skuba is available"
     if ! [ -d submodules/skuba ]; then
         echo "submodules/skuba directory not available. Can not deploy CaaSP 4"
+        exit
+    fi
+}
+check_caasp4_skuba_available(){
+    echo "Checking for CaaSP 4 that skuba is available"
+    if ! rpm -q --quiet skuba; then
+        echo "skuba package is not installed. Can not deploy CaaSP 4"
         exit
     fi
 }
@@ -46,6 +53,13 @@ check_caasp4_terraform_available(){
     command -v ${TERRAFORM_BINARY_PATH} 1> /dev/null
     if [ $? -ne 0 ]; then
         echo "${TERRAFORM_BINARY_PATH} executable not in \$PATH. Can not deploy CaaSP 4"
+        exit
+    fi
+}
+check_caasp4_ssh_agent_running(){
+    echo "Checking if ssh-agent is running"
+    if ! ssh-add -L >/dev/null ; then
+        echo "ssh agent is not running or does not contain any identities"
         exit
     fi
 }
