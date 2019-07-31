@@ -23,7 +23,7 @@ pipeline {
 
     parameters {
         /* first value in the list is the default */
-        choice(choices: ['airship', 'osh'], description: 'Which deployment mechanism?', name: 'deployment')
+        choice(choices: ['osh', 'airship'], description: 'Which deployment mechanism?', name: 'deployment')
     }
 
     environment {
