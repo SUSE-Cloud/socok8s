@@ -5,6 +5,25 @@ TestDocs = true
 TestFunctional = true
 
 
+void setBuildStatus(String message, String state, String context)
+{
+    withCredentials([string(credentialsId: 'opensusegithubapi', variable: 'TOKEN')])
+    {
+        // 'set -x' for debugging. Don't worry the access token won't be actually logged
+        // Also, the sh command actually executed is not properly logged, it will be further escaped when written to the log
+        sh """
+            set -x
+            curl \"https://api.github.com/repos/thanhlelgg/brain-and-brawn/statuses/$GIT_COMMIT?access_token=$TOKEN\" \
+                -H \"Content-Type: application/json\" \
+                -X POST \
+                -d \"{\\\"description\\\": \\\"$message\\\", \\\"state\\\": \\\"$state\\\", \
+                \\\"context\\\": \\\"$context\\\", \\\"target_url\\\": \\\"$BUILD_URL\\\"}\"
+        """
+    }
+}
+
+
+
 pipeline {
 
     options {
@@ -46,6 +65,7 @@ pipeline {
         stage('Show environment information') {
             steps {
                 sh 'printenv'
+                setBuildStatus("test", "PENDING", "continuous-integration/jenkins/test")
             }
         }
         stage('Check for updated files') {
@@ -147,13 +167,27 @@ pipeline {
             }
         }
 
-        stage('Configure CaaSP workers') {
-            when { expression { return  TestFunctional } }
+        stage('Enroll CaaSP workers') {
+            when {
+                allOf {
+                    expression { return  TestFunctional }
+                    expression  { params.caasp_version == "caasp3" }
+                }
+            }
             options {
                 timeout(time: 10, unit: 'MINUTES', activity: true)
             }
             steps {
                 sh "./run.sh enroll_caasp_workers"
+            }
+        }
+
+        stage('Setup CaaSP workers for openstack') {
+            when { expression { return  TestFunctional } }
+            options {
+                timeout(time: 10, unit: 'MINUTES', activity: true)
+            }
+            steps {
                 sh "./run.sh setup_caasp_workers_for_openstack"
             }
         }
