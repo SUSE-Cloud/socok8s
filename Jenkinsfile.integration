@@ -120,9 +120,9 @@ pipeline {
                 timeout(time: 45, unit: 'MINUTES', activity: true)
             }
             parallel {
-                stage('Deploy CaaSP') {
+                stage('Deploy CaaSP4') {
                     steps {
-                        sh "./run.sh deploy_caasp"
+                        sh "./run.sh deploy_caasp4"
                     }
                 }
                 stage('Deploy SES') {
