@@ -39,6 +39,8 @@
         executable: /bin/bash
       register: _podman_id
       changed_when: _podman_id.rc == 3
+      tags:
+        - skip_ansible_lint # Ansible lint failure to recognize podman templating with ansible vars inside raw block.
     - name: Add host to inventory
       add_host:
         groups: terraform-client
