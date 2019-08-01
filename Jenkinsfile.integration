@@ -24,6 +24,7 @@ pipeline {
     parameters {
         /* first value in the list is the default */
         choice(choices: ['airship', 'osh'], description: 'Which deployment mechanism?', name: 'deployment')
+        choice(choices: ['caasp3', 'caasp4'], description: 'Which caasp version to use?', name: 'caasp_version')
     }
 
     environment {
@@ -120,9 +121,16 @@ pipeline {
                 timeout(time: 45, unit: 'MINUTES', activity: true)
             }
             parallel {
-                stage('Deploy CaaSP') {
+                stage('Deploy CaaSP3') {
+                    when { expression  { params.caasp_version == "caasp3" } }
                     steps {
                         sh "./run.sh deploy_caasp"
+                    }
+                }
+                stage('Deploy CaaSP4') {
+                    when { expression  { params.caasp_version == "caasp4" } }
+                    steps {
+                        sh "./run.sh deploy_caasp4"
                     }
                 }
                 stage('Deploy SES') {
