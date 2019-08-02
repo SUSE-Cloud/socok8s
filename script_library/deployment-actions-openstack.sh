@@ -32,6 +32,7 @@ function deploy_caasp4(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_available
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_available
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_ssh_agent_running
     echo "Starting CaaSP 4 deploy"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_caasp4.yml
     echo "CaaSP 4 deployed successfully"
@@ -51,8 +52,7 @@ function enroll_caasp_workers() {
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-enroll_caasp_workers.yml
 }
 function clean_caasp4(){
-    if command -v ${TERRAFORM_BINARY_PATH} && [ -d submodules/skuba ]; then
-        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_available
+    if command -v ${TERRAFORM_BINARY_PATH} ; then
         source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_available
         echo "Delete CaaSP 4"
         run_ansible ${socok8s_absolute_dir}/playbooks/openstack-delete_caasp4.yml

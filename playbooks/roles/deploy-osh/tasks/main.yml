@@ -115,7 +115,9 @@
     - run
 
 - name: Apply base configuration in K8s for deployments on top of CaaSP/SES
-  include_tasks: apply_on_k8s.yml
+  include_role:
+    name: common-deployer
+    tasks_from: apply_on_k8s
   loop:
     - action: create openstack namespace
       template_src_file: k8s-openstack-namespace.yml.j2

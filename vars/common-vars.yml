@@ -43,6 +43,8 @@ socok8s_repos_to_configure:
   SLE-15-SP1-Module-Containers-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Containers/15-SP1/x86_64/update/"
   SLE-15-SP1-Module-Public-Cloud: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Public-Cloud/15-SP1/x86_64/product/"
   SLE-15-SP1-Module-Public-Cloud-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Public-Cloud/15-SP1/x86_64/update/"
+  SLE-15-SP1-Module-Development-Tools: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Development-Tools/15-SP1/x86_64/product/"
+  SLE-15-SP1-Module-Development-Tools-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Development-Tools/15-SP1/x86_64/update/"
   # needed for python-barbicanclient
   SLES-15-SP1-backports: "https://download.opensuse.org/repositories/openSUSE:/Backports:/SLE-15-SP1/standard/"
   socok8s: "{{ obs_mirror }}/repositories/Cloud:/socok8s:/master/openSUSE_Leap_15.0/"
@@ -140,3 +142,8 @@ scale_profile: "{{ lookup('env','scale_profile') | default('minimal', true) }}"
 
 #Set timeout for helm cleanup.
 helm_delete_timeout: 900
+
+caasp4_deployed: false
+
+# Location of the kubeconfig file, fetched from velum UI (CaaSP3) or copied from cluster setup dir (CaaSP4)
+kubeconfig_file_path: "{{ socok8s_deploy_config_location }}/kubeconfig"

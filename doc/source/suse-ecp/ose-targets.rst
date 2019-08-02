@@ -55,6 +55,22 @@ your environment from scratch.
    the `openstack` deployment mechanism. Verify that they are set
    appropriately. See :ref:`configureopenstackdeploymentmechanism`.
 
+The script run.sh
+-----------------
+
+This is the script that launch the Ansible scripts to deploy socok8s through
+some commands.
+
+Each command launch an specific function in one of scripts allocated in
+/script_library. This function will run one of the Ansible playbooks allocated
+in /playbooks
+
+For instance, deploy_airship will to call the function deploy_airship() in
+/script_library/deployment-actions-common.sh that after prepare some variables
+will run the Ansible playbook allocated in
+/playbooks/generic-deploy_airship.yml This script can launch one or more
+additional scripts (roles) allocated in the shared library in /playbooks/roles
+
 In separate steps
 -----------------
 

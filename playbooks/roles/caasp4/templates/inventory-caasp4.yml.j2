@@ -2,33 +2,55 @@
 caasp-masters:
   hosts:
 {% for master_ip in _terraform_json_output.ip_masters.value %}
-    {{ master_ip }}
+    caasp-master-{{ loop.index0 }}:
+      ansible_host: {{ master_ip }}
 {% endfor %}
+  vars:
+    ansible_user: sles
+    ansible_python_interpreter: /usr/bin/python3
 
 caasp-workers:
   hosts:
 {% for worker_ip in _terraform_json_output.ip_workers.value %}
-    {{ worker_ip }}
+    caasp-worker-{{ loop.index0 }}:
+      ansible_host: {{ worker_ip }}
 {% endfor %}
+  vars:
+    ansible_user: sles
+    ansible_python_interpreter: /usr/bin/python3
 
 airship-openstack-control-workers:
   hosts: &firsttwoworkers
 {% for worker_ip in _terraform_json_output.ip_workers.value %}
-{% if loop.index <= 2 %}
-    {{ worker_ip }}
+{% if loop.index0 < 2 %}
+    caasp-worker-{{ loop.index0 }}:
+      ansible_host: {{ worker_ip }}
 {% endif %}
 {% endfor %}
+  vars:
+    ansible_user: sles
+    ansible_python_interpreter: /usr/bin/python3
 
 airship-ucp-workers:
   hosts: *firsttwoworkers
+  vars:
+    ansible_user: sles
+    ansible_python_interpreter: /usr/bin/python3
 
 airship-openstack-compute-workers:
   hosts:
 {% for worker_ip in _terraform_json_output.ip_workers.value %}
-{% if loop.index > 2 %}
-    {{ worker_ip }}
+{% if loop.index0 > 1 %}
+    caasp-worker-{{ loop.index0}}:
+      ansible_host: {{ worker_ip }}
 {% endif %}
 {% endfor %}
+  vars:
+    ansible_user: sles
+    ansible_python_interpreter: /usr/bin/python3
 
 airship-kube-system-workers:
   hosts: *firsttwoworkers
+  vars:
+    ansible_user: sles
+    ansible_python_interpreter: /usr/bin/python3
