@@ -22,13 +22,14 @@
     - name: Get the running clients container ID
       shell: |
         {% raw %}
-        podman ps --format "{{.Names}}" | grep caasp4clients > /dev/null
+        podman ps --format '{{ .Names }}' | grep caasp4clients > /dev/null
         containerstatus=$?
 
         set -e
+        set -o pipefail
 
         if test $containerstatus -eq 0; then
-            podman ps --format "{{.ID}} {{.Names}}" | awk '/caasp4clients/ {print $1;}'
+            podman ps --format '{{ .ID }} {{ .Names }}' | awk '/caasp4clients/ {print $1;}'
             exit 0
         else
             podman run --name caasp4clients -it -d registry.suse.de/home/jevrard/branches/suse/templates/images/sle-15-sp1/containers/caasp4-clients:latest
@@ -39,8 +40,9 @@
         executable: /bin/bash
       register: _podman_id
       changed_when: _podman_id.rc == 3
+      # Skip ansible lint due to pipefail not placed on l1 (raw)
       tags:
-        - skip_ansible_lint # Ansible lint failure to recognize podman templating with ansible vars inside raw block.
+        - skip_ansible_lint
     - name: Add host to inventory
       add_host:
         groups: terraform-client
