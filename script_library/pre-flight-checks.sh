@@ -35,10 +35,13 @@ check_openstack_env_vars_set (){
 }
 
 check_caasp4_skuba_dir_available(){
+  echo "No need to check this"
 }
 check_caasp4_skuba_available(){
+  echo "No need to check this"
 }
 check_caasp4_terraform_available(){
+  echo "No need to check this"
 }
 check_caasp4_ssh_agent_running(){
     echo "Checking if ssh-agent is running"
