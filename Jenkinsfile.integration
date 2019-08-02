@@ -4,6 +4,11 @@
 TestDocs = true
 TestFunctional = true
 
+void setBuildStatus(String state, String context) {
+    full_context = "continuous-integration/jenkins/$context"
+    sh "/home/jenkins/github-pr/github_pr.rb -a set-status -o SUSE-Cloud -r socok8s -p ${env.CHANGE_ID} -s $state -x $full_context -u ${env.GIT_COMMIT} -t ${env.RUN_DISPLAY_URL}"
+}
+
 pipeline {
 
     options {
@@ -44,6 +49,10 @@ pipeline {
     stages {
         stage('Show environment information') {
             steps {
+                // Set default CI job to success, we will manage the statuses ourselves
+                setBuildStatus("success", "pr-head")
+                // Set out custom status check to pending
+                setBuildStatus("pending", "${params.deployment}-${params.caasp_version}")
                 sh 'printenv'
             }
         }
@@ -205,7 +214,21 @@ pipeline {
     }
 
     post {
+        success {
+            script {
+                setBuildStatus("success", "${params.deployment}-${params.caasp_version}")
+            }
+        }
+        aborted {
+            script {
+                setBuildStatus("error", "${params.deployment}-${params.caasp_version}")
+            }
+        }
         failure {
+            script {
+                setBuildStatus("failure", "${params.deployment}-${params.caasp_version}")
+            }
+
             script {
                 if (env.hold_instance_for_debug == 'true') {
                     echo "You can reach this node by connecting to its floating IP as root user, with the default password of your image."
