@@ -1,9 +1,11 @@
 ---
-- name: Add soc deployer in etc hosts for dns resolution
-  include_tasks: osh-deployer-in-hosts.yml
-
 - name: Include common vars to know developer_mode value
   include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+
+- name: Add soc deployer in etc hosts for dns resolution
+  include_tasks: osh-deployer-in-hosts.yml
+  when:
+    - not caasp4_deployed
 
 - name: Copy the registry certificates
   include_tasks: copy-certificates.yml
@@ -19,6 +21,8 @@
 
 - name: Apparmor profiles in worker nodes
   import_tasks: apparmor-profiles.yml
+  when:
+    - not caasp4_deployed
   tags:
     - apparmor
 
