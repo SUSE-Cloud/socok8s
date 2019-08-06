@@ -69,15 +69,15 @@
     - skip_ansible_lint
     - update_airship_osh_site
 
-- name: Copy site to Shipyard
+# TODO(evrardjp): Move this to copy: remote_src: yes when Ansible 2.8 is used.
+- name: copy site to Shipyard
   become: yes
-  delegate_to: '{{ inventory_hostname }}'
-  synchronize:
-    src: '{{ treasuremap_dir }}/{{ pegleg_output }}'
-    dest: '{{ upstream_repos_clone_folder }}/airship/shipyard'
+  command: "cp -r {{ treasuremap_dir }}/{{ pegleg_output }} {{ upstream_repos_clone_folder }}/airship/shipyard"
+  changed_when: true
   tags:
     - install
     - update_airship_osh_site
+    - skip_ansible_lint
 
 - name: Set up shipyard shell script
   set_fact:
@@ -177,26 +177,37 @@
     - update_airship_osh_site
 
 # TODO(aagate): Add a changed_when: to help idempotency
-- name: "Wait for update software action to complete... it can take up to {{ airship_deploy_openstack_timeout }} minutes"
-  command: '{{ shipyard }} describe {{ shipyard_action_key }}'
-  args:
-    chdir: '{{ upstream_repos_clone_folder }}/airship/shipyard'
-  environment:
-    SHIPYARD_IMAGE: "{{ shipyard_image }}"
-    OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
-  register: shipyard_desc_action
-  until: shipyard_desc_action.stdout.find('Processing') < 0 and shipyard_desc_action.stdout.find('running') < 0
-  retries: "{{ airship_deploy_openstack_timeout | int * 2 }}"
-  delay: 30
-  tags:
-    - skip_ansible_lint
-    - update_airship_osh_site
-    - add_compute_node
+- block:
+    - name: "Wait for update software action to complete... it can take up to {{ airship_deploy_openstack_timeout }} minutes"
+      command: '{{ shipyard }} describe {{ shipyard_action_key }}'
+      args:
+        chdir: '{{ upstream_repos_clone_folder }}/airship/shipyard'
+      environment:
+        SHIPYARD_IMAGE: "{{ shipyard_image }}"
+        OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
+      register: shipyard_desc_action
+      failed_when: "'failed' in shipyard_desc_action.stdout"
+      until: shipyard_desc_action.stdout.find('Processing') < 0 and shipyard_desc_action.stdout.find('running') < 0
+      retries: "{{ airship_deploy_openstack_timeout | int * 2 }}"
+      delay: 30
+      tags:
+        - skip_ansible_lint
+        - update_airship_osh_site
+        - add_compute_node
 
-- name: Print Shipyard update software action status
+  rescue:
+    - name: Print Shipyard update software action status
+      debug:
+        msg: "Update Software action has failed and stopped creating pods. Please check"
+      failed_when: "'failed' in shipyard_desc_action.stdout"
+      tags:
+        - update_airship_osh_site
+        - add_compute_node
+
+- name: Update Software Action still running
   debug:
-    msg: "{{ shipyard_desc_action.stdout_lines }}"
-  failed_when: "'failed' in shipyard_desc_action.stdout"
+    msg: "Update Software action is still running and creating pods"
+  when: "'running' in shipyard_desc_action.stdout"
   tags:
     - update_airship_osh_site
     - add_compute_node

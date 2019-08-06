@@ -1,5 +1,6 @@
 ---
 - name: Copy openstack apparmor profile into the workers
+  become: yes
   copy:
     src: "{{ item }}"
     dest: "/etc/apparmor.d/local/{{ item }}"

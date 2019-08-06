@@ -69,3 +69,8 @@
   loop_control:
     index_var: idx
   when: not _skuba_cluster_status.stdout | regex_search('^worker-' ~ idx ~ '.*', multiline=True)
+
+- name: Copy kubeconfig generated with new cluster to generic workspace
+  copy:
+    src: "{{ skuba_cluster_basedir }}/{{ skuba_cluster_name }}/admin.conf"
+    dest: "{{ kubeconfig_file_path }}"

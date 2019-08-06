@@ -17,7 +17,7 @@
 
 - name: Copy skuba openstack terraform files to socok8s workspace
   copy:
-    src: "{{ playbook_dir }}/../submodules/skuba/ci/infra/openstack/"
+    src: "/usr/share/caasp/terraform/openstack/"
     dest: "{{ skuba_ci_terraform_workspace }}"
     mode: 0775
     force: no

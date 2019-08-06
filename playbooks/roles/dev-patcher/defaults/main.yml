@@ -2,7 +2,7 @@
 dev_patcher_baseurl: "https://review.opendev.org/changes"
 
 dev_patcher_packages:
-  - git
+  - git-core
 
 #merged patches will be skipped
 #unrelated patches will fail (because not cloned)

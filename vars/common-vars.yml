@@ -20,7 +20,8 @@ suse_infra_image_version: "latest-opensuse_15"
 suse_osh_openstack_release: "rocky"
 
 obs_mirror: "{{ lookup('env','SOCOK8S_OPENSUSE_MIRROR') | default('https://download.opensuse.org', true) }}"
-ibs_mirror: http://ibs-mirror.prv.suse.net
+ibs_mirror: http://ibs-mirror.prv.suse.net/ibs
+dist_mirror: http://ibs-mirror.prv.suse.net/dist
 
 socok8s_repos_to_configure:
   SLE12SP3-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Pool/
@@ -31,9 +32,25 @@ socok8s_repos_to_configure:
   openSUSE-Leap-15.0-Update: "{{ obs_mirror }}/update/leap/15.0/oss/"
   openSUSE-Leap-15.0-Cloud: "{{ obs_mirror }}/repositories/Cloud:/Tools/openSUSE_Leap_15.0/"
   Leap15develtools: "{{ obs_mirror }}/repositories/devel:/tools/openSUSE_Leap_15.0/"
+  SLES-15-SP1-Product: "{{ ibs_mirror }}/SUSE/Products/SLE-Product-SLES/15-SP1/x86_64/product/"
+  SLES-15-SP1-Product-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Product-SLES/15-SP1/x86_64/update/"
+  SLE-15-SP1-Module-BaseSystem: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Basesystem/15-SP1/x86_64/product/"
+  SLE-15-SP1-Module-BaseSystem-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Basesystem/15-SP1/x86_64/update/"
+  # needed for phantomjs, can be removed with CaaSP4
+  SLE-15-SP1-Module-Legacy: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Legacy/15-SP1/x86_64/product/"
+  SLE-15-SP1-Module-Legacy-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Legacy/15-SP1/x86_64/update/"
+  SLE-15-SP1-Module-Containers: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Containers/15-SP1/x86_64/product/"
+  SLE-15-SP1-Module-Containers-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Containers/15-SP1/x86_64/update/"
+  SLE-15-SP1-Module-Public-Cloud: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Public-Cloud/15-SP1/x86_64/product/"
+  SLE-15-SP1-Module-Public-Cloud-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Public-Cloud/15-SP1/x86_64/update/"
+  SLE-15-SP1-Module-Development-Tools: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Development-Tools/15-SP1/x86_64/product/"
+  SLE-15-SP1-Module-Development-Tools-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Development-Tools/15-SP1/x86_64/update/"
+  # needed for python-barbicanclient
+  SLES-15-SP1-backports: "https://download.opensuse.org/repositories/openSUSE:/Backports:/SLE-15-SP1/standard/"
   socok8s: "{{ obs_mirror }}/repositories/Cloud:/socok8s:/master/openSUSE_Leap_15.0/"
-  CAASP30-update: "{{ ibs_mirror }}/dist/ibs/SUSE/Updates/SUSE-CAASP/3.0/x86_64/update/"
-  CAASP30-pool: "{{ ibs_mirror }}/dist/ibs/SUSE/Products/SUSE-CAASP/3.0/x86_64/product/"
+  socok8s_SLE15SP1: "https://download.opensuse.org/repositories/Cloud:/socok8s:/master/SLE_15_SP1/"
+  CAASP30-update: "{{ dist_mirror }}/ibs/SUSE/Updates/SUSE-CAASP/3.0/x86_64/update/"
+  CAASP30-pool: "{{ dist_mirror }}/ibs/SUSE/Products/SUSE-CAASP/3.0/x86_64/product/"
 
 ######################################################
 # Following variables are used by airship logic only
@@ -47,7 +64,7 @@ ucp_namespace_name: "{{ ucp_namespace | default('ucp') }}"
 
 # Variables used for building airship images locally
 suse_distro_identifier: opensuse_15
-suse_airship_components_base_image: "opensuse/leap:15.0"
+suse_airship_components_base_image: "opensuse/leap:15.1"
 
 # check if argument is set in commandline for airship_local_images_flag value
 # otherwise use corresponding environment variable to determine it
@@ -89,11 +106,11 @@ suse_airship_components_image_tag: |
                                    %}
                                    {% else %}
                                    {% set _img_tag = {
-                                     'armada': '1110c23cd192ea5eff77629d10924b290140d6e2-opensuse_15',
-                                     'shipyard': 'cd6f154da56079ba408b922ed748a80b622c3592-opensuse_15',
-                                     'airflow': 'cd6f154da56079ba408b922ed748a80b622c3592-opensuse_15',
-                                     'deckhand': 'd8c8e15074d484c356c03460c0acbaea96705150-opensuse_15',
-                                     'pegleg': '652c3abefd0f647cfc45096aa76cb76bfaf8a805-opensuse_15'
+                                     'armada': '46bb9bd8b35905294920eb4fdf30593cb4899780-opensuse_15',
+                                     'shipyard': 'a9ff859df980fbb95a912fc49312ef3c51f65b3f-opensuse_15',
+                                     'airflow': 'a9ff859df980fbb95a912fc49312ef3c51f65b3f-opensuse_15',
+                                     'deckhand': '971c901c4da36e3e31be58d4be8b0e194e715d8f-opensuse_15',
+                                     'pegleg': '70f2db465277b60d80e4bcbf347be565b6f81a05-opensuse_15'
                                    }
                                    %}
                                    {% endif %}
@@ -125,3 +142,8 @@ scale_profile: "{{ lookup('env','scale_profile') | default('minimal', true) }}"
 
 #Set timeout for helm cleanup.
 helm_delete_timeout: 900
+
+caasp4_deployed: false
+
+# Location of the kubeconfig file, fetched from velum UI (CaaSP3) or copied from cluster setup dir (CaaSP4)
+kubeconfig_file_path: "{{ socok8s_deploy_config_location }}/kubeconfig"

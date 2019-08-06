@@ -18,3 +18,4 @@ This feature is experimental and is intended for SUSE developers.
    ose-targets.rst
    ose-configure.rst
    ose-deploy.rst
+   ose-summary.rst

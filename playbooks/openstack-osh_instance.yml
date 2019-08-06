@@ -20,3 +20,4 @@
         groupname_for_inventory: "soc-deployer"
         userdata: "{{ deploy_on_openstack_oshnode_userdata }}"
         delete: "{{ ((osh_node_delete | default('False')) | bool) }}"
+        python_interpreter: /usr/bin/python3

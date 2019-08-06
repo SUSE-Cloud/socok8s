@@ -4,9 +4,6 @@
 # IP on the external network
 ext_vip: null
 
-# Location of the kubeconfig file, fetched from velum UI.
-kubeconfig_file_path: "{{ socok8s_deploy_config_location }}/kubeconfig"
-
 # extra repositories that will be added. key should be the repo name,
 # value the repo url
 zypper_extra_repos: {}
@@ -22,7 +19,7 @@ suse_airship_deploy_packages:
   - python3-setuptools
   - python3-pip
   - python3-cmd2
-  - python-devel
+  - python3-devel
 
 suse_airship_openstackclient_packages:
   - python3-barbicanclient
