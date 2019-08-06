@@ -21,7 +21,7 @@
 
 - name: Does the terraform workspace exist
   stat:
-    path: skuba_ci_terraform_workspace
+    path: "{{ skuba_ci_terraform_workspace }}"
   register: _terraform_workspace
 
 - name: Does the terraform state exist
