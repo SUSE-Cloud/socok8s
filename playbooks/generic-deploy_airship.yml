@@ -42,10 +42,32 @@
         - upstream_patching
 
 - hosts: caasp-workers
-  gather_facts: yes
+  tasks:
+    - import_role:
+        name: airship-configure-worker
+        tasks_from: subvolumes-setup
+      when: (redeploy_osh_only is not defined or not redeploy_osh_only) and not caasp4_deployed
+      tags:
+        - preinstall
+        - add_compute_node
+
+- hosts: caasp-workers
+  tasks:
+    - import_role:
+        name: airship-configure-worker
+        tasks_from: apparmor
+      when: (redeploy_osh_only is not defined or not redeploy_osh_only) and not caasp4_deployed
+      tags:
+        - preinstall
+        - add_compute_node
+
+- hosts: soc-deployer
+  gather_facts: no
   any_errors_fatal: true
-  roles:
-    - role: airship-configure-worker
+  tasks:
+    - import_role:
+        name: airship-configure-worker
+        tasks_from: enroll-nodes
       when: redeploy_osh_only is not defined or not redeploy_osh_only
       tags:
         - install

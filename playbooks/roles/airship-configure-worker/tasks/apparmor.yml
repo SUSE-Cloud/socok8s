@@ -1,0 +1,10 @@
+---
+- name: Copy openstack apparmor profile into the workers
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/apparmor.d/local/{{ item }}"
+  loop: "{{ apparmor_profiles }}"
+  register: apparmor_copy
+  notify: Reload apparmor profile
+  when:
+    - ('airship-openstack-control-workers' in group_names) or ('airship-openstack-compute-workers' in group_names)
