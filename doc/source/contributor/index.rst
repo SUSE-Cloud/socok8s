@@ -21,6 +21,12 @@ in the following sections.
    kubernetes.rst
    openstack-helm.rst
    airship.rst
+   cluster-api.rst
+   metalcubed.rst
+
+
+
+
 
 
 .. _contributing:
