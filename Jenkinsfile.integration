@@ -222,8 +222,11 @@ pipeline {
         }
         cleanup {
             script {
-                    sh '[ -f /tmp/${SOCOK8S_ENVNAME}.needcleanup ] && ./run.sh teardown && rm /tmp/${SOCOK8S_ENVNAME}.needcleanup'
+                if (fileExists("/tmp/${env.SOCOK8S_ENVNAME}.needcleanup")) {
+                    sh './run.sh teardown'
+                    sh 'rm /tmp/${SOCOK8S_ENVNAME}.needcleanup'
                 }
+            }
         }
     }
 }
