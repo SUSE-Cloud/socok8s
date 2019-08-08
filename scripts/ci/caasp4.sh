@@ -4,17 +4,10 @@ set -o pipefail
 set -o errexit
 set -o nounset
 
+# Will get some very early failure if some var is unset.
+echo "Workspace is ${SOCOK8S_WORKSPACE} - Environment is ${SOCOK8S_ENVNAME}"
+
 CI_SCRIPTS_PATH="$(dirname "$(readlink -f "${0}")")"
-# Deploy or destroy?
-ACTION=${1:-"deploy"}
-
-# PRE-FLIGHT CHECKS
-if [ -z ${SOCOK8S_WORKSPACE+x} ]; then
-    echo "No SOCOK8S_WORKSPACE given. \
-          Ensuring things are done right as punishment."
-    source ${CI_SCRIPTS_PATH}/../pre-flight-checks.sh
-fi
-
 TERRAFORM_CONTAINER="registry.suse.de/home/jevrard/branches/suse/templates/images/sle-15-sp1/containers/soc10-clients:latest"
 TERRAFORM_USERFILE=${SOCOK8S_WORKSPACE}/tf/terraform.tfvars
 
@@ -27,6 +20,10 @@ function finish {
 
 # Start
 #######
+
+# Action = deploy or destroy
+ACTION=${1:-"deploy"}
+
 
 echo "Fetching latest terraform container"
 podman pull $TERRAFORM_CONTAINER
@@ -49,6 +46,8 @@ rm -f ${SOCOK8S_WORKSPACE}/ssh_keys.csv
 #Run terraform container if not yet running
 ###########################################
 
+# Note: This is just for safety. As the trap deletes the container, we
+# should almost never reach this code.
 if ! podman ps --format '{{ .Names }}' | grep terraform > /dev/null; then
     containerid=$(podman run -it -d --name terraform \
         -v ${SSH_AUTH_SOCK}:/ssh_auth_sock \
