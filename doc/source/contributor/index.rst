@@ -23,6 +23,7 @@ in the following sections.
    airship.rst
    cluster-api.rst
    metalcubed.rst
+   rook-io.rst
 
 
 
