@@ -41,10 +41,12 @@ check_caasp4_skuba_dir_available(){
         exit 1
     fi
 }
+
 check_caasp4_skuba_available(){
     echo "Checking for CaaSP 4 that skuba is available"
-    if ! rpm -q --quiet skuba; then
-        echo "skuba package is not installed. Can not deploy CaaSP 4"
+    command -v skuba 1> /dev/null
+    if [ $? -ne 0 ]; then
+        echo "skuba executable not in \$PATH. Can not deploy CaaSP 4"
         exit 1
     fi
 }
