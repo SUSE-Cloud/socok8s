@@ -224,6 +224,7 @@ data:
         openvswitch_vswitchd: "{{ suse_osh_registry_location }}/openstackhelm/openvswitch:{{ suse_infra_image_version }}"
       rabbitmq:
         prometheus_rabbitmq_exporter_helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        rabbitmq_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       tempest:
         tempest_run_tests: "{{ suse_osh_registry_location }}/openstackhelm/tempest:{{ suse_infra_image_version }}"
         ks_user: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
@@ -295,7 +296,9 @@ data:
       memcached: {}
       postgresql: {}
       promenade: {}
-      rabbitmq: {}
+      rabbitmq:
+        prometheus_rabbitmq_exporter_helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
+        rabbitmq_init: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       shipyard:
         shipyard: "{{ suse_airship_registry_location }}/airshipit/shipyard:{{ suse_airship_components_image_tag['shipyard'] }}"
         shipyard_db_sync: "{{ suse_airship_registry_location }}/airshipit/shipyard:{{ suse_airship_components_image_tag['shipyard'] }}"
