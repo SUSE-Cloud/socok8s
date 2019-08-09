@@ -2,7 +2,7 @@
 
 set -e
 # bootstrap-ansible-if-necessary installs ansible in a virtualenv
-# should it be required. It can probably go away when ansible 2.7
+# should it be required. It can probably go away when ansible 2.8
 # is packaged for all the distributions.
 
 function install_ansible (){

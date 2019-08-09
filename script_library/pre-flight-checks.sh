@@ -95,9 +95,9 @@ check_ansible_requirements (){
         echo "Install from your system packages or set SOCOK8S_USE_VIRTUALENV=True to install ansible and other requirements into a virtualenv."
         exit 1
     fi
-    # We need ansible version 2.7 minimum
-    if [[ $(ansible --version | awk 'NR==1 { gsub(/[.]/,""); print substr($2,0,2); }' ) -lt "27" ]]; then
-        echo "Insufficent version of ansible: 2.7 or greater is required."
+    # We need ansible version 2.8 minimum
+    if [[ $(ansible --version | awk 'NR==1 { gsub(/[.]/,""); print substr($2,0,2); }' ) -lt "28" ]]; then
+        echo "Insufficent version of ansible: 2.8 or greater is required."
         echo "Install from your system packages or set SOCOK8S_USE_VIRTUALENV=True to install ansible and other requirements into a virtualenv."
         exit 1
     fi

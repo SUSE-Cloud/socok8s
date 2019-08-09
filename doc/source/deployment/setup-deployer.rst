@@ -78,7 +78,7 @@ There are several ways to install the SUSE Containerized OpenStack software.
 
    The following software must be manually installed on your `Deployer` using zypper or pip install:
 
-     * ansible >= 2.7.8
+     * ansible >= 2.8.3
      * git-core
      * jq
      * python3-virtualenv

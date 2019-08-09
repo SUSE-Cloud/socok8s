@@ -79,8 +79,8 @@ of the hosts you will need. For example:
          ansible_host: 10.86.1.144
 
 See also
-`Ansible Inventory Hosts and Groups
-<https://docs.ansible.com/ansible/2.7/user_guide/intro_inventory.html#hosts-and-groups>`_.
+`Ansible: Hosts and Groups
+<https://docs.ansible.com/ansible/2.8/user_guide/intro_inventory.html#inventory-basics-hosts-and-groups>`_.
 
 .. tip::
 
