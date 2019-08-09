@@ -92,10 +92,6 @@ Why...
    <insert your favorite language here>, mostly because the shell script grew
    organically out of actual use and CI needs.
 
-... Installing from sources?
-   Neither the socok8s repo nor the OpenStack-Helm project's repositories
-   have been packaged for Leap/SLE 15 yet.
-
 Image building process
 ======================
 
@@ -253,7 +249,7 @@ for deploying OSH later.
      localhost -> cloud             [label = "Start CaaSP3 stack"];
      localhost <- cloud             [label = "CaaSP inventory data"];
 
-     localhost -> cloud             [label = "Start Leap 15 node"];
+     localhost -> cloud             [label = "Start SLE 15 SP1 node"];
      localhost <- cloud             [label = "Deployer inventory data"];
 
      localhost -> deployer          [label = "Configure deployer" ];
