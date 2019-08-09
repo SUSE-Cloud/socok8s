@@ -26,6 +26,7 @@ pipeline {
         choice(choices: ['caasp3', 'caasp4'], description: 'Which caasp version to use?', name: 'caasp_version')
         booleanParam(name: 'run_tempest', defaultValue: false, description: 'Run tempest tests?')
         choice(choices: ['smoke', 'all'], description: 'Run smoke or all tempest tests?', name: 'tempest_test_type')
+        choice(choices: ['ses_aio', 'ses_rook'], description: 'Which ses version to use?', name: 'ses_version')
     }
 
     environment {
@@ -35,6 +36,7 @@ pipeline {
         SOCOK8S_ENVNAME = "cloud-socok8s-${env.BRANCH_NAME.replaceAll("[^a-zA-Z0-9-]+", "-").toLowerCase()}-${env.BUILD_NUMBER}"
         SOCOK8S_OPENSUSE_MIRROR="https://provo-mirror.opensuse.org"
         OS_CLOUD = "engcloud-socok8s-ci"
+        SOCOK8S_TEST_CEPH_ROOK="true"
         KEYNAME = "engcloud-cloud-ci"
         DELETE_ANYWAY = "YES"
         DEPLOYMENT_MECHANISM = "openstack"
@@ -153,6 +155,7 @@ pipeline {
                     }
                 }
                 stage('Deploy SES') {
+                    when { expression  { params.ses_version == "ses_aio" } }
                     steps {
                         sh "./run.sh deploy_ses"
                     }
@@ -188,6 +191,13 @@ pipeline {
             }
             steps {
                 sh "source ${WORKSPACE}/sock_${env.SOCOK8S_ENVNAME} && ./run.sh setup_caasp_workers_for_openstack"
+            }
+        }
+
+        stage('Deploy SES on Kubernetes with rook') {
+            when { expression  { params.ses_version == "ses_rook" } }
+            steps {
+                sh "./run.sh deploy_ses_rook"
             }
         }
 

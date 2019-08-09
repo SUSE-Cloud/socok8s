@@ -1,0 +1,48 @@
+---
+- name: Copy storageclass definition
+  copy:
+    src: "{{ playbook_dir }}/roles/ses-rook/files/test_storageclass.yml"
+    dest: /tmp/test_storageclass.yml
+
+- name: Create storageclass
+  command: "kubectl create -f /tmp/test_storageclass.yml"
+  register: _rook_ceph_test_storageclass_create
+  changed_when: "'created' in _rook_ceph_test_storageclass_create.stdout"
+
+- name: Copy pvc definition
+  copy:
+    src: "{{ playbook_dir }}/roles/ses-rook/files/test_pvc.yml"
+    dest: /tmp/test_pvc.yml
+
+- name: Create pvc
+  command: "kubectl create -f /tmp/test_pvc.yml"
+  register: _rook_ceph_test_pvc_create
+  changed_when: "'created' in _rook_ceph_test_pvc_create.stdout"
+
+# test if pvc is bound i.e. it has been created and available
+# so we know that the ceph cluster+rook is working as expected
+- name: Wait until pvc is bound
+  command: "kubectl get pvc test-pvc -o jsonpath='{.status.phase}'"
+  register: _rook_ceph_test_pvc_status
+  until: "'Bound' in _rook_ceph_test_pvc_status.stdout"
+  retries: 15
+  delay: 10
+
+# now lets clean up everything as we dont want to have leftovers in the cluster
+- name: Delete pvc
+  command: "kubectl delete -f /tmp/test_pvc.yml"
+  register: _rook_ceph_test_pvc_create
+  changed_when: "'deleted' in _rook_ceph_test_pvc_create.stdout"
+
+- name: Delete storageclass
+  command: "kubectl delete -f /tmp/test_storageclass.yml"
+  register: _rook_ceph_test_storageclass_create
+  changed_when: "'deleted' in _rook_ceph_test_storageclass_create.stdout"
+
+- name: Clean up definition files
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /tmp/test_storageclass.yml
+    - /tmp/test_pvc.yml
