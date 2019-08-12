@@ -24,12 +24,6 @@ deploy_on_openstack_ses_repos_per_imagename:
     - SES5-update
 
 deploy_on_openstack_osh_repos_per_imagename:
-  openSUSE-Leap-15.0:
-    - openSUSE-Leap-15.0-Oss
-    - openSUSE-Leap-15.0-Update
-    - openSUSE-Leap-15.0-Cloud
-    - Leap15develtools
-    - socok8s
   SLE-15-SP1-JeOS-GM:
     - SLES-15-SP1-Product
     - SLES-15-SP1-Product-Update

@@ -28,10 +28,6 @@ socok8s_repos_to_configure:
   SLE12SP3-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SLES12-SP3-Updates/
   SES5-product: http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Pool/
   SES5-update: http://provo-clouddata.cloud.suse.de/repos/x86_64/SUSE-Enterprise-Storage-5-Updates/
-  openSUSE-Leap-15.0-Oss: "{{ obs_mirror }}/distribution/leap/15.0/repo/oss/"
-  openSUSE-Leap-15.0-Update: "{{ obs_mirror }}/update/leap/15.0/oss/"
-  openSUSE-Leap-15.0-Cloud: "{{ obs_mirror }}/repositories/Cloud:/Tools/openSUSE_Leap_15.0/"
-  Leap15develtools: "{{ obs_mirror }}/repositories/devel:/tools/openSUSE_Leap_15.0/"
   SLES-15-SP1-Product: "{{ ibs_mirror }}/SUSE/Products/SLE-Product-SLES/15-SP1/x86_64/product/"
   SLES-15-SP1-Product-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Product-SLES/15-SP1/x86_64/update/"
   SLE-15-SP1-Module-BaseSystem: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Basesystem/15-SP1/x86_64/product/"
@@ -47,7 +43,6 @@ socok8s_repos_to_configure:
   SLE-15-SP1-Module-Development-Tools-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Development-Tools/15-SP1/x86_64/update/"
   # needed for python-barbicanclient
   SLES-15-SP1-backports: "https://download.opensuse.org/repositories/openSUSE:/Backports:/SLE-15-SP1/standard/"
-  socok8s: "{{ obs_mirror }}/repositories/Cloud:/socok8s:/master/openSUSE_Leap_15.0/"
   socok8s_SLE15SP1: "https://download.opensuse.org/repositories/Cloud:/socok8s:/master/SLE_15_SP1/"
   CAASP30-update: "{{ dist_mirror }}/ibs/SUSE/Updates/SUSE-CAASP/3.0/x86_64/update/"
   CAASP30-pool: "{{ dist_mirror }}/ibs/SUSE/Products/SUSE-CAASP/3.0/x86_64/product/"
