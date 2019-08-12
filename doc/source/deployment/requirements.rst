@@ -10,12 +10,8 @@ requirements.
 Infrastructure
 --------------
 
-* The `Deployer` must run openSUSE Leap 15.0. See :ref:`setupdeployer` for
+* The `Deployer` must run SUSE SLE 15 SP1. See :ref:`setupdeployer` for
   required deployment tools and packages.
-
-  .. note::
-     To install openSUSE Leap 15.0, follow the instructions at
-     https://software.opensuse.org/distributions/leap.
 
 * The :term:`CaaS Platform` cluster must run the latest :term:`CaaS Platform`
   version 3.
