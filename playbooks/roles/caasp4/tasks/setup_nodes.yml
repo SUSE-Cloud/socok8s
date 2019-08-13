@@ -82,3 +82,18 @@
   loop: "{{ _ssh_known_host_results.results }}"
   loop_control:
     label: "{{ item.item }}"
+
+# TODO(itxaka): Remove this when we are able to do this on the terraform config: https://github.com/SUSE/skuba/pull/519
+- name: Port security disable on ports for masters+workers+lbs
+  shell: |
+    ## Get ports from our network
+    serverports=$(openstack port list --network {{ deploy_on_openstack_internal_network }} -c ID -f value)
+    for port in $serverports; do
+        ## Disable port security on those pesky instances
+        openstack port set ${port} --no-security-group --disable-port-security
+    done
+  args:
+    executable: /bin/bash
+  changed_when: False
+  tags:
+    - bug
