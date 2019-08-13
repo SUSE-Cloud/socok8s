@@ -69,12 +69,7 @@ case "$deployment_action" in
         deploy_ses
         ;;
     "deploy_caasp")
-        # this is CaaSP 3
         deploy_caasp
-        ;;
-    "deploy_caasp4")
-        # this is CaaSP 4
-        deploy_caasp4
         ;;
     "deploy_ccp_deployer")
         # CCP deployer is a node that will be used to control k8s cluster,
@@ -83,9 +78,6 @@ case "$deployment_action" in
         ;;
     "configure_ccp_deployer")
         configure_ccp_deployer
-        ;;
-    "enroll_caasp_workers")
-        enroll_caasp_workers
         ;;
     "patch_upstream")
         patch_upstream
@@ -120,7 +112,6 @@ case "$deployment_action" in
         deploy_caasp
         deploy_ccp_deployer
         configure_ccp_deployer
-        enroll_caasp_workers
         ;;
     "setup_openstack")
         setup_caasp_workers_for_openstack
@@ -144,7 +135,6 @@ case "$deployment_action" in
         deploy_caasp
         deploy_ccp_deployer
         configure_ccp_deployer
-        enroll_caasp_workers
         setup_caasp_workers_for_openstack
         patch_upstream
         build_images
@@ -153,8 +143,8 @@ case "$deployment_action" in
     "teardown")
         teardown
         ;;
-    "clean_caasp4")
-        clean_caasp4
+    "clean_caasp")
+        clean_caasp
         ;;
     "clean_k8s")
         clean_k8s

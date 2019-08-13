@@ -23,7 +23,7 @@ pipeline {
     parameters {
         /* first value in the list is the default */
         choice(choices: ['airship', 'osh'], description: 'Which deployment mechanism?', name: 'deployment')
-        choice(choices: ['caasp3', 'caasp4'], description: 'Which caasp version to use?', name: 'caasp_version')
+        choice(choices: ['caasp4'], description: 'Which caasp version to use?', name: 'caasp_version')
         booleanParam(name: 'run_tempest', defaultValue: false, description: 'Run tempest tests?')
         choice(choices: ['smoke', 'all'], description: 'Run smoke or all tempest tests?', name: 'tempest_test_type')
     }
@@ -131,16 +131,9 @@ pipeline {
                 timeout(time: 45, unit: 'MINUTES', activity: true)
             }
             parallel {
-                stage('Deploy CaaSP3') {
-                    when { expression  { params.caasp_version == "caasp3" } }
-                    steps {
-                        sh "./run.sh deploy_caasp"
-                    }
-                }
                 stage('Deploy CaaSP4') {
-                    when { expression  { params.caasp_version == "caasp4" } }
                     steps {
-                        sh "source ${WORKSPACE}/sock_${env.SOCOK8S_ENVNAME} && ./run.sh deploy_caasp4"
+                        sh "source ${WORKSPACE}/sock_${env.SOCOK8S_ENVNAME} && ./run.sh deploy_caasp"
                     }
                 }
                 stage('Deploy SES') {
@@ -154,21 +147,6 @@ pipeline {
                         sh "./run.sh configure_ccp_deployer"
                     }
                 }
-            }
-        }
-
-        stage('Enroll CaaSP workers') {
-            when {
-                allOf {
-                    expression { return  TestFunctional }
-                    expression { params.caasp_version == "caasp3" }
-                }
-            }
-            options {
-                timeout(time: 10, unit: 'MINUTES', activity: true)
-            }
-            steps {
-                sh "./run.sh enroll_caasp_workers"
             }
         }
 

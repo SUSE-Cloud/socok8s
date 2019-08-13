@@ -19,12 +19,9 @@ function deploy_ses(){
     echo "ses-ansible deploy is successful"
 }
 function deploy_caasp(){
-    echo "This is not supported yet. Check at kubic-automation tooling."
-}
-function deploy_caasp4(){
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_dir_available
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_available
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_ssh_agent_running
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_skuba_dir_available
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_terraform_available
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_ssh_agent_running
     echo "Starting CaaSP 4 deploy on libvirt"
     run_ansible ${socok8s_absolute_dir}/playbooks/kvm-deploy_caasp4.yml
     echo "CaaSP 4 deployed successfully on libvirt"
@@ -44,10 +41,10 @@ function remove_compute(){
     echo "Now Remove compute"
     run_ansible ${socok8s_absolute_dir}/playbooks/remove_compute.yml -e compute_node_name=$1
 }
-function clean_caasp4(){
+function clean_caasp(){
     if command -v ${TERRAFORM_BINARY_PATH} && [ -d submodules/skuba ]; then
-        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_dir_available
-        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_available
+        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_skuba_dir_available
+        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_terraform_available
         echo "Delete CaaSP 4"
         run_ansible ${socok8s_absolute_dir}/playbooks/kvm-delete_caasp4.yml
     fi
@@ -60,7 +57,7 @@ function teardown(){
     then
         gather_logs
     fi
-    clean_caasp4
+    clean_caasp
     clean_kvm
     clean_userfiles
 }

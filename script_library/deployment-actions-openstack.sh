@@ -24,18 +24,12 @@ function deploy_ses(){
 }
 function deploy_caasp(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
-    echo "Starting CaaSP 3 deploy"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-create_caasp.yml
-    echo "CaaSP 3 deployed successfully"
-}
-function deploy_caasp4(){
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_available
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_available
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_version
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_skuba_available
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_terraform_available
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_terraform_version
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_ssh_agent_running
     echo "Starting CaaSP 4 deploy"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_caasp4.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_caasp.yml
     echo "CaaSP 4 deployed successfully"
 }
 
@@ -48,23 +42,19 @@ function configure_ccp_deployer() {
     echo "Configure CCP deployer node"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-configure_ccp_deployer.yml
 }
-function enroll_caasp_workers() {
-    echo "Enrolling caasp worker nodes into the cluster"
-    run_ansible ${socok8s_absolute_dir}/playbooks/generic-enroll_caasp_workers.yml
-}
-function clean_caasp4(){
+function clean_caasp(){
     if command -v ${TERRAFORM_BINARY_PATH} ; then
-        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_available
+        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_terraform_available
         echo "Delete CaaSP 4"
-        run_ansible ${socok8s_absolute_dir}/playbooks/openstack-delete_caasp4.yml
+        run_ansible ${socok8s_absolute_dir}/playbooks/openstack-delete_caasp.yml
     fi
 }
 function clean_openstack(){
     echo "Deleting on OpenStack"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-osh_instance.yml -e osh_node_delete=True
-    echo "Delete CaaSP 3 nodes"
+    echo "Delete CaaSP 4 nodes"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-delete_caasp.yml
-    clean_caasp4
+    clean_caasp
     echo "Delete SES node"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio_instance.yml -e ses_node_delete=True
     echo "Delete network stack"
@@ -79,4 +69,3 @@ function teardown(){
     clean_openstack
     clean_userfiles
 }
-
