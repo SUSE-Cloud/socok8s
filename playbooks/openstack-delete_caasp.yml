@@ -1,37 +1,39 @@
 ---
+#
+# (c) Copyright 2019 SUSE Linux GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+
 - hosts: localhost
-  gather_facts: no
-  connection: local
-  vars:
-    stackname_suffix: "caasp"
-  post_tasks:
-    - name: Load generic vars
-      include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
-    - name: Load openstack vars
-      include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+  gather_facts: yes
+  any_errors_fatal: true
+  vars_files:
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
+    - "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+  tasks:
+    - import_role:
+        name: caasp4
+        tasks_from: cleanup_nodes
+      vars:
+        import_terraform_resources: true
+        skuba_ci_terraform_workspace: "{{ socok8s_workspace }}/skuba-terraform/"
 
-    - name: Define stackname to create
-      set_fact:
-        stackname: "{{ socok8s_envname }}-{{ stackname_suffix }}"
 
-    - name: Delete OpenStack CaaSP
-      block:
-        - name: Delete stack
-          os_stack:
-            name: "{{ stackname }}"
-            state: absent
-            auth_type: "{{ os_auth_type }}"
-
-        - name: Remove host from known hosts
-          known_hosts:
-            state: absent
-            name: "{{ hostvars[item]['ansible_host'] | default('') }}"
-          loop: "{{ groups['caasp-admin']|default([]) + groups['caasp-masters']|default([]) + groups['caasp-workers']|default([]) }}"
-
-        - name: Remove caasp files
-          file:
-            state: absent
-            path: "{{ item }}"
-          loop:
-            - "{{ socok8s_caasp_environment_details }}"
-            - "{{ socok8s_workspace }}/inventory/caasp.yml"
+    - name: Unset caasp4 in extravars
+      delegate_to: localhost
+      lineinfile:
+        path: "{{ socok8s_extravars }}"
+        create: yes
+        line: "caasp4_deployed: True"
+        state: absent
