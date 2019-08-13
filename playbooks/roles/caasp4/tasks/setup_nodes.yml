@@ -55,3 +55,30 @@
   template:
     src: inventory-caasp4.yml.j2
     dest: "{{ socok8s_workspace }}/inventory/caasp4.yml"
+
+- meta: refresh_inventory
+
+- name: Get caasp ips
+  set_fact:
+    ssh_known_hosts_masters: "{{ groups['caasp-masters'] | map('extract', hostvars, ['ansible_host']) | list }}"
+    ssh_known_hosts_workers: "{{ groups['caasp-workers'] | map('extract', hostvars, ['ansible_host']) | list }}"
+  tags:
+    - ssh
+    - caasp4
+
+- name: Get pubkey, and add it to known hosts
+  command: "ssh-keyscan -H {{ item | quote }}"
+  changed_when: false
+  register: _ssh_known_host_results
+  loop: "{{ ssh_known_hosts_masters +  ssh_known_hosts_workers }}"
+  loop_control:
+    label: "{{ item }}"
+
+- name: Insert known hosts
+  known_hosts:
+    state: present
+    name: "{{ item.item }}"
+    key: "{{ item.stdout }}"
+  loop: "{{ _ssh_known_host_results.results }}"
+  loop_control:
+    label: "{{ item.item }}"

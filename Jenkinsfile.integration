@@ -47,6 +47,12 @@ pipeline {
                 sh 'printenv'
             }
         }
+        stage('Set ssh-agent for caasp4 deployment') {
+            when { expression { return  TestFunctional } }
+            steps {
+                sh "files/setup-ssh-agent-for-caasp4-ci.py ${env.SOCOK8S_ENVNAME}"
+            }
+        }
         stage('Check for updated files') {
             when { expression { env.BRANCH_NAME != 'master' } }
             steps {
@@ -129,7 +135,7 @@ pipeline {
                 stage('Deploy CaaSP4') {
                     when { expression  { params.caasp_version == "caasp4" } }
                     steps {
-                        sh "./run.sh deploy_caasp4"
+                        sh "source ${WORKSPACE}/sock_${env.SOCOK8S_ENVNAME} && ./run.sh deploy_caasp4"
                     }
                 }
                 stage('Deploy SES') {
@@ -150,7 +156,7 @@ pipeline {
             when {
                 allOf {
                     expression { return  TestFunctional }
-                    expression  { params.caasp_version == "caasp3" }
+                    expression { params.caasp_version == "caasp3" }
                 }
             }
             options {
@@ -167,7 +173,7 @@ pipeline {
                 timeout(time: 10, unit: 'MINUTES', activity: true)
             }
             steps {
-                sh "./run.sh setup_caasp_workers_for_openstack"
+                sh "source ${WORKSPACE}/sock_${env.SOCOK8S_ENVNAME} && ./run.sh setup_caasp_workers_for_openstack"
             }
         }
 
@@ -199,7 +205,7 @@ pipeline {
                 }
             }
             steps {
-                sh "./run.sh setup_airship"
+                sh "source ${WORKSPACE}/sock_${env.SOCOK8S_ENVNAME} && ./run.sh setup_airship"
             }
         }
     }
@@ -215,7 +221,7 @@ pipeline {
                 }
             }
             script {
-                sh './run.sh gather_logs'
+                sh "source ${WORKSPACE}/sock_${env.SOCOK8S_ENVNAME} && ./run.sh gather_logs"
             }
             zip archive: true, dir: 'logs/', zipFile: 'logs.zip'
             archiveArtifacts artifacts: 'logs.zip'

@@ -35,6 +35,12 @@
     - _terraform_state_file.stat.exists
     - import_terraform_resources|bool
 
+- name: Terraform destroy
+  command: "{{ terraform_binary_path }} destroy -auto-approve"
+  args:
+    chdir: "{{ skuba_ci_terraform_workspace }}"
+  when: _terraform_state_file.stat.exists
+
 - name: Destroy terraform plan
   terraform:
     binary_path: "{{ terraform_binary_path }}"

@@ -38,6 +38,7 @@ skuba_ci_terraform_worker_flavor: "m1.medium"
 # A public key file that is used by terraform when setting up nodes
 # Login to the CaaSP 4 nodes is possible with this priv/pub key combination
 skuba_ci_terraform_autorized_keys_files:
+  - "{{ lookup('file', '/home/jenkins/.ssh/id_rsa.pub', errors='ignore') }}"
   - "{{ lookup('file', '{{ ansible_env.HOME }}/.ssh/id_rsa.pub', errors='ignore') }}"
 
 # The directory where the skuba CI terraform data will be copied to

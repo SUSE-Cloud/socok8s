@@ -66,7 +66,7 @@
     name: airship-configure-worker
     tasks_from: subvolumes-setup.yml
   delegate_to: '{{ compute_node_name }}'
-  when: compute_node_name in groups['airship-openstack-compute-workers']
+  when: compute_node_name in groups['airship-openstack-compute-workers'] and not caasp4_deployed
   vars:
     clean_compute: "delete_subvolume"
     clean_control_node: '{{ node_label_result.stdout | default("") }}'

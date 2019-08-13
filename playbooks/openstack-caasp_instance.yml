@@ -99,6 +99,7 @@
               {% for node in admins %}
                   {{ node.Name }}:
                     ansible_host: {{ node.Networks.split(',')[-1].replace(' ','') }}
+                    ansible_user: root
               {% endfor %}
 
               caasp-masters:
@@ -106,6 +107,7 @@
               {% for node in masters %}
                   {{ node.Name }}:
                     ansible_host: {{ node.Networks.split(',')[-1].replace(' ','') }}
+                    ansible_user: root
               {% endfor %}
 
               caasp-workers:
@@ -113,6 +115,7 @@
               {% for node in workers %}
                   {{ node.Name }}:
                     ansible_host: {{ node.Networks.split(',')[-1].replace(' ','') }}
+                    ansible_user: root
               {% endfor %}
 
               airship-openstack-control-workers:
@@ -120,6 +123,7 @@
               {% for node in workers %}{% if loop.index <= 2 %}
                   {{ node.Name }}:
                     ansible_host: {{ node.Networks.split(',')[-1].replace(' ','') }}
+                    ansible_user: root
               {% if loop.first %}
                     primary: yes
               {% endif %}
@@ -135,6 +139,7 @@
               {% if loop.index == 3 %}
                   {{ node.Name }}:
                     ansible_host: {{ node.Networks.split(',')[-1].replace(' ','') }}
+                    ansible_user: root
               {% if loop.first %}
                     primary: yes
               {% endif %}

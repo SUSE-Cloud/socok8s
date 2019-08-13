@@ -37,6 +37,7 @@
         hosts:
           {{ servername }}:
             ansible_host: {{ floating_ip }}
+            ansible_user: {{ ssh_user|default('root') }}
             {% if python_interpreter|default(False) %}ansible_python_interpreter: {{ python_interpreter }}{% endif %}
 
 - meta: refresh_inventory

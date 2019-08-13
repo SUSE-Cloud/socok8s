@@ -32,7 +32,7 @@ function deploy_caasp4(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_skuba_available
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_available
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_ssh_agent_running
+    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp4_terraform_version
     echo "Starting CaaSP 4 deploy"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_caasp4.yml
     echo "CaaSP 4 deployed successfully"

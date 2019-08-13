@@ -28,3 +28,12 @@
       vars:
         import_terraform_resources: true
         skuba_ci_terraform_workspace: "{{ socok8s_workspace }}/skuba-terraform/"
+
+
+    - name: Unset caasp4 in extravars
+      delegate_to: localhost
+      lineinfile:
+        path: "{{ socok8s_extravars }}"
+        create: yes
+        line: "caasp4_deployed: True"
+        state: absent

@@ -13,7 +13,7 @@
   known_hosts:
     state: absent
     name: "{{ hostvars[item]['ansible_host'] }}"
-  loop: "{{ groups[groupname_for_inventory] }}"
+  loop: "{{ groups[groupname_for_inventory] | default([]) }}"
 
 - name: Delete inventory
   file:

@@ -2,7 +2,7 @@
 caasp-masters:
   hosts:
 {% for master_ip in _terraform_json_output.ip_masters.value %}
-    caasp-master-{{ loop.index0 }}:
+    master-{{ loop.index0 }}:
       ansible_host: {{ master_ip }}
 {% endfor %}
   vars:
@@ -12,7 +12,7 @@ caasp-masters:
 caasp-workers:
   hosts:
 {% for worker_ip in _terraform_json_output.ip_workers.value %}
-    caasp-worker-{{ loop.index0 }}:
+    worker-{{ loop.index0 }}:
       ansible_host: {{ worker_ip }}
 {% endfor %}
   vars:
@@ -23,7 +23,7 @@ airship-openstack-control-workers:
   hosts: &firsttwoworkers
 {% for worker_ip in _terraform_json_output.ip_workers.value %}
 {% if loop.index0 < 2 %}
-    caasp-worker-{{ loop.index0 }}:
+    worker-{{ loop.index0 }}:
       ansible_host: {{ worker_ip }}
 {% endif %}
 {% endfor %}
@@ -41,7 +41,7 @@ airship-openstack-compute-workers:
   hosts:
 {% for worker_ip in _terraform_json_output.ip_workers.value %}
 {% if loop.index0 > 1 %}
-    caasp-worker-{{ loop.index0}}:
+    worker-{{ loop.index0}}:
       ansible_host: {{ worker_ip }}
 {% endif %}
 {% endfor %}

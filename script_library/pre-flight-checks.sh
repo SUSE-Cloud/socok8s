@@ -62,6 +62,15 @@ check_caasp4_terraform_available(){
         exit 1
     fi
 }
+
+check_caasp4_terraform_version(){
+  echo "Checking for terraform version (should be version 0.11)"
+  ${TERRAFORM_BINARY_PATH} version|egrep -q "^Terraform\sv0\.11\.[0-9]{2}$"
+  if [ $? -ne 0 ]; then
+    echo "Only version 0.11.x is supported for ${TERRAFORM_BINARY_PATH}"
+    exit 1
+  fi
+}
 check_caasp4_ssh_agent_running(){
     echo "Checking if ssh-agent is running"
     if ! ssh-add -L >/dev/null ; then
