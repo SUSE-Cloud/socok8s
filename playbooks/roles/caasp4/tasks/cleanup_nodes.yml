@@ -52,3 +52,8 @@
   file:
     path: "{{ skuba_ci_terraform_workspace }}"
     state: absent
+
+- name: Remove skuba cluster dir
+  file:
+    path: "{{ skuba_cluster_basedir }}/{{ skuba_cluster_name }}"
+    state: absent
