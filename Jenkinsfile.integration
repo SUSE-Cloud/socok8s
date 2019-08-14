@@ -24,6 +24,8 @@ pipeline {
         /* first value in the list is the default */
         choice(choices: ['airship', 'osh'], description: 'Which deployment mechanism?', name: 'deployment')
         choice(choices: ['caasp3', 'caasp4'], description: 'Which caasp version to use?', name: 'caasp_version')
+        booleanParam(name: 'run_tempest', defaultValue: false, description: 'Run tempest tests?')
+        choice(choices: ['smoke', 'all'], description: 'Run smoke or all tempest tests?', name: 'tempest_test_type')
     }
 
     environment {
@@ -206,6 +208,26 @@ pipeline {
             }
             steps {
                 sh "source ${WORKSPACE}/sock_${env.SOCOK8S_ENVNAME} && ./run.sh setup_airship"
+            }
+        }
+
+        stage('Run Tempest') {
+            options {
+                timeout(time: 240, unit: 'MINUTES', activity: true)
+            }
+            when {
+                allOf {
+                    expression { env.run_tempest == 'true' }
+                    expression { params.deployment == 'airship' }
+                    expression { return  TestFunctional }
+                }
+            }
+            steps {
+                sh """
+                  export TEMPEST_TEST_TYPE=${env.tempest_test_type}
+                  export AIRSHIP_TEMPEST_LOG_STDOUT=True
+                  ./run.sh test
+                """
             }
         }
     }
