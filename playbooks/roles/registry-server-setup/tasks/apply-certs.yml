@@ -1,4 +1,6 @@
 ---
+- name: Populate service facts
+  service_facts:
 
 - name: Copy self-signed certs to expected location on nodes
   copy:
@@ -15,7 +17,7 @@
   notify:
     - restart docker
   when:
-    - _copy_ssc_result.changed
+    - "_copy_ssc_result.changed and 'docker.service' in ansible_facts.services"
   tags:
     - skip_ansible_lint
 
