@@ -7,7 +7,8 @@
 
 - name: Set site path
   set_fact:
-    site_path: "{{ upstream_repos_clone_folder }}/airship/treasuremap/site/{{ socok8s_site_name }}"
+    site_path: "{{ upstream_repos_clone_folder }}/airship/treasuremap/site/{{ socok8s_site_name }}/"
+    workspace_site_path: "{{ socok8s_workspace }}/{{ socok8s_site_name }}/"
   tags:
     - always
 
@@ -18,15 +19,20 @@
     state: absent
 
 - name: Ensure site directory for {{ socok8s_site_name }} exists
-  become: yes
   file:
     path: "{{ site_path }}"
     state: directory
 
-- name: Create site manifest directory structure
-  become: yes
+- name: Ensure local site directory exists
+  delegate_to: localhost
   file:
-    path: '{{ site_path }}/{{ item.path }}'
+    path: "{{ workspace_site_path }}"
+    state: directory
+
+- name: Create site manifest directory structure
+  delegate_to: localhost
+  file:
+    path: '{{ workspace_site_path }}/{{ item.path }}'
     state: directory
   with_filetree: '{{ playbook_dir }}/../site/soc'
   when: item.state == 'directory'
@@ -34,10 +40,10 @@
     - install
 
 - name: Create site profiles manifests
-  become: yes
+  delegate_to: localhost
   copy:
     src: '{{ item }}'
-    dest: '{{ site_path }}'
+    dest: '{{ workspace_site_path }}'
   loop:
     - '{{ playbook_dir }}/../site/soc/profiles'
     - '{{ playbook_dir }}/../site/soc/networks'
@@ -47,19 +53,19 @@
     - install
 
 - name: Create site-definition yaml
-  become: yes
+  delegate_to: localhost
   template:
     src: '{{ playbook_dir }}/../site/soc/site-definition.yaml'
-    dest: '{{ site_path }}'
+    dest: '{{ workspace_site_path }}'
   tags:
     - install
     - update_airship_osh_site
 
 - name: Create site software manifests
-  become: yes
+  delegate_to: localhost
   template:
     src: '{{ item.src }}'
-    dest: '{{ site_path }}/software/{{ item.path }}'
+    dest: '{{ workspace_site_path }}/software/{{ item.path }}'
   with_filetree: '{{ playbook_dir }}/../site/soc/software/'
   when: item.state == 'file'
   tags:
@@ -67,15 +73,27 @@
     - update_airship_osh_site
 
 - name: Create site secrets manifests
-  become: yes
+  delegate_to: localhost
   template:
     src: '{{ item.src }}'
-    dest: '{{ site_path }}/secrets/{{ item.path }}'
+    dest: '{{ workspace_site_path }}/secrets/{{ item.path }}'
   with_filetree: '{{ playbook_dir }}/../site/soc/secrets/'
   when: item.state == 'file'
   tags:
     - install
     - update_airship_osh_site
+
+- name: Sync local site dir with remote
+  become: yes
+  synchronize:
+    src: "{{ workspace_site_path }}"
+    dest: "{{ site_path }}"
+    recursive: yes
+
+- name: Remove local site
+  file:
+    path: "{{ workspace_site_path }}"
+    state: absent
 
 - name: Create pod scale profile
   become: yes
