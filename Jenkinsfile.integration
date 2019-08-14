@@ -6,26 +6,10 @@ TestFunctional = true
 
 pipeline {
 
-    options {
-        timestamps()
-        parallelsAlwaysFailFast()
-        // Note(jhesketh): Unfortunately we can't set a global timeout for the
-        //                 pipeline as it would also apply to the post stages
-        //                 and hence interrupt our cleanup.
-    }
-
     agent {
         node {
             label "cloud-ccp-ci"
         }
-    }
-
-    parameters {
-        /* first value in the list is the default */
-        choice(choices: ['airship', 'osh'], description: 'Which deployment mechanism?', name: 'deployment')
-        choice(choices: ['caasp3', 'caasp4'], description: 'Which caasp version to use?', name: 'caasp_version')
-        booleanParam(name: 'run_tempest', defaultValue: false, description: 'Run tempest tests?')
-        choice(choices: ['smoke', 'all'], description: 'Run smoke or all tempest tests?', name: 'tempest_test_type')
     }
 
     environment {
@@ -41,6 +25,31 @@ pipeline {
         ANSIBLE_VERBOSITY = 2
         ANSIBLE_STDOUT_CALLBACK = "yaml"
         USER = "jenkins" /* Why isn't this set in the jenkins environment? */
+    }
+
+    parameters {
+        /* first value in the list is the default */
+        choice(choices: ['airship', 'osh'], description: 'Which deployment mechanism?', name: 'deployment')
+        choice(choices: ['caasp3', 'caasp4'], description: 'Which caasp version to use?', name: 'caasp_version')
+        booleanParam(name: 'run_tempest', defaultValue: false, description: 'Run tempest tests?')
+        choice(choices: ['smoke', 'all'], description: 'Run smoke or all tempest tests?', name: 'tempest_test_type')
+        booleanParam(name: 'reserve_env', description: 'Should we reserve the cloud_env resource?', defaultValue: true)
+        string(name: 'cloud_env', description:'The environment identifier', defaultValue: 'socok8s-ci')
+    }
+
+    options {
+        timestamps()
+        parallelsAlwaysFailFast()
+        // reserve a resource if instructed to do so, otherwise use a dummy resource
+        // and a zero quantity to fool Jenkins into thinking it reserved a resource when in fact it didn't
+        // TODO(jharker): don't lock a resource for docs-only jobs
+        lock(label: reserve_env == 'true' ? cloud_env:'dummy-resource',
+             variable: 'reserved_env',
+             quantity: reserve_env == 'true' ? 1:0 )
+        // Note(jhesketh): Unfortunately we can't set a global timeout for the
+        //                 pipeline as it would also apply to the post stages
+        //                 and hence interrupt our cleanup.
+
     }
 
     stages {
