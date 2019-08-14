@@ -24,7 +24,7 @@ in the following sections.
    cluster-api.rst
    metalcubed.rst
    argo.rst
-
+   rook-io.rst
 
 
 
