@@ -84,6 +84,14 @@
     dest:  '{{ site_path }}/profiles'
     mode: 0644
 
+- name: Copy armada sle_15sp1 docker file to upstream repo cloned directory.
+  copy:
+    src: '{{ playbook_dir }}/../images/armada_Dockerfile.sle_15sp1'
+    dest: '{{ upstream_repos_clone_folder }}/airship/armada/images/armada/Dockerfile.sle_15sp1'
+    mode: 0644
+  when:
+    - suse_airship_build_local_images
+
 - name: Build Armada image
   make:
     chdir: "{{ upstream_repos_clone_folder }}/airship/{{ item.repo_name }}"
@@ -101,6 +109,22 @@
     - { repo_name: "armada", target: "images", image_name: "armada" }
   tags:
     - install
+
+- name: Copy shipyard sle_15sp1 docker file to upstream repo cloned directory.
+  copy:
+    src: '{{ playbook_dir }}/../images/shipyard_Dockerfile.sle_15sp1'
+    dest: '{{ upstream_repos_clone_folder }}/airship/shipyard/images/shipyard/Dockerfile.sle_15sp1'
+    mode: 0644
+  when:
+    - suse_airship_build_local_images
+
+- name: Copy airflow sle_15sp1 docker file to upstream repo cloned directory.
+  copy:
+    src: '{{ playbook_dir }}/../images/airflow_Dockerfile.sle_15sp1'
+    dest: '{{ upstream_repos_clone_folder }}/airship/shipyard/images/airflow/Dockerfile.sle_15sp1'
+    mode: 0644
+  when:
+    - suse_airship_build_local_images
 
 - name: Build Shipyard images
   become: yes
@@ -122,6 +146,14 @@
   tags:
     - install
 
+- name: Copy deckhand sle_15sp1 docker file to upstream repo cloned directory.
+  copy:
+    src: '{{ playbook_dir }}/../images/deckhand_Dockerfile.sle_15sp1'
+    dest: '{{ upstream_repos_clone_folder }}/airship/deckhand/images/deckhand/Dockerfile.sle_15sp1'
+    mode: 0644
+  when:
+    - suse_airship_build_local_images
+
 - name: Build Deckhand images
   make:
     chdir: "{{ upstream_repos_clone_folder }}/airship/{{ item.repo_name }}"
@@ -139,6 +171,14 @@
     - { repo_name: "deckhand", target: "images", image_name: "deckhand" }
   tags:
     - install
+
+- name: Copy pegleg sle_15sp1 docker file to upstream repo cloned directory.
+  copy:
+    src: '{{ playbook_dir }}/../images/pegleg_Dockerfile.sle_15sp1'
+    dest: '{{ upstream_repos_clone_folder }}/airship/pegleg/images/pegleg/Dockerfile.sle_15sp1'
+    mode: 0644
+  when:
+    - suse_airship_build_local_images
 
 - name: Build Pegleg image
   make:

@@ -63,8 +63,8 @@ socok8s_deploy_config_location: "{{ socok8s_workspace }}"
 ucp_namespace_name: "{{ ucp_namespace | default('ucp') }}"
 
 # Variables used for building airship images locally
-suse_distro_identifier: opensuse_15
-suse_airship_components_base_image: "opensuse/leap:15.1"
+suse_distro_identifier: sle_15sp1
+suse_airship_components_base_image: "registry.suse.com/suse/sle15"
 
 # check if argument is set in commandline for airship_local_images_flag value
 # otherwise use corresponding environment variable to determine it
