@@ -43,9 +43,6 @@ pipeline {
         // reserve a resource if instructed to do so, otherwise use a dummy resource
         // and a zero quantity to fool Jenkins into thinking it reserved a resource when in fact it didn't
         // TODO(jharker): don't lock a resource for docs-only jobs
-        lock(label: reserve_env == 'true' ? cloud_env:'dummy-resource',
-             variable: 'reserved_env',
-             quantity: reserve_env == 'true' ? 1:0 )
         // Note(jhesketh): Unfortunately we can't set a global timeout for the
         //                 pipeline as it would also apply to the post stages
         //                 and hence interrupt our cleanup.
@@ -125,6 +122,9 @@ pipeline {
             when { expression { return  TestFunctional } }
             options {
                 timeout(time: 10, unit: 'MINUTES', activity: true)
+                lock(label: reserve_env == 'true' ? cloud_env:'dummy-resource',
+                    variable: 'reserved_env',
+                    quantity: reserve_env == 'true' ? 1:0 )
             }
             steps {
                 sh 'touch /tmp/${SOCOK8S_ENVNAME}.needcleanup'
@@ -135,6 +135,9 @@ pipeline {
             when { expression { return  TestFunctional } }
             options {
                 timeout(time: 45, unit: 'MINUTES', activity: true)
+                lock(label: reserve_env == 'true' ? cloud_env:'dummy-resource',
+                    variable: 'reserved_env',
+                    quantity: reserve_env == 'true' ? 1:0 )
             }
             parallel {
                 stage('Deploy CaaSP3') {
@@ -172,6 +175,9 @@ pipeline {
             }
             options {
                 timeout(time: 10, unit: 'MINUTES', activity: true)
+                lock(label: reserve_env == 'true' ? cloud_env:'dummy-resource',
+                    variable: 'reserved_env',
+                    quantity: reserve_env == 'true' ? 1:0 )
             }
             steps {
                 sh "./run.sh enroll_caasp_workers"
@@ -182,6 +188,9 @@ pipeline {
             when { expression { return  TestFunctional } }
             options {
                 timeout(time: 10, unit: 'MINUTES', activity: true)
+                lock(label: reserve_env == 'true' ? cloud_env:'dummy-resource',
+                    variable: 'reserved_env',
+                    quantity: reserve_env == 'true' ? 1:0 )
             }
             steps {
                 sh "source ${WORKSPACE}/sock_${env.SOCOK8S_ENVNAME} && ./run.sh setup_caasp_workers_for_openstack"
@@ -191,6 +200,9 @@ pipeline {
         stage('Deploy OpenStack Helm') {
             options {
                 timeout(time: 20, unit: 'MINUTES', activity: true)
+                lock(label: reserve_env == 'true' ? cloud_env:'dummy-resource',
+                    variable: 'reserved_env',
+                    quantity: reserve_env == 'true' ? 1:0 )
             }
             when {
                 allOf {
@@ -208,6 +220,9 @@ pipeline {
         stage('Deploy Airship') {
             options {
                 timeout(time: 45, unit: 'MINUTES', activity: true)
+                lock(label: reserve_env == 'true' ? cloud_env:'dummy-resource',
+                    variable: 'reserved_env',
+                    quantity: reserve_env == 'true' ? 1:0 )
             }
             when {
                 allOf {
