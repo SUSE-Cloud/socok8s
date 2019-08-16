@@ -18,7 +18,6 @@
   tags:
     - install
 
-# TODO(itxaka): Check if this is still valid on caasp4 as its using crio
 - name: Local registry setup on deployer node
   include: local-registry-setup.yml
   when:

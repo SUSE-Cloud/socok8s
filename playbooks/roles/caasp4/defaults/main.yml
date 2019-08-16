@@ -31,9 +31,9 @@ skuba_ci_terraform_master_count: 1
 # number of worker nodes
 skuba_ci_terraform_worker_count: 2
 # the flavor name used for master nodes
-skuba_ci_terraform_master_flavor: "m1.medium"
+skuba_ci_terraform_master_flavor: "m1.large"
 # the flavor name used for worker nodes
-skuba_ci_terraform_worker_flavor: "m1.medium"
+skuba_ci_terraform_worker_flavor: "m1.medlarge"
 
 # A public key file that is used by terraform when setting up nodes
 # Login to the CaaSP 4 nodes is possible with this priv/pub key combination
