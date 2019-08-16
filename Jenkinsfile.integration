@@ -41,6 +41,9 @@ pipeline {
         ANSIBLE_VERBOSITY = 2
         ANSIBLE_STDOUT_CALLBACK = "yaml"
         USER = "jenkins" /* Why isn't this set in the jenkins environment? */
+        USE_ARA = "True"
+        SOCOK8S_USE_VIRTUALENV = "True"
+        ARA_DIR = "$WORKSPACE"
     }
 
     stages {
@@ -233,6 +236,19 @@ pipeline {
     }
 
     post {
+        always {
+            script {
+                sh 'ara generate html ara_report'
+            }
+            publishHTML target: [
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: false,
+                        keepAll: true,
+                        reportDir: 'ara_report',
+                        reportFiles: 'index.html',
+                        reportName: 'ARA Report'
+            ]
+        }
         failure {
             script {
                 if (env.hold_instance_for_debug == 'true') {
