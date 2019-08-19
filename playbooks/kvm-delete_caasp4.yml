@@ -28,3 +28,4 @@
       vars:
         import_terraform_resources: false
         skuba_ci_terraform_workspace: "{{ socok8s_workspace }}/skuba-terraform/"
+        skuba_cluster_basedir: "{{ socok8s_workspace }}"
