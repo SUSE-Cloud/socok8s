@@ -139,7 +139,7 @@ helm_delete_timeout: 900
 
 # Number of caasp workers to use for the control plane,
 # the remainder will be used as computer hosts
-airship_ucp_control_workers: 2
+airship_ucp_control_workers: 5
 
 # Location of the kubeconfig file, fetched from velum UI (CaaSP3) or copied from cluster setup dir (CaaSP4)
 kubeconfig_file_path: "{{ socok8s_deploy_config_location }}/kubeconfig"

@@ -45,7 +45,7 @@ deploy_on_openstack_caasp_repos_per_imagename:
     - CAASP30-update
     - CAASP30-pool
 deploy_on_openstack_caasp_image: "caasp-3.0.0-GM-OpenStack-qcow"
-deploy_on_openstack_caasp_workers: 3
+deploy_on_openstack_caasp_workers: 5
 deploy_on_openstack_caasp_securitygroup: "{{ deploy_on_openstack_sesnode_securitygroup }}"
 deploy_on_openstack_caasp_stacknamefile: "{{ socok8s_workspace }}/stackname"
 deploy_on_openstack_oshnode_image: "SLE-15-SP1-JeOS-GM"
