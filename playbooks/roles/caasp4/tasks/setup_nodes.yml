@@ -95,5 +95,7 @@
   args:
     executable: /bin/bash
   changed_when: False
+  when:
+    - socok8s_deployment_mechanism == 'openstack'
   tags:
     - bug

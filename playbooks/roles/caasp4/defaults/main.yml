@@ -1,6 +1,10 @@
 # path to the terraform binary
 terraform_binary_path: "{{ (lookup('env','TERRAFORM_BINARY_PATH') | default('/usr/bin/terraform', true) ) }}"
 
+# Which deployment method have we been started with. (This is guaranted to be set
+# when executed via ./run.sh
+socok8s_deployment_mechanism: "{{ lookup('env', 'DEPLOYMENT_MECHANISM') }}"
+
 ############################################################################
 # skuba terraform openstack provider specific variables
 ############################################################################
