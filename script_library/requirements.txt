@@ -4,3 +4,5 @@ jmespath==0.9.3
 requests==2.21.0
 ara==0.16.3
 openstacksdk==0.22.0
+python-openstackclient
+python-heatclient
