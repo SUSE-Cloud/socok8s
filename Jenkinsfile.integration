@@ -266,6 +266,8 @@ pipeline {
         }
         cleanup {
             script {
+                // Do not leave the ssh-agent running
+                sh "pkill -f 'ssh-agent -a /tmp/${env.SOCOK8S_ENVNAME}'"
                 if (fileExists("/tmp/${env.SOCOK8S_ENVNAME}.needcleanup")) {
                     sh './run.sh teardown'
                     sh 'rm /tmp/${SOCOK8S_ENVNAME}.needcleanup'
