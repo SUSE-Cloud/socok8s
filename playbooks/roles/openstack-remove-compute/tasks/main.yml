@@ -60,13 +60,3 @@
     OS_CLOUD: openstack
   when: compute_id is defined and compute_id.stdout | length | int != 0
   failed_when: false
-
-- name: Delete subvolumes from compute node.
-  import_role:
-    name: airship-configure-worker
-    tasks_from: subvolumes-setup.yml
-  delegate_to: '{{ compute_node_name }}'
-  when: compute_node_name in groups['airship-openstack-compute-workers'] and not caasp4_deployed
-  vars:
-    clean_compute: "delete_subvolume"
-    clean_control_node: '{{ node_label_result.stdout | default("") }}'
