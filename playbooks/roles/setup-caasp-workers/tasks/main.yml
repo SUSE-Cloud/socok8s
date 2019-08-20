@@ -6,3 +6,9 @@
   include_tasks: copy-certificates.yml
   when:
     - "((developer_mode | default(False)) | bool) or ((socok8s_byo_certs | default(False)) | bool)"
+
+# Apparmor does not seem to be present on current CaaSP4 nodes
+#- name: Apparmor profiles in worker nodes
+#  import_tasks: apparmor-profiles.yml
+#  tags:
+#    - apparmor
