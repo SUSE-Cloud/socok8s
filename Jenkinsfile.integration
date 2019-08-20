@@ -42,7 +42,6 @@ pipeline {
         ANSIBLE_STDOUT_CALLBACK = "yaml"
         USER = "jenkins" /* Why isn't this set in the jenkins environment? */
         USE_ARA = "True"
-        SOCOK8S_USE_VIRTUALENV = "True"
         ARA_DIR = "$WORKSPACE"
     }
 
@@ -114,7 +113,17 @@ pipeline {
                 }
             }
         }
-
+        stage('Clean tox dir') {
+            when {
+                anyOf {
+                    expression { return  TestFunctional }
+                    expression { return TestDocs }
+                }
+            }
+            steps {
+                sh "rm -Rf .tox"
+            }
+        }
         stage('Create network') {
             when { expression { return  TestFunctional } }
             options {
