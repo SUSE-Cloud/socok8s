@@ -119,8 +119,8 @@
               {% endfor %}
 
               airship-openstack-control-workers:
-                hosts: &firsttwoworkers
-              {% for node in workers %}{% if loop.index <= 2 %}
+                hosts: &first_workers
+              {% for node in workers %}{% if loop.index <= airship_ucp_control_workers %}
                   {{ node.Name }}:
                     ansible_host: {{ node.Networks.split(',')[-1].replace(' ','') }}
                     ansible_user: root
@@ -131,12 +131,12 @@
               {% endfor %}
 
               airship-ucp-workers:
-                hosts: *firsttwoworkers
+                hosts: *first_workers
 
               airship-openstack-compute-workers:
                 hosts:
               {% for node in workers %}
-              {% if loop.index == 3 %}
+              {% if loop.index > airship_ucp_control_workers %}
                   {{ node.Name }}:
                     ansible_host: {{ node.Networks.split(',')[-1].replace(' ','') }}
                     ansible_user: root
@@ -147,7 +147,7 @@
               {% endfor %}
 
               airship-kube-system-workers:
-                hosts: *firsttwoworkers
+                hosts: *first_workers
 
         - meta: refresh_inventory
 
