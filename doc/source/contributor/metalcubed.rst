@@ -4,29 +4,30 @@ Metal³-Bare Metal Provisioning for Kubernetes
 
 **What is  Metal³ ?**
 
-The Metal³ project (pronounced: Metal Kubed)  provides components for  bare metal host management for Kubernetes. Metal³ aims to build on  OpenStack Ironic  to provide a Kubernetes native API for managing bare metal hosts via a provisioning stack that is also running on Kubernetes.  The Metal³ project is also building integration with the Kubernetes `cluster-api <https://github.com/kubernetes-sigs/cluster-api>`_
-project, allowing Metal³ to be used as an infrastructure backend for Machine objects from the Cluster API.
+The Metal³ project (pronounced: metal cubed) provides components for bare
+metal host management for Kubernetes. Metal³ builds on OpenStack Ironic to
+provide a Kubernetes native API for managing bare metal hosts. It uses a
+provisioning stack that is also running on Kubernetes. The Metal³ project is
+integrates the Kubernetes `Cluster-API <https://github.com/kubernetes-sigs/cluster-api>`_
+project, allowing Metal³ to be used as an infrastructure back-end for Machine
+objects from the Cluster API.
 
-We plan to use  Metal³  for bare metal host management  , integrating with `Airship 2.0  <https://wiki.openstack.org/wiki/Airship>`_  for Cloud10.
+We plan to use Metal³ for bare metal host management, integrating with
+`Airship 2.0  <https://wiki.openstack.org/wiki/Airship>`_  for SUSE OpenStack
+Cloud 10.
 
 
-* Interesting Read
+**Background Information**
 
   https://thenewstack.io/metal3-uses-openstacks-ironic-for-declarative-bare-metal-kubernetes/
 
   https://blog.russellbryant.net/2019/04/30/metal%C2%B3-metal-kubed-bare-metal-provisioning-for-kubernetes/
 
-
-.. |br| raw:: html
-* Github Resources
+**GitHub Resources**
 
   https://github.com/metal3-io/metal3-docs
+
   https://github.com/metal3-io/baremetal-operator
-
-
-.. |br| raw:: html
-
-.. |br| raw:: html
 
 **Architecture**
 
@@ -41,39 +42,47 @@ We plan to use  Metal³  for bare metal host management  , integrating with `Air
 
 - Bare Metal Management Pods
 
-
-
-
 ``Machine API Actuator``
 
-The first component is the `Bare Metal Actuator <https://github.com/metal3-io/cluster-api-provider-baremetal>`_
-, which is an implementation of the Machine Actuator interface defined by the cluster-api project. This actuator reacts to changes to Machine objects and acts as a client of the BareMetalHost custom resources managed by the Bare Metal Operator.
+The `Bare Metal Actuator <https://github.com/metal3-io/cluster-api-provider-baremetal>`_
+is an implementation of the Machine Actuator interface defined by the Cluster-API
+project. This actuator reacts to Machine object changes and acts as a client
+of the `BareMetalHost` custom resources managed by the `Bare Metal Operator`.
 
 ``Bare Metal Operator``
 
-The architecture also includes a new `Bare Metal Operator <https://github.com/metal3-io/baremetal-operator>`_
-, which includes the following:
+The architecture has a new `Bare Metal Operator <https://github.com/metal3-io/baremetal-operator>`_,
+which includes the following:
 
-A Controller for a new Custom Resource, BareMetalHost. This custom resource represents an inventory of known (configured or automatically discovered) bare metal hosts. When a Machine is created the Bare Metal Actuator will claim one of these hosts to be provisioned as a new Kubernetes node.
-In response to BareMetalHost updates, will perform bare metal host provisioning actions as necessary to reach the desired state. It will do so by managing and driving a set of underlying bare metal provisioning components.
+A Controller for a new Custom Resource, `BareMetalHost`. This custom resource
+represents an inventory of known (configured or automatically discovered) bare
+metal hosts. When a Machine is created, the Bare Metal Actuator will claim one
+of these hosts to be provisioned as a new Kubernetes node. In response to
+BareMetalHost updates, it will perform bare metal host provisioning actions to
+reach the desired state. It will do so by managing and driving a set of
+underlying bare metal provisioning components.
+
 The creation of the BareMetalHost inventory can be done in two ways:
 
-Manually via creating BareMetalHost objects.
-Optionally, automatically created via a bare metal host discovery process. Ironic is capable of doing this, which will also be integrated into Metal³ as an option.
-For more information about Operators, see the `operator-sdk <https://github.com/operator-framework/operator-sdk>`_
-.
+1. Manually by creating BareMetalHost objects.
+2. Automatically with a bare metal host discovery process. Ironic is already
+   capable of doing this. It will be integrated into Metal³ as an option.
+
+For more information about Operators, see the `Kubernetes operator-sdk <https://github.com/operator-framework/operator-sdk>`_.
 
 ``Bare Metal Management Pods``
 
-The implementation will focus on using Ironic as its first implementation of the Bare Metal Management Pods, but aims to keep this as an implementation detail under the hood such that alternatives could be added in the future if the need arises.
+Ironic will be used for the first implementation of the Bare Metal Management
+Pods. This implementation detail will be kept under the hood so that
+alternatives can be added in the future.
 
-For more information about the choice to use Ironic, see the `use-ironic design <https://github.com/metal3-io/metal3-docs/blob/master/design/use-ironic.md>`_
-document.
+For more information about the choice to use Ironic, see
+`Using Ironic Design <https://github.com/metal3-io/metal3-docs/blob/master/design/use-ironic.md>`_.
 
-Setup Metal³ in  Local Environment
-++++++++++++++++++++++++++++++++++
+Set up Metal³ in  Local Environment
++++++++++++++++++++++++++++++++++++
 
-This assumes you have a running CaaSP cluster and kubectl can connect to that.
+There must be a running CaaSP cluster that kubectl can connect to.
 
 Requirements
   - python
@@ -81,7 +90,7 @@ Requirements
 
 
 
-1) Install operator sdk
+1) Install operator sdk.
 
 .. code-block:: console
 
@@ -93,17 +102,15 @@ Requirements
    make install
    export PATH=$PATH:~/go/bin
 
-
-2) Create a namespace to host the operator
-
-
-    kubectl create namespace metal3
-
-
-3) Install baremetal-operator
+2) Create a namespace to host the operator.
 
 .. code-block:: console
 
+    kubectl create namespace metal3
+
+3) Install Bare Metal Operator.
+
+.. code-block:: console
 
    eval $(go env)
    mkdir -p $GOPATH/src/github.com/metal3-io
@@ -115,7 +122,7 @@ Requirements
    kubectl apply -f deploy/role_binding.yaml
    kubectl apply -f deploy/crds/metal3_v1alpha1_baremetalhost_crd.yaml
 
-4) Launch the operator locally
+4) Launch the operator locally.
 
 .. code-block:: console
 
@@ -128,7 +135,7 @@ Requirements
    export IRONIC_INSPECTOR_ENDPOINT=http://localhost:5050/v1
    operator-sdk up local --namespace=metal3
 
-5) Install the VBMC (This is optional)
+5) (Optional) install the Virtual Bare Metal Controller (VBMC)
 
 .. code-block:: console
 
@@ -137,19 +144,27 @@ Requirements
    mkvirtualenv vbmc
 
 
-6) Create some VMs in libvirt to be our bare metal hosts
+6) Create some VMs in libvirt to be bare metal hosts.
 
-7) Create VBMC servers for them.  *Note: every "vbmc" instance needs its own port to listen on.*
+7) Create VBMC servers for the bare metal hosts.
+
+.. note ::
+
+   Every VBMC instance must have its own port to listen on.
 
 .. code-block:: console
 
    vbmc add --username admin --password password --port 15015 <libvirt_domain_name>
    vbmc start <libvirt_domain_name>
 
-8) Write a yaml file to describe the machine and add to cluster. Create a machine. Be sure to update the names and addresses for your paticular machine
+8) Write a `yaml` file to describe the machine and add to cluster. Create a
+   machine. Be sure to update the names and addresses for your particular
+   machine.
 
-   *Note: the ip address of the bmc should be an ip adress that is accessible from any machine ont he kubernetes cluster.*
+.. note ::
 
+   The IP address of the BMC should accessible from any machine on the Kubernetes
+   cluster.
 
 .. code-block:: console
 
@@ -157,9 +172,8 @@ Requirements
    export MACHINE_MAC=$(virsh -c qemu:///system domiflist <libvirt_domain_name> | grep network | awk '{print $5}' | head -n 1)
    go run cmd/make-bm-worker/main.go -user admin -password password -address http://192.168.122.1:<vbmc_port>/ -boot-mac $MACHINE_MAC <libvirt_domain_name> | kubectl -n metal3 apply -f
 
-   #Download agent files
+   # Download agent files
    curl https://images.rdoproject.org/master/rdo_trunk/current-tripleo-rdo/ironic-python-agent.tar | tar -xf -
-
 
    # Download OS images.
 
@@ -173,7 +187,7 @@ Requirements
    mv openSUSE-Leap-15.1-JeOS.x86_64-15.1.0-OpenStack-Cloud-Current.qcow2 openSUSE-Leap-15.1.qcow2
    md5sum openSUSE-Leap-15.1.qcow2 | awk '{print $1}' > openSUSE-Leap-15.1.qcow2.md5sum
 
-9) Start Ironic
+9) Start Ironic.
 
 .. code-block:: console
 
