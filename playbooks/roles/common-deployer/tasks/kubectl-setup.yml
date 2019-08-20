@@ -90,11 +90,3 @@
     that:
       - _kubectlclusterinfo.stdout.find('\u001b[0;32mKubernetes master\u001b[0m is running') != -1
       - _kubectlclusterinfo.stdout.find('\u001b[0;32mKubeDNS\u001b[0m is running') != -1
-
-# Check for Dex only for CaaSP3 deployments
-- name: Do not proceed further if issues in kubectl
-  assert:
-    that:
-      - _kubectlclusterinfo.stdout.find('\u001b[0;32mDex\u001b[0m is running') != -1
-  when:
-    - not caasp4_deployed
