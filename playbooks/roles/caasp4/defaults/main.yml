@@ -30,6 +30,11 @@ skuba_ci_terraform_libvirt_image_password: "linux"
 ############################################################################
 # skuba terraform common variables
 ############################################################################
+# Download mirror to use for internal IBS repositories
+skuba_ci_terraform_ibs_mirror_uri: "http://download.suse.de/ibs"
+# Download mirror to use for "official" products and updates (can e.g. point
+# to a local rmt mirror)
+skuba_ci_terraform_rmt_mirror_uri: "http://download.suse.de/ibs"
 # number of master nodes
 skuba_ci_terraform_master_count: 1
 # number of worker nodes
