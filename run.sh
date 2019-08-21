@@ -176,6 +176,12 @@ case "$deployment_action" in
     "test")
         deploy_tempest
         ;;
+    "deploy_ses_rook")
+        deploy_ses_rook
+        ;;
+    "delete_ses_rook")
+        delete_ses_rook
+        ;;
     *)
         echo "Invalid option, Check --help for valid options"
         ;;

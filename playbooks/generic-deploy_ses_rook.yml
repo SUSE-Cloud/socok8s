@@ -1,0 +1,47 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Caasp is deployed and we have workers
+      assert:
+        that: "{{ groups['caasp-workers'] | length > 0 }}"
+        fail_msg: You need Caasp deployed in order to deploy ses with rook
+        success_msg: Caasp workers found
+    - name: We have a deployer
+      assert:
+        that: "{{ groups['soc-deployer'] | length > 0 }}"
+        fail_msg: You need a soc-deployer node in order to deploy ses with rook
+        success_msg: Deployer found
+# TODO(itxaka): Remove this once the images are pushed to registry.suse.com
+- hosts: caasp-masters:caasp-workers
+  gather_facts: no
+  tasks:
+    - name: Configure insecure registry for registry.suse.de
+      become: true
+      replace:
+        path: "/etc/containers/registries.conf"
+        regexp: '^\[registries\.insecure]\nregistries = \[]\n'
+        replace: '[registries.insecure]\nregistries = ["registry.suse.de"]\n'
+      register: _registry_insecure
+      tags:
+        - bug
+    - name: Reload crio
+      become: true
+      systemd:
+        name: crio.service
+        state: reloaded
+      when: _registry_insecure.changed
+      tags:
+        - bug
+        - skip_ansible_lint
+- hosts: soc-deployer
+  gather_facts: yes
+  any_errors_fatal: true
+  vars_files:
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
+  tasks:
+    - import_role:
+        name: common-deployer
+        tasks_from: kubectl-setup
+    - import_role:
+        name: ses-rook

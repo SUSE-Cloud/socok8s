@@ -22,6 +22,16 @@ function deploy_osh(){
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_osh.yml
 }
 
+function deploy_ses_rook(){
+    echo "Deploying SES on Kubernetes with rook"
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_ses_rook.yml
+}
+
+function delete_ses_rook(){
+    echo "Deleting SES with rook"
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-delete_ses_rook.yml
+}
+
 function deploy_airship(){
     echo "Deploying SUSE version of Airship"
     tagged_info=''

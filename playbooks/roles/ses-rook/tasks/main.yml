@@ -1,0 +1,99 @@
+---
+- name: Add SES repositories
+  become: yes
+  zypper_repository:
+    name: "{{ item['key'] }}"
+    repo: "{{ item['value'] }}"
+    autorefresh: True
+    auto_import_keys: yes
+    state: present
+  loop: "{{ ses_rook_repos | dict2items }}"
+  tags:
+    - ses-rook-repository
+
+- name: Install packages
+  become: yes
+  package:
+    name: "{{ ses_rook_yaml_manifests_package }}"
+    state: present
+  register: install_packages
+  until: install_packages is success
+  retries: 5
+  delay: 2
+  tags:
+    - ses-rook-install
+
+- name: Point to registry.suse.de until images are published at registry.suse.com
+  replace:
+    path: "{{ item }}"
+    regexp: 'registry.suse.com/ses/6/'
+    replace: 'registry.suse.de/devel/storage/6.0/containers/ses/6/'
+  loop:
+    - "{{ ses_rook_k8s_manifests_dir }}/operator.yaml"
+    - "{{ ses_rook_k8s_manifests_dir }}/cluster.yaml"
+    - "{{ ses_rook_k8s_manifests_dir }}/toolbox.yaml"
+
+- name: Create rook operator
+  command: "kubectl apply -f common.yaml -f operator.yaml"
+  register: _rook_operator_creation
+  args:
+    chdir: "{{ ses_rook_k8s_manifests_dir }}"
+  changed_when: "'created' in _rook_operator_creation.stdout"
+
+- name: Wait for rook operator to be running
+  command: "kubectl get pods -n rook-ceph -l app=rook-ceph-operator -o jsonpath='{.items[].status.containerStatuses[].ready}'"
+  register: _rook_ceph_operator_status
+  until: "'false' not in _rook_ceph_operator_status.stdout"
+  retries: 30
+  delay: 10
+  changed_when: False
+
+- name: Deploy Ceph cluster
+  command: "kubectl apply -f cluster.yaml"
+  register: _rook_ceph_cluster_creation
+  args:
+    chdir: "{{ ses_rook_k8s_manifests_dir }}"
+  changed_when: "'created' in _rook_ceph_cluster_creation.stdout"
+
+- name: Wait for Ceph cluster to be launched
+  shell: "kubectl get pods -n rook-ceph -l app={{ item }} -o jsonpath='{.items[].status.containerStatuses[].ready}' || echo 'false'"
+  register: _rook_ceph_cluster_status
+  until: "'false' not in _rook_ceph_cluster_status.stdout"
+  retries: 60
+  delay: 10
+  changed_when: False
+  loop:
+    - rook-ceph-mgr
+    - rook-ceph-mon
+    - rook-ceph-agent
+
+- name: Deploy Ceph toolbox
+  command: "kubectl apply -f toolbox.yaml"
+  register: _rook_ceph_toolbox_creation
+  args:
+    chdir: "{{ ses_rook_k8s_manifests_dir }}"
+  changed_when: "'created' in _rook_ceph_toolbox_creation.stdout"
+
+- name: Wait for Ceph toolbox to be running
+  command: "kubectl get pods -n rook-ceph -l app=rook-ceph-tools -o jsonpath='{.items[].status.containerStatuses[].ready}'"
+  register: _rook_ceph_toolbox_status
+  until: "'false' not in _rook_ceph_toolbox_status.stdout"
+  retries: 30
+  delay: 10
+  changed_when: False
+
+- name: Wait for Ceph to be ready
+  shell: "kubectl -n rook-ceph exec $(kubectl -n rook-ceph get pod -l 'app=rook-ceph-tools' -o jsonpath='{.items[0].metadata.name}') ceph status"
+  register: _rook_ceph_health
+  until: "'HEALTH_OK' in _rook_ceph_health.stdout"
+  retries: 30
+  delay: 15
+
+
+# TODO(itxaka): Not sure why but I cannot just include_tasks here...
+- name: Test Ceph
+  import_role:
+    name: ses-rook
+    tasks_from: test_rook
+  when: lookup('env','SOCOK8S_TEST_CEPH_ROOK') | default(False)
+
