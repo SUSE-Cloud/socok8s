@@ -246,7 +246,7 @@ for deploying OSH later.
      localhost -> ses               [label = "Deploy SES" ];
      localhost <- ses               [label = "ses_config data" ];
 
-     localhost -> cloud             [label = "Start CaaSP3 stack"];
+     localhost -> cloud             [label = "Start CaaSP4 stack"];
      localhost <- cloud             [label = "CaaSP inventory data"];
 
      localhost -> cloud             [label = "Start SLE 15 SP1 node"];
