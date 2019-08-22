@@ -165,3 +165,5 @@ openstack_helm_pod_resources_enabled:
   mariadb: true
   memcached: true
   tempest: true
+# If SES is deployed into stand alone extra node ('aio'), or into CaaSP cluster ("rook")
+ses_deployment: aio
