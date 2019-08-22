@@ -46,17 +46,30 @@ rm -f ${SOCOK8S_WORKSPACE}/ssh_keys.csv
 #Run terraform container if not yet running
 ###########################################
 
-# Note: This is just for safety. As the trap deletes the container, we
-# should almost never reach this code.
+# because libvirt provider by default runs on qemu:/// it makes sense to expose
+# libvirt socket to the container by default.
+if [[ -f /var/run/libvirt/libvirt-sock ]] && [[ "${PROVIDER}" == "kvm" ]]; then
+    echo "Auto expose libvirt socket by default"
+    provider_args="
+      -v /var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock
+      -e LIBVIRT_DEFAULT_URI=${LIBVIRT_DEFAULT_URI:-qemu:///system}"
+else
+    provider_args=""
+fi
+
 if ! podman ps --format '{{ .Names }}' | grep terraform > /dev/null; then
     containerid=$(podman run -it -d --name terraform \
         -v ${SSH_AUTH_SOCK}:/ssh_auth_sock \
         -v ${SOCOK8S_WORKSPACE}:/workdir \
+        ${provider_args} \
+        ${USER_ARGS:-}
         -e SSH_AUTH_SOCK=/ssh_auth_sock \
         ${TERRAFORM_CONTAINER} \
         /bin/bash)
     echo "Running new terraform container with ID ${containerid}"
 else
+    # Note: This is just for safety. As the trap deletes the container, we
+    # should almost never reach this else bit.
     echo "Terraform container already running, reusing"
 fi
 trap finish INT TERM EXIT
@@ -72,6 +85,13 @@ if [[ "${PROVIDER}" == "openstack" ]]; then
             podman cp $filepath terraform:/root/.config/openstack/$fname;
         fi
     done
+elif [[ "${PROVIDER}" == "kvm" ]]; then
+    # Please remove all of this when skuba packages its libvirt code in IBS.
+    cd ${SOCOK8S_WORKSPACE}
+    git clone https://github.com/SUSE/skuba.git skuba-code
+    mv skuba-code/ci/infra/libvirt/* tf/
+    rm -rf skuba-code
+    cd -
 fi
 
 # Now copy and run the terraformcmds script

@@ -19,7 +19,7 @@ terraform output -json > ./terraform-output.json
 echo "Cloud instances successfully deployed"
 
 # Skuba init
-CLUSTER_NAME="caasp4-cluster"
+CLUSTER_NAME="caasp4-cluster" # Please be consistent with destroy.
 if [[ ! -d ./${CLUSTER_NAME} ]]; then
     load_balancer=$(jq --raw-output '.ip_load_balancer.value' terraform-output.json)
     skuba cluster init ${CLUSTER_NAME} --control-plane ${load_balancer}
