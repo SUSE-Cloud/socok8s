@@ -1,0 +1,28 @@
+---
+- name: Get list of mons from services
+  shell: |
+    set -o pipefail
+    kubectl get services -n rook-ceph -l app=rook-ceph-mon --show-labels=false -o jsonpath='{.items[*].spec.clusterIP}' | tr " " ","
+  register: _rook_ceph_conf_mon_host
+
+- name: Generate ses-config.yml
+  delegate_to: localhost
+  template:
+    src: "ses-config.yml.j2"
+    dest: "{{ socok8s_ses_pools_details }}"
+
+- name: Find the admin keyring b64 value
+  shell: |
+    set -o pipefail
+    kubectl -n rook-ceph exec {{ ceph_tools_pod }} -- ceph auth get-key client.admin | base64
+  changed_when: false
+  register: _clientadminkey
+
+- name: Create user_variables
+  delegate_to: localhost
+  blockinfile:
+    path: "{{ socok8s_extravars }}"
+    create: yes
+    block: |
+      ceph_admin_keyring_b64key: {{ _clientadminkey.stdout_lines[0] }}
+      ceph_user_keyring_b64key: {{ _clientadminkey.stdout_lines[0]  }}

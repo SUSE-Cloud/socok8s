@@ -1,0 +1,17 @@
+---
+ceph_conf:
+  mon_host: {{ _rook_ceph_conf_mon_host.stdout }}
+cinder:
+  rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}volumes"
+  rbd_store_user: "cinder"
+cinder-backup:
+  rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}cinder_backup"
+  rbd_store_user: "cinder-backup"
+nova:
+  rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}nova"
+glance:
+  rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}images"
+  rbd_store_user: "glance"
+libvirt:
+  rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}vms"
+  rbd_store_user: "cinder"

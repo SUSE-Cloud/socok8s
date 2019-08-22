@@ -82,13 +82,52 @@
   delay: 10
   changed_when: False
 
+- name: Find out ceph-tools pod
+  command: "kubectl -n rook-ceph get pod -l 'app=rook-ceph-tools' -o jsonpath='{.items[0].metadata.name}'"
+  register: _rook_ceph_tools_pod
+
+- name: Remember ceph-tools pod name
+  set_fact:
+    ceph_tools_pod: "{{ _rook_ceph_tools_pod.stdout }}"
+
 - name: Wait for Ceph to be ready
-  shell: "kubectl -n rook-ceph exec $(kubectl -n rook-ceph get pod -l 'app=rook-ceph-tools' -o jsonpath='{.items[0].metadata.name}') ceph status"
+  shell: "kubectl -n rook-ceph exec {{ ceph_tools_pod }} -- ceph status"
   register: _rook_ceph_health
   until: "'HEALTH_OK' in _rook_ceph_health.stdout"
   retries: 30
   delay: 15
 
+# kubectl cp cannot be use due to missing tar in the container
+- name: Get mons from ceph.conf of the ceph tools container
+  shell: |
+    set -o pipefail
+    kubectl -n rook-ceph exec $(kubectl -n rook-ceph get pod -l 'app=rook-ceph-tools' -o jsonpath='{.items[0].metadata.name}') -- \
+    sed -n 's/mon_host = //p' /etc/ceph/ceph.conf
+  register: _rook_ceph_conf_mon_host
+
+- name: Generate ses-config.yml
+  delegate_to: localhost
+  template:
+    src: "ses-config.yml.j2"
+    dest: "{{ socok8s_ses_pools_details }}"
+
+- name: Find the admin keyring b64 value
+  shell: |
+    set -o pipefail
+    kubectl -n rook-ceph exec $(kubectl -n rook-ceph get pod -l 'app=rook-ceph-tools' -o jsonpath='{.items[0].metadata.name}') \
+    ceph auth get-key client.admin | base64
+  changed_when: false
+  register: _clientadminkey
+
+- name: Create user_variables
+  delegate_to: localhost
+  blockinfile:
+    path: "{{ socok8s_extravars }}"
+    create: yes
+    block: |
+      ceph_admin_keyring_b64key: {{ _clientadminkey.stdout_lines[0] }}
+      ceph_user_keyring_b64key: {{ _clientadminkey.stdout_lines[0]  }}
+      # not adding suse_osh_deploy_ceph_mons - relying on ceph.conf values
 
 # TODO(itxaka): Not sure why but I cannot just include_tasks here...
 - name: Test Ceph
