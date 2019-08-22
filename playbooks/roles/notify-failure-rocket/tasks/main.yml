@@ -1,0 +1,44 @@
+#
+# (c) Copyright 2019 SUSE LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+---
+
+- name: Load rocketchat auth variables
+  uri:
+    url: "{{ rc_auth_info_creds }}"
+    return_content: yes
+  register: rocket_vars
+  no_log: True
+
+- name: Set rc_token var
+  set_fact:
+    rc_token: "{{ (rocket_vars.content | from_yaml).rc_token  }}"
+  no_log: True
+
+- name: Notify RocketChat of the failure to clean up
+  rocketchat:
+    domain: "{{ rc_domain }}"
+    token: "{{ rc_token }}"
+    username: "Jenkins"
+    channel: "{{ rc_channel }}"
+    validate_certs: no
+    protocol: "{{ rc_protocol }}"
+    attachments:
+      - color: "danger"
+        text: "Failure in Job teardown for {{ lookup('env','BRANCH_NAME') }} on build number {{ lookup('env','BUILD_NUMBER') }}"
+        title_link: "{{ lookup('env','RUN_DISPLAY_URL') }}"
+        title: "A Job failed to cleanup, please check that there is no resources left over"
+        collapsed: False
+  ignore_errors: True
