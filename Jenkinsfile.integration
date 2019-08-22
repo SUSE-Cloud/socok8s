@@ -30,10 +30,12 @@ pipeline {
     }
 
     environment {
+        /* env.BRANCH_NAME is available in multibranch plugin but not in pipeline plugin used in daily integration job */
+        BRANCH_NAME_ONLY="${env.GIT_BRANCH.replaceAll("origin/", "")}"
         /* Sanitize ENVNAME (lowercase and remove some problematic characters)
            as the names of the heat stacks will be derived from this. Also
            the CaaSP Velum automation has issues with mixed case hostnames. */
-        SOCOK8S_ENVNAME = "cloud-socok8s-${env.BRANCH_NAME.replaceAll("[^a-zA-Z0-9-]+", "-").toLowerCase()}-${env.BUILD_NUMBER}"
+        SOCOK8S_ENVNAME = "cloud-socok8s-${BRANCH_NAME_ONLY.replaceAll("[^a-zA-Z0-9-]+", "-").toLowerCase()}-${env.BUILD_NUMBER}"
         SOCOK8S_OPENSUSE_MIRROR="https://provo-mirror.opensuse.org"
         OS_CLOUD = "engcloud-socok8s-ci"
         SOCOK8S_TEST_CEPH_ROOK="true"
@@ -60,7 +62,7 @@ pipeline {
             }
         }
         stage('Check for updated files') {
-            when { expression { env.BRANCH_NAME != 'master' } }
+            when { expression { env.BRANCH_NAME_ONLY != 'master' } }
             steps {
                 script {
                     /* When doing PRs, make sure we don't test everything by default */
@@ -70,7 +72,7 @@ pipeline {
                     /* Need to fetch master to check against it for the proper diff */
                     sh "git config --add remote.origin.fetch +refs/heads/master:refs/remotes/origin/master"
                     sh "git fetch --no-tags"
-                    List<String> sourceChanged = sh(returnStdout: true, script: "git diff --name-only origin/master...origin/${env.BRANCH_NAME}").split()
+                    List<String> sourceChanged = sh(returnStdout: true, script: "git diff --name-only origin/master...origin/${env.BRANCH_NAME_ONLY}").split()
                     echo "Files changed for this PR:\n${sourceChanged.join('\n')}"
                     TestDocs = sourceChanged.any{it.contains("doc/")} or sourceChanged.any{it.contains("tox.ini")} or sourceChanged.any{it.contains("Jenkinsfile.integration")}
                     /* In the future we could add a conditional to auto TestFunctional if tox.ini or Jenkinsfile is changed */
