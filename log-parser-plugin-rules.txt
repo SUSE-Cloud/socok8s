@@ -1,0 +1,66 @@
+start /\sPLAYBOOK:\s/
+start /^\./run.sh/
+
+info /\+\sansible-playbook\s/
+info /\sTASK\s\[/
+info /skipped/
+
+# set the retries as warning so we can check them faster
+warning /\sFAILED - RETRYING:/
+
+# not errors
+# this one is the task state at the end
+ok /failed=0/
+# this one comes from the task output
+ok /failed: false/
+# same as above
+ok /'failed': False/
+# this is part of the task options
+ok /failed_when_result:/
+# part of the systemd output
+ok /ignore_errors=no/
+# same systemd
+ok /FailureAction:/
+# same systemd
+ok /SystemCallErrorNumber:/
+# same systemd
+ok /StandardError: inherit/
+# same systemd
+ok /OnFailureJobMode:/
+# same systemd
+ok /Restart: on-failure/
+# description of a package on package install
+ok /<description>com_err/
+# same
+ok /name="libcom_err2"/
+# this is the output from the node upgrade
+ok /Failed to connect to bus: No such file or directory/
+# same as above
+ok /Failed to look up reference node - returned empty list/
+# same as above
+ok /dracut-install: ERROR:/
+# ignore package name downloads with error in the name
+ok /<download url="/
+# ignore package with error in the name
+ok /.*<solvable.*/
+# ignore package descriptions with error in the name
+ok /.*<description>.*/
+ok /.*</description>.*/
+# ignore %post failures in package installs
+ok /warning: %post/
+# from kernel install
+ok /Failed to import \/etc\/uefi\/certs\/91A3B0B5.crt/
+# output from ses salt
+ok /Failed:\s*0/
+# velum output:
+ok /0 failures/
+# shipyard output
+ok /Errors: 0,/
+# expected on ansible machine reboots
+ok /\[WARNING]: Failed to reset connection:Control socket/
+# ansible var set in playbooks/roles/airship-deploy-osh/tasks/main.yml:23
+ok /no_revision_error_msg/
+
+error /(?i)error/
+error /(?i)fail(ure|ed)/
+error /(?i)fatal/
