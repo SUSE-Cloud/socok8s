@@ -40,3 +40,5 @@ ntp_servers = [
   "0.novell.pool.ntp.org",
   "1.novell.pool.ntp.org",
 ]
+
+enable_openstack_port_security = false

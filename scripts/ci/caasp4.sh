@@ -9,7 +9,6 @@ echo "Workspace is ${SOCOK8S_WORKSPACE} - Environment is ${SOCOK8S_ENVNAME}"
 
 CI_SCRIPTS_PATH="$(dirname "$(readlink -f "${0}")")"
 TERRAFORM_CONTAINER="registry.suse.de/home/jevrard/branches/suse/templates/images/sle-15-sp1/containers/soc10-clients:latest"
-TERRAFORM_USERFILE=${SOCOK8S_WORKSPACE}/tf/terraform.tfvars
 
 function finish {
   if podman ps --format '{{ .Names }}' | grep terraform > /dev/null; then
@@ -22,8 +21,9 @@ function finish {
 #######
 
 # Action = deploy or destroy
-ACTION=${1:-"deploy"}
-
+ACTION=${1:-deploy}
+# PROVIDER = openstack or kvm.
+PROVIDER=${DEPLOYMENT_MECHANISM:-openstack}
 
 echo "Fetching latest terraform container"
 podman pull $TERRAFORM_CONTAINER
@@ -31,16 +31,16 @@ podman pull $TERRAFORM_CONTAINER
 # Generate terraform config file
 ################################
 
-if [[ ! -d $(dirname ${TERRAFORM_USERFILE}) ]]; then
-    mkdir $(dirname ${TERRAFORM_USERFILE})
+if [[ ! -d ${SOCOK8S_WORKSPACE}/tf ]]; then
+    mkdir -p ${SOCOK8S_WORKSPACE}/tf
 fi
 
-sed "s/%SOCOK8S_ENVNAME%/${SOCOK8S_ENVNAME}/g" ${CI_SCRIPTS_PATH}/terraform.tfvars.example > $TERRAFORM_USERFILE
+sed "s/%SOCOK8S_ENVNAME%/${SOCOK8S_ENVNAME}/g" ${CI_SCRIPTS_PATH}/terraform.tfvars.${PROVIDER}.example > ${SOCOK8S_WORKSPACE}/tf/terraform.tfvars
 
 # Add user ssh keys from their keyring
 # Make it a csv (don't trail with ', ') and indent with 2 spaces the first line.
 ssh-add -L | awk '{ORS=", ";} {print "\"" $1 " " $2 "\"";}' | head -c -2 | sed -e 's/^/  /'> ${SOCOK8S_WORKSPACE}/ssh_keys.csv
-sed -i -e "/%SSH_KEYS%/r ${SOCOK8S_WORKSPACE}/ssh_keys.csv" -e "//d" ${TERRAFORM_USERFILE}
+sed -i -e "/%SSH_KEYS%/r ${SOCOK8S_WORKSPACE}/ssh_keys.csv" -e "//d" ${SOCOK8S_WORKSPACE}/tf/terraform.tfvars
 rm -f ${SOCOK8S_WORKSPACE}/ssh_keys.csv
 
 #Run terraform container if not yet running
@@ -61,33 +61,21 @@ else
 fi
 trap finish INT TERM EXIT
 
+if [[ "${PROVIDER}" == "openstack" ]]; then
+    # Find openstack config, and make it available under the container, to
+    # reuse a single "OS_CLOUD" variable.
+    # Secrets are destroyed upon successful execution
+    # (deletion of the container)
+    for filepath in ~/.config/openstack/* /etc/openstack/*; do
+        if [[ -f $filepath ]]; then
+            fname=$(basename $filepath)
+            podman cp $filepath terraform:/root/.config/openstack/$fname;
+        fi
+    done
+fi
 
-# Find openstack config, and make it available under the container, to
-# reuse a single "OS_CLOUD" variable.
-# Secrets are destroyed upon successful execution (deletion of the container)
-for filepath in ~/.config/openstack/* /etc/openstack/*; do
-    if [[ -f $filepath ]]; then
-        fname=$(basename $filepath)
-        podman cp $filepath terraform:/root/.config/openstack/$fname;
-    fi
-done
-
-# Now prep and run the terraformcmds script
-case ${ACTION:-"deploy"} in
-    deploy)
-      podman cp ${CI_SCRIPTS_PATH}/terraforming.sh terraform:/workdir/tf/terraformcmds.sh
-      podman exec -w /workdir/tf/ -e OS_CLOUD=${OS_CLOUD} -e SSH_AUTH_SOCK=/ssh_auth_sock terraform /workdir/tf/terraformcmds.sh
-    ;;
-    destroy)
-      cat << EOF > ${SOCOK8S_WORKSPACE}/tf/terraformcmds.sh
-#!/bin/bash
-env | grep OS_
-terraform destroy -auto-approve ./
-rm -rf ./caasp4-cluster/
-EOF
-      chmod 750 ${SOCOK8S_WORKSPACE}/tf/terraformcmds.sh
-      podman exec -w /workdir/tf/ -e OS_CLOUD=${OS_CLOUD} terraform /workdir/tf/terraformcmds.sh
-    ;;
-esac
+# Now copy and run the terraformcmds script
+podman cp ${CI_SCRIPTS_PATH}/terraforming-${ACTION}.sh terraform:/workdir/tf/terraformcmds.sh
+podman exec -w /workdir/tf/ -e OS_CLOUD=${OS_CLOUD} -e SSH_AUTH_SOCK=/ssh_auth_sock terraform /workdir/tf/terraformcmds.sh
 
 echo "Successfully ${ACTION}ed CaaSP"
