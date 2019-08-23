@@ -2,27 +2,13 @@
 - name: Include common vars to know developer_mode value
   include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
 
-- name: Add soc deployer in etc hosts for dns resolution
-  include_tasks: osh-deployer-in-hosts.yml
-  when:
-    - not caasp4_deployed
-
 - name: Copy the registry certificates
   include_tasks: copy-certificates.yml
   when:
     - "((developer_mode | default(False)) | bool) or ((socok8s_byo_certs | default(False)) | bool)"
 
-- name: Subvolumes setup on control plane worker nodes
-  import_tasks: subvolumes-setup.yml
-  when:
-    - not caasp4_deployed
-  tags:
-    - preinstall
-
-- name: Apparmor profiles in worker nodes
-  import_tasks: apparmor-profiles.yml
-  when:
-    - not caasp4_deployed
-  tags:
-    - apparmor
-
+# Apparmor does not seem to be present on current CaaSP4 nodes
+#- name: Apparmor profiles in worker nodes
+#  import_tasks: apparmor-profiles.yml
+#  tags:
+#    - apparmor

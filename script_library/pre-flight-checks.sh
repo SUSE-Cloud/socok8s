@@ -40,21 +40,21 @@ check_openstack_env_vars_set (){
     fi
 }
 
-check_caasp4_skuba_dir_available(){
+check_caasp_skuba_dir_available(){
     echo "Checking for CaaSP 4 that SUSE/skuba is available"
     if ! [ -d submodules/skuba ]; then
         echo "submodules/skuba directory not available. Can not deploy CaaSP 4"
         exit 1
     fi
 }
-check_caasp4_skuba_available(){
+check_caasp_skuba_available(){
     echo "Checking for CaaSP 4 that skuba is available"
     if ! rpm -q --quiet skuba; then
         echo "skuba package is not installed. Can not deploy CaaSP 4"
         exit 1
     fi
 }
-check_caasp4_terraform_available(){
+check_caasp_terraform_available(){
     echo "Checking for CaaSP 4 that terraform is available"
     command -v ${TERRAFORM_BINARY_PATH} 1> /dev/null
     if [ $? -ne 0 ]; then
@@ -63,7 +63,7 @@ check_caasp4_terraform_available(){
     fi
 }
 
-check_caasp4_terraform_version(){
+check_caasp_terraform_version(){
   echo "Checking for terraform version (should be version 0.11)"
   ${TERRAFORM_BINARY_PATH} version|egrep -q "^Terraform\sv0\.11\.[0-9]{2}$"
   if [ $? -ne 0 ]; then
@@ -71,7 +71,7 @@ check_caasp4_terraform_version(){
     exit 1
   fi
 }
-check_caasp4_ssh_agent_running(){
+check_caasp_ssh_agent_running(){
     echo "Checking if ssh-agent is running"
     if ! ssh-add -L >/dev/null ; then
         echo "ssh agent is not running or does not contain any identities"

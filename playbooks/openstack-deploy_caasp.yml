@@ -43,11 +43,3 @@
       vars:
         skuba_cluster_basedir: "{{ socok8s_workspace }}"
         image_username: "{{ skuba_ci_terraform_openstack_image_username }}"
-
-    - name: Set caasp4 in extravars
-      delegate_to: localhost
-      lineinfile:
-        path: "{{ socok8s_extravars }}"
-        create: yes
-        line: "caasp4_deployed: True"
-        state: present
