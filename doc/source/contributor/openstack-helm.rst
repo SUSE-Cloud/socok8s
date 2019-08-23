@@ -1,59 +1,60 @@
-OpenStack Helm
+OpenStack-Helm
 ==============
 
-OpenStack-helm is a collection of packages to deploy OpenStack in kubernetes.
+`OpenStack-Helm` (OSH) is a collection of packages to deploy, maintain and
+upgrade OpenStack and related services on Kubernetes. OSH uses a package
+management format called `Chart` that has all the resource definitions necessary
+to run an application, tool or service in a Kubernetes cluster. Charts are used
+to simplify the deployment of those resource packages.
 
-These packages are written using the helm packaging structure called Chart that
-describe how to automatize the deployment the images.
-
-The OpenStack images are built using LOCI_ (official OpenStack images). The
-rest of images are fetched from other upstream projects created using docker
-build. See `role SUSE-build-images`_
+OSH images are built with LOCI_ (lightweight OpenStack containers). Additional
+capabilities can be fetched from other upstream projects to create
+pre-configured packages of resources, ready to be deployed as charts. Charts
+can also be created using Docker containers, for example, see
+`role SUSE-build-images`_
 
 .. _LOCI: https://github.com/openstack/loci
 .. _role SUSE-build-images: https://github.com/SUSE-Cloud/socok8s/tree/master/playbooks/roles/suse-build-images
 
-List of interesting links:
---------------------------
+OpenStack-Helm Resources:
+-------------------------
 
 * Helm
 
-  * webpage
+  * Project webpage
       https://helm.sh
 
-  * Documentation
-      https://helm.sh/docs/helm (v2)
-
-      https://v3.helm.sh/docs/ (v3)
+  * Documentation and more
+      https://helm.sh/docs/
 
   * Quick start
       https://github.com/helm/helm/blob/master/docs/quickstart.md
 
-* OpenStack helm infra git repository
+* Repository for OpenStack-Helm infrastructure-related code
     https://opendev.org/openstack/openstack-helm-infra
 
-* OpenStack helm
+* OpenStack-Helm
 
-  * Webpage
+  * Project webpage
       https://wiki.openstack.org/wiki/Openstack-helm
 
   * Documentation
       https://docs.openstack.org/openstack-helm/latest/
 
-  * Git repository
+  * Repository - Helm charts
       https://opendev.org/openstack/openstack-helm
 
-  * Git images repository
+  * Repository - Images for use with OpenStack-Helm
       https://opendev.org/openstack/openstack-helm-images
 
-  * Git addons repository
+  * Repository - Add-ons for OpenStack-Helm
       https://opendev.org/openstack/openstack-helm-addons
 
-  * Git docs repository
+  * Repository - OpenStack-Helm Documentation
       https://opendev.org/openstack/openstack-helm-docs
 
 
-* Loci git Repository
+* Repository - Lightweight OCI compatible images for OpenStack projects
     https://github.com/openstack/loci
 
 
