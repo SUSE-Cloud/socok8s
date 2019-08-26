@@ -30,6 +30,8 @@ data:
     timeout: {{ test_timeout }}
   values:
     pod:
+      resources:
+        enabled: {{ openstack_helm_pod_resources_enabled['glance_rabbitmq'] }}
       replicas:
         server: 1
     monitoring:

@@ -113,6 +113,8 @@ data:
         DEFAULT:
           mkisofs_cmd: mkisofs
     pod:
+      resources:
+        enabled: {{ openstack_helm_pod_resources_enabled['nova'] }}
       replicas:
         api_metadata: 1 
         placement: 1

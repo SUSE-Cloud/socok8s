@@ -18,6 +18,9 @@ data:
     timeout: 12000
 {% if deploy_tempest is defined and deploy_tempest is sameas true %}
   values:
+    pod:
+      resources:
+        enabled: {{ openstack_helm_pod_resources_enabled['tempest'] }}
     jobs:
       run_tests:
         backoffLimit: 0

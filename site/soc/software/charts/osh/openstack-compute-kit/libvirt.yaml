@@ -17,6 +17,9 @@ data:
   wait:
     timeout: {{ openstack_helm_deploy_timeout }}
   values:
+    pod:
+      resources:
+        eanbled: {{ openstack_helm_pod_resources_enabled['libvirt'] }}
     labels:
       agent:
         libvirt:
