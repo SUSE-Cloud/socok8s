@@ -22,10 +22,8 @@ caasp-workers:
 airship-openstack-control-workers:
   hosts: &first_workers
 {% for worker_ip in _terraform_json_output.ip_workers.value %}
-{% if loop.index0 < airship_ucp_control_workers %}
     worker-{{ loop.index0 }}:
       ansible_host: {{ worker_ip }}
-{% endif %}
 {% endfor %}
   vars:
     ansible_user: sles
