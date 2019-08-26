@@ -1,4 +1,20 @@
 ---
+#
+# (c) Copyright 2019 SUSE Linux GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+
 - name: Add SES repositories
   become: yes
   zypper_repository:
@@ -97,37 +113,33 @@
   retries: 30
   delay: 15
 
-# kubectl cp cannot be use due to missing tar in the container
-- name: Get mons from ceph.conf of the ceph tools container
-  shell: |
-    set -o pipefail
-    kubectl -n rook-ceph exec $(kubectl -n rook-ceph get pod -l 'app=rook-ceph-tools' -o jsonpath='{.items[0].metadata.name}') -- \
-    sed -n 's/mon_host = //p' /etc/ceph/ceph.conf
-  register: _rook_ceph_conf_mon_host
+- name: Set up SES for OpenStack
+  import_tasks: setup_for_openstack.yml
+  vars:
+    ses_openstack_glance_pool:
+      name: "{{ airship_ses_pools_prefix | default('') }}images"
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_openstack_cinder_pool:
+      name: "{{ airship_ses_pools_prefix | default('') }}volumes"
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_openstack_nova_pool:
+      name: "{{ airship_ses_pools_prefix | default('') }}vms"
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_osh_rbd_pool:
+      name: "{{ airship_ses_pools_prefix | default('') }}rbd"
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_openstack_cinder_backup_pool:
+      name: "{{ airship_ses_pools_prefix | default('') }}cinder_backup"
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_openstack_pools:
+      - "{{ ses_openstack_glance_pool }}"
+      - "{{ ses_openstack_cinder_pool }}"
+      - "{{ ses_openstack_nova_pool }}"
+      - "{{ ses_openstack_cinder_backup_pool }}"
+      - "{{ ses_osh_rbd_pool }}"
 
-- name: Generate ses-config.yml
-  delegate_to: localhost
-  template:
-    src: "ses-config.yml.j2"
-    dest: "{{ socok8s_ses_pools_details }}"
-
-- name: Find the admin keyring b64 value
-  shell: |
-    set -o pipefail
-    kubectl -n rook-ceph exec $(kubectl -n rook-ceph get pod -l 'app=rook-ceph-tools' -o jsonpath='{.items[0].metadata.name}') \
-    ceph auth get-key client.admin | base64
-  changed_when: false
-  register: _clientadminkey
-
-- name: Create user_variables
-  delegate_to: localhost
-  blockinfile:
-    path: "{{ socok8s_extravars }}"
-    create: yes
-    block: |
-      ceph_admin_keyring_b64key: {{ _clientadminkey.stdout_lines[0] }}
-      ceph_user_keyring_b64key: {{ _clientadminkey.stdout_lines[0]  }}
-      # not adding suse_osh_deploy_ceph_mons - relying on ceph.conf values
+- name: GenerateImport SES configs to deployer
+  import_tasks: ses_config.yml
 
 # TODO(itxaka): Not sure why but I cannot just include_tasks here...
 - name: Test Ceph
