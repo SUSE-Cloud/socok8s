@@ -18,13 +18,10 @@
   tags:
     - always
 
-- name: Create a list of monitors (ip and port) if no override exists for it.
-  set_fact:
-    suse_airship_deploy_ceph_mons:  "[{% for ip in ses_cluster_configuration.ceph_conf.mon_host.split(',') %}'{{ ip }}:{{ ceph_mon_port | default(6789) }}'{% if not loop.last %},{% endif %}{% endfor %}]"
-  when: suse_airship_deploy_ceph_mons is not defined
-  tags:
-    - always
-    - run
+- name: Create a list of monitors
+  include_role:
+    name: common-ses
+    tasks_from: list_of_mons
 
 - name: Create Libvirt ceph cinder secret uuid
   shell: "uuidgen > {{ socok8s_libvirtuuid }}"
@@ -41,24 +38,29 @@
   tags:
     - always
 
-#TODO JG move to ceph provisioner chart
-- name: Create ceph secrets yaml
-  template:
-    src: "suse-define-ses-secrets-in-k8s.yml.j2"
-    dest: "/tmp/ceph-secrets.yaml"
-    mode: "0600"
-
-- name: Create ceph storage class yaml
-  template:
-    src: "suse-define-ses-storageclasses-in-k8s.yml.j2"
-    dest: "/tmp/ceph-storage-classes.yaml"
-    mode: "0600"
-
-# TODO(aagate): Add a changed_when: to help idempotency
-- name: "Apply ceph {{ item }} yaml"
-  command: "kubectl apply -f /tmp/ceph-{{ item }}.yaml --overwrite=true"
-  with_items:
-    - secrets
-    - storage-classes
+- name: Create secrets and StorageClass for external Ceph
+  include_role:
+    name: common-deployer
+    tasks_from: apply_on_k8s
+  loop:
+    - action: create ceph secrets
+      template_src_file: suse-define-ses-secrets-in-k8s.yml.j2
+      templated_location: /tmp/ceph-secrets.yaml
+    - action: create ceph storage class
+      template_src_file: suse-define-ses-storageclasses-in-k8s.yml.j2
+      templated_location: /tmp/ceph-storage-classes.yaml
   tags:
-    - skip_ansible_lint
+    - run
+  when: ses_deployment == "aio"
+
+- name: Create StorageClass for rook-based Ceph
+  include_role:
+    name: common-deployer
+    tasks_from: apply_on_k8s
+  loop:
+    - action: create ceph storage class
+      template_src_file: k8s-ses-storageclass-rook.yml.j2
+      templated_location: /tmp/socok8s-ses-storage-class-rook.yml
+  tags:
+    - run
+  when: ses_deployment == "rook"

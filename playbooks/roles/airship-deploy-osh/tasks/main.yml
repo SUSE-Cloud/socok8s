@@ -12,13 +12,10 @@
   tags:
     - always
 
-- name: Create a list of monitors (ip and port) if no override exists for it.
-  set_fact:
-    suse_airship_deploy_ceph_mons:  "[{% for ip in ses_cluster_configuration.ceph_conf.mon_host.split(',') %}'{{ ip }}:{{ ceph_mon_port | default(6789) }}'{% if not loop.last %},{% endif %}{% endfor %}]"
-  when: suse_airship_deploy_ceph_mons is not defined
-  tags:
-    - always
-    - run
+- name: Create a list of monitors
+  include_role:
+    name: common-ses
+    tasks_from: list_of_mons
 
 - name: Set site path
   set_fact:
