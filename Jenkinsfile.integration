@@ -76,7 +76,7 @@ pipeline {
                     TestDocs = sourceChanged.any{it.contains("doc/")} or sourceChanged.any{it.contains("tox.ini")} or sourceChanged.any{it.contains("Jenkinsfile.integration")}
                     /* In the future we could add a conditional to auto TestFunctional if tox.ini or Jenkinsfile is changed */
                     /* when conditionals will be harder to grasp or different code paths */
-                    TestFunctional = !sourceChanged.every{it.contains("doc/")}
+                    TestFunctional = sourceChanged.any{(!it.contains("doc/") && !it.contains("research/"))}
                 }
             }
         }
