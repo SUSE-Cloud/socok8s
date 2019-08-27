@@ -47,14 +47,27 @@
   tags:
     - skip_ansible_lint
 
-- name: Enroll node for Airship Openstack compute plane
-  command: "kubectl label nodes {{ item }} openstack-compute-node=enabled openvswitch=enabled"
+- name: Enroll node for Airship Openstack compute plane (compute label)
+  command: "kubectl label nodes {{ item }} openstack-compute-node=enabled"
   register: _enrollforopenstackcomp
   changed_when:
     - _enrollforopenstackcomp.rc == 0
   failed_when:
     - _enrollforopenstackcomp.rc != 0
     - _enrollforopenstackcomp.stderr.find("already has a value (enabled)") == -1
+  loop: "{{ groups['airship-openstack-compute-workers'] | default([]) }}"
+  tags:
+    - skip_ansible_lint
+    - add_compute_node
+
+- name: Enroll node for Airship Openstack compute plane (openvswitch label)
+  command: "kubectl label nodes {{ item }} openvswitch=enabled"
+  register: _enrollforopenstackcompopenvswitch
+  changed_when:
+    - _enrollforopenstackcompopenvswitch.rc == 0
+  failed_when:
+    - _enrollforopenstackcompopenvswitch.rc != 0
+    - _enrollforopenstackcompopenvswitch.stderr.find("already has a value (enabled)") == -1
   loop: "{{ groups['airship-openstack-compute-workers'] | default([]) }}"
   tags:
     - skip_ansible_lint
