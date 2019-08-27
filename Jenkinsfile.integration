@@ -246,6 +246,11 @@ pipeline {
                         reportFiles: 'index.html',
                         reportName: 'ARA Report'
             ]
+            script {
+                sh "source ${WORKSPACE}/sock_${env.SOCOK8S_ENVNAME} && ./run.sh gather_logs"
+            }
+            zip archive: true, dir: 'logs/', zipFile: 'logs.zip'
+            archiveArtifacts artifacts: 'logs.zip'
         }
         failure {
             script {
@@ -256,11 +261,6 @@ pipeline {
                     }
                 }
             }
-            script {
-                sh "source ${WORKSPACE}/sock_${env.SOCOK8S_ENVNAME} && ./run.sh gather_logs"
-            }
-            zip archive: true, dir: 'logs/', zipFile: 'logs.zip'
-            archiveArtifacts artifacts: 'logs.zip'
         }
         cleanup {
             script {
