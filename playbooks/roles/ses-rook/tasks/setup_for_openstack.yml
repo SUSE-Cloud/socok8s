@@ -34,6 +34,7 @@
     creates: "/etc/ceph/ceph.{{ item.name }}.keyring"
   with_items: "{{ ses_openstack_keys }}"
   changed_when: false
+  no_log: true
 
 - name: Check if openstack key(s) already exist(s)
   command: "kubectl -n rook-ceph exec {{ ceph_tools_pod }} -- ceph auth get {{ item.name }}"
@@ -41,6 +42,7 @@
   failed_when: false
   with_items: "{{ ses_openstack_keys }}"
   register: openstack_key_exist
+  no_log: true
 
 - name: Add openstack key(s) to ceph
   command: "kubectl -n rook-ceph exec {{ ceph_tools_pod }} -- ceph auth import -i /etc/ceph/ceph.{{ item.0.name }}.keyring"
@@ -49,6 +51,7 @@
     - "{{ ses_openstack_keys }}"
     - "{{ openstack_key_exist.results }}"
   when: item.1.rc != 0
+  no_log: true
 
 - name: Get ses conf options
   shell:
@@ -57,11 +60,21 @@
     grep 'fsid\|mon_host\|mon_initial\|network' /etc/ceph/ceph.conf | awk '{ print $3}'
   register: conf_options
 
-#- name: Get ceph conf/key file contents
-#  slurp:
-#    src: "/etc/ceph/{{ item }}"
-#  with_items:
-#    - "ceph.client.cinder.keyring"
-#    - "ceph.client.cinder_backup.keyring"
-#    - "ceph.client.glance.keyring"
-#  register: ceph_files
+- name: Get ceph conf/key file contents for cinder
+  command: kubectl exec -n rook-ceph {{ ceph_tools_pod }} cat /etc/ceph/ceph.client.cinder.keyring
+  register: client_cinder_file
+
+- name: Get ceph conf/key file contents for cinder backup
+  command: kubectl exec -n rook-ceph {{ ceph_tools_pod }} cat /etc/ceph/ceph.client.cinder_backup.keyring
+  register: client_cinder_backup_file
+
+- name: Get ceph conf/key file contents for glance
+  command: kubectl exec -n rook-ceph {{ ceph_tools_pod }} cat /etc/ceph/ceph.client.glance.keyring
+  register: client_glance_file
+
+- name: Set client key facts for ses-config.yml
+  set_fact:
+    client_cinder_file_key: "{{ client_cinder_file.stdout | regex_findall('\\bkey\\b\\s*=\\s*(.*)') | first }}"
+    client_cinder_backup_file_key: "{{ client_cinder_backup_file.stdout | regex_findall('\\bkey\\b\\s*=\\s*(.*)') | first }}"
+    client_glance_file_key: "{{ client_glance_file.stdout | regex_findall('\\bkey\\b\\s*=\\s*(.*)') | first }}"
+  no_log: true

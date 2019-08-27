@@ -4,14 +4,17 @@ ceph_conf:
 cinder:
   rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}volumes"
   rbd_store_user: "cinder"
+  key: "{{  client_cinder_file_key  }}"
 cinder-backup:
   rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}cinder_backup"
   rbd_store_user: "cinder-backup"
+  key: "{{  client_cinder_backup_file_key  }}"
 nova:
   rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}nova"
 glance:
   rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}images"
   rbd_store_user: "glance"
+  key: "{{  client_glance_file_key  }}"
 libvirt:
   rbd_store_pool: "{{ airship_ses_pools_prefix | default('') }}vms"
   rbd_store_user: "cinder"
