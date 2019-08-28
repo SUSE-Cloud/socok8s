@@ -23,7 +23,6 @@ pipeline {
     parameters {
         /* first value in the list is the default */
         choice(choices: ['airship', 'osh'], description: 'Which deployment mechanism?', name: 'deployment')
-        booleanParam(name: 'run_tempest', defaultValue: false, description: 'Run tempest tests?')
         choice(choices: ['smoke', 'all'], description: 'Run smoke or all tempest tests?', name: 'tempest_test_type')
         choice(choices: ['ses_aio', 'ses_rook'], description: 'Which ses version to use?', name: 'ses_version')
     }
@@ -216,13 +215,8 @@ pipeline {
             options {
                 timeout(time: 240, unit: 'MINUTES', activity: true)
             }
-            when {
-                allOf {
-                    expression { env.run_tempest == 'true' }
-                    expression { params.deployment == 'airship' }
-                    expression { return  TestFunctional }
-                }
-            }
+            when { expression { return  TestFunctional } }
+
             steps {
                 sh """
                   export TEMPEST_TEST_TYPE=${params.tempest_test_type}
