@@ -1,32 +1,32 @@
 Airship
 =======
 
-Airship is a collection of interoperable tools for automating cloud
-provisioning and management. It uses a declarative framework described by YAML
-documents to define and manage the life cycle of container-based
-`open infrastructure <https://opensource.com/article/18/5/open-infrastructure>`_
-software tools and underlying hardware.
+Airship is a platform that takes YAML documents and turns them into Clouds.
+Takes helm charts, baremetal, security policies and network description and
+creates a cloud
 
 .. image:: https://airship-treasuremap.readthedocs.io/en/stable/_images/architecture.png
 
 * Airship architecture
-    https://airship-treasuremap.readthedocs.io/en/stable/
+    https://airship-treasuremap.readthedocs.io/en/stable/ (Stable)
 
-* Git repository for Airship and Airship subprojects
+    https://airship-treasuremap.readthedocs.io/en/latest/ (Latest)
+
+* Git repository
     https://opendev.org/airship
 
-* Video introduction
+* Video
     https://www.youtube.com/watch?v=0eEisMm9ykg
 
 
-Airship Architecture Elements
------------------------------
+Airship Architecture Parts
+--------------------------
 
 Shipyard
 ++++++++
 
-Shipyard is the cluster lifecycle orchestrator that provides a framework for a
-fully functional container-based Cloud.
+Shipyard is the cluster lifecycle orchestrator that provides to end-users the
+framework to orchestrate and deploy a fully functional container-based Cloud.
 
 * Documentation
     https://airship-shipyard.readthedocs.io/
@@ -43,17 +43,19 @@ cloud provisioning and management, leveraging a collection of interoperable
 open-source tools.
 
 * Documentation
-    https://airship-treasuremap.readthedocs.io/en/latest/
+    https://airship-treasuremap.readthedocs.io/en/latest/index.html
 
-* Git repository - reference manifests, reference architecture
+* Git repository
     https://opendev.org/airship/treasuremap
 
 Armada
 ++++++
 
-Armada is used to deploy and manage multiple Helm charts. It
-communicates with Helm to create a single YAML to centralize configurations
-of the desired infrastructure. The configuration can be managed with Deckhand.
+Armada uses a YAML to describe a multi-chart deployment. The keys are:
+
+* Armada communicates with helm to create the desired infrastructure.
+* The configuration can be stored on the Deckhand.
+* Armada is commanded by Shipyard
 
 * Documentation
     https://airship-armada.readthedocs.io/
@@ -71,9 +73,7 @@ of the desired infrastructure. The configuration can be managed with Deckhand.
 Deckhand
 ++++++++
 
-Deckhand is a document-based configuration management service back-end for
-Airship. It validates and stores YAML documents, including sensitive data using
-Barbican secure storage service.
+Deckhand is a document-based configuration storage service using Barbican
 
 * Documentation
     https://airship-deckhand.readthedocs.io/en/latest/
@@ -85,13 +85,13 @@ Barbican secure storage service.
 Pegleg
 ++++++
 
-Pegleg is a document aggregator that combines all required documents in a
-repository into a single YAML file. It is a configuration organization tool that
-provides the automation and tooling needed to aggregate, lint, and render the
-documents for deployment.
+Pegleg is a document aggregator that combine all the required documents across
+multiple Git repositories, additionally checks the documents with lint and
+validations via Deckhand.
 
 * Documentation
     https://airship-pegleg.readthedocs.io/
 
 * Git repository
     https://opendev.org/airship/pegleg
+
