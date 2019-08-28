@@ -29,6 +29,8 @@ metadata:
 data:
   values:
     pod:
+      resources:
+        enabled: {{ openstack_helm_pod_resources_enabled['memcached'] }}
       replicas:
         server: 1
         prometheus_memcached_exporter: 1

@@ -143,3 +143,25 @@ airship_ucp_control_workers: 2
 
 # Location of the kubeconfig file, fetched from velum UI (CaaSP3) or copied from cluster setup dir (CaaSP4)
 kubeconfig_file_path: "{{ socok8s_deploy_config_location }}/kubeconfig"
+
+# enable resource limiting for openstack pods
+openstack_helm_pod_resources_enabled:
+  ceph: true
+  libvirt: true
+  ingress: true
+  cinder: true
+  cinder_rabbitmq: false
+  neutron: true
+  neutron_rabbitmq: false
+  nova: true
+  nova_rabbitmq: false
+  glance: true
+  glance_rabbitmq: false
+  heat: true
+  heat_rabbitmq: false
+  horizon: true
+  keystone: true
+  keystone_rabbitmq: false
+  mariadb: true
+  memcached: true
+  tempest: true

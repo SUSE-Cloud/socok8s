@@ -30,6 +30,8 @@ data:
     timeout: {{ test_timeout }}
   values:
     pod:
+      resources:
+        enabled: {{ openstack_helm_pod_resources_enabled['mariadb'] }}
       replicas:
         server: 1
     volume:

@@ -27,6 +27,8 @@ data:
     timeout: {{ openstack_helm_deploy_timeout }}
   values:
     pod:
+      resources:
+        enabled: {{ openstack_helm_pod_resources_enabled['horizon'] }}
       replicas:
         server: 1
     conf:

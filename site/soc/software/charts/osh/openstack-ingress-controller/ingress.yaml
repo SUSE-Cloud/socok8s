@@ -29,6 +29,8 @@ metadata:
 data:
   values:
     pod:
+      resources:
+        enabled: {{ openstack_helm_pod_resources_enabled['ingress'] }}
       replicas:
         ingress: 1
         error_page: 1

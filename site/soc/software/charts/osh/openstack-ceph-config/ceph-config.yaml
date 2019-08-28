@@ -53,4 +53,7 @@ data:
       job_namespace_client_key: false
       storageclass_cephfs: false
       storageclass_rbd: false
+    pod:
+      resources:
+        enabled: {{ openstack_helm_pod_resources_enabled['ceph'] }}
 ...

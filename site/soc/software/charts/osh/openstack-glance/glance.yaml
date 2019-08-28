@@ -46,6 +46,8 @@ data:
             image_file: "cirros-0.4.0-x86_64-disk.img"
             private: false
     pod:
+      resources:
+        enabled: {{ openstack_helm_pod_resources_enabled['glance'] }}
       replicas:
         api: 1
         registry: 1
