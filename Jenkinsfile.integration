@@ -225,7 +225,7 @@ pipeline {
             }
             steps {
                 sh """
-                  export TEMPEST_TEST_TYPE=${env.tempest_test_type}
+                  export TEMPEST_TEST_TYPE=${params.tempest_test_type}
                   export AIRSHIP_TEMPEST_LOG_STDOUT=True
                   ./run.sh test
                 """
