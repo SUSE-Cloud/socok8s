@@ -141,7 +141,7 @@ validate_cli_options (){
        exit 1
    fi
 
-   OPTIONS=(deploy test update_openstack add_openstack_compute remove_openstack_compute remove_deployment deploy_network deploy_ses deploy_caasp deploy_caasp4 deploy_caasp4 configure_ccp_deployer deploy_ccp_deployer enroll_caasp_workers patch_upstream build_images deploy_osh setup_caasp_workers_for_openstack setup_hosts setup_openstack setup_airship setup_everything teardown clean_caasp4 clean_k8s clean_airship_not_images gather_logs deploy_ses_rook delete_ses_rook)
+   OPTIONS=(deploy test update_openstack add_openstack_compute remove_openstack_compute remove_deployment deploy_network deploy_ses deploy_caasp deploy_caasp4 deploy_caasp4 configure_ccp_deployer deploy_ccp_deployer enroll_caasp_workers patch_upstream build_images deploy_osh setup_caasp_workers_for_openstack setup_hosts setup_openstack setup_airship setup_everything teardown clean_caasp clean_k8s clean_airship_not_images gather_logs deploy_ses_rook delete_ses_rook)
 
    action=$1
    isvalid=false
