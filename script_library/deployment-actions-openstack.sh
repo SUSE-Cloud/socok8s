@@ -24,9 +24,6 @@ function deploy_ses(){
 }
 function deploy_caasp(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_skuba_available
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_terraform_available
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_terraform_version
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_ssh_agent_running
     echo "Starting CaaSP 4 deploy"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_caasp.yml
@@ -44,7 +41,6 @@ function configure_ccp_deployer() {
 }
 function clean_caasp(){
     if command -v ${TERRAFORM_BINARY_PATH} ; then
-        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_terraform_available
         echo "Delete CaaSP 4"
         run_ansible ${socok8s_absolute_dir}/playbooks/openstack-delete_caasp.yml
     fi

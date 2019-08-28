@@ -46,6 +46,10 @@ socok8s_repos_to_configure:
   socok8s_SLE15SP1: "https://download.opensuse.org/repositories/Cloud:/socok8s:/master/SLE_15_SP1/"
   CAASP30-update: "{{ dist_mirror }}/ibs/SUSE/Updates/SUSE-CAASP/3.0/x86_64/update/"
   CAASP30-pool: "{{ dist_mirror }}/ibs/SUSE/Products/SUSE-CAASP/3.0/x86_64/product/"
+  # needed for skuba and terraform
+  CAASP40-SLES-151: "{{ ibs_mirror }}/Devel:/CaaSP:/4.0/SLE_15_SP1/"
+  CAASP40-SLES-150: "{{ ibs_mirror }}/Devel:/CaaSP:/4.0/SLE_15/"
+
 
 ######################################################
 # Following variables are used by airship logic only

@@ -23,6 +23,10 @@
     - "{{ playbook_dir }}/../vars/deploy-on-kvm.yml"
   tasks:
     - import_role:
+        name: runner-setup
+        tasks_from: assert_packages.yml
+
+    - import_role:
         name: caasp4
         tasks_from: setup_terraform_workspace_libvirt
       vars:
