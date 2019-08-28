@@ -68,12 +68,40 @@ We currently only allow to deploy master branch from sources.
      * ansible >= 2.8.3
      * git-core
      * jq
+     * python
      * python3-virtualenv
-     * python3-jmespath
-     * python3-netaddr
-     * python3-openstacksdk
      * python3-openstackclient
-     * python3-heatclient
+     * python3-barbicanclient
+     * python3-cmd2
+     * python-xml
+     * docker
+
+   Enable following repos and install packages.
+.. code-block:: console
+
+  pip install ansible >= 2.8.3
+  zypper install git-core
+  zypper install jq
+  zypper install python
+
+  SUSEConnect --product sle-module-desktop-applications/15.1/x86_64
+  SUSEConnect --product sle-module-development-tools/15.1/x86_64
+  zypper install python3-virtualenv
+
+  SUSEConnect --product sle-module-containers/15.1/x86_64
+  zypper install docker
+
+  SUSEConnect --product ses/6/x86_64 -r ADDITIONAL REGCODE
+  zypper install python3-cmd2
+
+  SUSEConnect --product sle-module-public-cloud/15.1/x86_64
+  zypper install python3-openstackclient
+  zypper install python3-barbicanclient
+
+  SUSEConnect --product PackageHub/15.1/x86_64
+  zypper install python-xml
+  SUSEConnect --product sle-module-python2/15.1/x86_64
+..
 
    After the required packages are installed, clone
    `socok8s GitHub repository <https://github.com/SUSE-Cloud/socok8s>`.
