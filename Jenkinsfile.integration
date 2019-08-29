@@ -42,6 +42,7 @@ pipeline {
         DEPLOYMENT_MECHANISM = "openstack"
         ANSIBLE_VERBOSITY = 1
         ANSIBLE_STDOUT_CALLBACK = "fancyyaml"
+        ANSIBLE_CALLBACK_PLUGINS = "${env.WORKSPACE}/files/ansible-plugins/callback/"
         USER = "jenkins" /* Why isn't this set in the jenkins environment? */
         USE_ARA = "True"
         ARA_DIR = "$WORKSPACE"
@@ -51,12 +52,6 @@ pipeline {
         stage('Show environment information') {
             steps {
                 sh 'printenv'
-            }
-        }
-        stage('Copy CI related files') {
-            when { expression { return  TestFunctional } }
-            steps {
-                sh "mkdir -p ~/.ansible/plugins/callback/ && cp files/fancyyaml.yml ~/.ansible/plugins/callback/"
             }
         }
         stage('Set ssh-agent for caasp4 deployment') {
