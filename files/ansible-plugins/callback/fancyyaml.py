@@ -14,4 +14,5 @@ class CallbackModule(YamlCallbackModule):
     def v2_runner_on_ok(self, result):
       if result._task.action in ['package', 'zypper', 'zypper_repository']:
           del result._result['stdout']
+          del result._result['stdout_lines']
       super(CallbackModule, self).v2_runner_on_ok(result)
