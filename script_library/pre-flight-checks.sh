@@ -117,7 +117,11 @@ check_ansible_requirements (){
     # If ara is requested
     if [[ ${USE_ARA:-False} == "True" ]]; then
         check_python_requirement 'ara'
-        python3 -m ara.setup.env > ${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace/ara.rc
+        ARA_PATH=$(python3 -m ara.setup.path)
+        cat << EOF > ${SOCOK8S_WORKSPACE_BASEDIR}/${SOCOK8S_ENVNAME}-workspace/ara.rc
+export ANSIBLE_CALLBACK_PLUGINS=${ANSIBLE_CALLBACK_PLUGINS:-}${ANSIBLE_CALLBACK_PLUGINS+:}${ARA_PATH}/plugins/callback
+export ANSIBLE_ACTION_PLUGINS=${ANSIBLE_ACTION_PLUGINS:-}${ANSIBLE_ACTION_PLUGINS+:}${ARA_PATH}/plugins/actions
+EOF
     fi
 }
 
