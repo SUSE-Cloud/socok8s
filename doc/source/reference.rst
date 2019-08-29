@@ -92,6 +92,44 @@ Why...
    <insert your favorite language here>, mostly because the shell script grew
    organically out of actual use and CI needs.
 
+Deployment process
+==================
+
+.. actdiag::
+
+   actdiag{
+     init,import -> deploytooling -> validate;
+     lane CLI {
+       init [label="new hosts manifests"];
+       import [label="import manifests"];
+       deploytooling [label="Add deploy tool\nmanifests"]
+       validate [label="Validate clusterAPI/\n provider manifests"];
+     }
+   }
+
+.. seqdiag::
+
+   seqdiag{
+      skuba [label="skuba/airshipcli"]
+      localhost [label="localhost/\nServer1"]
+      operator [label="Deploy/lifecycle\ntool in k8s"]
+      ironic [label="ClusterAPI Provider"]
+      node [label="k8s other node"]
+
+      skuba -> localhost [label="K8s cluster init"];
+      skuba <<-- localhost [label="K8s master node is enrolled"];
+      skuba -> operator [label="Apply deploy/LCM operator tooling"];
+      skuba <<-- operator [label="LCM knows which apps/manifests to deploy"];
+      operator -> operator [label="Auto-apply cluster-api manifests"];
+      operator -> operator [label="Deploy Cluster-API\nmetal3 provider"];
+      operator -> ironic [label="Make me a bare metal node"];
+      ironic -> node [label="IPMI/iPXE"];
+      ironic <- node [label="k8s cluster node created"];
+      operator <- ironic [label="k8s aware of node"];
+      operator -> operator [label="Apply node labels"];
+      operator -> operator [label="Deploy Application"];
+   }
+
 Image building process
 ======================
 
