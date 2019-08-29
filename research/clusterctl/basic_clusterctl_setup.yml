@@ -1,0 +1,80 @@
+---
+#
+# (c) Copyright 2019 SUSE LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+
+- hosts: localhost
+  gather_facts: yes
+  pre_tasks:
+    - name: Check supported system
+      assert:
+        that:
+          - ansible_distribution == 'Suse'
+          - ansible_distribution_version == '15.1'
+        fail_msg: "We only support running this on SLES 15-SP1"
+  tasks:
+    - name: Set install dir
+      set_fact:
+        cluster_api_provider_dir: " ~/dev/go/src/sigs.k8s.io/cluster-api-provider-openstack"
+    - name: Add repos
+      zypper_repository:
+        repo: "{{ item.url }}"
+        name: "{{ item.name }}"
+        disable_gpg_check: yes
+        autorefresh: no
+        state: present
+      loop:
+        - {"name": "socok8s_sle15sp1", "url": "http://download.opensuse.org/repositories/Cloud:/socok8s:/master/SLE_15_SP1" }
+        - {"name": "go_sle15sp1", "url": "http://download.opensuse.org/repositories/devel:/languages:/go/SLE_15-SP1/" }
+    - name: Add repos with Suseconnect
+      command: "SUSEConnect --product {{ item }}"
+      loop:
+        - "sle-module-containers/15.1/x86_64"
+        - "PackageHub/15.1/x86_64"
+    - name: Refresh repos
+      zypper_repository:
+        repo: '*'
+        runrefresh: yes
+    - name: Install required packages
+      become: yes
+      zypper:
+        name: ["kubectl", "minikube", "go1.13", "docker", "git-core", "make"]
+        state: present
+    - name: Start minikube
+      become: yes
+      command: "minikube start --vm-driver=none"
+    - name: Create dir
+      file:
+        path: "{{ cluster_api_provider_dir }}"
+        state: present
+    - name: Clone cluster-api-provider-openstack
+      git:
+        repo: "https://github.com/kubernetes-sigs/cluster-api-provider-openstack"
+        dest: "{{ cluster_api_provider_dir }}"
+        varsion: "release-0.1"
+    - name: Check for clusterctl existance
+      stat:
+        path: "{{ cluster_api_provider_dir }}/bin/clusterctl"
+      register: _clusterctl_bin
+    - name: Build clusterctl
+      make:
+        chdir: "{{ cluster_api_provider_dir }}"
+        target: "clusterctl"
+      when: not _clusterctl_bin
+    - name: Add clusterctl path to profile.d
+      become: yes
+      copy:
+        dest: "/etc/profile.d/clusterctl.sh"
+        content: "PATH=$PATH:{{ cluster_api_provider_dir }}/bin/"
