@@ -6,4 +6,4 @@
     - import_role:
         name: dstat
         tasks_from: fetch-data
-      when: lookup('env', 'SOCOK8S_DEPLOY_DSTAT') | default(False)
+      when: lookup('env', 'SOCOK8S_DEPLOY_DSTAT') | default(False, True)

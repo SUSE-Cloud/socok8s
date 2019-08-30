@@ -1,12 +1,12 @@
 ---
 - name: Fetch csv and log files
   fetch:
-    dest: "{{ socok8s_workspace }}/dstat/"
+    dest: "{{ playbook_dir }}/../dstat/"
     src: "{{ item }}"
     validate_checksum: no
     # no checksum because dstat keeps writing to the file so it will be changed by the time we have fetch it
-    ignore_errors: yes
-    # ignore_errors because the files migth not exist
+  ignore_errors: True
+  # ignore_errors because the files might not exist
   loop:
     - "{{ dstat_output_csv }}"
     - "{{ dstat_output_log }}"

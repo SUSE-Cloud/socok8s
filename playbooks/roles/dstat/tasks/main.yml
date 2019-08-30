@@ -10,11 +10,9 @@
   failed_when: false
   changed_when: false
 
-# https://stackoverflow.com/a/20338327 executing in ()& decouples the dstat
-# process from scripts-library to prevent hung builds if dstat fails to exit
-# for any reason.
 - name: Run dstat in the background
   shell: |
-    (dstat {{ dstat_options }} --nocolor --output {{ dstat_output_csv }} {{ dstat_delay }} \
-    < /dev/null > {{ dstat_output_log }} 2>&1 &)
+    (nohup /usr/bin/dstat {{ dstat_options }} --nocolor --output {{ dstat_output_csv }} {{ dstat_delay }} </dev/null >{{ dstat_output_log }} 2>&1 &)
+  args:
+    executable: /bin/bash
   when: _dstat_running.rc == 1
