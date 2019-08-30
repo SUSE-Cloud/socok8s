@@ -53,3 +53,15 @@
   gather_facts: false
   tasks:
     - include: roles/common-ses/tasks/ses_config.yml
+
+- hosts: localhost
+  vars_files:
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
+  tasks:
+    - name: Set SES version in extravars
+      delegate_to: localhost
+      lineinfile:
+        path: "{{ socok8s_extravars }}"
+        create: yes
+        line: "ses_deployment: aio"
+        state: present

@@ -1,4 +1,20 @@
 ---
+#
+# (c) Copyright 2019 SUSE Linux GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+
 - name: Add SES repositories
   become: yes
   zypper_repository:
@@ -82,18 +98,49 @@
   delay: 10
   changed_when: False
 
+- name: Find out ceph-tools pod
+  command: "kubectl -n rook-ceph get pod -l 'app=rook-ceph-tools' -o jsonpath='{.items[0].metadata.name}'"
+  register: _rook_ceph_tools_pod
+
+- name: Remember ceph-tools pod name
+  set_fact:
+    ceph_tools_pod: "{{ _rook_ceph_tools_pod.stdout }}"
+
 - name: Wait for Ceph to be ready
-  shell: "kubectl -n rook-ceph exec $(kubectl -n rook-ceph get pod -l 'app=rook-ceph-tools' -o jsonpath='{.items[0].metadata.name}') ceph status"
+  shell: "kubectl -n rook-ceph exec {{ ceph_tools_pod }} -- ceph status"
   register: _rook_ceph_health
   until: "'HEALTH_OK' in _rook_ceph_health.stdout"
   retries: 30
   delay: 15
 
+- name: Set up SES for OpenStack
+  import_tasks: setup_for_openstack.yml
+  vars:
+    ses_openstack_glance_pool:
+      name: "{{ airship_ses_pools_prefix | default('') }}images"
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_openstack_cinder_pool:
+      name: "{{ airship_ses_pools_prefix | default('') }}volumes"
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_openstack_nova_pool:
+      name: "{{ airship_ses_pools_prefix | default('') }}vms"
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_osh_rbd_pool:
+      name: "{{ airship_ses_pools_prefix | default('') }}rbd"
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_openstack_cinder_backup_pool:
+      name: "{{ airship_ses_pools_prefix | default('') }}cinder_backup"
+      pg_num: "{{ ses_osd_pool_default_pg_num }}"
+    ses_openstack_pools:
+      - "{{ ses_openstack_glance_pool }}"
+      - "{{ ses_openstack_cinder_pool }}"
+      - "{{ ses_openstack_nova_pool }}"
+      - "{{ ses_openstack_cinder_backup_pool }}"
+      - "{{ ses_osh_rbd_pool }}"
 
-# TODO(itxaka): Not sure why but I cannot just include_tasks here...
+- name: GenerateImport SES configs to deployer
+  import_tasks: ses_config.yml
+
 - name: Test Ceph
-  import_role:
-    name: ses-rook
-    tasks_from: test_rook
+  import_tasks: test_rook.yml
   when: lookup('env','SOCOK8S_TEST_CEPH_ROOK') | default(False)
-
