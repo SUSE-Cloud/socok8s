@@ -179,6 +179,7 @@ data:
       libvirt:
         libvirt: "{{ suse_osh_registry_location }}/openstackhelm/libvirt:{{ suse_infra_image_version }}"
       mariadb:
+        mariadb: "registry.suse.de/devel/cloud/10/containers/containers/soc/openstack-helm-mariadb:latest"
         prometheus_mysql_exporter_helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       memcached: {}
       neutron:
