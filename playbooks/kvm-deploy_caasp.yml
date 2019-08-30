@@ -43,3 +43,12 @@
       vars:
         skuba_cluster_basedir: "{{ socok8s_workspace }}"
         image_username: "{{ skuba_ci_terraform_libvirt_image_username }}"
+
+- hosts: caasp-workers
+  vars_files:
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
+  tasks:
+    - import_role:
+        name: dstat
+        tasks_from: main
+      when: lookup('env', 'SOCOK8S_DEPLOY_DSTAT') | default(False)
