@@ -240,6 +240,7 @@ pipeline {
                         reportFiles: 'index.html',
                         reportName: 'ARA Report'
             ]
+            logParser projectRulePath: 'log-parser-plugin-rules.txt', showGraphs: true, useProjectRule: true, parsingRulesPath: null
             script {
                 try {
                     sh "source ${WORKSPACE}/sock_${env.SOCOK8S_ENVNAME} && ./run.sh gather_logs"
