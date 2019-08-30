@@ -184,7 +184,10 @@
         OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
       register: shipyard_desc_action
       failed_when: "'failed' in shipyard_desc_action.stdout"
-      until: shipyard_desc_action.stdout.find('Processing') < 0 and shipyard_desc_action.stdout.find('running') < 0
+      until:
+        - shipyard_desc_action.stdout.find('Processing') == -1
+        - shipyard_desc_action.stdout.find('running') == -1
+        - shipyard_desc_action.stdout.find('Error') == -1
       retries: "{{ airship_deploy_openstack_timeout | int * 2 }}"
       delay: 30
       tags:
