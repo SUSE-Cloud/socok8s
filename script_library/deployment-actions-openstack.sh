@@ -61,6 +61,10 @@ function clean_openstack(){
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-delete_network.yml
 }
 
+function parse_tempest_ci() {
+    parse_tempest_ci
+}
+
 function teardown(){
     if [[ ${SOCOK8S_DEPLOY_DSTAT:-"NO"} == "YES" ]]
     then

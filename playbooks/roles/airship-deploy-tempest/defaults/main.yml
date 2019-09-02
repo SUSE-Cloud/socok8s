@@ -22,3 +22,5 @@ cirros_test_image_url: "http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_
 use_blacklist: true
 # Flag to hide tempest pod logs during ansible tempest run. Default is True (show tempest logs)
 print_tempest_log: "{{ lookup('env','AIRSHIP_TEMPEST_LOG_STDOUT') | default('True', true) | bool }}"
+# wheter to output tempest in subunit format
+tempest_subunit: "{{ lookup('env', 'SOCOK8S_TEMPEST_SUBUNIT_OUTPUT') | default(False, True) | bool }}"

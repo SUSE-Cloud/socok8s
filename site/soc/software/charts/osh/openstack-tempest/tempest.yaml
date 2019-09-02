@@ -27,12 +27,17 @@ data:
         restartPolicy: Never
     conf:
       script: |
+        tempest workspace register --path /var/lib/tempest/data --name default
         tempest run \
+        --workspace default \
         --config-file /etc/tempest/tempest.conf \
         -w {{ tempest_workers }} \
         {{ tempest_test_args[tempest_test_type] }} \
 {% if use_blacklist %}
         --blacklist-file /etc/tempest/test-blacklist \
+{% endif %}
+{% if tempest_subunit is defined and tempest_subunit is sameas true %}
+        --subunit \
 {% endif %}
         || true
 {% if use_blacklist %}

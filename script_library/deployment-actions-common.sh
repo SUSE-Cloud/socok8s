@@ -83,3 +83,8 @@ function gather_dstat_output(){
     echo "Gathering dstat output"
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-gather_dstat_output.yml
 }
+
+function parse_tempest_output(){
+    echo "Parsing tempest output for CI"
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-tempest-output-to-junit.yml
+}

@@ -1,0 +1,83 @@
+---
+- hosts: soc-deployer
+  gather_facts: yes
+  tasks:
+    - name: Run container to attach tempest pvc
+      shell: |
+        set pipefail -o
+        cat <<EOF | kubectl -n openstack apply -f -
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          name: tempest-data
+        spec:
+          containers:
+          - name: tempest-data
+            image: opensuse/leap
+            command: ["/bin/bash", "-ec", "while :; do echo '.'; sleep 5 ; done"]
+            volumeMounts:
+            - name: mypvc
+              mountPath: /data
+          volumes:
+          - name: mypvc
+            persistentVolumeClaim:
+              claimName: pvc-tempest
+        EOF
+      register: tempest_data_pod_create
+      ignore_errors: true
+      tags:
+        - skip_ansible_lint
+    - name: Wait until data pod api pod is deployed
+      command: "kubectl get pod -n openstack tempest-data -o jsonpath='{.status.containerStatuses[].ready}'"
+      register: tempest_data_pod_status
+      until: tempest_data_pod_status.stdout == "true"
+      retries: 60
+      delay: 2
+      changed_when: False
+      when: tempest_data_pod_create.rc == 0
+    - name: Cat the tempest output into a local file
+      shell: "kubectl -n openstack exec -i tempest-data -- cat /data/.stestr/0 > {{ ansible_env.HOME }}/tempest.subunit"
+      register: _tempest_output
+      when: tempest_data_pod_status.rc == 0
+    - name: Fetch the tempest output
+      fetch:
+        dest: "{{ playbook_dir }}/../tempest.subunit"
+        src: "{{ ansible_env.HOME }}/tempest.subunit"
+        flat: yes
+      when:
+        - _tempest_output.rc == 0
+    - name: Delete the data pod
+      command: kubectl -n openstack delete pod tempest-data --grace-period=5
+      when: tempest_data_pod_create.rc == 0
+
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Check that previous task were successfull
+      stat:
+        path: "{{ playbook_dir }}/../tempest.subunit"
+      register: _tempest_file
+    - name: Install required packages in a virtualenv
+      pip:
+        name:
+          - junitxml
+          - python-subunit
+        virtualenv: "{{ playbook_dir }}/../junitvirtualenv"
+        virtualenv_python: python2  # junit stuff does not work under py3 for some reason, needs more investigation
+      when: _tempest_file.stat.exists
+    # This task can output rc 1 even if it succeeds!
+    # subunit2junitxml will forward the stream results to the exit code, so if tests fail, exit code will be 1
+    - name: Transform subunit into junit
+      shell: |
+        source {{ playbook_dir }}/../junitvirtualenv/bin/activate
+        cat {{ playbook_dir }}/../tempest.subunit | subunit-1to2 | subunit2junitxml > {{ playbook_dir }}/../tempest.xml
+      args:
+        executable: /bin/bash
+      failed_when: False
+      tags:
+        - skip_ansible_lint
+      when: _tempest_file.stat.exists
+    - name: Remove virtualenv
+      file:
+        path: "{{ playbook_dir }}/../junitvirtualenv"
+        state: absent

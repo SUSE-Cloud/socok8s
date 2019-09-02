@@ -137,6 +137,7 @@
       when:
         - _tempest_run_pod_name.rc == 0
         - print_tempest_log
+        - not tempest_subunit
 
     - name: Show command for gathering tempest logs
       debug:
@@ -155,3 +156,4 @@
       when:
         - _tempest_run_pod_name.rc == 0
         - print_tempest_log
+        - not tempest_subunit
