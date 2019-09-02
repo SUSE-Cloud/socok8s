@@ -65,9 +65,6 @@ case "$deployment_action" in
     "deploy_network")
         deploy_network
         ;;
-    "deploy_ses")
-        deploy_ses
-        ;;
     "deploy_caasp")
         deploy_caasp
         ;;
@@ -108,10 +105,10 @@ case "$deployment_action" in
         ;;
     "setup_hosts")
         deploy_network
-        deploy_ses
         deploy_caasp
         deploy_ccp_deployer
         configure_ccp_deployer
+        deploy_ses_rook
         ;;
     "setup_openstack")
         setup_caasp_workers_for_openstack
@@ -131,10 +128,10 @@ case "$deployment_action" in
         ;;
     "setup_everything")
         deploy_network
-        deploy_ses
         deploy_caasp
         deploy_ccp_deployer
         configure_ccp_deployer
+        deploy_ses_rook
         setup_caasp_workers_for_openstack
         patch_upstream
         build_images

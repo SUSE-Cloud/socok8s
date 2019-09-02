@@ -16,12 +16,6 @@ function deploy_network(){
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-create_network.yml
     echo "network deployment successful"
 }
-function deploy_ses(){
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
-    echo "Starting a SES deploy"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-deploy_ses.yml
-    echo "ses-ansible deploy is successful"
-}
 function deploy_caasp(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_openstack_environment_is_ready_for_deploy
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_ssh_agent_running
@@ -51,8 +45,6 @@ function clean_openstack(){
     echo "Delete CaaSP 4 nodes"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-delete_caasp.yml
     clean_caasp
-    echo "Delete SES node"
-    run_ansible ${socok8s_absolute_dir}/playbooks/openstack-ses_aio_instance.yml -e ses_node_delete=True
     echo "Delete network stack"
     run_ansible ${socok8s_absolute_dir}/playbooks/openstack-delete_network.yml
 }

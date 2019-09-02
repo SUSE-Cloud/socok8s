@@ -13,11 +13,6 @@ source ${scripts_absolute_dir}/deployment-actions-common.sh
 function deploy_network(){
     echo "This is not supported yet on KVM"
 }
-function deploy_ses(){
-    echo "This just runs ses configuration logic. Please create a SES node manually first."
-    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_ses_aio.yml
-    echo "ses-ansible deploy is successful"
-}
 function deploy_caasp(){
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_ssh_agent_running
     echo "Starting CaaSP 4 deploy on libvirt"
