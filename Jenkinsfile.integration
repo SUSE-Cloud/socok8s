@@ -24,7 +24,6 @@ pipeline {
         /* first value in the list is the default */
         choice(choices: ['airship', 'osh'], description: 'Which deployment mechanism?', name: 'deployment')
         choice(choices: ['smoke', 'all'], description: 'Run smoke or all tempest tests?', name: 'tempest_test_type')
-        choice(choices: ['ses_aio', 'ses_rook'], description: 'Which ses version to use?', name: 'ses_version')
         booleanParam(name: 'hold_instance_for_debug', defaultValue: false, description: 'Keep this instance up for 3 hours')
     }
 
@@ -152,12 +151,6 @@ pipeline {
                         sh "source ${WORKSPACE}/sock_${env.SOCOK8S_ENVNAME} && ./run.sh deploy_caasp"
                     }
                 }
-                stage('Deploy SES') {
-                    when { expression  { params.ses_version == "ses_aio" } }
-                    steps {
-                        sh "./run.sh deploy_ses"
-                    }
-                }
                 stage('Deploy CCP Deployer') {
                     steps {
                         sh "./run.sh deploy_ccp_deployer"
@@ -178,7 +171,6 @@ pipeline {
         }
 
         stage('Deploy SES on Kubernetes with rook') {
-            when { expression  { params.ses_version == "ses_rook" } }
             steps {
                 sh "./run.sh deploy_ses_rook"
             }
