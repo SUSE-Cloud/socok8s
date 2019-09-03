@@ -6,9 +6,10 @@
 ## - SOCOK8S_ENVNAME defined
 ## - access to registry.suse.de
 ## - podman installed
-## - clouds.yaml (for openstack provider)
 ## - SSH_AUTH_SOCK env var exposed
 ## - ssh-add -L should return results.
+## - clouds.yaml (for openstack provider)
+## - OS_CLOUD defined (for openstack provider)
 
 set -o pipefail
 set -o errexit
@@ -107,5 +108,10 @@ fi
 # Now copy and run the terraformcmds script
 podman cp ${CI_SCRIPTS_PATH}/terraforming-${ACTION}.sh terraform:/workdir/tf/terraformcmds.sh
 podman exec -it -w /workdir/tf/ -e OS_CLOUD=${OS_CLOUD} -e SSH_AUTH_SOCK=/ssh_auth_sock terraform /workdir/tf/terraformcmds.sh
+
+# Extra hacks for openstack until handled by terraform
+if [[ "${PROVIDER}" == "openstack" ]] && [[ "${ACTION}" == "deploy" ]] ; then
+    source ${CI_SCRIPTS_PATH}/${PROVIDER}-temphack.sh
+fi
 
 echo "Successfully ${ACTION}ed CaaSP"
