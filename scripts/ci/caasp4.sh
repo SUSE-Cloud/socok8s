@@ -32,7 +32,7 @@ function finish {
 
 # Action = deploy or destroy
 ACTION=${1:-deploy}
-# PROVIDER = openstack or kvm.
+# PROVIDER = openstack or libvirt.
 PROVIDER=${DEPLOYMENT_MECHANISM:-openstack}
 
 echo "Fetching latest terraform container"
@@ -58,7 +58,7 @@ rm -f ${SOCOK8S_WORKSPACE}/ssh_keys.csv
 
 # because libvirt provider by default runs on qemu:/// it makes sense to expose
 # libvirt socket to the container by default.
-if [[ -f /var/run/libvirt/libvirt-sock ]] && [[ "${PROVIDER}" == "kvm" ]]; then
+if [[ -f /var/run/libvirt/libvirt-sock ]] && [[ "${PROVIDER}" == "libvirt" ]]; then
     echo "Auto expose libvirt socket by default"
     provider_args="
       -v /var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock
@@ -95,7 +95,7 @@ if [[ "${PROVIDER}" == "openstack" ]]; then
             podman cp $filepath terraform:/root/.config/openstack/$fname;
         fi
     done
-elif [[ "${PROVIDER}" == "kvm" ]]; then
+elif [[ "${PROVIDER}" == "libvirt" ]]; then
     # Please remove all of this when skuba packages its libvirt code in IBS.
     cd ${SOCOK8S_WORKSPACE}
     git clone https://github.com/SUSE/skuba.git skuba-code
