@@ -1,4 +1,14 @@
 #!/bin/bash
+## This creates or destroys caasp4 cluster
+## Output on create: kubeconfig in $SOCOK8S_WORKSPACE
+## Requirements:
+## - SOCOK8S_WORKSPACE defined
+## - SOCOK8S_ENVNAME defined
+## - access to registry.suse.de
+## - podman installed
+## - clouds.yaml (for openstack provider)
+## - SSH_AUTH_SOCK env var exposed
+## - ssh-add -L should return results.
 
 set -o pipefail
 set -o errexit
