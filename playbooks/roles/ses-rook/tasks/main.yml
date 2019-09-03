@@ -39,16 +39,6 @@
   tags:
     - ses-rook-install
 
-- name: Point to registry.suse.de until images are published at registry.suse.com
-  replace:
-    path: "{{ item }}"
-    regexp: 'registry.suse.com/ses/6/'
-    replace: 'registry.suse.de/devel/storage/6.0/containers/ses/6/'
-  loop:
-    - "{{ ses_rook_k8s_manifests_dir }}/operator.yaml"
-    - "{{ ses_rook_k8s_manifests_dir }}/cluster.yaml"
-    - "{{ ses_rook_k8s_manifests_dir }}/toolbox.yaml"
-
 - name: Create rook operator
   command: "kubectl apply -f common.yaml -f operator.yaml"
   register: _rook_operator_creation
