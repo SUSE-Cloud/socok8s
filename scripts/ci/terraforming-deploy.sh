@@ -42,7 +42,7 @@ fi
 
 # Skuba workers deploy
 let i=1
-for worker in $(jq --raw-output '.ip_workers.value[]')
+for worker in $(jq --raw-output '.ip_workers.value[]' ../terraform-output.json); do
     echo "Bootstrapping worker ${i} through ip ${worker}"
     skuba node join worker-${i} -r worker -s -t ${worker} -u sles -v 2
     let i++

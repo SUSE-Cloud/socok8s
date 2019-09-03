@@ -62,7 +62,7 @@ if ! podman ps --format '{{ .Names }}' | grep terraform > /dev/null; then
         -v ${SSH_AUTH_SOCK}:/ssh_auth_sock \
         -v ${SOCOK8S_WORKSPACE}:/workdir \
         ${provider_args} \
-        ${USER_ARGS:-}
+        ${USER_ARGS:-} \
         -e SSH_AUTH_SOCK=/ssh_auth_sock \
         ${TERRAFORM_CONTAINER} \
         /bin/bash)
@@ -96,6 +96,6 @@ fi
 
 # Now copy and run the terraformcmds script
 podman cp ${CI_SCRIPTS_PATH}/terraforming-${ACTION}.sh terraform:/workdir/tf/terraformcmds.sh
-podman exec -w /workdir/tf/ -e OS_CLOUD=${OS_CLOUD} -e SSH_AUTH_SOCK=/ssh_auth_sock terraform /workdir/tf/terraformcmds.sh
+podman exec -it -w /workdir/tf/ -e OS_CLOUD=${OS_CLOUD} -e SSH_AUTH_SOCK=/ssh_auth_sock terraform /workdir/tf/terraformcmds.sh
 
 echo "Successfully ${ACTION}ed CaaSP"
