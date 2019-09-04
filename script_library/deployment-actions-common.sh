@@ -78,3 +78,8 @@ function gather_logs(){
     echo "Gathering kubernetes logs"
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-collect-logs.yml
 }
+
+function gather_dstat_output(){
+    echo "Gathering dstat output"
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-gather_dstat_output.yml
+}

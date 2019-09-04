@@ -1,0 +1,9 @@
+- hosts: caasp-workers
+  gather_facts: yes
+  vars_files:
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
+  tasks:
+    - import_role:
+        name: dstat
+        tasks_from: fetch-data
+      when: lookup('env', 'SOCOK8S_DEPLOY_DSTAT') | default(False, True)

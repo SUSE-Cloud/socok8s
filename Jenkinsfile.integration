@@ -45,6 +45,7 @@ pipeline {
         USER = "jenkins" /* Why isn't this set in the jenkins environment? */
         USE_ARA = "True"
         ARA_DIR = "$WORKSPACE"
+        SOCOK8S_DEPLOY_DSTAT = "YES"
     }
 
     stages {
@@ -274,6 +275,11 @@ pipeline {
                         // manually set the build to failure if we could not cleanup resources
                         currentBuild.result = 'FAILURE'
                     }
+                }
+                try {
+                    zip archive: true, dir: 'dstat/', zipFile: 'dstat.zip'
+                } catch(e) {
+                    echo "Could not gather dstat logs"
                 }
             }
         }

@@ -1,0 +1,18 @@
+- name: Package install
+  become: yes
+  zypper:
+    name: dstat
+    state: present
+
+- name: Check if dstat is already running
+  command: pgrep dstat
+  register: _dstat_running
+  failed_when: false
+  changed_when: false
+
+- name: Run dstat in the background
+  shell: |
+    (nohup /usr/bin/dstat {{ dstat_options }} --nocolor --output {{ dstat_output_csv }} {{ dstat_delay }} </dev/null >{{ dstat_output_log }} 2>&1 &)
+  args:
+    executable: /bin/bash
+  when: _dstat_running.rc == 1

@@ -62,6 +62,10 @@ function clean_openstack(){
 }
 
 function teardown(){
+    if [[ ${SOCOK8S_DEPLOY_DSTAT:-"NO"} == "YES" ]]
+    then
+      gather_dstat_output
+    fi
     if [[ ${SOCOK8S_GATHER_LOGS:-"NO"} == "YES" ]]
     then
         gather_logs
