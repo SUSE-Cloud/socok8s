@@ -60,8 +60,8 @@
   command: "kubectl get pods -n rook-ceph -l app=rook-ceph-operator -o jsonpath='{.items[].status.containerStatuses[].ready}'"
   register: _rook_ceph_operator_status
   until: "'false' not in _rook_ceph_operator_status.stdout"
-  retries: 30
-  delay: 10
+  retries: 10
+  delay: 30
   changed_when: False
 
 - name: Deploy Ceph cluster
@@ -75,8 +75,8 @@
   shell: "kubectl get pods -n rook-ceph -l app={{ item }} -o jsonpath='{.items[].status.containerStatuses[].ready}' || echo 'false'"
   register: _rook_ceph_cluster_status
   until: "'false' not in _rook_ceph_cluster_status.stdout"
-  retries: 60
-  delay: 10
+  retries: 20
+  delay: 30
   changed_when: False
   loop:
     - rook-ceph-mgr
@@ -94,8 +94,8 @@
   command: "kubectl get pods -n rook-ceph -l app=rook-ceph-tools -o jsonpath='{.items[].status.containerStatuses[].ready}'"
   register: _rook_ceph_toolbox_status
   until: "'false' not in _rook_ceph_toolbox_status.stdout"
-  retries: 30
-  delay: 10
+  retries: 10
+  delay: 30
   changed_when: False
 
 - name: Find out ceph-tools pod
@@ -110,8 +110,8 @@
   shell: "kubectl -n rook-ceph exec {{ ceph_tools_pod }} -- ceph status"
   register: _rook_ceph_health
   until: "'HEALTH_OK' in _rook_ceph_health.stdout"
-  retries: 30
-  delay: 15
+  retries: 10
+  delay: 45
 
 - name: Set up SES for OpenStack
   import_tasks: setup_for_openstack.yml
