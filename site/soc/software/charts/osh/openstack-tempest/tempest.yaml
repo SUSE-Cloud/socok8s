@@ -63,6 +63,7 @@ data:
           public_network_id: "{{ tempest_public_network_details.stdout_lines[0] }}"
           shared_physical_network: "{{ tempest_public_network_details.stdout_lines[1] }}"
         validation:
+          auth_method: "password"
           image_ssh_user: "cirros"
           image_ssh_password: "gocubsgo"
           network_for_ssh: "{{ openstack_external_network_name }}"
