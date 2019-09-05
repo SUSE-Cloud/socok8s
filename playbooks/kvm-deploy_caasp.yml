@@ -24,7 +24,6 @@
   tasks:
     - import_role:
         name: runner-setup
-        tasks_from: assert_packages.yml
 
     - import_role:
         name: caasp4

@@ -1,0 +1,44 @@
+---
+#
+# (c) Copyright 2019 SUSE Linux GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+
+- name: Check software versions
+  block:
+    - name: Check skuba binary is available
+      command: "skuba version"
+      changed_when: False
+    - name: Check if the right terraform version is available
+      command: "terraform version"
+      register: _tfversion
+      failed_when: >-
+        _tfversion.stdout.find(required_terraform_version) == -1 or
+        _tfversion.rc != 0
+      changed_when: False
+  rescue:
+    - name: Installing required software
+      include_tasks: install_packages.yml
+      when:
+        - "(ansible_distribution | lower) == 'sles'"
+        - "ansible_distribution_version in auto_pkginstall_supported_versions"
+    - name: Cannot install required software
+      fail:
+        msg: |
+          Skuba or terraform is not installed.
+          Check above which one failed.
+          Please install skuba and {{ required_terraform_version }} manually.
+      when:
+        - not "(ansible_distribution | lower) == 'sles'"
+        - not "ansible_distribution_version in auto_pkginstall_supported_versions"
