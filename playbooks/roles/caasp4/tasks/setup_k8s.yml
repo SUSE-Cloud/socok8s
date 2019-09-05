@@ -42,7 +42,10 @@
   register: _skuba_cluster_dir
 
 - name: Init skuba cluster
-  command: "skuba cluster init --control-plane {{ _terraform_json_output.ip_load_balancer.value }} {{ skuba_cluster_name }}"
+  #Go back to use LB IP when long term fix is merged.
+  #See also SOC-10463 and https://bugzilla.suse.com/show_bug.cgi?id=1149211
+  #command: "skuba cluster init --control-plane {{ _terraform_json_output.ip_load_balancer.value }} {{ skuba_cluster_name }}"
+  command: "skuba cluster init --control-plane {{ _terraform_json_output.ip_masters.value[0] }} {{ skuba_cluster_name }}"
   args:
     chdir: "{{ skuba_cluster_basedir }}"
   when: not _skuba_cluster_dir.stat.exists
