@@ -127,6 +127,13 @@ pipeline {
                 sh "rm -Rf .tox"
             }
         }
+        stage('Clean up ara dir') {
+            steps {
+                dir("${env.WORKSPACE}/.ara/") {
+                    deleteDir()
+                }
+            }
+        }
         stage('Create network') {
             when { expression { return  TestFunctional } }
             options {
