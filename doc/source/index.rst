@@ -1,5 +1,5 @@
-Welcome to SUSE Containerized OpenStack
-=======================================
+Welcome to SUSE Containerized OpenStack (Milestone 1)
+=====================================================
 
 The socok8s project automates SUSE Containerized OpenStack provisioning
 and lifecycle management on SUSE Container as a Service Platform (CaaSP) and
