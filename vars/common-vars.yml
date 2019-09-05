@@ -146,24 +146,24 @@ kubeconfig_file_path: "{{ socok8s_deploy_config_location }}/kubeconfig"
 
 # enable resource limiting for openstack pods
 openstack_helm_pod_resources_enabled:
-  ceph: true
-  libvirt: true
-  ingress: true
-  cinder: true
+  ceph: false
+  libvirt: false
+  ingress: false
+  cinder: false
   cinder_rabbitmq: false
-  neutron: true
+  neutron: false
   neutron_rabbitmq: false
-  nova: true
+  nova: false
   nova_rabbitmq: false
-  glance: true
+  glance: false
   glance_rabbitmq: false
-  heat: true
+  heat: false
   heat_rabbitmq: false
-  horizon: true
-  keystone: true
+  horizon: false
+  keystone: false
   keystone_rabbitmq: false
-  mariadb: true
-  memcached: true
-  tempest: true
+  mariadb: false
+  memcached: false
+  tempest: false
 # If SES is deployed into stand alone extra node ('aio'), or into CaaSP cluster ("rook")
 ses_deployment: aio

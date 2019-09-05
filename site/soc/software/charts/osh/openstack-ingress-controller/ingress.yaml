@@ -32,6 +32,6 @@ data:
       resources:
         enabled: {{ openstack_helm_pod_resources_enabled['ingress'] }}
       replicas:
-        ingress: 1
+        ingress: 2
         error_page: 1
 ...
