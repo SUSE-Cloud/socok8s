@@ -177,7 +177,7 @@ data:
         keystone_api: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
         keystone_domain_manage: "{{ suse_osh_registry_location }}/openstackhelm/keystone:{{ suse_openstack_image_version }}"
       libvirt:
-        libvirt: "{{ suse_osh_registry_location }}/openstackhelm/libvirt:{{ suse_infra_image_version }}"
+        libvirt: "{{ suse_osh_registry_location }}/openstackhelm/libvirt:{{ suse_infra_libvirt_image_version }}"
       mariadb:
         prometheus_mysql_exporter_helm_tests: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
       memcached: {}
