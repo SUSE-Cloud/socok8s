@@ -25,6 +25,7 @@ pipeline {
         choice(choices: ['airship', 'osh'], description: 'Which deployment mechanism?', name: 'deployment')
         choice(choices: ['smoke', 'all'], description: 'Run smoke or all tempest tests?', name: 'tempest_test_type')
         choice(choices: ['ses_aio', 'ses_rook'], description: 'Which ses version to use?', name: 'ses_version')
+        booleanParam(name: 'hold_instance_for_debug', defaultValue: false, description: 'Keep this instance up for 3 hours')
     }
 
     environment {
@@ -52,6 +53,7 @@ pipeline {
         stage('Show environment information') {
             steps {
                 sh 'printenv'
+                echo "Job parameters are: ${params}"
             }
         }
         stage('Set ssh-agent for caasp4 deployment') {
@@ -251,13 +253,15 @@ pipeline {
                     echo "Could not gather logs"
                 }
             }
-        }
-        failure {
             script {
-                if (env.hold_instance_for_debug == 'true') {
-                    echo "You can reach this node by connecting to its floating IP as root user, with the default password of your image."
-                    timeout(time: 3, unit: 'HOURS') {
-                        input(message: "Waiting for input before deleting  env ${SOCOK8S_ENVNAME}.")
+                if (params.hold_instance_for_debug == true) {
+                     try {
+                        echo "You can reach this node by connecting to its floating IP as root user, with the default password of your image."
+                        timeout(time: 3, unit: 'HOURS') {
+                            input(message: "Waiting for input before deleting  env ${SOCOK8S_ENVNAME}.")
+                        }
+                    } catch(e) {
+                        echo "Timed out waiting for input, proceeding"
                     }
                 }
             }
