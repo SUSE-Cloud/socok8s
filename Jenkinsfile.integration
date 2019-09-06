@@ -272,9 +272,11 @@ pipeline {
                 sh "pkill -f 'ssh-agent -a /tmp/${env.SOCOK8S_ENVNAME}'"
                 if (fileExists("/tmp/${env.SOCOK8S_ENVNAME}.needcleanup")) {
                     try {
-                        sh './run.sh teardown'
-                        sh 'rm /tmp/${SOCOK8S_ENVNAME}.needcleanup'
-                    } catch (e) {
+                        retry(3) {
+                            sh './run.sh teardown'
+                            sh 'rm /tmp/${SOCOK8S_ENVNAME}.needcleanup'
+                        }
+                    } catch (error) {
                         sh 'ansible-playbook playbooks/generic-notify_failure_rocket.yml -v'
                         // manually set the build to failure if we could not cleanup resources
                         currentBuild.result = 'FAILURE'
