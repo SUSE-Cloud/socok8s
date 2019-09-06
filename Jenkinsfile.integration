@@ -36,6 +36,7 @@ pipeline {
            the CaaSP Velum automation has issues with mixed case hostnames. */
         SOCOK8S_ENVNAME = "cloud-socok8s-${BRANCH_NAME_ONLY.replaceAll("[^a-zA-Z0-9-]+", "-").toLowerCase()}-${env.BUILD_NUMBER}"
         SOCOK8S_OPENSUSE_MIRROR="https://provo-mirror.opensuse.org"
+        SOCOK8S_IBS_MIRROR="http://download.suse.de/ibs"
         OS_CLOUD = "engcloud-socok8s-ci"
         SOCOK8S_TEST_CEPH_ROOK="true"
         KEYNAME = "engcloud-cloud-ci"
