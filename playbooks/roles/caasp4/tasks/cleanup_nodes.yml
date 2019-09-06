@@ -40,6 +40,8 @@
   args:
     chdir: "{{ skuba_ci_terraform_workspace }}"
   when: _terraform_state_file.stat.exists
+  retries: 30
+  delay: 10
 
 - name: Destroy terraform plan
   terraform:
