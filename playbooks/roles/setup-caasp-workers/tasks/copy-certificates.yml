@@ -3,16 +3,19 @@
   include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
 
 - name: Copy the certificates
+  become: True
   copy:
     src: "{{ socok8s_registry_cert }}"
     dest: "/etc/pki/trust/anchors"
   register: _copiedcert
 
 - name: Refresh ca certs
+  become: True
   command: update-ca-certificates
   when: _copiedcert is changed
 
 - name: Restart docker
+  become: True
   when: _copiedcert is changed
   service:
     name: docker
