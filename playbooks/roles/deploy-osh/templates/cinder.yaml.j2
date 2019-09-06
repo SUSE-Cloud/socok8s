@@ -2,6 +2,12 @@ conf:
   ceph:
     enabled: true
     admin_keyring: {{ ceph_admin_keyring_key }}
+    pools:
+      {{ ses_cluster_configuration['cinder']['rbd_store_pool'] }}:
+        replication: 3
+        crush_rule: replicated_rule
+        chunk_size: 8
+        app_name: cinder-volume
   cinder:
     DEFAULT:
       debug: true
