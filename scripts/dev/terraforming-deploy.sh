@@ -2,7 +2,7 @@
 
 set -e
 set -x
-env | grep -e OS_ -e SSH_ -e LIBVIRT_DEFAULT_URI
+env | grep -e OS_ -e SSH_ -e LIBVIRT_DEFAULT_URI -e TERRAFORM
 
 if [[ `find -maxdepth 1 -type f -name '*.tf'` == "" ]]; then
     echo "Seeding up tf files for openstack"
@@ -16,7 +16,10 @@ if [[ ! -d .terraform ]]; then
 fi
 
 terraform validate .
-terraform apply ./
+if [[ ! -z "${TERRAFORM_APPLY_AUTOAPPROVE:-}" ]]; then
+    terraform_args="-auto-approve"
+fi
+terraform apply ${terraform_args:-} ./
 terraform output -json > ./terraform-output.json
 echo "Cloud instances successfully deployed"
 

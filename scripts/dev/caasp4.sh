@@ -65,6 +65,7 @@ if ! podman ps --format '{{ .Names }}' | grep terraform-${SOCOK8S_ENVNAME} > /de
         -e SSH_AUTH_SOCK=/ssh_auth_sock \
         -e IMAGE_USERNAME=${IMAGE_USERNAME} \
         -e OS_CLOUD=${OS_CLOUD:-""} \
+        -e TERRAFORM_APPLY_AUTOAPPROVE=${TERRAFORM_APPLY_AUTOAPPROVE:-""} \
         ${TERRAFORM_CONTAINER} \
         /bin/bash)
     echo "Running new terraform container ${containerid} for ${SOCOK8S_ENVNAME}"
