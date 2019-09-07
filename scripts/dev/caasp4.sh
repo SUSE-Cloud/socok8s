@@ -18,7 +18,7 @@ set -o nounset
 # Will get some very early failure if some var is unset.
 echo "Workspace is ${SOCOK8S_WORKSPACE} - Environment is ${SOCOK8S_ENVNAME}"
 
-CI_SCRIPTS_PATH="$(dirname "$(readlink -f "${0}")")"
+DEV_SCRIPTS_PATH="$(dirname "$(readlink -f "${0}")")"
 TERRAFORM_CONTAINER="registry.suse.de/home/jevrard/branches/suse/templates/images/sle-15-sp1/containers/soc10-clients:latest"
 
 function finish {
@@ -47,7 +47,7 @@ if [[ ! -d ${SOCOK8S_WORKSPACE}/tf ]]; then
 fi
 
 if [[ ! -f ${SOCOK8S_WORKSPACE}/tf/terraform.tfvars ]]; then
-    sed "s/%SOCOK8S_ENVNAME%/${SOCOK8S_ENVNAME}/g" ${CI_SCRIPTS_PATH}/terraform.tfvars.${PROVIDER}.example > ${SOCOK8S_WORKSPACE}/tf/terraform.tfvars
+    sed "s/%SOCOK8S_ENVNAME%/${SOCOK8S_ENVNAME}/g" ${DEV_SCRIPTS_PATH}/terraform.tfvars.${PROVIDER}.example > ${SOCOK8S_WORKSPACE}/tf/terraform.tfvars
 fi
 
 # Add user ssh keys from their keyring
@@ -101,12 +101,12 @@ elif [[ "${PROVIDER}" == "libvirt" ]]; then
 fi
 
 # Now copy and run the terraformcmds script
-podman cp ${CI_SCRIPTS_PATH}/terraforming-${ACTION}.sh terraform:/workdir/tf/terraformcmds.sh
+podman cp ${DEV_SCRIPTS_PATH}/terraforming-${ACTION}.sh terraform:/workdir/tf/terraformcmds.sh
 podman exec -it -w /workdir/tf/ terraform /workdir/tf/terraformcmds.sh
 
 # Extra hacks for openstack until handled by terraform
 if [[ "${PROVIDER}" == "openstack" ]] && [[ "${ACTION}" == "deploy" ]] ; then
-    source ${CI_SCRIPTS_PATH}/${PROVIDER}-temphack.sh
+    source ${DEV_SCRIPTS_PATH}/${PROVIDER}-temphack.sh
 fi
 
 echo "Successfully ${ACTION}ed CaaSP"
