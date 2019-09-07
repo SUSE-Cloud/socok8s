@@ -1,8 +1,8 @@
 image_uri = "http://download.suse.de/install/SLE-15-SP1-JeOS-GM/SLES15-SP1-JeOS.x86_64-15.1-OpenStack-Cloud-GM.qcow2"
-username = "sles"
+username = "${IMAGE_USERNAME}"
 password = "linux"
 
-stack_name = "%SOCOK8S_ENVNAME%-stack"
+stack_name = "${SOCOK8S_ENVNAME}-stack"
 
 network_cidr = "10.17.0.0/22"
 dns_domain = "caasp.local"
@@ -52,4 +52,4 @@ ntp_servers = [
   "1.novell.pool.ntp.org",
 ]
 
-libvirt_uri = "qemu+tcp://192.168.102.196:16509/system"
+libvirt_uri = "${LIBVIRT_DEFAULT_URI}"

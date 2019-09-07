@@ -19,3 +19,7 @@ OpenStack specific requirements
 
 - Have a clouds.yaml file in the standard locations (~/.config/openstack or /etc/openstack)
 - Have the OS_CLOUD env var defined.
+
+Optional:
+
+- define IMAGE_USERNAME if the image you're using doesn't use the username "sles".

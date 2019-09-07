@@ -1,15 +1,7 @@
 #!/bin/bash
 ## This creates or destroys caasp4 cluster
 ## Output on create: kubeconfig in $SOCOK8S_WORKSPACE
-## Requirements:
-## - SOCOK8S_WORKSPACE defined
-## - SOCOK8S_ENVNAME defined
-## - access to registry.suse.de
-## - podman installed
-## - SSH_AUTH_SOCK env var exposed
-## - ssh-add -L should return results.
-## - clouds.yaml (for openstack provider)
-## - OS_CLOUD defined (for openstack provider)
+## Requirements: See README.md
 
 set -o pipefail
 set -o errexit
@@ -20,11 +12,13 @@ echo "Workspace is ${SOCOK8S_WORKSPACE} - Environment is ${SOCOK8S_ENVNAME}"
 
 DEV_SCRIPTS_PATH="$(dirname "$(readlink -f "${0}")")"
 TERRAFORM_CONTAINER="registry.suse.de/home/jevrard/branches/suse/templates/images/sle-15-sp1/containers/soc10-clients:latest"
+export IMAGE_USERNAME=${IMAGE_USERNAME:-sles}
+export LIBVIRT_DEFAULT_URI=${LIBVIRT_DEFAULT_URI:-qemu+tcp://192.168.102.196:16509/system}
 
 function finish {
   if podman ps --format '{{ .Names }}' | grep terraform > /dev/null; then
-      podman stop terraform > /dev/null
-      podman rm terraform -f > /dev/null
+      podman stop terraform-${SOCOK8S_ENVNAME} > /dev/null
+      podman rm terraform-${SOCOK8S_ENVNAME} -f > /dev/null
   fi
 }
 
@@ -46,31 +40,34 @@ if [[ ! -d ${SOCOK8S_WORKSPACE}/tf ]]; then
     mkdir -p ${SOCOK8S_WORKSPACE}/tf
 fi
 
+# Template if not yet templated
 if [[ ! -f ${SOCOK8S_WORKSPACE}/tf/terraform.tfvars ]]; then
-    sed "s/%SOCOK8S_ENVNAME%/${SOCOK8S_ENVNAME}/g" ${DEV_SCRIPTS_PATH}/terraform.tfvars.${PROVIDER}.example > ${SOCOK8S_WORKSPACE}/tf/terraform.tfvars
+    envsubst < ${DEV_SCRIPTS_PATH}/terraform.tfvars.${PROVIDER}.example \
+        > ${SOCOK8S_WORKSPACE}/tf/terraform.tfvars
 fi
 
-# Add user ssh keys from their keyring
+# Add user ssh keys from their keyring, live.
 # Make it a csv (don't trail with ', ') and indent with 2 spaces the first line.
-ssh-add -L | awk '{ORS=", ";} {print "\"" $1 " " $2 "\"";}' | head -c -2 | sed -e 's/^/  /'> ${SOCOK8S_WORKSPACE}/ssh_keys.csv
-sed -i -e "/%SSH_KEYS%/r ${SOCOK8S_WORKSPACE}/ssh_keys.csv" -e "//d" ${SOCOK8S_WORKSPACE}/tf/terraform.tfvars
+ssh-add -L | awk '{ORS=", ";} {print "\"" $1 " " $2 "\"";}' | head -c -2 | \
+    sed -e 's/^/  /'> ${SOCOK8S_WORKSPACE}/ssh_keys.csv
+sed -i -e "/%SSH_KEYS%/r ${SOCOK8S_WORKSPACE}/ssh_keys.csv" -e "//d" \
+    ${SOCOK8S_WORKSPACE}/tf/terraform.tfvars
 rm -f ${SOCOK8S_WORKSPACE}/ssh_keys.csv
 
 #Run terraform container if not yet running
 ###########################################
 
-# because libvirt provider by default runs on qemu:///system, you might
-# need to override the path into the tfvars.
-
-if ! podman ps --format '{{ .Names }}' | grep terraform > /dev/null; then
-    containerid=$(podman run -it -d --name terraform \
+if ! podman ps --format '{{ .Names }}' | grep terraform-${SOCOK8S_ENVNAME} > /dev/null; then
+    containerid=$(podman run -it -d --name terraform-${SOCOK8S_ENVNAME} \
         -v ${SSH_AUTH_SOCK}:/ssh_auth_sock \
         -v ${SOCOK8S_WORKSPACE}:/workdir \
         ${USER_ARGS:-} \
         -e SSH_AUTH_SOCK=/ssh_auth_sock \
+        -e IMAGE_USERNAME=${IMAGE_USERNAME} \
+        -e OS_CLOUD=${OS_CLOUD:-""} \
         ${TERRAFORM_CONTAINER} \
         /bin/bash)
-    echo "Running new terraform container with ID ${containerid}"
+    echo "Running new terraform container ${containerid} for ${SOCOK8S_ENVNAME}"
 else
     # Note: This is just for safety. As the trap deletes the container, we
     # should almost never reach this else bit.
@@ -86,7 +83,7 @@ if [[ "${PROVIDER}" == "openstack" ]]; then
     for filepath in ~/.config/openstack/* /etc/openstack/*; do
         if [[ -f $filepath ]]; then
             fname=$(basename $filepath)
-            podman cp $filepath terraform:/root/.config/openstack/$fname;
+            podman cp $filepath terraform-${SOCOK8S_ENVNAME}:/root/.config/openstack/$fname;
         fi
     done
 elif [[ "${PROVIDER}" == "libvirt" ]]; then
@@ -101,8 +98,8 @@ elif [[ "${PROVIDER}" == "libvirt" ]]; then
 fi
 
 # Now copy and run the terraformcmds script
-podman cp ${DEV_SCRIPTS_PATH}/terraforming-${ACTION}.sh terraform:/workdir/tf/terraformcmds.sh
-podman exec -it -w /workdir/tf/ terraform /workdir/tf/terraformcmds.sh
+podman cp ${DEV_SCRIPTS_PATH}/terraforming-${ACTION}.sh terraform-${SOCOK8S_ENVNAME}:/workdir/tf/terraformcmds.sh
+podman exec -it -w /workdir/tf/ terraform-${SOCOK8S_ENVNAME} /workdir/tf/terraformcmds.sh
 
 # Extra hacks for openstack until handled by terraform
 if [[ "${PROVIDER}" == "openstack" ]] && [[ "${ACTION}" == "deploy" ]] ; then

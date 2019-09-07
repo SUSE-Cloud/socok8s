@@ -1,16 +1,16 @@
 image_name = "SLE-15-SP1-JeOS-GM"
-internal_net = "%SOCOK8S_ENVNAME%-net"
-internal_subnet = "%SOCOK8S_ENVNAME%-subnet"
-internal_router = "%SOCOK8S_ENVNAME%-subnet"
+internal_net = "${SOCOK8S_ENVNAME}-net"
+internal_subnet = "${SOCOK8S_ENVNAME}-subnet"
+internal_router = "${SOCOK8S_ENVNAME}-subnet"
 external_net = "floating"
-stack_name = "%SOCOK8S_ENVNAME%-stack"
+stack_name = "${SOCOK8S_ENVNAME}-stack"
 subnet_cidr = "192.168.100.0/24"
 masters = 1
 workers = 3
 master_size = "m1.medium"
 worker_size = "m1.large"
 
-username = "sles"
+username = "${IMAGE_USERNAME}"
 password = "linux"
 
 repositories = {

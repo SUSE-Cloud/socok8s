@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -x
 env | grep -e OS_ -e SSH_ -e LIBVIRT_DEFAULT_URI
 
 if [[ `find -maxdepth 1 -type f -name '*.tf'` == "" ]]; then
@@ -39,14 +40,14 @@ fi
 if [ "$cluster_status" == "" ] || [ ! `echo $cluster_status | grep master-0` ]; then
     master_ip=$(jq --raw-output '.ip_masters.value[0]' ../terraform-output.json)
     echo "Bootstrapping master through ${master_ip}"
-    skuba node bootstrap master-0 -s -t ${master_ip} -u sles -v 2
+    skuba node bootstrap master-0 -s -t ${master_ip} -u ${IMAGE_USERNAME} -v 2
 fi
 
 # Skuba workers deploy
 let i=1
 for worker in $(jq --raw-output '.ip_workers.value[]' ../terraform-output.json); do
     echo "Bootstrapping worker ${i} through ip ${worker}"
-    skuba node join worker-${i} -r worker -s -t ${worker} -u sles -v 2
+    skuba node join worker-${i} -r worker -s -t ${worker} -u ${IMAGE_USERNAME} -v 2
     let i++
 done
 
