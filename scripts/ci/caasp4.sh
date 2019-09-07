@@ -46,7 +46,9 @@ if [[ ! -d ${SOCOK8S_WORKSPACE}/tf ]]; then
     mkdir -p ${SOCOK8S_WORKSPACE}/tf
 fi
 
-sed "s/%SOCOK8S_ENVNAME%/${SOCOK8S_ENVNAME}/g" ${CI_SCRIPTS_PATH}/terraform.tfvars.${PROVIDER}.example > ${SOCOK8S_WORKSPACE}/tf/terraform.tfvars
+if [[ ! -f ${SOCOK8S_WORKSPACE}/tf/terraform.tfvars ]]; then
+    sed "s/%SOCOK8S_ENVNAME%/${SOCOK8S_ENVNAME}/g" ${CI_SCRIPTS_PATH}/terraform.tfvars.${PROVIDER}.example > ${SOCOK8S_WORKSPACE}/tf/terraform.tfvars
+fi
 
 # Add user ssh keys from their keyring
 # Make it a csv (don't trail with ', ') and indent with 2 spaces the first line.
@@ -57,22 +59,13 @@ rm -f ${SOCOK8S_WORKSPACE}/ssh_keys.csv
 #Run terraform container if not yet running
 ###########################################
 
-# because libvirt provider by default runs on qemu:/// it makes sense to expose
-# libvirt socket to the container by default.
-if [[ -f /var/run/libvirt/libvirt-sock ]] && [[ "${PROVIDER}" == "libvirt" ]]; then
-    echo "Auto expose libvirt socket by default"
-    provider_args="
-      -v /var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock
-      -e LIBVIRT_DEFAULT_URI=${LIBVIRT_DEFAULT_URI:-qemu:///system}"
-else
-    provider_args=""
-fi
+# because libvirt provider by default runs on qemu:///system, you might
+# need to override the path into the tfvars.
 
 if ! podman ps --format '{{ .Names }}' | grep terraform > /dev/null; then
     containerid=$(podman run -it -d --name terraform \
         -v ${SSH_AUTH_SOCK}:/ssh_auth_sock \
         -v ${SOCOK8S_WORKSPACE}:/workdir \
-        ${provider_args} \
         ${USER_ARGS:-} \
         -e SSH_AUTH_SOCK=/ssh_auth_sock \
         ${TERRAFORM_CONTAINER} \
@@ -99,15 +92,17 @@ if [[ "${PROVIDER}" == "openstack" ]]; then
 elif [[ "${PROVIDER}" == "libvirt" ]]; then
     # Please remove all of this when skuba packages its libvirt code in IBS.
     cd ${SOCOK8S_WORKSPACE}
-    git clone https://github.com/SUSE/skuba.git skuba-code
-    mv skuba-code/ci/infra/libvirt/* tf/
-    rm -rf skuba-code
+    # Do not copy again if it was already copied
+    if [[ ! -d skuba-code ]]; then
+        git clone https://github.com/SUSE/skuba.git skuba-code
+        cp -r $(pwd)/skuba-code/ci/infra/libvirt/* tf/
+    fi
     cd -
 fi
 
 # Now copy and run the terraformcmds script
 podman cp ${CI_SCRIPTS_PATH}/terraforming-${ACTION}.sh terraform:/workdir/tf/terraformcmds.sh
-podman exec -it -w /workdir/tf/ -e OS_CLOUD=${OS_CLOUD} -e SSH_AUTH_SOCK=/ssh_auth_sock terraform /workdir/tf/terraformcmds.sh
+podman exec -it -w /workdir/tf/ terraform /workdir/tf/terraformcmds.sh
 
 # Extra hacks for openstack until handled by terraform
 if [[ "${PROVIDER}" == "openstack" ]] && [[ "${ACTION}" == "deploy" ]] ; then

@@ -1,9 +1,12 @@
-image_uri = http://download.suse.de/install/SLE-15-SP1-JeOS-GMC/SLES15-SP1-JeOS.x86_64-15.1-OpenStack-Cloud-GMC.qcow2
-username = sles
-password = linux
+image_uri = "http://download.suse.de/install/SLE-15-SP1-JeOS-GM/SLES15-SP1-JeOS.x86_64-15.1-OpenStack-Cloud-GM.qcow2"
+username = "sles"
+password = "linux"
+
 stack_name = "%SOCOK8S_ENVNAME%-stack"
+
 network_cidr = "10.17.0.0/22"
 dns_domain = "caasp.local"
+
 lbs = 1
 masters = 1
 workers = 2
@@ -35,7 +38,8 @@ packages = [
   "kernel-default",
   "-kernel-default-base",
   "ca-certificates-suse",
-  "ceph-common"
+  "ceph-common",
+  "lvm2"
 ]
 
 authorized_keys = [
@@ -47,3 +51,5 @@ ntp_servers = [
   "0.novell.pool.ntp.org",
   "1.novell.pool.ntp.org",
 ]
+
+libvirt_uri = "qemu+tcp://192.168.102.196:16509/system"

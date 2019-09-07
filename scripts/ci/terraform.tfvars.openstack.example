@@ -28,7 +28,8 @@ packages = [
   "kernel-default",
   "-kernel-default-base",
   "ca-certificates-suse",
-  "ceph-common"
+  "ceph-common",
+  "lvm2"
 ]
 
 authorized_keys = [

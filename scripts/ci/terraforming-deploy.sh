@@ -1,9 +1,10 @@
 #!/bin/bash
 
 set -e
-env | grep -e OS_ -e SSH_
+env | grep -e OS_ -e SSH_ -e LIBVIRT_DEFAULT_URI
 
 if [[ `find -maxdepth 1 -type f -name '*.tf'` == "" ]]; then
+    echo "Seeding up tf files for openstack"
     # No tf things. Take them from containers.
     # Please remove the *.tf files on upgrade.
     cp -r /usr/share/caasp/terraform/openstack/* ./
@@ -21,7 +22,8 @@ echo "Cloud instances successfully deployed"
 # Skuba init
 CLUSTER_NAME="caasp4-cluster" # Please be consistent with destroy.
 if [[ ! -d ./${CLUSTER_NAME} ]]; then
-    load_balancer=$(jq --raw-output '.ip_load_balancer.value' terraform-output.json)
+    #load_balancer=$(jq --raw-output '.ip_load_balancer.value' terraform-output.json)
+    load_balancer=$(jq --raw-output '.ip_masters.value[0]' terraform-output.json)
     skuba cluster init ${CLUSTER_NAME} --control-plane ${load_balancer}
 fi
 
