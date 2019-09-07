@@ -5,7 +5,7 @@ set -x
 helm_delete_timeout=${1:-"300"}
 deep_clean=${2:-"no"}
 
-delete_helm_chart(){
+delete_helm_charts(){
   #defaulting to non empty to avoid mistakes
   whattodelete=${1:-"deletethis"}
   helm ls -a | grep $whattodelete | awk 'NR >= 1 {print $1 }' | xargs -r helm delete --timeout ${helm_delete_timeout} --purge $line
@@ -20,9 +20,9 @@ delete_folder_if_exists() {
 }
 
 # Purge helm charts
-delete_helm_chart ucp
-delete_helm_chart airship-ingress-kube-system
-delete_helm_chart openstack
+delete_helm_charts ucp
+delete_helm_charts airship-ingress-kube-system
+delete_helm_charts openstack
 
 sleep 30
 
