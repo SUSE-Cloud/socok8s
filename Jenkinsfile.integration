@@ -23,23 +23,21 @@ pipeline {
 
     parameters {
         /* first value in the list is the default */
-        choice(choices: ['airship', 'osh'], description: 'Which deployment mechanism?', name: 'deployment')
-        choice(choices: ['caasp3', 'caasp4'], description: 'Which caasp version to use?', name: 'caasp_version')
+        booleanParam(name: 'hold_instance_for_debug', defaultValue: false, description: 'Keep this instance up for 3 hours')
     }
 
     environment {
+        /* env.BRANCH_NAME is available in multibranch plugin but not in pipeline plugin used in daily integration job */
+        BRANCH_NAME_ONLY="${env.GIT_BRANCH.replaceAll("origin/", "")}"
         /* Sanitize ENVNAME (lowercase and remove some problematic characters)
            as the names of the heat stacks will be derived from this. Also
            the CaaSP Velum automation has issues with mixed case hostnames. */
-        SOCOK8S_ENVNAME = "cloud-socok8s-${env.BRANCH_NAME.replaceAll("[^a-zA-Z0-9-]+", "-").toLowerCase()}-${env.BUILD_NUMBER}"
+        SOCOK8S_ENVNAME = "cloud-socok8s-${BRANCH_NAME_ONLY.replaceAll("[^a-zA-Z0-9-]+", "-").toLowerCase()}-${env.BUILD_NUMBER}"
         SOCOK8S_OPENSUSE_MIRROR="https://provo-mirror.opensuse.org"
-        OS_CLOUD = "engcloud-cloud-ci"
+        OS_CLOUD = "engcloud-socok8s-ci"
         KEYNAME = "engcloud-cloud-ci"
-        DELETE_ANYWAY = "YES"
         DEPLOYMENT_MECHANISM = "openstack"
-        ANSIBLE_VERBOSITY = 2
-        ANSIBLE_STDOUT_CALLBACK = "yaml"
-        USER = "jenkins" /* Why isn't this set in the jenkins environment? */
+        SOCOK8S_DEPLOY_DSTAT = "YES"
     }
 
     stages {
@@ -48,6 +46,7 @@ pipeline {
                 sh 'printenv'
             }
         }
+
         stage('Check for updated files') {
             when { expression { env.BRANCH_NAME != 'master' } }
             steps {
@@ -71,16 +70,6 @@ pipeline {
 
         stage('lint and docs') {
             parallel {
-                stage('Lint Ansible playbooks') {
-                    when { expression { return  TestFunctional } }
-                    options {
-                        timeout(time: 5, unit: 'MINUTES', activity: true)
-                    }
-                    steps {
-                        sh "tox -e lint"
-                    }
-                }
-
                 stage('Build docs') {
                     when { expression { return TestDocs } }
                     options {
@@ -105,112 +94,66 @@ pipeline {
             }
         }
 
-        stage('Create network') {
+        stage('Deploy CaaSP4') {
             when { expression { return  TestFunctional } }
-            options {
-                timeout(time: 10, unit: 'MINUTES', activity: true)
-            }
             steps {
                 sh 'touch /tmp/${SOCOK8S_ENVNAME}.needcleanup'
-                sh "./run.sh deploy_network"
+                sh "scripts/ci/caasp4.sh"
+                try {
+                  retry(10) {
+                    sh "scripts/checks/are_k8s_nodes_ready.sh"
+                  }
+                } catch (error) {
+                    currentBuild.result = 'FAILURE'
+                }
             }
         }
-        stage('Create VMs') {
+
+        stage('Deploy Auto-Deploy tooling') {
             when { expression { return  TestFunctional } }
-            options {
-                timeout(time: 45, unit: 'MINUTES', activity: true)
-            }
-            parallel {
-                stage('Deploy CaaSP3') {
-                    when { expression  { params.caasp_version == "caasp3" } }
-                    steps {
-                        sh "./run.sh deploy_caasp"
-                    }
-                }
-                stage('Deploy CaaSP4') {
-                    when { expression  { params.caasp_version == "caasp4" } }
-                    steps {
-                        sh "./run.sh deploy_caasp4"
-                    }
-                }
-                stage('Deploy SES') {
-                    steps {
-                        sh "./run.sh deploy_ses"
-                    }
-                }
-                stage('Deploy CCP Deployer') {
-                    steps {
-                        sh "./run.sh deploy_ccp_deployer"
-                        sh "./run.sh configure_ccp_deployer"
-                    }
-                }
-            }
-        }
-
-        stage('Configure CaaSP workers') {
-            when { expression { return  TestFunctional } }
-            options {
-                timeout(time: 10, unit: 'MINUTES', activity: true)
-            }
             steps {
-                sh "./run.sh enroll_caasp_workers"
-                sh "./run.sh setup_caasp_workers_for_openstack"
+                sh "scripts/ci/autodeploy.sh"
             }
         }
-
-        stage('Deploy OpenStack Helm') {
-            options {
-                timeout(time: 20, unit: 'MINUTES', activity: true)
-            }
-            when {
-                allOf {
-                    expression { params.deployment == "osh" }
-                    expression { return  TestFunctional }
-                }
-            }
-            steps {
-                sh "./run.sh patch_upstream"
-                sh "./run.sh build_images"
-                sh "./run.sh deploy_osh"
-            }
-        }
-
-        stage('Deploy Airship') {
-            options {
-                timeout(time: 45, unit: 'MINUTES', activity: true)
-            }
-            when {
-                allOf {
-                    expression { params.deployment == "airship" }
-                    expression { return  TestFunctional }
-                }
-            }
-            steps {
-                sh "./run.sh setup_airship"
-            }
-        }
-    }
 
     post {
-        failure {
+        always {
+            logParser projectRulePath: 'scripts/ci/log-parser-plugin-rules.txt', showGraphs: true, useProjectRule: true, parsingRulesPath: null
             script {
-                if (env.hold_instance_for_debug == 'true') {
-                    echo "You can reach this node by connecting to its floating IP as root user, with the default password of your image."
-                    timeout(time: 3, unit: 'HOURS') {
-                        input(message: "Waiting for input before deleting  env ${SOCOK8S_ENVNAME}.")
-                    }
+                try {
+                    sh "scripts/ci/gather_logs.sh"
+                    zip archive: true, dir: 'logs/', zipFile: 'logs.zip'
+                    archiveArtifacts artifacts: 'logs.zip'
+                } catch(e) {
+                    echo "Could not gather logs"
                 }
             }
             script {
-                sh './run.sh gather_logs'
+                if (params.hold_instance_for_debug == true) {
+                     try {
+                        echo "You can reach this node by connecting to its floating IP as root user, with the default password of your image."
+                        timeout(time: 3, unit: 'HOURS') {
+                            input(message: "Waiting for input before deleting  env ${SOCOK8S_ENVNAME}.")
+                        }
+                    } catch(e) {
+                        echo "Timed out waiting for input, proceeding"
+                    }
+                }
             }
-            zip archive: true, dir: 'logs/', zipFile: 'logs.zip'
-            archiveArtifacts artifacts: 'logs.zip'
         }
         cleanup {
             script {
-                    sh '[ -f /tmp/${SOCOK8S_ENVNAME}.needcleanup ] && ./run.sh teardown && rm /tmp/${SOCOK8S_ENVNAME}.needcleanup'
+                if (fileExists("/tmp/${env.SOCOK8S_ENVNAME}.needcleanup")) {
+                    try {
+                        retry(3) {
+                            sh 'scripts/ci/caasp4.sh destroy && \
+                                rm -f /tmp/${SOCOK8S_ENVNAME}.needcleanup'
+                        }
+                    } catch (e) {
+                        currentBuild.result = 'FAILURE'
+                    }
                 }
+            }
         }
     }
 }

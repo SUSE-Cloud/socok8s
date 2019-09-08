@@ -1,8 +1,0 @@
----
-- hosts: soc-deployer
-  gather_facts: yes
-  any_errors_fatal: true
-  roles:
-    - role: dev-patcher
-      tags:
-        - upstream_patching

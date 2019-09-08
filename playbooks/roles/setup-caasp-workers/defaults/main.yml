@@ -1,4 +1,0 @@
----
-caasp_reboot_timeout: 300
-apparmor_profiles:
-  - usr.sbin.dnsmasq

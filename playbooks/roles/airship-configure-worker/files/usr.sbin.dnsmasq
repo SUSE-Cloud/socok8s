@@ -1,5 +1,0 @@
-# Site-specific additions and overrides for 'usr.sbin.dnsmasq'
-# neutron containers need the following access to launch dnsmasq
-  /etc/neutron/dnsmasq.conf r,
-  /var/lib/neutron/dhcp/ rw,
-  /var/lib/neutron/dhcp/** rw,

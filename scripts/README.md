@@ -12,5 +12,12 @@ Folder structure
 ================
 
 - scripts/checks/ contains pre-flight checks
-- scripts/ci/ contains CI only scripts.
-- scripts/cleanup.sh is a k8s cleanup tool.
+- scripts/ci/ contains **for CI only** scripts.
+- scripts/dev/ contains tools to use/setup caasp for development environment.
+- scripts/tools/ contains generic tools for users or developers.
+
+Example tools
+=============
+
+- a way to gather logs without relying on central logging.
+- a way to clean up the k8s cluster to an empty state.

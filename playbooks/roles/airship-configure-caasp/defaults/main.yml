@@ -1,7 +1,0 @@
----
-ucp_namespace_name: "{{ ucp_namespace | default('ucp') }}"
-ceph_namespace_name: "{{ ceph_namespace | default('ceph') }}"
-openstack_namespace_name: "{{ openstack_namespace | default('openstack') }}"
-
-# ClusterRole to allow privileged containers
-suse_airship_deploy_privileged_cluster_role: suse:caasp:psp:privileged

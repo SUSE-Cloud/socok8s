@@ -1,3 +1,0 @@
-#  Add tests to be blacklisted below using the following format:
-#  - (?:tempest\.api\.identity\.admin\.v3\.test_groups\.GroupsV3TestJSON\.test_list_groups)
-- (?:tempest\.api\.identity\.v3\.test_domains\.DefaultDomainTestJSON\.test_default_domain_exists)
