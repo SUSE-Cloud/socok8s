@@ -99,6 +99,7 @@
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
     OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
   register: shipyard_create_config
+  retries: 5
   failed_when:
     - "shipyard_create_config.stdout.find('Errors: 0') == -1"
     - shipyard_create_config.stdout.find('Traceback') == 0
@@ -119,6 +120,7 @@
   when:
     - "no_revision_error_msg not in shipyard_create_config.stdout"
   register: shipyard_commit_config
+  retries: 5
   failed_when:
     - "shipyard_commit_config.stdout.find('Errors: 0') == -1"
   tags:
