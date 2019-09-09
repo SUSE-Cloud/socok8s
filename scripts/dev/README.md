@@ -12,8 +12,8 @@ If you want to use this scripts for developer usage you should:
 KVM specific requirements:
 
 - LIBVIRT_DEFAULT_URI env var defined like qemu+tcp://192.168.102.196:16509/system
-- LIBVIRT tcp access
-- virsh pool-list should have a default pool defined, active.
+- LIBVIRT tcp access. (https://wiki.archlinux.org/index.php/Libvirt#Unencrypt_TCP/IP_sockets)
+- virsh pool-list should have a default pool defined, active*
 
 OpenStack specific requirements
 
@@ -23,3 +23,11 @@ OpenStack specific requirements
 Optional:
 
 - define IMAGE_USERNAME if the image you're using doesn't use the username "sles".
+
+
+To define the libvirt pool:
+
+- `virsh pool-define-as default dir - - - - /images`
+- `virsh pool-build default`
+- `virsh pool-start default`
+- `virsh pool-autostart default`
