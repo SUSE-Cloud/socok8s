@@ -100,7 +100,7 @@
     OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
   register: shipyard_create_config
   failed_when:
-    - shipyard_create_config.stdout.find('Error') == 0
+    - "shipyard_create_config.stdout.find('Errors: 0') == -1"
     - shipyard_create_config.stdout.find('Traceback') == 0
     - "no_revision_error_msg not in shipyard_create_config.stdout"
   tags:
@@ -119,7 +119,8 @@
   when:
     - "no_revision_error_msg not in shipyard_create_config.stdout"
   register: shipyard_commit_config
-  failed_when: shipyard_commit_config.stdout.find('Error') == 0
+  failed_when:
+    - "shipyard_commit_config.stdout.find('Errors: 0') == -1"
   tags:
     - install
     - skip_ansible_lint
@@ -134,7 +135,8 @@
     SHIPYARD_IMAGE: "{{ shipyard_image }}"
     OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
   register: shipyard_update_software
-  failed_when: shipyard_update_software.stdout.find('Error') == 0
+  failed_when:
+    - shipyard_update_software.stdout.find('Errors: 0') != 0
   tags:
     - install
     - skip_ansible_lint
