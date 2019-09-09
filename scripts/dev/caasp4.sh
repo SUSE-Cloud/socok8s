@@ -16,9 +16,9 @@ export IMAGE_USERNAME=${IMAGE_USERNAME:-sles}
 export LIBVIRT_DEFAULT_URI=${LIBVIRT_DEFAULT_URI:-qemu+tcp://192.168.102.196:16509/system}
 
 function finish {
-  if podman ps --format '{{ .Names }}' | grep terraform > /dev/null; then
-      podman stop terraform-${SOCOK8S_ENVNAME} > /dev/null
-      podman rm terraform-${SOCOK8S_ENVNAME} -f > /dev/null
+  if podman ps -a --format '{{ .Names }}' | grep terraform-${SOCOK8S_ENVNAME} > /dev/null; then
+      podman stop terraform-${SOCOK8S_ENVNAME} > /dev/null || true
+      podman rm terraform-${SOCOK8S_ENVNAME} -f > /dev/null || true
   fi
 }
 
@@ -57,6 +57,7 @@ rm -f ${SOCOK8S_WORKSPACE}/ssh_keys.csv
 #Run terraform container if not yet running
 ###########################################
 
+trap finish INT TERM EXIT
 if ! podman ps --format '{{ .Names }}' | grep terraform-${SOCOK8S_ENVNAME} > /dev/null; then
     containerid=$(podman run -it -d --name terraform-${SOCOK8S_ENVNAME} \
         -v ${SSH_AUTH_SOCK}:/ssh_auth_sock \
@@ -74,7 +75,6 @@ else
     # should almost never reach this else bit.
     echo "Terraform container already running, reusing"
 fi
-trap finish INT TERM EXIT
 
 if [[ "${PROVIDER}" == "openstack" ]]; then
     # Find openstack config, and make it available under the container, to
