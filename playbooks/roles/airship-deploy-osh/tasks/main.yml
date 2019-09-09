@@ -183,8 +183,13 @@
         SHIPYARD_IMAGE: "{{ shipyard_image }}"
         OS_PASSWORD: "{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
       register: shipyard_desc_action
-      failed_when: "'failed' in shipyard_desc_action.stdout"
-      until: shipyard_desc_action.stdout.find('Processing') < 0 and shipyard_desc_action.stdout.find('running') < 0
+      failed_when:
+        - shipyard_desc_action.stdout.find('failed') >= 0
+        - shipyard_desc_action.stdout.find('Traceback') == 0
+      until:
+        - shipyard_desc_action.stdout.find('Processing') < 0
+        - shipyard_desc_action.stdout.find('running') < 0
+        - shipyard_desc_action.stdout.find('Error') != 0
       retries: "{{ airship_deploy_openstack_timeout | int * 2 }}"
       delay: 30
       tags:
@@ -196,7 +201,10 @@
     - name: Print Shipyard update software action status
       debug:
         msg: "Update Software action has failed and stopped creating pods. Please check"
-      failed_when: "'failed' in shipyard_desc_action.stdout"
+      failed_when:
+        - shipyard_desc_action.stdout.find('failed') >= 0
+        - shipyard_desc_action.stdout.find('Error') == 0
+        - shipyard_desc_action.stdout.find('Traceback') == 0
       tags:
         - update_airship_osh_site
         - add_compute_node
