@@ -5,7 +5,7 @@ If you want to use this scripts for developer usage you should:
 - define env var SOCOK8S_WORKSPACE (for example /home/jean-philippe/jevrard3-workspace/ )
 - define env var SOCOK8S_ENVNAME jevrard3
 - have access to registry.suse.de
-- have podman installed
+- have podman installed (keep in mind on OpenSUSE Leap 15.1 you might need podman-cni-config too)
 - have SSH_AUTH_SOCK env var defined, and your keys added to your agent
   (ssh-add -L should return results)
 
