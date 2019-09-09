@@ -30,8 +30,6 @@ deploy_on_openstack_osh_repos_per_imagename:
     - SLES-15-SP1-backports
     - SLE-15-SP1-Module-BaseSystem
     - SLE-15-SP1-Module-BaseSystem-Update
-    - SLE-15-SP1-Module-Legacy
-    - SLE-15-SP1-Module-Legacy-Update
     - SLE-15-SP1-Module-Containers
     - SLE-15-SP1-Module-Containers-Update
     - SLE-15-SP1-Module-Public-Cloud
@@ -40,14 +38,7 @@ deploy_on_openstack_osh_repos_per_imagename:
     - SLE-15-SP1-Module-Development-Tools-Update
     - socok8s_SLE15SP1
 
-deploy_on_openstack_caasp_repos_per_imagename:
-  caasp-3.0.0-GM-OpenStack-qcow:
-    - CAASP30-update
-    - CAASP30-pool
-deploy_on_openstack_caasp_image: "caasp-3.0.0-GM-OpenStack-qcow"
 deploy_on_openstack_caasp_workers: 3
-deploy_on_openstack_caasp_securitygroup: "{{ deploy_on_openstack_sesnode_securitygroup }}"
-deploy_on_openstack_caasp_stacknamefile: "{{ socok8s_workspace }}/stackname"
 deploy_on_openstack_oshnode_image: "SLE-15-SP1-JeOS-GM"
 deploy_on_openstack_oshnode_flavor: "m1.large"
 deploy_on_openstack_oshnode_securitygroup: "all-incoming"
