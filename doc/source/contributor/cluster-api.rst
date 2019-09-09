@@ -13,7 +13,7 @@ associated tooling to make it easier for ordinary users to access computational
 resources in a portable way.
 
 Cluster API for Cluster Management with `Airship 2.0 <https://wiki.openstack.org/wiki/Airship>`_
-will be used for SUSE OpenStack Cloud 10.
+is being considered for SUSE OpenStack Cloud 10.
 
 **Key Resources**
 
