@@ -54,7 +54,10 @@ socok8s_repos_to_configure:
 suse_ovs_image_version: "v2.8.1"
 
 socok8s_deploy_config_location: "{{ socok8s_workspace }}"
+
 ucp_namespace_name: "{{ ucp_namespace | default('ucp') }}"
+ceph_namespace_name: "{{ ceph_namespace | default('ceph') }}"
+openstack_namespace_name: "{{ openstack_namespace | default('openstack') }}"
 
 # Variables used for building airship images locally
 suse_distro_identifier: opensuse_15
