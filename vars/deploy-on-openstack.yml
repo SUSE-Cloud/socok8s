@@ -23,7 +23,7 @@ deploy_on_openstack_ses_repos_per_imagename:
     - SES5-product
     - SES5-update
 
-deploy_on_openstack_osh_repos_per_imagename:
+deploy_repos_per_imagename:
   SLE-15-SP1-JeOS-GM:
     - SLES-15-SP1-Product
     - SLES-15-SP1-Product-Update
@@ -39,10 +39,20 @@ deploy_on_openstack_osh_repos_per_imagename:
     - socok8s_SLE15SP1
 
 deploy_on_openstack_caasp_workers: 3
-deploy_on_openstack_oshnode_image: "SLE-15-SP1-JeOS-GM"
 deploy_on_openstack_oshnode_flavor: "m1.large"
 deploy_on_openstack_oshnode_securitygroup: "all-incoming"
 deploy_on_openstack_oshnode_userdata: |
   {%- raw -%}#cloud-config
   disable_root: false
   {% endraw %}
+
+# In openstack deployment mechanism, deployer ansible user is root
+# So escalation is not needed duing configure_deployer tasks
+deployer_ansible_user_root_escalation: False
+
+# Flag to indicate if prefer to use dev repositories version on terraform
+# provisioned nodes. With dev versions (internal only), you don't need to provide
+# product registration code
+use_dev_repo_versions: True
+
+deploy_node_image_name: "SLE-15-SP1-JeOS-GM"

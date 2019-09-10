@@ -113,6 +113,11 @@ case "$deployment_action" in
         deploy_ccp_deployer
         configure_ccp_deployer
         ;;
+    "setup_kvm_hosts")
+        deploy_caasp
+        configure_ccp_deployer
+        deploy_ses_rook
+        ;;
     "setup_openstack")
         setup_caasp_workers_for_openstack
         patch_upstream

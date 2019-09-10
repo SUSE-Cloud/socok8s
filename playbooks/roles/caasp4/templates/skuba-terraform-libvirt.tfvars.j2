@@ -3,43 +3,82 @@ image_uri = "{{ image_uri }}"
 username = "{{ image_username }}"
 password = "{{ image_password }}"
 
+{% if terraform_libvirt_remotehost | default("", true) | length > 0 %}
+libvirt_uri = "qemu+ssh://root@{{ terraform_libvirt_remotehost }}/system"
+{% else %}
+libvirt_uri = "qemu:///system"
+{% endif %}
+
 stack_name = "{{ stack_name }}"
 
-network_cidr = "10.17.0.0/22"
+network_cidr = "{{ terraform_libvirt_network_cidr }}"
+network_mode = "{{ terraform_libvirt_create_network_mode }}"
+network_bridge_name  = "{{ terraform_libvirt_create_existing_bridge_name }}"
+cidrhost_master_offset = {{ terraform_libvirt_cidrhost_master_offset }}
+cidrhost_lb_offset = {{ terraform_libvirt_cidrhost_lb_offset }}
+cidrhost_worker_offset = {{ terraform_libvirt_cidrhost_worker_offset }}
+
 dns_domain = "caasp.local"
 
+{% if not use_dev_repo_versions %}
+sles_registry_code = "{{ product_sles_registration_code }}"
+caasp_registry_code = "{{ product_caasp_registration_code }}"
+{% endif %}
+{% if terraform_libvirt_rmt_server_name| default("", true) | length > 0 %}
+rmt_server_name = "{{ terraform_libvirt_rmt_server_name }}"
+{% endif %}
+
+domain_create_timeout = "{{ skuba_ci_terraform_domain_create_timeouts }}"
 lbs = 1
+deployer = 1
 masters = {{ master_count }}
 workers = {{ worker_count }}
+workers_vol_enabled = {{ terraform_libvirt_workers_vol_enabled }}
+# size in bytes : 20GB
+workers_vol_size = {{ terraform_libvirt_workers_vol_size }}
+
+master_memory = {{ terraform_libvirt_master_memory }}
+worker_memory = {{ terraform_libvirt_worker_memory }}
 
 repositories = {
-  caasp_devel = "{{ ibs_mirror_uri }}/Devel:/CaaSP:/4.0/SLE_15_SP1/"
-  suse_ca = "{{ ibs_mirror_uri }}/SUSE:/CA/SLE_15_SP1/"
-  sle_server_pool = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Product-SLES/15-SP1/x86_64/product/"
-  basesystem_pool = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Module-Basesystem/15-SP1/x86_64/product/"
-  containers_pool = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Module-Containers/15-SP1/x86_64/product/"
-  serverapps_pool = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Module-Server-Applications/15-SP1/x86_64/product/"
-  sle_server_updates = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Product-SLES/15-SP1/x86_64/update/"
-  basesystem_updates = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Module-Basesystem/15-SP1/x86_64/update/"
-  containers_updates = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Module-Containers/15-SP1/x86_64/update/"
-  serverapps_updates = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Module-Server-Applications/15-SP1/x86_64/update/"
+{% if use_dev_repo_versions %}
+  caasp_pool           = "{{ rmt_mirror_uri }}/SUSE/Products/SUSE-CAASP/4.0/x86_64/product/"
+  suse_ca              = "{{ rmt_mirror_uri }}/SUSE:/CA/SLE_15_SP1/"
+  sle_server_pool      = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Product-SLES/15-SP1/x86_64/product/"
+  basesystem_pool      = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Module-Basesystem/15-SP1/x86_64/product/"
+  containers_pool      = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Module-Containers/15-SP1/x86_64/product/"
+  serverapps_pool      = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Module-Server-Applications/15-SP1/x86_64/product/"
+  sle_server_updates   = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Product-SLES/15-SP1/x86_64/update/"
+  caasp_updates        = "{{ rmt_mirror_uri }}/SUSE/Updates/SUSE-CAASP/4.0/x86_64/update/"
+  basesystem_updates   = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Module-Basesystem/15-SP1/x86_64/update/"
+  containers_updates   = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Module-Containers/15-SP1/x86_64/update/"
+  serverapps_updates   = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Module-Server-Applications/15-SP1/x86_64/update/"
+{% endif %}
 }
 
 lb_repositories = {
-  sle_server_pool    = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Product-SLES/15-SP1/x86_64/product/"
-  basesystem_pool    = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Module-Basesystem/15-SP1/x86_64/product/"
-  ha_pool            = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Product-HA/15/x86_64/product/"
-  sle_server_updates = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Product-SLES/15-SP1/x86_64/update/"
-  basesystem_updates = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Module-Basesystem/15-SP1/x86_64/update/"
-  ha_updates         = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Product-HA/15/x86_64/update/"
+{% if use_dev_repo_versions %}
+  suse_ca              = "{{ rmt_mirror_uri }}/SUSE:/CA/SLE_15_SP1/"
+  sle_server_pool      = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Product-SLES/15-SP1/x86_64/product/"
+  basesystem_pool      = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Module-Basesystem/15-SP1/x86_64/product/"
+  ha_pool              = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Product-HA/15/x86_64/product/"
+  serverapps_pool      = "{{ rmt_mirror_uri }}/SUSE/Products/SLE-Module-Server-Applications/15-SP1/x86_64/product/"
+  sle_server_updates   = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Product-SLES/15-SP1/x86_64/update/"
+  basesystem_updates   = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Module-Basesystem/15-SP1/x86_64/update/"
+  ha_updates           = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Product-HA/15/x86_64/update/"
+  serverapps_updates   = "{{ rmt_mirror_uri }}/SUSE/Updates/SLE-Module-Server-Applications/15-SP1/x86_64/update/"
+{% endif %}
 }
 
 packages = [
   "kernel-default",
   "-kernel-default-base",
+{% if use_dev_repo_versions %}
   "ca-certificates-suse",
+{% endif %}
   "ceph-common",
-  "lvm2"
+  "lvm2",
+  "qemu-guest-agent",
 ]
 
 authorized_keys = [
@@ -53,4 +92,3 @@ ntp_servers = [
   "{{ server }}",
 {% endfor %}
 ]
-

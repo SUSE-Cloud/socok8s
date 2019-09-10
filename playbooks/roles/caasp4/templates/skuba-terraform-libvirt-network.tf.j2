@@ -1,0 +1,16 @@
+{% if terraform_libvirt_create_network %}
+resource "libvirt_network" "network" {
+  name   = "${var.stack_name}-network"
+  mode   = "${var.network_mode}"
+{% if terraform_libvirt_create_network_mode == "bridge" %}
+  bridge = "${var.network_bridge_name}"
+{% endif %}
+  domain = "${var.dns_domain}"
+
+  dns {
+    enabled = true
+  }
+
+  addresses = ["${var.network_cidr}"]
+}
+{% endif %}

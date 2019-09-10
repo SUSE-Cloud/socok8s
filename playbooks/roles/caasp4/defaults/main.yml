@@ -1,10 +1,6 @@
 # path to the terraform binary
 terraform_binary_path: "{{ (lookup('env','TERRAFORM_BINARY_PATH') | default('/usr/bin/terraform', true) ) }}"
 
-# Which deployment method have we been started with. (This is guaranted to be set
-# when executed via ./run.sh
-socok8s_deployment_mechanism: "{{ lookup('env', 'DEPLOYMENT_MECHANISM') }}"
-
 ############################################################################
 # skuba terraform openstack provider specific variables
 ############################################################################
@@ -19,13 +15,17 @@ skuba_ci_terraform_openstack_image_password: "linux"
 ############################################################################
 # skuba terraform libvirt provider specific variables
 ############################################################################
-# A image that is use for libvirt. That image is used to deploy
-# CaaSP 4 with the skuba ci terraforms
-skuba_ci_terraform_libvirt_image_uri: "http://download.suse.de/install/SLE-15-SP1-JeOS-GMC/SLES15-SP1-JeOS.x86_64-15.1-OpenStack-Cloud-GMC.qcow2"
 # the username to log into the image
 skuba_ci_terraform_libvirt_image_username: "sles"
 # the password to log into the image
 skuba_ci_terraform_libvirt_image_password: "linux"
+
+# Binary absolute path is used to copy it to terraform expected 3rd party provider
+# plugin lookup path which is under user home
+terraform_libvirt_provider_install_path: "/usr/bin/terraform-provider-libvirt"
+
+# Default timeout in terraform libvirt provider is 5 minutes
+skuba_ci_terraform_domain_create_timeouts: "30m"
 
 ############################################################################
 # skuba terraform common variables

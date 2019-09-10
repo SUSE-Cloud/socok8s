@@ -35,6 +35,7 @@
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Pegleg lint the site manifests
+  become: yes
   command: '{{ pegleg }} site -r . lint "{{ socok8s_site_name }}" -x P001 -x P009'
   args:
     chdir: '{{ treasuremap_dir }}'
@@ -56,6 +57,7 @@
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Collect site config
+  become: yes
   command: '{{ pegleg }} site -r . collect {{ socok8s_site_name }} -s {{ pegleg_output }}'
   args:
     chdir: '{{ treasuremap_dir }}'

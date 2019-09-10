@@ -18,22 +18,23 @@
 - name: Configure repositories for skuba and terraforms
   become: yes
   zypper_repository:
-    name: "{{ caasp_pkgs_repo_version }}"
-    repo: "{{ socok8s_repos_to_configure[caasp_pkgs_repo_version] }}"
+    name: "{{ item }}"
+    repo: "{{ socok8s_repos_to_configure[item] }}"
     autorefresh: True
     auto_import_keys: yes
     state: present
   when:
-    - caasp_pkgs_repo_version in socok8s_repos_to_configure
+    - item in socok8s_repos_to_configure
+  loop:
+    - "{{ caasp_pkgs_repo_version }}"
+    - "{{ sysm_terraform_repo_version }}"
 
 - name: Install required skuba, terraform packages for OS versions
   become: yes
   package:
     name: "{{ item }}"
     state: present
-  with_items:
-    - skuba
-    - terraform
+  with_items: "{{ assert_installed_packages }}"
   when:
     - caasp_pkgs_repo_version in socok8s_repos_to_configure
 

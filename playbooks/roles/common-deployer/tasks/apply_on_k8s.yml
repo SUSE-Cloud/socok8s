@@ -1,9 +1,10 @@
 ---
 - name: "Generate file ({{ item.action }})"
+  become: yes
   template:
     src: "{{ item.template_src_file }}"
     dest: "{{ item.templated_location }}"
-    mode: "0600"
+    mode: "0644"
     owner: "root"
     group: "root"
 

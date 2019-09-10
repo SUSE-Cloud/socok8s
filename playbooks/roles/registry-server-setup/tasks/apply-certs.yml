@@ -3,10 +3,10 @@
   service_facts:
 
 - name: Copy self-signed certs to expected location on nodes
-  copy:
-    src: "{{ suse_registry_certs_dir }}/domain.crt"
-    dest: "/etc/pki/trust/anchors"
   become: yes
+  copy:
+    src: "/tmp/domain.crt"
+    dest: "/etc/pki/trust/anchors"
   register: _copy_ssc_result
 
 # TODO convert to handler and remove skip_ansible_lint

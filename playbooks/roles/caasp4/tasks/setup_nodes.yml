@@ -34,11 +34,26 @@
   include_tasks: _setup_nodes_terraform_import_resources.yml
   when: import_terraform_resources|bool
 
+# Observed timeout on vpn during nodes cloud-init as all nodes tries to download
+# package from repos at same time and init process for each node slows down. So
+# removing concurrent execution of operations. Ansible terraform module does not
+# have this option so using command module.
 - name: Apply terraform plan in the workspace dir
-  terraform:
-    binary_path: "{{ terraform_binary_path }}"
-    project_path: "{{ skuba_ci_terraform_workspace }}"
-    state: present
+  command: "{{ terraform_binary_path }} apply -auto-approve -parallelism=1"
+  args:
+    chdir: "{{ skuba_ci_terraform_workspace }}"
+  changed_when: False
+
+# TODO: Add specific resource targets instead of refershing all
+#  -target=libvirt_domain.worker -target=libvirt_domain.master
+#  -target=libvirt_domain.deployer -target=libvirt_domain.lb
+- name: Refresh terraform to reconcile state with infra if its re-run
+  command: "{{ terraform_binary_path }} refresh"
+  args:
+    chdir: "{{ skuba_ci_terraform_workspace }}"
+  when:
+    - _terraform_hidden_dir.stat.exists
+    - socok8s_deployment_mechanism == 'kvm'
 
 - name: Get terraform output variables
   command: "{{ terraform_binary_path }} output -json"
@@ -82,6 +97,41 @@
   loop: "{{ _ssh_known_host_results.results }}"
   loop_control:
     label: "{{ item.item }}"
+
+- name: Setup deployer node for KVM (libvirt) deployment mechanism
+  block:
+    - name: Extend inventory in workspace with newly created deployer node
+      template:
+        src: inventory-deployer.yml.j2
+        dest: "{{ socok8s_workspace }}/inventory/soc-deployer.yml"
+
+    - meta: refresh_inventory
+
+    - name: Get deployer ip
+      set_fact:
+        ssh_known_hosts_deployers: "{{ groups['soc-deployer'] | map('extract', hostvars, ['ansible_host']) | list }}"
+      tags:
+        - ssh
+        - deployer
+
+    - name: Get pubkey, and add it to known deployer hosts
+      command: "ssh-keyscan -H {{ item | quote }}"
+      changed_when: false
+      register: _ssh_known_deployer_results
+      loop: "{{ ssh_known_hosts_deployers }}"
+      loop_control:
+        label: "{{ item }}"
+
+    - name: Insert known deployer hosts
+      known_hosts:
+        state: present
+        name: "{{ item.item }}"
+        key: "{{ item.stdout }}"
+      loop: "{{ _ssh_known_deployer_results.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+  when:
+    - socok8s_deployment_mechanism == 'kvm'
 
 # TODO(itxaka): Remove this when we are able to do this on the terraform config: https://github.com/SUSE/skuba/pull/519
 - name: Port security disable on ports for masters+workers+lbs

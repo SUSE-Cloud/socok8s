@@ -19,6 +19,7 @@
     state: absent
 
 - name: Ensure site directory for {{ socok8s_site_name }} exists
+  become: yes
   file:
     path: "{{ site_path }}"
     state: directory
@@ -236,6 +237,7 @@
     - always
 
 - name: Collect ucp site manifest
+  become: yes
   command: '{{ pegleg }} site -r . render "{{ socok8s_site_name }}" -o {{ socok8s_site_name }}-ucp.yaml'
   args:
     chdir: '{{ treasuremap_dir }}'
@@ -245,6 +247,13 @@
   tags:
     - install
     - skip_ansible_lint
+
+- name: Ensure site manifest is readable
+  become: yes
+  file:
+    path: "{{ treasuremap_dir }}/{{ socok8s_site_name }}-ucp.yaml"
+    state: file
+    mode: 0644
 
 # TODO(aagate): Add a changed_when: to help idempotency
 - name: Copy Airship UCP content to Armada pod

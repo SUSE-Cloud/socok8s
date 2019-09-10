@@ -1,2 +1,88 @@
 # number of caasp worker nodes
-deploy_on_kvm_caasp_workers: 1
+deploy_on_kvm_caasp_workers: 3
+
+# A image that is use for libvirt. That image is used to deploy
+# CaaSP 4 with the skuba ci terraforms
+skuba_ci_terraform_libvirt_image_uri: "http://download.suse.de/install/SLE-15-SP1-JeOS-GM/SLES15-SP1-JeOS.x86_64-15.1-OpenStack-Cloud-GM.qcow2"
+#skuba_ci_terraform_libvirt_image_uri: "http://192.168.89.43/shared/rpms/SLES15-SP1-JeOS.x86_64-15.1-OpenStack-Cloud-GM.qcow2"
+#skuba_ci_terraform_libvirt_image_uri: http://192.168.122.28/shared/SLES15-SP1-JeOS.x86_64-15.1-OpenStack-Cloud-GM.qcow2
+
+# libvirt (KVM) host where caasp cluster needs to be created
+# Require passwordless ssh connectivity for root user to that host from runner node
+terraform_libvirt_remotehost: 192.168.89.30
+# Make it empty if ansible runner node and libvirt host are same node
+# terraform_libvirt_remotehost:
+
+# Provide existing network name available on libvirt host
+# Currently works with NAT network only.
+# Bridge network support is work-in-progress as missing qemu-guest-agent setup
+terraform_libvirt_existing_network_name: default
+#terraform_libvirt_existing_network_name: caasp-br-network
+
+# Configure as per your local libvirt existing network cidr
+#terraform_libvirt_network_cidr: "192.168.89.0/24"
+terraform_libvirt_network_cidr: "192.168.122.0/24"
+
+# ipv4 Address offset for master, deployer, lb and worker nodes
+terraform_libvirt_cidrhost_master_offset: 132
+terraform_libvirt_cidrhost_deployer_offset: 140
+terraform_libvirt_cidrhost_lb_offset: 144
+terraform_libvirt_cidrhost_worker_offset: 164
+
+# Flag to indicate if need to create network via terraform libvirt provider
+# In KVM mode, most likely existing network will be used
+terraform_libvirt_create_network: False
+terraform_libvirt_create_network_mode: bridge
+terraform_libvirt_create_existing_bridge_name: br0
+
+terraform_libvirt_use_static_ips: True
+
+
+# Flag to indicate if add additional volume for SES on worker node (1 = Yes, 0 = No)
+terraform_libvirt_workers_vol_enabled: 1
+# Addtional volume size added to worker nodes (in bytes) : 20GB
+terraform_libvirt_workers_vol_size: 21474836480
+
+# Flag to indicate if prefer to use dev repositories version on terraform
+# provisioned nodes. With dev versions (internal only), you don't need to provide
+# product registration code
+use_dev_repo_versions: True
+
+# SLES 15-SP1 registration code
+product_sles_registration_code: ""
+# CAASP 4.0 registration code
+product_caasp_registration_code: ""
+
+# Download mirror to use for "official" products and updates (can e.g. point
+# to a local rmt mirror)
+#skuba_ci_terraform_rmt_mirror_uri: "http://192.168.89.32/repo/ibs"
+#terraform_libvirt_rmt_server_name: "192.168.89.32"
+skuba_ci_terraform_rmt_mirror_uri: "http://download.suse.de/ibs"
+terraform_libvirt_rmt_server_name:
+
+# https://github.com/dmacvicar/terraform-provider-libvirt/blob/master/website/docs/r/domain.html.markdown#argument-reference
+# in MiB
+terraform_libvirt_master_memory: 16384
+terraform_libvirt_worker_memory:  16384
+terraform_libvirt_deployer_memory: 8192
+
+# In kvm deployment mechanism, deployer ansible user is non-root (sles)
+# So escalation is needed duing configure_deployer tasks
+deployer_ansible_user_root_escalation: True
+
+deploy_repos_per_imagename:
+  SLE-15-SP1-JeOS-GM:
+    - SLES-15-SP1-Product
+    - SLES-15-SP1-Product-Update
+    - SLES-15-SP1-backports
+    - SLE-15-SP1-Module-BaseSystem
+    - SLE-15-SP1-Module-BaseSystem-Update
+    - SLE-15-SP1-Module-Containers
+    - SLE-15-SP1-Module-Containers-Update
+    - SLE-15-SP1-Module-Public-Cloud
+    - SLE-15-SP1-Module-Public-Cloud-Update
+    - SLE-15-SP1-Module-Development-Tools
+    - SLE-15-SP1-Module-Development-Tools-Update
+    - socok8s_SLE15SP1
+
+deploy_node_image_name: "SLE-15-SP1-JeOS-GM"

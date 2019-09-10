@@ -1,5 +1,6 @@
 ---
 - name: Clone local-path provisioner
+  become: yes
   git:
     repo: "https://github.com/rancher/local-path-provisioner"
     dest: "{{ upstream_repos_clone_folder }}/local-path-provisioner"

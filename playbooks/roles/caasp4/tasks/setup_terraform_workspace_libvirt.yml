@@ -15,12 +15,70 @@
 # under the License.
 #
 
+- name: Ensure terraform 3rd party plugins directory exists in user home
+  file:
+    path: "{{ ansible_env.HOME }}/.terraform.d/plugins"
+    state: directory
+    recurse: yes
+
+- name: Make terraform libvirt plugin available in user home plugins directory
+  copy:
+    src: "{{ terraform_libvirt_provider_install_path }}"
+    dest: "{{ ansible_env.HOME }}/.terraform.d/plugins"
+    mode: 0775
+    force: no
+
+- name: Run tasks on libvirt/kvm host
+  block:
+  - name: Retrieve existing libvirt network id for given network name
+    shell: "virsh net-info {{ terraform_libvirt_existing_network_name }} | awk '/UUID/ {print $2}'"
+    register: _virsh_net_networkid
+    when:
+      - not terraform_libvirt_create_network
+  delegate_to: "{{ terraform_libvirt_remotehost if terraform_libvirt_remotehost | length > 0 else omit }}"
+
+- name: Set existing libvirt network id value
+  set_fact:
+    _terraform_libvirt_existing_network_id: "{{ _virsh_net_networkid.stdout }}"
+  when:
+    - not (_virsh_net_networkid is skipped)
+
 - name: Copy skuba libvirt terraform files to socok8s workspace
   copy:
     src: "{{ playbook_dir }}/../submodules/skuba/ci/infra/libvirt/"
     dest: "{{ skuba_ci_terraform_workspace }}"
     mode: 0775
     force: no
+
+# Need to create PR in skuba for changes
+- name: Copy skuba libvirt updated terraform files to socok8s workspace
+  copy:
+    src: "{{ item }}"
+    dest: "{{ skuba_ci_terraform_workspace }}"
+    mode: 0775
+    force: yes
+  with_fileglob:
+    - "{{ playbook_dir }}/roles/caasp4/files/*.tf"
+
+- name: Copy skuba libvirt updated cloud-init terraform files to socok8s workspace
+  copy:
+    src: "{{ item }}"
+    dest: "{{ skuba_ci_terraform_workspace }}/cloud-init"
+    mode: 0775
+    force: yes
+  with_fileglob:
+    - "{{ playbook_dir }}/roles/caasp4/files/cloud-init/*.tpl"
+
+- name: Copy updated libvirt terraform templates
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ skuba_ci_terraform_workspace }}/{{ item.dest }}"
+  loop:
+    - { src: "skuba-terraform-libvirt-network.tf.j2", dest: "network.tf" }
+    - { src: "skuba-terraform-libvirt-lb-instances.tf.j2", dest: "lb-instances.tf" }
+    - { src: "skuba-terraform-libvirt-master-instance.tf.j2", dest: "master-instance.tf" }
+    - { src: "skuba-terraform-libvirt-worker-instance.tf.j2", dest: "worker-instance.tf" }
+    - { src: "skuba-terraform-libvirt-deployer-instance.tf.j2", dest: "deployer-instance.tf" }
 
 - name: Create a terraform variable file for libvirt
   template:

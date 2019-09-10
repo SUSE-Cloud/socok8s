@@ -24,3 +24,9 @@
 - name: Get registry host (aka deployer) ip for entry in other host's /etc/hosts
   set_fact:
     registry_server_host_ip: "{{ ansible_default_ipv4.address | ipaddr('address') }}"
+
+- name: Fetch self-signed cert to runner host
+  fetch:
+    src: "{{ suse_registry_certs_dir }}/domain.crt"
+    dest: "/tmp/"
+    flat: yes

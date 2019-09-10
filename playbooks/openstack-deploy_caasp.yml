@@ -25,6 +25,10 @@
     - import_role:
         name: runner-setup
         tasks_from: assert_packages.yml
+      vars:
+        assert_installed_packages:
+          - "skuba"
+          - "terraform<0.12"
 
     - import_role:
         name: caasp4
@@ -32,6 +36,9 @@
       vars:
         skuba_ci_terraform_worker_count: "{{ deploy_on_openstack_caasp_workers }}"
         skuba_ci_terraform_workspace: "{{ socok8s_workspace }}/skuba-terraform/"
+
+    - name: Refresh host inventory
+      meta: refresh_inventory
 
     - import_role:
         name: caasp4

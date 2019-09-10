@@ -11,7 +11,7 @@ echo "Deploying on KVM"
 source ${scripts_absolute_dir}/deployment-actions-common.sh
 
 function deploy_network(){
-    echo "This is not supported yet on KVM"
+    echo "This is not needed on KVM"
 }
 function deploy_ses(){
     echo "This just runs ses configuration logic. Please create a SES node manually first."

@@ -24,7 +24,3 @@ doc/build
 
 # log artifacts
 logs/
-
-# NOTE(toabctl): Remove when skuba is a public repo and we can use submodules
-# for now, submodules/skuba needs to be a local symlink to the SUSE/skuba checkout
-submodules/skuba

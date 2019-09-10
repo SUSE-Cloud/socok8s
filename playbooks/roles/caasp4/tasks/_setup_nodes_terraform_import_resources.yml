@@ -28,26 +28,43 @@
   changed_when: False
   when: _terraform_state_file.stat.exists
 
-- name: Import internal network resource to terraform
-  command: "{{ terraform_binary_path }} import openstack_networking_network_v2.network {{ deploy_on_openstack_internal_network_id }}"
-  args:
-    chdir: "{{ skuba_ci_terraform_workspace }}"
-  when: 'not _terraform_state_file.stat.exists or "openstack_networking_network_v2.network" not in _terraform_state_list.stdout_lines'
+- name: Import pre-existing resources to terraform for openstack mechanism
+  block:
+    - name: Import internal network resource to terraform
+      command: "{{ terraform_binary_path }} import openstack_networking_network_v2.network {{ deploy_on_openstack_internal_network_id }}"
+      args:
+        chdir: "{{ skuba_ci_terraform_workspace }}"
+      when:
+        - 'not _terraform_state_file.stat.exists or "openstack_networking_network_v2.network" not in _terraform_state_list.stdout_lines'
 
-- name: Import internal subnet resource to terraform
-  command: "{{ terraform_binary_path }} import openstack_networking_subnet_v2.subnet {{ deploy_on_openstack_internal_subnet_id }}"
-  args:
-    chdir: "{{ skuba_ci_terraform_workspace }}"
-  when: 'not _terraform_state_file.stat.exists or "openstack_networking_subnet_v2.subnet" not in _terraform_state_list.stdout_lines'
+    - name: Import internal subnet resource to terraform
+      command: "{{ terraform_binary_path }} import openstack_networking_subnet_v2.subnet {{ deploy_on_openstack_internal_subnet_id }}"
+      args:
+        chdir: "{{ skuba_ci_terraform_workspace }}"
+      when: 'not _terraform_state_file.stat.exists or "openstack_networking_subnet_v2.subnet" not in _terraform_state_list.stdout_lines'
 
-- name: Import router resource to terraform
-  command: "{{ terraform_binary_path }} import openstack_networking_router_v2.router {{ deploy_on_openstack_router_id }}"
-  args:
-    chdir: "{{ skuba_ci_terraform_workspace }}"
-  when: 'not _terraform_state_file.stat.exists or "openstack_networking_router_v2.router" not in _terraform_state_list.stdout_lines'
+    - name: Import router resource to terraform
+      command: "{{ terraform_binary_path }} import openstack_networking_router_v2.router {{ deploy_on_openstack_router_id }}"
+      args:
+        chdir: "{{ skuba_ci_terraform_workspace }}"
+      when: 'not _terraform_state_file.stat.exists or "openstack_networking_router_v2.router" not in _terraform_state_list.stdout_lines'
 
-- name: Import router interface resource to terraform
-  command: "{{ terraform_binary_path }} import openstack_networking_router_interface_v2.router_interface {{ deploy_on_openstack_router_interface_id }}"
-  args:
-    chdir: "{{ skuba_ci_terraform_workspace }}"
-  when: 'not _terraform_state_file.stat.exists or "openstack_networking_router_interface_v2.router_interface" not in _terraform_state_list.stdout_lines'
+    - name: Import router interface resource to terraform
+      command: "{{ terraform_binary_path }} import openstack_networking_router_interface_v2.router_interface {{ deploy_on_openstack_router_interface_id }}"
+      args:
+        chdir: "{{ skuba_ci_terraform_workspace }}"
+      when: 'not _terraform_state_file.stat.exists or "openstack_networking_router_interface_v2.router_interface" not in _terraform_state_list.stdout_lines'
+  when:
+    - socok8s_deployment_mechanism == 'openstack'
+
+- name: Import pre-existing resources to terraform for kvm mechanism
+  block:
+    - name: Import pre-existing network resource to terraform
+      command: "{{ terraform_binary_path }} import -var 'name={{ terraform_libvirt_existing_network_name }}' libvirt_network.network {{ _virsh_net_networkid.stdout }}"
+      args:
+        chdir: "{{ skuba_ci_terraform_workspace }}"
+      when:
+        - 'not _terraform_state_file.stat.exists or "libvirt_network.network" not in _terraform_state_list.stdout_lines'
+        - not (_virsh_net_networkid is skipped)
+  when:
+    - socok8s_deployment_mechanism == 'kvm'

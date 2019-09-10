@@ -4,15 +4,25 @@ socok8s_envname: "{{ lookup('env','SOCOK8S_ENVNAME') | default('socok8s', true) 
 upstream_repos_clone_folder: "/opt"
 developer_mode: "{{ (lookup('env','SOCOK8S_DEVELOPER_MODE') | default('False', true) ) | bool }}"
 # configure the workspace base directory (where workspace(s) are created in)
+# ansible lookup plugin runs only on ansible runner/control node so env is from runner node.
 socok8s_default_basedir: "{{ lookup('env','HOME') | default('/tmp', true) }}"
 socok8s_workspace_basedir: "{{ lookup('env','SOCOK8S_WORKSPACE_BASEDIR') | default(socok8s_default_basedir, true) }}"
 # configure the full path to the current workspace
 socok8s_workspace: "{{ socok8s_workspace_basedir }}/{{ socok8s_envname }}-workspace"
+
+# Need to be host specific home (as runner and deployer can have different user and hence home directory)
+socok8s_deployer_basedir: "{{ ansible_env.HOME }}"
+# configure the full path to the deployer workspace
+socok8s_deployer_workspace: "{{ socok8s_deployer_basedir }}/{{ socok8s_envname }}-workspace"
 socok8s_extravars: "{{ socok8s_workspace }}/env/extravars"
 socok8s_ses_pools_details: "{{ socok8s_workspace }}/ses_config.yml"
 socok8s_registry_cert: "{{ socok8s_workspace }}/certs/domain.crt"
 socok8s_registry_certkey: "{{ socok8s_workspace }}/certs/domain.key"
 socok8s_libvirtuuid: "{{ socok8s_workspace }}/libvirt.uuid"
+# Which deployment method have we been started with. (This is guaranted to be set
+# when executed via ./run.sh on ansible runner node
+socok8s_deployment_mechanism: "{{ lookup('env', 'DEPLOYMENT_MECHANISM') }}"
+
 suse_osh_registry_location: "docker.io"
 suse_openstack_image_version: "rocky-opensuse_15"
 suse_infra_image_version: "latest-opensuse_15"
@@ -43,6 +53,8 @@ socok8s_repos_to_configure:
   # needed for skuba and terraform
   CAASP40-SLES-151: "{{ ibs_mirror }}/Devel:/CaaSP:/4.0/SLE_15_SP1/"
   CAASP40-SLES-150: "{{ ibs_mirror }}/Devel:/CaaSP:/4.0/SLE_15/"
+  SYSM-TERRAFORM-SLES-151: "http://download.opensuse.org/repositories/systemsmanagement:/terraform/SLE_15_SP1/"
+  SYSM-TERRAFORM-SLES-150: "http://download.opensuse.org/repositories/systemsmanagement:/terraform/SLE_15/"
 
 
 ######################################################
@@ -51,7 +63,7 @@ socok8s_repos_to_configure:
 
 suse_ovs_image_version: "v2.8.1"
 
-socok8s_deploy_config_location: "{{ socok8s_workspace }}"
+socok8s_deploy_config_location: "{{ socok8s_deployer_workspace }}"
 
 ucp_namespace_name: "{{ ucp_namespace | default('ucp') }}"
 ceph_namespace_name: "{{ ceph_namespace | default('ceph') }}"
@@ -168,3 +180,10 @@ openstack_helm_pod_resources_enabled:
   tempest: true
 # If SES is deployed into stand alone extra node ('aio'), or into CaaSP cluster ("rook")
 ses_deployment: aio
+
+# Map for deployment mechanism and its related vars file (added to decouple in case
+# mechanism name got updated later).
+deploy_mechanism_vars_map:
+  kvm: deploy-on-kvm.yml
+  openstack: deploy-on-openstack.yml
+

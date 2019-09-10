@@ -13,7 +13,7 @@
       vars:
         servername_suffix: "deployer"
         flavor: "{{ deploy_on_openstack_oshnode_flavor }}"
-        image: "{{ deploy_on_openstack_oshnode_image }}"
+        image: "{{ deploy_node_image_name }}"
         network: "{{ deploy_on_openstack_internal_network }}"
         securitygroups:
           - "{{ deploy_on_openstack_oshnode_securitygroup }}"

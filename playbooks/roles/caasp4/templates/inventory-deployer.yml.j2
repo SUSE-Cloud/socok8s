@@ -1,0 +1,10 @@
+---
+soc-deployer:
+  hosts:
+{% for node_ip in _terraform_json_output.ip_deployer.value %}
+   deployer:
+      ansible_host: {{ node_ip }}
+{% endfor %}
+  vars:
+    ansible_user: sles
+    ansible_python_interpreter: /usr/bin/python3

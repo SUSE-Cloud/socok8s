@@ -25,6 +25,20 @@
     - import_role:
         name: runner-setup
         tasks_from: assert_packages.yml
+      vars:
+        assert_installed_packages:
+          - "skuba"
+          - "terraform<0.12"
+          - "terraform-provider-libvirt"
+
+    - name: Make sure product registration codes are entered for non-dev setup
+      assert:
+        that:
+          - product_sles_registration_code | length > 5
+          - product_caasp_registration_code | length > 5
+        fail_msg: "SLES and CaaSP registration codes are required for non-dev deployment"
+      when:
+        - not use_dev_repo_versions
 
     - import_role:
         name: caasp4

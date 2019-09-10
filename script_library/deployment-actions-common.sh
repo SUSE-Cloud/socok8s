@@ -44,6 +44,11 @@ function deploy_airship(){
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_airship.yml ${tagged_info}
 }
 
+function configure_ccp_deployer() {
+    echo "Configure deployer node"
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-configure_deployer.yml
+}
+
 function deploy_tempest(){
     echo "Deploying Tempest"
     run_ansible ${socok8s_absolute_dir}/playbooks/deploy_tempest.yml

@@ -1,6 +1,6 @@
 ses_rook_repos:
   ses_rook_sle15_sp1: "{{ ibs_mirror }}/SUSE:/SLE-15-SP1:/Update:/Products:/SES6:/Update/standard/"
-ses_rook_yaml_manifests_package: "rook-k8s-yaml"
+ses_rook_yaml_manifests_package: "rook-k8s-yaml<1.1"
 ses_rook_k8s_manifests_dir: "/usr/share/k8s-yaml/rook/ceph"
 ses_rook_config_path_in_caasp_workers: "/home/ses/var/lib/rook/"
 

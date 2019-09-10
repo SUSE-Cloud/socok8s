@@ -22,26 +22,42 @@
   register: _terraform_state_list
   changed_when: False
 
-- name: Remove internal network resource from terraform state
-  command: "{{ terraform_binary_path }} state rm openstack_networking_network_v2.network"
-  args:
-    chdir: "{{ socok8s_workspace }}/skuba-terraform/"
-  when: '"openstack_networking_network_v2.network" in _terraform_state_list.stdout_lines'
+- name: Clear pre-existing resources from terraform state for openstack mechanism
+  block:
+    - name: Remove internal network resource from terraform state
+      command: "{{ terraform_binary_path }} state rm openstack_networking_network_v2.network"
+      args:
+        chdir: "{{ socok8s_workspace }}/skuba-terraform/"
+      when: '"openstack_networking_network_v2.network" in _terraform_state_list.stdout_lines'
 
-- name: Remove internal subnet resource from terraform state
-  command: "{{ terraform_binary_path }} state rm openstack_networking_subnet_v2.subnet"
-  args:
-    chdir: "{{ socok8s_workspace }}/skuba-terraform/"
-  when: '"openstack_networking_subnet_v2.subnet" in _terraform_state_list.stdout_lines'
+    - name: Remove internal subnet resource from terraform state
+      command: "{{ terraform_binary_path }} state rm openstack_networking_subnet_v2.subnet"
+      args:
+        chdir: "{{ socok8s_workspace }}/skuba-terraform/"
+      when: '"openstack_networking_subnet_v2.subnet" in _terraform_state_list.stdout_lines'
 
-- name: Remove router interrface resource from terraform state
-  command: "{{ terraform_binary_path }} state rm openstack_networking_router_interface_v2.router_interface"
-  args:
-    chdir: "{{ socok8s_workspace }}/skuba-terraform/"
-  when: '"openstack_networking_router_interface_v2.router_interface" in _terraform_state_list.stdout_lines'
+    - name: Remove router interrface resource from terraform state
+      command: "{{ terraform_binary_path }} state rm openstack_networking_router_interface_v2.router_interface"
+      args:
+        chdir: "{{ socok8s_workspace }}/skuba-terraform/"
+      when: '"openstack_networking_router_interface_v2.router_interface" in _terraform_state_list.stdout_lines'
 
-- name: Remove router resource from terraform state
-  command: "{{ terraform_binary_path }} state rm openstack_networking_router_v2.router"
-  args:
-    chdir: "{{ socok8s_workspace }}/skuba-terraform/"
-  when: '"openstack_networking_router_v2.router" in _terraform_state_list.stdout_lines'
+    - name: Remove router resource from terraform state
+      command: "{{ terraform_binary_path }} state rm openstack_networking_router_v2.router"
+      args:
+        chdir: "{{ socok8s_workspace }}/skuba-terraform/"
+      when: '"openstack_networking_router_v2.router" in _terraform_state_list.stdout_lines'
+  when:
+    - socok8s_deployment_mechanism == 'openstack'
+
+- name: Clear pre-existing resources from terraform state for kvm mechanism
+  block:
+    - name: Remove pre-existing network resource from terraform state
+      command: "{{ terraform_binary_path }} state rm libvirt_network.network"
+      args:
+        chdir: "{{ socok8s_workspace }}/skuba-terraform/"
+      when:
+        - '"libvirt_network.network" in _terraform_state_list.stdout_lines'
+        - not terraform_libvirt_create_network
+  when:
+    - socok8s_deployment_mechanism == 'kvm'

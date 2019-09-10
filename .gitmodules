@@ -4,3 +4,6 @@
 [submodule "submodules/openstack-helm-infra"]
 	path = submodules/openstack-helm-infra
 	url = https://github.com/openstack/openstack-helm-infra.git
+[submodule "submodules/skuba"]
+	path = submodules/skuba
+	url = https://github.com/SUSE/skuba.git

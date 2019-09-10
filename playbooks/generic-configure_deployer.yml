@@ -5,63 +5,80 @@
     - name: Ensure all the common vars are loaded
       include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
 
-    - name: Ensure all the openstack mechanism vars are loaded
-      include_vars: "{{ playbook_dir }}/../vars/deploy-on-openstack.yml"
+    - name: Ensure deploy mechanism specific vars are loaded
+      include_vars: "{{ playbook_dir }}/../vars/{{ deploy_mechanism_vars_map[socok8s_deployment_mechanism] }}"
 
     - name: Collect repo files for removal
       find:
         paths: "/etc/zypp/repos.d/"
         patterns: "*.repo"
       register: repo_files
+      when:
+        - use_dev_repo_versions
 
     - name: Clear existing repo config
+      become: "{{ deployer_ansible_user_root_escalation }}"
       file:
         path: "{{ item['path'] }}"
         state: absent
       with_items: "{{ repo_files['files'] }}"
+      when:
+        - use_dev_repo_versions
 
     - name: Disable delta rpms
+      become: "{{ deployer_ansible_user_root_escalation }}"
       ini_file:
         path: /etc/zypp/zypp.conf
         section: main
         option: download.use_deltarpm
         value: "false"
+      when:
+        - use_dev_repo_versions
 
     - name: Workaround stupid JeOS image bugs (bsc#1138727)
+      become: "{{ 'yes' if socok8s_deployment_mechanism == 'kvm' else omit }}"
       file:
-      args:
         src: /var/run/netconfig/resolv.conf
         dest: /etc/resolv.conf
         state: link
         force: yes
+      when:
+        - use_dev_repo_versions
 
     - name: Configure host repositories
+      become: "{{ deployer_ansible_user_root_escalation }}"
       zypper_repository:
         name: "{{ item }}"
         repo: "{{ socok8s_repos_to_configure[item] }}"
         autorefresh: True
         auto_import_keys: yes
         state: present
-      loop: "{{ deploy_on_openstack_osh_repos_per_imagename[deploy_on_openstack_oshnode_image] }}"
+      loop: "{{ deploy_repos_per_imagename[deploy_node_image_name] }}"
 
     - name: Add known vendors
+      become: "{{ deployer_ansible_user_root_escalation }}"
       blockinfile:
         path: /etc/zypp/vendors.d/opensuse
         block: |
           [main]
           vendors = suse,opensuse,obs://build.opensuse.org/Cloud:OpenStack,obs://build.opensuse.org/Cloud
         create: yes
+      when:
+        - use_dev_repo_versions
 
     - name: Zypper dist-upgrade
+      become: "{{ deployer_ansible_user_root_escalation }}"
       zypper:
         name: '*'
         state: dist-upgrade
         update_cache: yes
         extra_args_precommand: "--gpg-auto-import-keys"
 
+
     #On some images this service is not defined and the systemctl command fails.
     #The failed_when false is temporary until I find out proper conditional on this task.
     - name: Disable firewall
+      become: "{{ deployer_ansible_user_root_escalation }}"
       systemd:
         enabled: no
         name: "{{ item }}"
@@ -86,6 +103,7 @@
         - skip_ansible_lint
 
     - name: Reboot host
+      become: "{{ deployer_ansible_user_root_escalation }}"
       reboot:
         reboot_timeout: 900
         connect_timeout: 90
