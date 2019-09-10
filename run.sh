@@ -172,6 +172,9 @@ case "$deployment_action" in
     "delete_ses_rook")
         delete_ses_rook
         ;;
+    "parse_tempest_ci")
+        parse_tempest_output
+        ;;
     *)
         echo "Invalid option, Check --help for valid options"
         ;;

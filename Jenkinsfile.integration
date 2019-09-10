@@ -47,6 +47,7 @@ pipeline {
         USE_ARA = "True"
         ARA_DIR = "$WORKSPACE"
         SOCOK8S_DEPLOY_DSTAT = "YES"
+        SOCOK8S_TEMPEST_SUBUNIT_OUTPUT = "True"
     }
 
     stages {
@@ -226,6 +227,18 @@ pipeline {
                   export AIRSHIP_TEMPEST_LOG_STDOUT=True
                   ./run.sh test
                 """
+            }
+            post {
+                success {
+                    script {
+                        try {
+                            sh "./run.sh parse_tempest_ci"
+                            junit testResults: 'tempest.xml', allowEmptyResults: true, keepLongStdio: true
+                        } catch(e) {
+                            echo "Could not parse tempest results"
+                        }
+                    }
+                }
             }
         }
     }

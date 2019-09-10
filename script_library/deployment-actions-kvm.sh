@@ -53,6 +53,10 @@ function clean_kvm(){
     echo "Not implemented"
 }
 function teardown(){
+    if [[ ${SOCOK8S_TEMPEST_PARSE_RESULTS} == "True" ]]
+    then
+      parse_tempest_ci
+    fi
     if [[ ${SOCOK8S_GATHER_LOGS:-"NO"} == "YES" ]]
     then
         gather_logs
