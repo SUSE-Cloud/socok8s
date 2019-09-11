@@ -1,7 +1,19 @@
 config:
   argo_namespace: argocd
   default_server: https://kubernetes.default.svc
-applications: []
+applications:
+  - name: metallb
+    project: default
+    git:
+      url: https://github.com/danderson/metallb.git
+      branch: v0.8.1
+      path: manifests
+    syncPolicy:
+      automated:
+        selfHeal: false
+        prune: false
+    annotations:
+      argocd.argoproj.io/sync-wave: "-3"
 
 ## Example
 #applications:
