@@ -41,16 +41,15 @@
       tags:
         - upstream_patching
 
-# Apparmor does not seem to be present on current CaaSP4 nodes
-#- hosts: caasp-workers
-#  tasks:
-#    - import_role:
-#      name: airship-configure-worker
-#      tasks_from: apparmor
-#    when: redeploy_osh_only is not defined or not redeploy_osh_only
-#    tags:
-#      - preinstall
-#      - add_compute_node
+- hosts: caasp-workers
+  tasks:
+    - import_role:
+        name: airship-configure-worker
+        tasks_from: apparmor
+      when: redeploy_osh_only is not defined or not redeploy_osh_only
+      tags:
+        - preinstall
+        - add_compute_node
 
 - hosts: soc-deployer
   gather_facts: no
