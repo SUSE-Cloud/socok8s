@@ -1,0 +1,24 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: auto-deploy
+  namespace: argocd
+  # Finalizer not added, because we don't want a cascade deletion of
+  # auto-deploy to destroy everything.
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    helm:
+      valueFiles:
+      - values.yaml
+    path: auto-deploy
+    repoURL: https://github.com/evrardjp/socok8s #TODO: Update to SUSE-Cloud
+    targetRevision: mega_patch #TODO: Update to master or a stable branch
+  # On install, make sure the auto-deployer app deploys
+  # immediately the software it "contains" (=deploys)
+  syncPolicy:
+    automated: {} # Do not prune or self-heal by default.

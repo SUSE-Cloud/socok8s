@@ -1,0 +1,22 @@
+config:
+  argo_namespace: argocd
+  default_server: https://kubernetes.default.svc
+applications: []
+
+## Example
+#applications:
+#  - name: namespaces
+#    project: default
+#    git:
+#      url: https://github.com/evrardjp/argocd-deploy
+#      branch: HEAD
+#      path: namespaces
+#    # If no prune/self heal, just make
+#    # syncPolicy:
+#    #   automated: {}
+#    syncPolicy:
+#      automated:
+#        selfHeal: true
+#        prune: true
+#    annotations:
+#      argocd.argoproj.io/sync-wave: "-3"

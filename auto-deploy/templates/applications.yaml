@@ -1,0 +1,58 @@
+{{- $default_server := .Values.config.default_server -}}
+{{- $namespace := .Values.config.argo_namespace -}}
+{{- $chart_name := include "argo-cd.name" . -}}
+{{- $chart := include "argo-cd.chart" . -}}
+{{- $defaultdeploy := dict "server" $default_server "namespace" $namespace -}}
+
+{{- range .Values.applications }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .name }}
+  namespace: {{ $namespace }}
+  {{- if .annotations }}
+  annotations:
+    {{- toYaml .annotations | nindent 4 }}
+  {{- end }}
+  finalizers:
+  {{- if not .disable_argo_finalizer }}
+    - resources-finalizer.argocd.argoproj.io
+  {{- end }}
+labels:
+  app.kubernetes.io/name: {{ $chart_name }}
+  helm.sh/chart: {{ $chart }}
+  app.kubernetes.io/instance: {{ $.Release.Name }}
+  app.kubernetes.io/managed-by: {{ $.Release.Service }}
+  app.kubernetes.io/part-of: {{ $chart_name }}
+spec:
+  project: {{ .project }}
+  source:
+    repoURL: {{ .git.url }}
+    targetRevision: {{ .git.branch }}
+    path: {{ .git.path }}
+    {{- if eq (or .type "undefined") "helm" }}
+    helm:
+      valueFiles: {{ required "At least one value file is required" .remote_value_files }}
+      {{- if or .local_values .local_value_files }}
+      values: |
+        {{- if .local_value_files }}
+          {{- range .local_value_files }}
+            {{- $.Files.Get . | nindent 8 }}
+          {{- end }}
+        {{- else }}
+          {{- .local_values | nindent 8}}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  destination:
+    {{- if .destination }}
+      {{- toYaml (merge .destination $defaultdeploy) | nindent 4 }}
+    {{- else }}
+      {{- toYaml $defaultdeploy | nindent 4}}
+    {{ end }}
+  {{- if .syncPolicy }}
+  syncPolicy:
+    {{- toYaml .syncPolicy | nindent 4 }}
+  {{- end }}
+---
+{{- end }}
