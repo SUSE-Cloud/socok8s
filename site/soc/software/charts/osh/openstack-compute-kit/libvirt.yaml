@@ -19,7 +19,7 @@ data:
   values:
     pod:
       resources:
-        eanbled: {{ openstack_helm_pod_resources_enabled['libvirt'] }}
+        enabled: {{ openstack_helm_pod_resources_enabled['libvirt'] }}
     labels:
       agent:
         libvirt:
