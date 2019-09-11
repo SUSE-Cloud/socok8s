@@ -85,6 +85,18 @@ venv in |socok8s_workspace_default|\ `/.ansiblevenv`.
       :code:
 
 
+For CaaSP 4.x deployment, skuba (https://github.com/SUSE/skuba) and terraform
+packages are required. Currently deployment steps automatically configure
+related package repositories and installs the appropriate packages if ansible
+runner (the host where ansible is running) is SLES-15.0 or SLES-15-SP1 host.
+
+.. note ::
+
+   If your ansible runner OS is not SLES-15 or SLES-15-SP1, then you will
+   need to find above packages for your OS distribution and version. Please
+   make sure that terrform version is v0.11.x as that's the only working
+   version for now.
+
 
 Cloning this repository
 -----------------------

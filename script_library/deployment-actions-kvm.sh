@@ -19,8 +19,6 @@ function deploy_ses(){
     echo "ses-ansible deploy is successful"
 }
 function deploy_caasp(){
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_skuba_dir_available
-    source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_terraform_available
     source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_ssh_agent_running
     echo "Starting CaaSP 4 deploy on libvirt"
     run_ansible ${socok8s_absolute_dir}/playbooks/kvm-deploy_caasp.yml
@@ -43,8 +41,6 @@ function remove_compute(){
 }
 function clean_caasp(){
     if command -v ${TERRAFORM_BINARY_PATH} && [ -d submodules/skuba ]; then
-        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_skuba_dir_available
-        source ${scripts_absolute_dir}/pre-flight-checks.sh check_caasp_terraform_available
         echo "Delete CaaSP 4"
         run_ansible ${socok8s_absolute_dir}/playbooks/kvm-delete_caasp.yml
     fi
