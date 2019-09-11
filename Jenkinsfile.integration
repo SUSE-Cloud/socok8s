@@ -233,7 +233,7 @@ pipeline {
                     script {
                         try {
                             sh "./run.sh parse_tempest_ci"
-                            junit testResults: 'tempest.xml', allowEmptyResults: true, keepLongStdio: true
+                            junit testResults: 'tempest.xml', allowEmptyResults: true, keepLongStdio: true, healthScaleFactor: 0
                         } catch(e) {
                             echo "Could not parse tempest results"
                         }
