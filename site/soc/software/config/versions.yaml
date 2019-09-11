@@ -1,12 +1,6 @@
 ---
 data:
   charts:
-    kubernetes:
-      # contains dev patcher to enable multiple vips
-      ingress:
-        type: local
-        location: /armada/airship-components/openstack-helm-infra
-        subpath: ingress
     osh:
       cinder:
         location: https://opendev.org/openstack/openstack-helm
