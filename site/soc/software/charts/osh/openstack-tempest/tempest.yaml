@@ -29,6 +29,7 @@ data:
       script: |
         tempest workspace register --path /var/lib/tempest/data --name default
         tempest run \
+        --serial \
         --workspace default \
         --config-file /etc/tempest/tempest.conf \
         -w {{ tempest_workers }} \
