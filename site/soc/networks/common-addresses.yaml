@@ -142,15 +142,15 @@ data:
     # VLAN number are consistent with what's defined for the bond and the
     # overlay
     # network in networks/physical/networks.yaml
-    tunnel_device: 'docker0'
+    tunnel_device: 'cilium_host@cilium_net'
     # bond which the overlay is a member of. Ensure the bond name is consistent
     # with the bond assigned to the overlay network in
     # networks/physical/networks.yaml
-    external_iface: 'docker0'
+    external_iface: 'cilium_host@cilium_net'
 
   openvswitch:
     # bond which the overlay is a member of. Ensure the bond name is consistent
     # with the bond assigned to the overlay network in
     # networks/physical/networks.yaml
-    external_iface: 'docker0'
+    external_iface: 'cilium_host@cilium_net'
 ...
