@@ -7,8 +7,10 @@ stack_name = "${SOCOK8S_ENVNAME}-stack"
 subnet_cidr = "192.168.100.0/24"
 masters = 1
 workers = 3
-master_size = "m1.medium"
-worker_size = "m1.large"
+workers_vol_enabled = 1
+workers_vol_size = 10
+master_size = "m1.xxlarge"
+worker_size = "m1.xxlarge"
 
 username = "${IMAGE_USERNAME}"
 password = "linux"
