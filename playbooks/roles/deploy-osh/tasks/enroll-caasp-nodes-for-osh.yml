@@ -53,16 +53,12 @@
   register: _nodes
 
 - name: Find master node
-  shell: |
-    set -o pipefail
-    kubectl get node --selector='node-role.kubernetes.io/master' -o name
+  command: kubectl get node --selector='node-role.kubernetes.io/master' -o jsonpath='{.items[].metadata.name}'
   changed_when: false
   register: _master_node
 
 - name: Find first non-master node
-  shell: |
-    set -o pipefail
-    kubectl get node --selector='!node-role.kubernetes.io/master' -o name | head -n 1
+  command: kubectl get node --selector='!node-role.kubernetes.io/master' -o jsonpath="{.items[0].metadata.name}"
   changed_when: false
   register: _primary_node
 
