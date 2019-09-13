@@ -6,7 +6,6 @@ namespace: argocd
 resources:
 - namespace.yaml
 - upstream-install.yaml
-- first-app--the-auto-deployer.yaml
 
 patchesJson6902:
 - target:

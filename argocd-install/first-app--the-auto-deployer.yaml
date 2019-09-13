@@ -18,7 +18,6 @@ spec:
     path: auto-deploy
     repoURL: https://github.com/evrardjp/socok8s #TODO: Update to SUSE-Cloud
     targetRevision: mega_patch #TODO: Update to master or a stable branch
-  # On install, make sure the auto-deployer app deploys
-  # immediately the software it "contains" (=deploys)
-  syncPolicy:
-    automated: {} # Do not prune or self-heal by default.
+  # On install, make sure the auto-deployer app doesn't deploy all
+  # the applications. That will be too much for k8s on small deploys.
+  # Instead, configure the app, to then trigger when the customer is ready.
