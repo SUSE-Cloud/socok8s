@@ -112,7 +112,7 @@ pipeline {
         stage('Deploy Auto-Deploy tooling') {
             when { expression { return  TestFunctional } }
             steps {
-                sh "scripts/ci/autodeploy.sh"
+                sh "scripts/dev/autodeploy.sh"
             }
         }
 
