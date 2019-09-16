@@ -9,14 +9,25 @@
     dest: "/etc/pki/trust/anchors"
   register: _copiedcert
 
-- name: Refresh ca certs
-  become: True
-  command: update-ca-certificates
-  when: _copiedcert is changed
+- block:
+    - name: Refresh ca certs
+      become: True
+      command: update-ca-certificates
 
-- name: Restart docker
-  become: True
+    - name: Populate service info
+      service_facts:
+
+    - name: Restart docker
+      become: True
+      when: "'docker.service' in services"
+      service:
+        name: docker
+        state: restarted
+
+    - name: Restart crio
+      become: True
+      when: "'crio.service' in services"
+      service:
+        name: crio
+        state: restarted
   when: _copiedcert is changed
-  service:
-    name: docker
-    state: restarted
