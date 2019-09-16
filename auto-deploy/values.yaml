@@ -1,26 +1,13 @@
 config:
   argo_namespace: argocd
   default_server: https://kubernetes.default.svc
-applications:
-  - name: metallb
-    project: default
-    git:
-      url: https://github.com/danderson/metallb.git
-      branch: v0.8.1
-      path: manifests
-    syncPolicy:
-      automated:
-        selfHeal: false
-        prune: false
-    annotations:
-      argocd.argoproj.io/sync-wave: "-3"
 
 ## Example
 #applications:
 #  - name: namespaces
 #    project: default
 #    git:
-#      url: https://github.com/evrardjp/argocd-deploy
+#      url: https://github.com/evrardjp/socok8s
 #      branch: HEAD
 #      path: namespaces
 #    # If no prune/self heal, just make
@@ -32,3 +19,48 @@ applications:
 #        prune: true
 #    annotations:
 #      argocd.argoproj.io/sync-wave: "-3"
+
+applications:
+  - name: namespaces
+    project: default
+    git:
+      url: https://github.com/evrardjp/socok8s
+      branch: mega_patch
+      path: reserved-namespaces
+    syncPolicy:
+      automated:
+        selfHeal: yes
+        prune: false
+    annotations:
+      argocd.argoproj.io/sync-wave: "-100"
+  - name: metallb
+    project: default
+    git:
+      url: https://github.com/danderson/metallb.git
+      branch: v0.8.1
+      path: manifests
+    syncPolicy:
+      automated:
+        selfHeal: false
+        prune: false
+    annotations:
+      argocd.argoproj.io/sync-wave: "-99"
+  - name: dynamic-provisioner-for-localpv
+    type: helm
+    project: default
+    git:
+      url: https://github.com/rancher/local-path-provisioner.git
+      branch: 0bc654974e0c4f64b09e868413bf98334185955a
+      path: deploy/chart
+    destination:
+      namespace: local-path-storage
+    remote_value_files:
+      - values.yaml
+    local_value_files:
+      - helm-values/local-path-storage.yaml
+    syncPolicy:
+      automated:
+        selfHeal: yes
+        prune: false
+    annotations:
+      argocd.argoproj.io/sync-wave: "-99"

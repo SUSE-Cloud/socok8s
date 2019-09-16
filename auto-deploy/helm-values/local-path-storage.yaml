@@ -1,0 +1,3 @@
+storageClass:
+  defaultClass: true
+  name: "general"
