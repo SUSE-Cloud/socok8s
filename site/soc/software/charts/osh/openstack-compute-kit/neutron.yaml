@@ -42,6 +42,9 @@ data:
       interface:
         tunnel: {{ neutron_tunnel_device }}
     conf:
+      dhcp_agent:
+        DEFAULT:
+          enable_isolated_metadata: True
       paste:
         app:neutronversions:
           paste.app_factory: neutron.pecan_wsgi.app:versions_factory
