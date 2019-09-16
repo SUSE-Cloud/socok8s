@@ -1,8 +1,3 @@
 #  Add tests to be blacklisted below using the following format:
 #  - (?:tempest\.api\.identity\.admin\.v3\.test_groups\.GroupsV3TestJSON\.test_list_groups)
 - (?:tempest\.api\.identity\.v3\.test_domains\.DefaultDomainTestJSON\.test_default_domain_exists)
-# SOC-10437
-- (?:tempest\.api\.compute\.servers\.test_server_actions\.ServerActionsTestJSON)
-- (?:tempest\.api\.compute\.servers\.test_attach_interfaces\.AttachInterfacesUnderV243Test)
-- (?:tempest\.scenario\.test_network_basic_ops\.TestNetworkBasicOps)
-- (?:tempest\.scenario\.test_server_basic_ops\.TestServerBasicOps)
