@@ -48,6 +48,7 @@ pipeline {
         ARA_DIR = "$WORKSPACE"
         SOCOK8S_DEPLOY_DSTAT = "YES"
         SOCOK8S_TEMPEST_SUBUNIT_OUTPUT = "True"
+        SOCOK8S_SCALE_PROFILE = "ci"
     }
 
     stages {
