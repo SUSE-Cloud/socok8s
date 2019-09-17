@@ -190,8 +190,8 @@
         - shipyard_desc_action.stdout.find('Processing') < 0
         - shipyard_desc_action.stdout.find('running') < 0
         - shipyard_desc_action.stdout.find('Error') != 0
-      retries: "{{ airship_deploy_openstack_timeout | int * 2 }}"
-      delay: 30
+      retries: "{{ airship_deploy_openstack_timeout | int }}"
+      delay: 60
       tags:
         - skip_ansible_lint
         - update_airship_osh_site
