@@ -219,7 +219,12 @@ pipeline {
             options {
                 timeout(time: 240, unit: 'MINUTES', activity: true)
             }
-            when { expression { return  TestFunctional } }
+            when {
+                allOf {
+                    expression { params.deployment == "airship" }
+                    expression { return  TestFunctional }
+                }
+            }
 
             steps {
                 sh """
