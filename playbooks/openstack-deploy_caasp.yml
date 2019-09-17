@@ -51,6 +51,16 @@
 - hosts: caasp-workers
   vars_files:
     - "{{ playbook_dir }}/../vars/common-vars.yml"
+  pre_tasks:
+    # fix for cilium losing connectivity on restart
+    # TODO: Remove when https://github.com/SUSE/skuba/pull/598 is merged
+    - name: Ensure bpf is mounted
+      become: true
+      mount:
+        path: /sys/fs/bpf
+        src: bpffs
+        fstype: bpf
+        state: mounted
   roles:
     - role: dstat
       when: lookup('env', 'SOCOK8S_DEPLOY_DSTAT') | default(False, True)
