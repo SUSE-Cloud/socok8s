@@ -31,6 +31,9 @@ data:
   wait:
     timeout: {{ ucp_deploy_timeout }}
   values:
+    conf:
+      ingress:
+        worker-shutdown-timeout: "120s"
     pod:
       replicas:
         ingress: 1
