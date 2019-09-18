@@ -47,6 +47,11 @@ data:
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
         subpath: helm-toolkit
         type: git
+      ingress:
+        location: https://opendev.org/openstack/openstack-helm-infra
+        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        subpath: ingress
+        type: git
       ingress-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
         reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
