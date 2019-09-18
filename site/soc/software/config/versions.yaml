@@ -156,6 +156,7 @@ data:
         db_drop: "{{ suse_osh_registry_location }}/openstackhelm/heat:{{ suse_openstack_image_version }}"
         horizon: "{{ suse_osh_registry_location }}/openstackhelm/horizon:{{ suse_openstack_image_version }}"
       ingress:
+        ingress: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0"
         ingress_module_init: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_openstack_image_version }}"
         ingress_routed_vip: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_openstack_image_version }}"
       keystone:
@@ -270,6 +271,7 @@ data:
       divingbell: {}
       drydock: {}
       ingress:
+        ingress: "quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.23.0"
         ingress_module_init: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_openstack_image_version }}"
         ingress_routed_vip: "{{ suse_osh_registry_location }}/openstackhelm/neutron:{{ suse_openstack_image_version }}"
       keystone:
