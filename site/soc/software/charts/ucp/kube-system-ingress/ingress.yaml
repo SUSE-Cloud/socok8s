@@ -19,6 +19,9 @@ metadata:
   storagePolicy: cleartext
 data:
   values:
+    conf:
+      ingress:
+        worker-shutdown-timeout: "120s"
     network:
       host_namespace: True
       vip:

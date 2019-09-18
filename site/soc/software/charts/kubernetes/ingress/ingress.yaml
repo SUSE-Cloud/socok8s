@@ -16,5 +16,9 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
-data: {}
+data:
+  values:
+    conf:
+      ingress:
+        worker-shutdown-timeout: "120s"
 ...

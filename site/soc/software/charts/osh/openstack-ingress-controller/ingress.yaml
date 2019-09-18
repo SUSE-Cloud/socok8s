@@ -12,6 +12,8 @@ metadata:
     actions:
       - method: replace
         path: .values.pod
+      - method: merge
+        path: .values.conf
   storagePolicy: cleartext
   substitutions:
     - src:
@@ -28,6 +30,9 @@ metadata:
         path: .values.pod.replicas.error_page
 data:
   values:
+    conf:
+      ingress:
+        worker-shutdown-timeout: "120s"
     pod:
       resources:
         enabled: {{ openstack_helm_pod_resources_enabled['ingress'] }}
