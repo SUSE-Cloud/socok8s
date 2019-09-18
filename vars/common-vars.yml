@@ -12,7 +12,6 @@ socok8s_extravars: "{{ socok8s_workspace }}/env/extravars"
 socok8s_ses_pools_details: "{{ socok8s_workspace }}/ses_config.yml"
 socok8s_registry_cert: "{{ socok8s_workspace }}/certs/domain.crt"
 socok8s_registry_certkey: "{{ socok8s_workspace }}/certs/domain.key"
-socok8s_caasp_environment_details: "{{ socok8s_workspace }}/environment.json"
 socok8s_libvirtuuid: "{{ socok8s_workspace }}/libvirt.uuid"
 suse_osh_registry_location: "docker.io"
 suse_openstack_image_version: "rocky-opensuse_15"
@@ -32,9 +31,6 @@ socok8s_repos_to_configure:
   SLES-15-SP1-Product-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Product-SLES/15-SP1/x86_64/update/"
   SLE-15-SP1-Module-BaseSystem: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Basesystem/15-SP1/x86_64/product/"
   SLE-15-SP1-Module-BaseSystem-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Basesystem/15-SP1/x86_64/update/"
-  # needed for phantomjs, can be removed with CaaSP4
-  SLE-15-SP1-Module-Legacy: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Legacy/15-SP1/x86_64/product/"
-  SLE-15-SP1-Module-Legacy-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Legacy/15-SP1/x86_64/update/"
   SLE-15-SP1-Module-Containers: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Containers/15-SP1/x86_64/product/"
   SLE-15-SP1-Module-Containers-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Containers/15-SP1/x86_64/update/"
   SLE-15-SP1-Module-Public-Cloud: "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Public-Cloud/15-SP1/x86_64/product/"
@@ -44,8 +40,6 @@ socok8s_repos_to_configure:
   # needed for python-barbicanclient
   SLES-15-SP1-backports: "https://download.opensuse.org/repositories/openSUSE:/Backports:/SLE-15-SP1/standard/"
   socok8s_SLE15SP1: "https://download.opensuse.org/repositories/Cloud:/socok8s:/master/SLE_15_SP1/"
-  CAASP30-update: "{{ dist_mirror }}/ibs/SUSE/Updates/SUSE-CAASP/3.0/x86_64/update/"
-  CAASP30-pool: "{{ dist_mirror }}/ibs/SUSE/Products/SUSE-CAASP/3.0/x86_64/product/"
   # needed for skuba and terraform
   CAASP40-SLES-151: "{{ ibs_mirror }}/Devel:/CaaSP:/4.0/SLE_15_SP1/"
   CAASP40-SLES-150: "{{ ibs_mirror }}/Devel:/CaaSP:/4.0/SLE_15/"
