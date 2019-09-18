@@ -27,6 +27,15 @@ data:
     enabled: {{ run_tests }}
     timeout: {{ test_timeout }}
   values:
+    endpoints:
+      oslo_messaging:
+        # this is set to null so on the conf the rabbitmq dns looks like: keystone-rabbitmq.openstack.svc.cluster.local
+        # otherwise it would end up with rabbitmq-rabbitmq-0.keystone-rabbitmq.openstack.svc.cluster.local
+        # this is due to a change upstream: https://github.com/openstack/openstack-helm/commit/9bcf0df94c1a8455e17aa79f20efaf2736eed0f4
+        statefulset: null
+      hosts:
+        # we need the custom name, otherwise this defaults to rabbit and our pods are called differently
+        default: keystone-rabbitmq
     pod:
       resources:
         enabled: {{ openstack_helm_pod_resources_enabled['keystone'] }}

@@ -39,12 +39,12 @@ data:
         type: git
       keystone:
         location: https://opendev.org/openstack/openstack-helm
-        reference: f22f53030335121a6019a603910deef0a759b1de
+        reference: a6ccab5270c8f01e68b748a2d252422c14d679c1
         subpath: keystone
         type: git
       keystone-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
+        reference: 494ce39624f66d715f383f2647b90f2d27f776ba
         subpath: helm-toolkit
         type: git
       ingress-htk:
