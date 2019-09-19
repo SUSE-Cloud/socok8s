@@ -10,16 +10,17 @@ zypper_extra_repos: {}
 
 suse_airship_deploy_packages:
   - ca-certificates
-  - make
-  - jq
-  - nmap
-  - uuid-runtime
-  - docker
   - curl
+  - docker
+  - git-core # for download of local-provisioner
+  - jq
+  - make
+  - nmap
   - python3-setuptools
   - python3-pip
   - python3-cmd2
   - python3-devel
+  - uuid-runtime
 
 suse_airship_openstackclient_packages:
   - python3-barbicanclient

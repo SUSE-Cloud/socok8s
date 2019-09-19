@@ -68,6 +68,13 @@
   tags:
     - run
 
+- name: Install local path provisioner
+  include_role:
+    name: common-deployer
+    tasks_from: local-provisioner
+  tags:
+    - install
+
 # Need to use specific marker to avoid overwriting via other step
 - name: Ensure VIP is present in /etc/hosts for the services to deploy
   become: yes
