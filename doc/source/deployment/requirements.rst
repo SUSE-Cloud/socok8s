@@ -18,7 +18,7 @@ Infrastructure
 
   .. note::
      The CaaS Platform Installation Quick Start guide is available at:
-     https://susedoc.github.io/doc-caasp/beta/caasp-deployment/single-html/
+     https://documentation.suse.com/suse-caasp/4/single-html/caasp-quickstart/
 
      You must register the CaaS Platform product to get access to the update
      repository. We strongly recommend enabling the auto-update repository
