@@ -1,2 +1,6 @@
 ---
+volume:
+  class_name: local-path
+  backup:
+    class_name: local-path
 {{ lookup('template','files/common-images-overrides.yml') | from_yaml | to_nice_yaml(indent=2) }}
