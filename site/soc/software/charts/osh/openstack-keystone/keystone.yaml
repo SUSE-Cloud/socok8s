@@ -30,8 +30,6 @@ data:
     pod:
       resources:
         enabled: {{ openstack_helm_pod_resources_enabled['keystone'] }}
-      replicas:
-        api: 1
       security_context:
         keystone:
           pod:

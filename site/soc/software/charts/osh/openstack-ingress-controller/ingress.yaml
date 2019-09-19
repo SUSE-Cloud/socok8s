@@ -12,6 +12,8 @@ metadata:
     actions:
       - method: replace
         path: .values.pod
+      - method: merge
+        path: .values.conf
   storagePolicy: cleartext
   substitutions:
     - src:
@@ -28,6 +30,17 @@ metadata:
         path: .values.pod.replicas.error_page
 data:
   values:
+    conf:
+      ingress:
+        # pass to the next upstream the request if we have a 503
+        # error and timeout are the default values for this option
+        proxy_next_upstream : "error timeout http_503"
+        # but timeout after 10s in case there is a real issue
+        # default timeout is 0 which means unlimited
+        proxy_next_upstream_timeout: "10"
+        # this sets the number of times it will try to pass the request to
+        # the next upstream. Its 0 by default which means unlimited
+        proxy_next_upstream_tries: "5"
     pod:
       resources:
         enabled: {{ openstack_helm_pod_resources_enabled['ingress'] }}
