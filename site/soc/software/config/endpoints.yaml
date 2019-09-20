@@ -562,6 +562,10 @@ data:
           default: 9104
     keystone_oslo_messaging:
       namespace: openstack
+      # this is set to null so on the conf the rabbitmq dns looks like: keystone-rabbitmq.openstack.svc.cluster.local
+      # otherwise it would end up with rabbitmq-rabbitmq-0.keystone-rabbitmq.openstack.svc.cluster.local
+      # this is due to a change upstream: https://github.com/openstack/openstack-helm/commit/9bcf0df94c1a8455e17aa79f20efaf2736eed0f4
+      statefulset: null
       hosts:
         default: keystone-rabbitmq
       host_fqdn_override:
