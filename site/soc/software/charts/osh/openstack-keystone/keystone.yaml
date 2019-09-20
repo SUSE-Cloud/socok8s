@@ -27,6 +27,12 @@ data:
     enabled: {{ run_tests }}
     timeout: {{ test_timeout }}
   values:
+    probes:
+      keystone_api:
+        readinessProbe:
+          timeoutSeconds: 30
+        livenessProbe:
+          timeoutSeconds: 30
     pod:
       resources:
         enabled: {{ openstack_helm_pod_resources_enabled['keystone'] }}

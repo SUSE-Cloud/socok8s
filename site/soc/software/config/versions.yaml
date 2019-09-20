@@ -38,10 +38,9 @@ data:
         subpath: helm-toolkit
         type: git
       keystone:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: a6ccab5270c8f01e68b748a2d252422c14d679c1
+        type: local
+        location: /armada/airship-components/openstack-helm
         subpath: keystone
-        type: git
       keystone-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
         reference: 494ce39624f66d715f383f2647b90f2d27f776ba
