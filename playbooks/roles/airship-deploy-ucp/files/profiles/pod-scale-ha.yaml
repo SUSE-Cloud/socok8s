@@ -10,6 +10,21 @@ metadata:
     abstract: false
     layer: site
 data:
+  probes:
+    osh:
+      keystone_api:
+        readinessProbe:
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          initialDelaySeconds: 50
+          periodSeconds: 20
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
   pods:
     ucp:
       armada:

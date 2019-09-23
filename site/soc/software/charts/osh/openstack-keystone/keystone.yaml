@@ -20,21 +20,21 @@ metadata:
         path: .pods.osh.keystone.api.min
       dest:
         path: .values.pod.replicas.api
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .probes.osh.keystone_api
+      dest:
+        path: .values.probes.keystone_api
 data:
+  values:
+    proves:
+      keystone_api: null
   wait:
     timeout: {{ openstack_helm_deploy_timeout }}
   test:
     enabled: {{ run_tests }}
     timeout: {{ test_timeout }}
-  values:
-    probes:
-      keystone_api:
-        # bump probe timeout to 30s to avoid ingress removing the pods from the pool when they take long to respond
-        # default upstream is 5s
-        readinessProbe:
-          timeoutSeconds: 30
-        livenessProbe:
-          timeoutSeconds: 30
     pod:
       resources:
         enabled: {{ openstack_helm_pod_resources_enabled['keystone'] }}
