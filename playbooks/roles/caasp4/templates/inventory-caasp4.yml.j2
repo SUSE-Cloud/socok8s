@@ -47,6 +47,18 @@ airship-openstack-compute-workers:
     ansible_user: sles
     ansible_python_interpreter: /usr/bin/python3
 
+airship-openstack-l3-agent-workers:
+  hosts:
+{% for worker_ip in _terraform_json_output.ip_workers.value %}
+{% if loop.index0 >= airship_ucp_control_workers %}
+    worker-{{ loop.index0}}:
+      ansible_host: {{ worker_ip }}
+{% endif %}
+{% endfor %}
+  vars:
+    ansible_user: sles
+    ansible_python_interpreter: /usr/bin/python3
+
 airship-kube-system-workers:
   hosts: *first_workers
   vars:
