@@ -408,6 +408,7 @@
         --values=/tmp/socok8s-useroverrides-neutron.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NEUTRON') | default('', True) }}
       OSH_OPENSTACK_RELEASE: "{{ suse_osh_openstack_release }}"
+      OSH_TEST_TIMEOUT: 1400
       OSH_EXTRA_HELM_ARGS_NOVA: >
         --values=./nova/values_overrides/opensuse_15.yaml
         --values=./nova/values_overrides/rocky-opensuse_15.yaml
