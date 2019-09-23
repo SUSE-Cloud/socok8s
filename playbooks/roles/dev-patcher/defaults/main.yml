@@ -7,4 +7,7 @@ dev_patcher_packages:
 #merged patches will be skipped
 #unrelated patches will fail (because not cloned)
 #conflicting patches will fail (because need resolving)
-dev_patcher_patches: []
+dev_patcher_patches:
+  # https://review.opendev.org/#/c/683220/ -> Keystone: allow probes configuration
+  - - 683220
+    - current
