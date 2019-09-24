@@ -24,15 +24,6 @@ suse_osh_openstackclient_packages:
   - python3-openstackclient
   - python3-barbicanclient
 
-# OpenStack-Helm repos, frozen on 9th November 2018
-osh_repos:
-  openstack-helm-infra:
-    src: https://opendev.org/openstack/openstack-helm-infra.git
-    version: b55e9b10a72ce5531ae22f15f953b2eb71e6f623
-  openstack-helm:
-    src: https://opendev.org/openstack/openstack-helm.git
-    version: 4f94593e870ac879b2d01300cb02485ace58b3ac
-
 suse_osh_deploy_require_ha: True
 
 suse_osh_deploy_storage:
@@ -61,9 +52,6 @@ suse_osh_deploy_storage:
 
 # ClusterRole to allow privileged containers
 suse_osh_deploy_privileged_cluster_role: suse:caasp:psp:privileged
-
-# Set this to false if you want to speed up your builds or do partial upgrades
-suse_osh_deploy_always_redeploy: True
 
 # These variables were created to provide a way for deployers to
 # override the default registry, for example to point to a local
