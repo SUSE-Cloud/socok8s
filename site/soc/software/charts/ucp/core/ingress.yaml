@@ -35,8 +35,4 @@ data:
       replicas:
         ingress: 1
         error_page: 1
-  source:
-    type: local
-    location: /armada/airship-components/openstack-helm-infra
-    subpath: ingress
 ...
