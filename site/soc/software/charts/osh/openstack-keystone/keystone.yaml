@@ -27,15 +27,18 @@ data:
     enabled: {{ run_tests }}
     timeout: {{ test_timeout }}
   values:
-    probes:
-      keystone_api:
-        # bump probe timeout to 30s to avoid ingress removing the pods from the pool when they take long to respond
-        # default upstream is 5s
-        readinessProbe:
-          timeoutSeconds: 30
-        livenessProbe:
-          timeoutSeconds: 30
     pod:
+      probes:
+        api:
+          api:
+            # bump probe timeout to 30s to avoid ingress removing the pods from the pool when they take long to respond
+            # default upstream is 5s
+            readiness:
+              params:
+                timeoutSeconds: 30
+            liveness:
+              params:
+                timeoutSeconds: 30
       resources:
         enabled: {{ openstack_helm_pod_resources_enabled['keystone'] }}
       replicas:
