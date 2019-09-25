@@ -19,7 +19,7 @@
   when: "_rook_ceph_pods.stdout is regex('rook-ceph-mon-.*')"
 
 - name: Delete rook operator
-  command: "kubectl delete -f common.yaml -f csi/rbac/cephfs/ -f csi/rbac/rbd/ -f operator-with-csi.yaml"
+  command: "kubectl delete -f common.yaml"
   register: _rook_operator_delete
   args:
     chdir: "{{ ses_rook_k8s_manifests_dir }}"
