@@ -5,10 +5,10 @@ metadata:
   name: general
 provisioner: kubernetes.io/rbd
 parameters:
-  monitors: {{ ','.join(suse_airship_deploy_ceph_mons) }}
-  adminId: {{ suse_airship_deploy_storage.adminId }}
-  adminSecretName: {{ suse_airship_deploy_storage.adminSecretName }}
-  adminSecretNamespace: {{ suse_airship_deploy_storage.adminSecretNamespace }}
-  pool: {{ suse_airship_deploy_storage.pool }}
-  userId: {{ suse_airship_deploy_storage.userId }}
-  userSecretName: {{ suse_airship_deploy_storage.userSecretName }}
+  monitors: {{ ','.join(suse_deploy_ceph_mons) }}
+  adminId: {{ suse_deploy_storage.adminId }}
+  adminSecretName: {{ suse_deploy_storage.adminSecretName }}
+  adminSecretNamespace: {{ suse_deploy_storage.adminSecretNamespace }}
+  pool: {{ suse_deploy_storage.pool }}
+  userId: {{ suse_deploy_storage.userId }}
+  userSecretName: {{ suse_deploy_storage.userSecretName }}

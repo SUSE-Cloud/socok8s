@@ -5,6 +5,7 @@
   loop:
     - "{{ playbook_dir }}/../vars/common-vars.yml"
     - "{{ playbook_dir }}/../vars/manifest.yml"
+    - "{{ playbook_dir }}/roles/common-ses/defaults/main.yml"
   tags:
     - always
 

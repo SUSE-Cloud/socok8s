@@ -1,6 +1,9 @@
 ---
 - name: Load standard variables
-  include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+  include_vars: "{{ item }}"
+  loop:
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
+    - "{{ playbook_dir }}/roles/common-ses/defaults/main.yml"
   tags:
     - always
 
