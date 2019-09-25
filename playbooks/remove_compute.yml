@@ -2,5 +2,7 @@
 - hosts: soc-deployer
   gather_facts: yes
   any_errors_fatal: true
+  vars_files:
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
   roles:
     - role: openstack-remove-compute

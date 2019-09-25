@@ -17,6 +17,8 @@
 - hosts: soc-deployer
   gather_facts: no
   any_errors_fatal: true
+  vars_files:
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
   tasks:
     - name: Remove compute nodes.
       include_role:
@@ -27,9 +29,8 @@
 
 - hosts: soc-deployer
   gather_facts: no
-  pre_tasks:
-    - name: Load generic vars
-      include_vars: "{{ playbook_dir }}/../vars/common-vars.yml"
+  vars_files:
+    - "{{ playbook_dir }}/../vars/common-vars.yml"
   tasks:
     - name: Running cleanup script
       script: "{{ playbook_dir }}/../script_library/clean-airship.sh '{{ clean_action | default('') }}' '{{ helm_delete_timeout }}'"
