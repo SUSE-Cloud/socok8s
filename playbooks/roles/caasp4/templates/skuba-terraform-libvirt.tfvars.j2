@@ -25,6 +25,10 @@ repositories = {
   serverapps_updates = "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Server-Applications/15-SP1/x86_64/update/"
 }
 
+master_memory = 4096
+worker_memory = 12288
+lb_memory = 2048
+
 lb_repositories = {
   sle_server_pool    = "{{ ibs_mirror }}/SUSE/Products/SLE-Product-SLES/15-SP1/x86_64/product/"
   basesystem_pool    = "{{ ibs_mirror }}/SUSE/Products/SLE-Module-Basesystem/15-SP1/x86_64/product/"
