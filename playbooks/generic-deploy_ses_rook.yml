@@ -23,15 +23,3 @@
         tasks_from: kubectl-setup
     - import_role:
         name: ses-rook
-
-- hosts: localhost
-  vars_files:
-    - "{{ playbook_dir }}/../vars/common-vars.yml"
-  tasks:
-    - name: Set SES version in extravars
-      delegate_to: localhost
-      lineinfile:
-        path: "{{ socok8s_extravars }}"
-        create: yes
-        line: "ses_deployment: rook"
-        state: present

@@ -129,21 +129,6 @@
   tags:
     - run
 
-- name: Create secrets and StorageClass for external Ceph
-  include_role:
-    name: common-deployer
-    tasks_from: apply_on_k8s
-  loop:
-    - action: create ceph secrets
-      template_src_file: k8s-ses-secrets.yml.j2
-      templated_location: /tmp/socok8s-ses-secrets.yml
-    - action: create ceph storage class
-      template_src_file: k8s-ses-storageclasses.yml.j2
-      templated_location: /tmp/socok8s-ses-storage-classes.yml
-  tags:
-    - run
-  when: ses_deployment == "aio"
-
 - name: Create StorageClass for rook-based Ceph
   include_role:
     name: common-deployer
@@ -154,7 +139,6 @@
       templated_location: /tmp/socok8s-ses-storage-class-rook.yml
   tags:
     - run
-  when: ses_deployment == "rook"
 
 - name: Install OpenStack client packages
   package:

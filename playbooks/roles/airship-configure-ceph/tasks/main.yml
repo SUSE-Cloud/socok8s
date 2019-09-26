@@ -41,21 +41,6 @@
   tags:
     - always
 
-- name: Create secrets and StorageClass for external Ceph
-  include_role:
-    name: common-deployer
-    tasks_from: apply_on_k8s
-  loop:
-    - action: create ceph secrets
-      template_src_file: suse-define-ses-secrets-in-k8s.yml.j2
-      templated_location: /tmp/ceph-secrets.yaml
-    - action: create ceph storage class
-      template_src_file: suse-define-ses-storageclasses-in-k8s.yml.j2
-      templated_location: /tmp/ceph-storage-classes.yaml
-  tags:
-    - run
-  when: ses_deployment == "aio"
-
 - name: Create StorageClass for rook-based Ceph
   include_role:
     name: common-deployer
@@ -66,4 +51,3 @@
       templated_location: /tmp/socok8s-ses-storage-class-rook.yml
   tags:
     - run
-  when: ses_deployment == "rook"
