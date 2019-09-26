@@ -1,0 +1,45 @@
+---
+- hosts: caasp-workers
+  gather_facts: no
+  any_errors_fatal: true
+  tasks:
+    - block:
+      # I dont like this. Move this vars out of the role into the common-vars so we have them everywhere?
+      - name: Load vars from tempest to gather floating ip cidr
+        include_vars: "{{ playbook_dir }}/roles/airship-deploy-tempest/defaults/main.yml"
+      - name: Check if we already have the ip set in br-ex
+        shell: "ip -f inet address show br-ex| grep -Po 'inet \\K[\\d.]+'"
+        failed_when: false
+        register: _ip
+      - name: Add IP to br-ex
+        become: yes
+        command: "ip addr add  {{ openstack_tempest_public_subnet_cidr | ipaddr('next_usable') }}/24 dev br-ex"
+        when: openstack_tempest_public_subnet_cidr | ipaddr('next_usable') != _ip.stdout
+      - name: Set br-ex up
+        become: yes
+        command: "ip link set br-ex up"
+      - name: Set FORWARD chain to ACCEPT
+        become: yes
+        iptables:
+          chain: FORWARD
+          policy: ACCEPT
+      # should this be configurable?
+      - name: Get default route dev
+        become: yes
+        shell: "ip -4 route list 0/0 | awk '{ print $5; exit }'"
+        register: _default_route_dev
+      - name: Add masquerading on default route dev to public subnet
+        become: yes
+        iptables:
+          table: nat
+          chain: POSTROUTING
+          out_interface: "{{ _default_route_dev.stdout }}"
+          source: "{{ openstack_tempest_public_subnet_cidr }}"
+          jump: MASQUERADE
+      when: lookup('env', 'SOCOK8S_SET_IPTABLES_RULES_FOR_EXTERNAL_NETWORK') | default(False, True)
+
+- hosts: soc-deployer
+  gather_facts: yes
+  any_errors_fatal: true
+  roles:
+    - role: airship-deploy-tempest

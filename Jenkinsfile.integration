@@ -49,6 +49,7 @@ pipeline {
         SOCOK8S_DEPLOY_DSTAT = "YES"
         SOCOK8S_TEMPEST_SUBUNIT_OUTPUT = "True"
         SOCOK8S_RUN_CONTAINER_TESTS= "False"
+        SOCOK8S_SET_IPTABLES_RULES_FOR_EXTERNAL_NETWORK = "True"
     }
 
     stages {

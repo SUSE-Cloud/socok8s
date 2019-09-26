@@ -9,15 +9,13 @@ tempest_enable_cinder_service: true
 tempest_enable_glance_service: true
 tempest_enable_nova_service: true
 tempest_enable_neutron_service: true
-tempest_provider_physical_network: external
-tempest_network_prefix: "{{ lookup('env', 'SOCOK8S_ENVNAME') }}-tempest"
-openstack_external_network_name: "{{ tempest_network_prefix}}-public"
-openstack_external_subnet_name: "{{ tempest_network_prefix }}-public-subnet"
-# used by tempest, input required for kvm deployment mechanism
-openstack_project_network_cidr:
-# used by tempest for ssh connection to servers, input used in kvm deployment mechanism
-openstack_external_network_cidr:
-tempest_network_address_start_index: 10
+tempest_provider_physical_network: "public"
+openstack_tempest_network_name: "tempest-network"
+openstack_tempest_subnet_pool_cidr: "10.0.0.0/8"
+openstack_tempest_subnet_pool_prefix: "24"
+openstack_tempest_subnet_pool_name: "private-subnet"
+openstack_tempest_public_subnet_cidr: "172.24.4.0/24"
+openstack_tempest_public_subnet_name: "external-subnet"
 cirros_test_image_url: "http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img"
 use_blacklist: true
 # Flag to hide tempest pod logs during ansible tempest run. Default is True (show tempest logs)

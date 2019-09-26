@@ -1,0 +1,40 @@
+---
+- name: Copy heat templates to remote
+  copy:
+    src: "{{ playbook_dir }}/../heat-templates/{{ item }}"
+    dest: "/tmp/{{ item }}"
+  loop:
+    - "tempest-network.yml"
+    - "tempest-subnet-pool.yml"
+- name: Create tempest network stack and public subnet
+  register: tempest_network_stack_create
+  os_stack:
+    state: "present"
+    name: "{{ openstack_tempest_network_name }}"
+    template: "/tmp/tempest-network.yml"
+    auth_type: "password"
+    cloud: "openstack"
+    parameters:
+      network_name: "{{ openstack_tempest_network_name }}"
+      physical_network_name: "{{ tempest_provider_physical_network }}"
+      subnet_name: "{{ openstack_tempest_public_subnet_name }}"
+      subnet_cidr: "{{ openstack_tempest_public_subnet_cidr }}"
+      subnet_gateway: "{{ openstack_tempest_public_subnet_cidr | ipaddr('next_usable') }}"
+
+- name: Create tempest subnet pool stack
+  os_stack:
+    state: "present"
+    name: "{{ openstack_tempest_subnet_pool_name }}"
+    template: "/tmp/tempest-subnet-pool.yml"
+    auth_type: "password"
+    cloud: "openstack"
+    parameters:
+      subnet_pool_name: "{{ openstack_tempest_subnet_pool_name }}"
+      subnet_pool_prefixes: "{{ openstack_tempest_subnet_pool_cidr }}"
+      subnet_pool_default_prefix_length: "{{ openstack_tempest_subnet_pool_prefix }}"
+
+- name: Set network facts
+  set_fact:
+    tempest_public_network_id: "{{ item.output_value }}"
+  loop: "{{ tempest_network_stack_create.stack.outputs }}"
+  when: item.output_key == 'network_id'

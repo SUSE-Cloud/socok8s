@@ -46,7 +46,7 @@ function deploy_airship(){
 
 function deploy_tempest(){
     echo "Deploying Tempest"
-    run_ansible ${socok8s_absolute_dir}/playbooks/deploy_tempest.yml
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-deploy_tempest.yml
 }
 
 function clean_airship(){

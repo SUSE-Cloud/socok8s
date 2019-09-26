@@ -49,7 +49,7 @@
         path: /etc/zypp/vendors.d/opensuse
         block: |
           [main]
-          vendors = suse,opensuse,obs://build.opensuse.org/Cloud:OpenStack,obs://build.opensuse.org/Cloud
+          vendors = suse,opensuse,obs://build.opensuse.org/Cloud:OpenStack,obs://build.opensuse.org/Cloud, obs://build.suse.de/Devel:Cloud
         create: yes
 
     - name: Zypper dist-upgrade
@@ -58,6 +58,12 @@
         state: dist-upgrade
         update_cache: yes
         extra_args_precommand: "--gpg-auto-import-keys"
+
+    # we need a openstacksdk >= 0.12 for tempest testing on airship as it uses ansible stacks for the networks
+    - name: Zypper install latest openstacksdk package for tempest deployment
+      zypper:
+        name: "python3-openstacksdk"
+        state: present
 
     #On some images this service is not defined and the systemctl command fails.
     #The failed_when false is temporary until I find out proper conditional on this task.

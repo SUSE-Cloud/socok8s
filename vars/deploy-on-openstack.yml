@@ -36,6 +36,7 @@ deploy_on_openstack_osh_repos_per_imagename:
     - SLE-15-SP1-Module-Public-Cloud-Update
     - SLE-15-SP1-Module-Development-Tools
     - SLE-15-SP1-Module-Development-Tools-Update
+    - Devel_Cloud_OpenStackClients
     - socok8s_SLE15SP1
 
 deploy_on_openstack_caasp_workers: 3

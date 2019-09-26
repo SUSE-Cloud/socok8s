@@ -1,0 +1,14 @@
+---
+- name: Remove tempest subnet pool stack
+  os_stack:
+    state: "absent"
+    name: "{{ openstack_tempest_subnet_pool_name }}"
+    auth_type: "password"
+    cloud: "openstack"
+
+- name: Remove tempest network stack and public subnet
+  os_stack:
+    state: "absent"
+    name: "{{ openstack_tempest_network_name }}"
+    auth_type: "password"
+    cloud: "openstack"

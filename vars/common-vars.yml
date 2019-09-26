@@ -39,6 +39,8 @@ socok8s_repos_to_configure:
   SLE-15-SP1-Module-Development-Tools-Update: "{{ ibs_mirror }}/SUSE/Updates/SLE-Module-Development-Tools/15-SP1/x86_64/update/"
   # needed for python-barbicanclient
   SLES-15-SP1-backports: "https://download.opensuse.org/repositories/openSUSE:/Backports:/SLE-15-SP1/standard/"
+  # needed for deployer, higher openstacksdk version
+  Devel_Cloud_OpenStackClients: "{{ ibs_mirror }}/Devel:/Cloud:/OpenStackClients/SLE_15_SP1/"
   socok8s_SLE15SP1: "https://download.opensuse.org/repositories/Cloud:/socok8s:/master/SLE_15_SP1/"
   # needed for skuba and terraform
   CAASP40-SLES-151: "{{ ibs_mirror }}/Devel:/CaaSP:/4.0/SLE_15_SP1/"

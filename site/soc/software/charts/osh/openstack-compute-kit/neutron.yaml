@@ -37,11 +37,17 @@ data:
       replicas:
         server: 1
     network:
-      auto_bridge_add:
-        br-ex: {{ neutron_external_interface }}
       interface:
         tunnel: {{ neutron_tunnel_device }}
     conf:
+      auto_bridge_add:
+        br-ex: {{ neutron_external_interface }}
+      neutron:
+        DEFAULT:
+          l3_ha: False
+          max_l3_agents_per_router: 1
+          l3_ha_network_type: vxlan
+          dhcp_agents_per_network: 1
       paste:
         app:neutronversions:
           paste.app_factory: neutron.pecan_wsgi.app:versions_factory

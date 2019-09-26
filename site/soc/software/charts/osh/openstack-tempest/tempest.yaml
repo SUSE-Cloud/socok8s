@@ -62,16 +62,16 @@ data:
           image_ref_alt: "{{ tempest_test_image_id.stdout }}"
           hypervisor_type: "{{ tempest_test_hypervisor_type | default('qemu') }}"
         network:
-          default_network: "10.0.0.0/8"
-          project_network_cidr: "{{ openstack_project_network_cidr }}"
-          floating_network_name: "{{ openstack_external_network_name }}"
-          public_network_id: "{{ tempest_public_network_details.stdout_lines[0] }}"
-          shared_physical_network: "{{ tempest_public_network_details.stdout_lines[1] }}"
+          default_network: "{{ openstack_tempest_subnet_pool_cidr}}"
+          project_network_cidr: "{{ openstack_tempest_subnet_pool_cidr }}"
+          floating_network_name: "{{ openstack_tempest_public_subnet_name }}"
+          public_network_id: "{{ tempest_public_network_id }}"
+          shared_physical_network: "true"
         validation:
           image_ssh_user: "cirros"
           image_ssh_password: "gocubsgo"
-          network_for_ssh: "{{ openstack_external_network_name }}"
-          floating_ip_range: "{{ openstack_external_subnet_cidr.stdout }}"
+          network_for_ssh: "{{ openstack_tempest_public_subnet_name }}"
+          floating_ip_range: "{{ openstack_tempest_public_subnet_cidr }}"
         service_available:
           cinder: "{{ tempest_enable_cinder_service }}"
           glance: "{{ tempest_enable_glance_service }}"
