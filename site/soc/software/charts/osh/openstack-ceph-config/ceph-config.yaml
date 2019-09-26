@@ -39,7 +39,7 @@ data:
     conf:
       ceph:
         global:
-          mon_host: {{ ','.join(suse_airship_deploy_ceph_mons) }}
+          mon_host: {{ ','.join(suse_deploy_ceph_mons) }}
     manifests:
       configmap_bin: false
       configmap_bin_common: false
