@@ -38,14 +38,13 @@ data:
         subpath: helm-toolkit
         type: git
       keystone:
-        # use local patched keystone chart until https://review.opendev.org/#/c/683220/ is merged upstream
-        # and we can bump this to use the latest keystone with the included patch
-        type: local
-        location: /armada/airship-components/openstack-helm
+        location: https://opendev.org/openstack/openstack-helm
+        reference: edb93bd96c2bbc3d40f7f4d37d3137aba1d4b572
         subpath: keystone
+        type: git
       keystone-htk:
         location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 494ce39624f66d715f383f2647b90f2d27f776ba
+        reference: db855bcd61983be80f8cf24386d1edc81f83ae6c
         subpath: helm-toolkit
         type: git
       ingress:
