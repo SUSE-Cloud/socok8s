@@ -589,3 +589,123 @@ To avoid having to pass "-n openstack" all the time:
 .. code-block:: console
 
    kubectl config set-context $(kubectl config current-context) --namespace=openstack
+
+Cheat-sheet
+===========
+
+**Kubernetes useful commands**
+
+To get namespaces
+
+.. code-block:: console
+
+   kubectl get namespaces
+
+To get the cluster nodes and their status
+
+.. code-block:: console
+
+  kubectl get nodes -n <namespace>
+
+To list the pods are running in what node in an specific namespace
+
+.. code-block:: console
+
+   kubectl get pods -o wide -n openstack | grep Running
+
+To list the pods are running in what node of all namespaces
+
+.. code-block:: console
+
+   kubectl get pods -o wide --all-namespaces | grep Running
+
+To list the pods with column customization. In the example only shows the name
+and the worker where is this pod more info at
+  - https://kubernetes.io/docs/reference/kubectl/overview/#custom-columns
+  - https://kubernetes.io/docs/reference/kubectl/jsonpath/
+
+.. code-block:: console
+
+    kubectl -n openstack get pods -o=custom-columns=NAME:.metadata.name,WORKER:.spec.nodeName
+
+To get the logs of a pod
+
+.. code-block:: console
+
+ kubectl logs <pod-name>  -n <namespace>
+
+To follow the logs of a pod
+
+.. code-block:: console
+
+  kubectl logs -f <pod-name>  -n <namespace>
+
+To execute a command in the pod
+
+.. code-block:: console
+
+  kubectl exec -ti <pod-name> <command>  -n <namespace>
+
+To shell into a pod
+
+.. code-block:: console
+
+ kubectl exec -ti <pod-name> [sh|bash]  -n <namespace>
+
+To have access from outside the cluster to a service in a pod that doesn't
+expose the port. After do port-forwarding the service is accessible using
+localhost
+
+.. code-block:: console
+
+ kubectl port-forward pod/<pod-name> <local-port>:<pod-port>  -n <namespace>
+
+If you want to see more ideas follow the link https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+
+**Helm useful commands**
+
+To list the helm Charts (versions, and status)
+
+.. code-block:: console
+
+   helm list
+
+To test a helm
+
+.. code-block:: console
+
+   helm test <helm-name>
+
+To check the status of an specific Chart. This shows specific Information about
+the deployments, pods, services, roles and more
+
+.. code-block:: console
+
+  helm status <chart-name>
+
+**Airship useful commands**
+
+To get all the Actions
+
+.. code-block:: console
+
+  tools/shiyard.sh get actions
+
+To get more information about an specific action
+
+.. code-block:: console
+
+  tools/shiyard.sh describe action <action-name>
+
+**Other useful commands**
+
+To monitor what is happening in cilium nodes. This helps to check the
+communication inside the cluster
+
+.. code-block:: console
+
+  kubectl exec -ti <-cilium-pod-name> -n kube-system cilium monitor
+
+**Interesting tools**
+
+- kail: To tail kubernetes logs. https://github.com/boz/kail
