@@ -330,18 +330,6 @@
     - name: Wait until all pods to be ready
       command: "{{ upstream_repos_clone_folder }}/openstack/openstack-helm/tools/deployment/common/wait-for-pods.sh {{ ucp_namespace_name }} 3600"
 
-    # TODO(aagate): Add a changed_when: to help idempotency
-    # local changes need to go into the armada-api pod as thats the one executing the code
-    - name: Copy patched repos into Armada-api pod
-      command: "{{ item }}"
-      loop:
-        - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/airship-components
-        - kubectl cp {{ upstream_repos_clone_folder }}/openstack/openstack-helm-infra {{ ucp_namespace_name }}/{{ armada_api_pod_name }}:/armada/airship-components/
-        - kubectl cp {{ upstream_repos_clone_folder }}/openstack/openstack-helm {{ ucp_namespace_name }}/{{ armada_api_pod_name }}:/armada/airship-components/
-      tags:
-        - install
-        - skip_ansible_lint
-
   rescue:
     - name: List all ucp pods
       command: "kubectl get pods -n {{ ucp_namespace_name }}"
