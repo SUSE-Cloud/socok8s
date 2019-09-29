@@ -10,14 +10,12 @@ metadata:
       ingress: kube-system
       name: ingress-kube-system-global
     actions:
-      - method: replace
-        path: .source
-      - method: replace
-        path: .source
       - method: merge
         path: .
   storagePolicy: cleartext
 data:
+  wait:
+    timeout: {{ ucp_deploy_timeout }}
   values:
     network:
       host_namespace: True
@@ -29,7 +27,3 @@ data:
         interface: ext-vip
         addr: {{ socok8s_ext_vip }}
       external_policy_local: true
-  source:
-    type: local
-    location: /armada/airship-components/openstack-helm-infra
-    subpath: ingress
