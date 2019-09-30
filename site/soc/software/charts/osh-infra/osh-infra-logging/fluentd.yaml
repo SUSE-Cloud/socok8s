@@ -1,15 +1,13 @@
 ---
-# NOTE: This file is ignored by Airskiff and is copied from the seaworthy site.
-
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: fluent-logging
+  name: fluentd
   layeringDefinition:
     abstract: false
     layer: site
     parentSelector:
-      hosttype: fluent-logging-global
+      hosttype: fluentd-global
     actions:
       - method: merge
         path: .
