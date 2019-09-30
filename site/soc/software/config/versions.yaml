@@ -1,42 +1,9 @@
 ---
 data:
   charts:
+    # versions are managed in treasuremap global/software/config/versions.yaml
+    # we should only override here when there is a specific version we want to freeze
     osh:
-      cinder:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: be761f50f614485598ac8520140b37c5153f0f6c
-        subpath: cinder
-        type: git
-      cinder-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
-        subpath: helm-toolkit
-        type: git
-      glance:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: be761f50f614485598ac8520140b37c5153f0f6c
-        subpath: glance
-        type: git
-      glance-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
-        subpath: helm-toolkit
-        type: git
-      heat-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
-        subpath: helm-toolkit
-        type: git
-      horizon:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: f22f53030335121a6019a603910deef0a759b1de
-        subpath: horizon
-        type: git
-      horizon-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
-        subpath: helm-toolkit
-        type: git
       keystone:
         location: https://opendev.org/openstack/openstack-helm
         reference: edb93bd96c2bbc3d40f7f4d37d3137aba1d4b572
@@ -46,47 +13,6 @@ data:
         location: https://opendev.org/openstack/openstack-helm-infra
         reference: db855bcd61983be80f8cf24386d1edc81f83ae6c
         subpath: helm-toolkit
-        type: git
-      ingress:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 494ce39624f66d715f383f2647b90f2d27f776ba
-        subpath: ingress
-        type: git
-      ingress-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 494ce39624f66d715f383f2647b90f2d27f776ba
-        subpath: helm-toolkit
-        type: git
-      neutron:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: 83fbb31192cb9973ba3a503e956c965857ac5b42
-        subpath: neutron
-        type: git
-      neutron-htk:
-        location: https://opendev.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
-        subpath: helm-toolkit
-        type: git
-      nova:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: baf5356a4fb61590a95f64a63c0dcabfebb3baaa
-        subpath: nova
-        type: git
-      nova-htk:
-        location: https://git.openstack.org/openstack/openstack-helm-infra
-        reference: 5e1ecd9840397bf9e8829ce0d98fcb721db1b74e
-        subpath: helm-toolkit
-        type: git
-      tempest:
-        location: https://opendev.org/openstack/openstack-helm
-        reference: 3811eedefe92f1df6c1d31a366773b9a6dce0b7b
-        subpath: tempest
-        type: git
-    ucp:
-      shipyard:
-        location: https://opendev.org/airship/shipyard
-        reference: 6a54c628281eaad8526ca1a4dd28f79c3ad23405
-        subpath: charts/shipyard
         type: git
   images:
     calico:

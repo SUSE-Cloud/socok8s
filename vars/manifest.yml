@@ -32,7 +32,9 @@ upstream_repos:
     src: https://opendev.org/airship/pegleg
     version: master
     dest_subdir: airship
+  # treasuremap already contains the other charts sha hardcoded under global/software/config/versions.yaml
+  # so bumping treasuremap means bumping the rest of the k8s+airship+osh components
   treasuremap:
     src: https://opendev.org/airship/treasuremap
-    version: 2c63e36cef1c67784d0c693a7e7e65e2aab71832
+    version: 44d6f90a2d5ada8d4f1feb4a1607e3ba8299a3d5
     dest_subdir: airship
