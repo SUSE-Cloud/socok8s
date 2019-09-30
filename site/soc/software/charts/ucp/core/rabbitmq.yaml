@@ -28,6 +28,13 @@ data:
     enabled: {{ run_tests }}
     timeout: {{ test_timeout }}
   values:
+    # disable monitoring stuff as we are not using it currently
+    manifests:
+      monitoring:
+        prometheus:
+          configmap_bin: false
+          deployment_exporter: false
+          service_exporter: false
     pod:
       replicas:
         server: 1

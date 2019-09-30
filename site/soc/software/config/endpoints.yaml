@@ -173,6 +173,9 @@ data:
           public: 80
     airflow_oslo_messaging:
       namespace: null
+      statefulset:
+        replicas: 1
+        name: airship-ucp-rabbitmq-rabbitmq
       hosts:
         default: rabbitmq
       host_fqdn_override:
@@ -186,6 +189,9 @@ data:
           default: 15672
     oslo_messaging:
       namespace: null
+      statefulset:
+        replicas: 1
+        name: airship-ucp-rabbitmq-rabbitmq
       hosts:
         default: rabbitmq
       host_fqdn_override:
@@ -547,6 +553,44 @@ data:
           default: 3306
         wsrep:
           default: 4567
+    oslo_messaging:
+      namespace: openstack
+      statefulset:
+        replicas: 1
+        name: airship-openstack-rabbitmq-rabbitmq
+      hosts:
+        default: openstack-rabbitmq
+      host_fqdn_override:
+        default: null
+      path: /VHOST_NAME
+      scheme: rabbit
+      port:
+        amqp:
+          default: 5672
+        http:
+          default: 15672
+    oslo_cache:
+      namespace: openstack
+      hosts:
+        default: memcached
+      host_fqdn_override:
+        default: null
+      port:
+        memcache:
+          default: 11211
+    openstack_rabbitmq_exporter:
+      namespace: openstack
+      hosts:
+        default: openstack-rabbitmq-exporter
+      host_fqdn_override:
+        default: null
+      path:
+        default: /metrics
+      scheme:
+        default: "http"
+      port:
+        metrics:
+          default: 9095
     prometheus_mysql_exporter:
       namespace: openstack
       hosts:
@@ -560,45 +604,6 @@ data:
       port:
         metrics:
           default: 9104
-    keystone_oslo_messaging:
-      namespace: openstack
-      # this is set to null so on the conf the rabbitmq dns looks like: keystone-rabbitmq.openstack.svc.cluster.local
-      # otherwise it would end up with rabbitmq-rabbitmq-0.keystone-rabbitmq.openstack.svc.cluster.local
-      # this is due to a change upstream: https://github.com/openstack/openstack-helm/commit/9bcf0df94c1a8455e17aa79f20efaf2736eed0f4
-      statefulset: null
-      hosts:
-        default: keystone-rabbitmq
-      host_fqdn_override:
-        default: null
-      path: /keystone
-      scheme: rabbit
-      port:
-        amqp:
-          default: 5672
-        http:
-          default: 15672
-    keystone_rabbitmq_exporter:
-      namespace: openstack
-      hosts:
-        default: keystone-rabbitmq-exporter
-      host_fqdn_override:
-        default: null
-      path:
-        default: /metrics
-      scheme:
-        default: "http"
-      port:
-        metrics:
-          default: 9095
-    oslo_cache:
-      namespace: openstack
-      hosts:
-        default: memcached
-      host_fqdn_override:
-        default: null
-      port:
-        memcache:
-          default: 11211
     identity:
       namespace: openstack
       name: keystone
@@ -622,32 +627,6 @@ data:
           #default: 443
           default: 80
           internal: 5000
-    glance_oslo_messaging:
-      namespace: openstack
-      hosts:
-        default: glance-rabbitmq
-      host_fqdn_override:
-        default: null
-      path: /glance
-      scheme: rabbit
-      port:
-        amqp:
-          default: 5672
-        http:
-          default: 15672
-    glance_rabbitmq_exporter:
-      namespace: openstack
-      hosts:
-        default: glance-rabbitmq-exporter
-      host_fqdn_override:
-        default: null
-      path:
-        default: /metrics
-      scheme:
-        default: "http"
-      port:
-        metrics:
-          default: 9095
     image:
       name: glance
       hosts:
@@ -683,32 +662,6 @@ data:
         api:
           default: 9191
           public: 80
-    cinder_oslo_messaging:
-      namespace: openstack
-      hosts:
-        default: cinder-rabbitmq
-      host_fqdn_override:
-        default: null
-      path: /cinder
-      scheme: rabbit
-      port:
-        amqp:
-          default: 5672
-        http:
-          default: 15672
-    cinder_rabbitmq_exporter:
-      namespace: openstack
-      hosts:
-        default: cinder-rabbitmq-exporter
-      host_fqdn_override:
-        default: null
-      path:
-        default: /metrics
-      scheme:
-        default: "http"
-      port:
-        metrics:
-          default: 9095
     volume:
       name: cinder
       hosts:
@@ -769,32 +722,6 @@ data:
           default: 8776
           public: 80
           #public: 443
-    heat_oslo_messaging:
-      namespace: openstack
-      hosts:
-        default: heat-rabbitmq
-      host_fqdn_override:
-        default: null
-      path: /heat
-      scheme: rabbit
-      port:
-        amqp:
-          default: 5672
-        http:
-          default: 15672
-    heat_rabbitmq_exporter:
-      namespace: openstack
-      hosts:
-        default: heat-rabbitmq-exporter
-      host_fqdn_override:
-        default: null
-      path:
-        default: /metrics
-      scheme:
-        default: "http"
-      port:
-        metrics:
-          default: 9095
     orchestration:
       name: heat
       hosts:
@@ -851,32 +778,6 @@ data:
         api:
           default: 8003
           public: 80
-    neutron_oslo_messaging:
-      namespace: openstack
-      hosts:
-        default: neutron-rabbitmq
-      host_fqdn_override:
-        default: null
-      path: /neutron
-      scheme: rabbit
-      port:
-        amqp:
-          default: 5672
-        http:
-          default: 15672
-    neutron_rabbitmq_exporter:
-      namespace: openstack
-      hosts:
-        default: neutron-rabbitmq-exporter
-      host_fqdn_override:
-        default: null
-      path:
-        default: /metrics
-      scheme:
-        default: "http"
-      port:
-        metrics:
-          default: 9095
     network:
       name: neutron
       hosts:
@@ -897,32 +798,6 @@ data:
           default: 9696
           public: 80
           #public: 443
-    nova_oslo_messaging:
-      namespace: openstack
-      hosts:
-        default: nova-rabbitmq
-      host_fqdn_override:
-        default: null
-      path: /nova
-      scheme: rabbit
-      port:
-        amqp:
-          default: 5672
-        http:
-          default: 15672
-    nova_rabbitmq_exporter:
-      namespace: openstack
-      hosts:
-        default: nova-rabbitmq-exporter
-      host_fqdn_override:
-        default: null
-      path:
-        default: /metrics
-      scheme:
-        default: "http"
-      port:
-        metrics:
-          default: 9095
     compute:
       name: nova
       hosts:

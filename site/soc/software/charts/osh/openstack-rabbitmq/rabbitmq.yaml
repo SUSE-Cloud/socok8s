@@ -2,19 +2,15 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: keystone-rabbitmq-soc
+  name: openstack-rabbitmq-soc
   layeringDefinition:
     abstract: false
     layer: site
     parentSelector:
-      name: keystone-rabbitmq-global
-      component: keystone
+      name: openstack-rabbitmq-global
     actions:
-      - method: delete
-        path: .values.labels.prometheus_rabbitmq_exporter
       - method: merge
         path: .
-  storagePolicy: cleartext
   substitutions:
     - src:
         schema: pegleg/PodScaleProfile/v1
@@ -22,6 +18,7 @@ metadata:
         path: .pods.osh.rabbitmq.server.min
       dest:
         path: .values.pod.replicas.server
+  storagePolicy: cleartext
 data:
   wait:
     timeout: {{ openstack_helm_deploy_timeout }}
@@ -29,14 +26,11 @@ data:
     enabled: {{ run_tests }}
     timeout: {{ test_timeout }}
   values:
-    pod:
-      resources:
-        enabled: {{ openstack_helm_pod_resources_enabled['keystone_rabbitmq'] }}
-      replicas:
-        server: 1
-    monitoring:
-      prometheus:
-        enabled: false
-    volume:
-      size: {{ rabbitmq_volume_size }}
+    # disable monitoring stuff as we are not using it currently
+    manifests:
+      monitoring:
+        prometheus:
+          configmap_bin: false
+          deployment_exporter: false
+          service_exporter: false
 ...

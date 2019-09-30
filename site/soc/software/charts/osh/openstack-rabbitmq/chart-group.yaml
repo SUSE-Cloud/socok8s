@@ -2,20 +2,18 @@
 schema: armada/ChartGroup/v1
 metadata:
   schema: metadata/Document/v1
-  name: openstack-heat-soc
+  name: openstack-rabbitmq-soc
   layeringDefinition:
     abstract: false
     layer: site
     parentSelector:
-      name: openstack-heat-chart-group-global
-      component: heat
+      name: openstack-rabbitmq-chart-group-global
+      component: rabbitmq
     actions:
-      - method: merge
-        path: .sequenced
       - method: replace
         path: .chart_group
   storagePolicy: cleartext
 data:
-  sequenced: true
   chart_group:
-    - heat-soc
+    - openstack-rabbitmq-soc
+...

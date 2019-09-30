@@ -19,7 +19,5 @@ data:
   chart_group:
     - libvirt-soc
     - openvswitch
-    - neutron-rabbitmq-soc
-    - nova-rabbitmq-soc
     - neutron-soc
     - nova-soc

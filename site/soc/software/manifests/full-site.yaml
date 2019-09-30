@@ -19,6 +19,7 @@ data:
     - openstack-ingress-controller-soc
     - openstack-mariadb-soc
     - openstack-memcached-soc
+    - openstack-rabbitmq-soc
     - openstack-keystone-soc
     - openstack-ceph-config-soc
     - openstack-glance-soc
