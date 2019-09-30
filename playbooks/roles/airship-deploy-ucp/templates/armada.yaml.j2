@@ -21,5 +21,13 @@ spec:
         image: "{{ suse_airship_registry_location }}/airshipit/armada:{{ suse_airship_components_image_tag['armada'] }}"
         ports:
         - containerPort: 8000
+        # volume needed to store metrics, otherwise aramada pod fails to create the dir to store those
+        # https://github.com/airshipit/armada/commit/0721ed43aa17e913bd6603d26ca7249a0abfc0b1
+        volumeMounts:
+        - name: tmp-armada
+          mountPath: /tmp/armada/metrics
+      volumes:
+      - name: tmp-armada
+        emptyDir: {}
       nodeSelector:
         ucp-control-plane: enabled

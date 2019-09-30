@@ -102,11 +102,11 @@ suse_airship_components_image_tag: |
                                    %}
                                    {% else %}
                                    {% set _img_tag = {
-                                     'armada': '46bb9bd8b35905294920eb4fdf30593cb4899780-opensuse_15',
-                                     'shipyard': 'a9ff859df980fbb95a912fc49312ef3c51f65b3f-opensuse_15',
-                                     'airflow': 'a9ff859df980fbb95a912fc49312ef3c51f65b3f-opensuse_15',
-                                     'deckhand': '971c901c4da36e3e31be58d4be8b0e194e715d8f-opensuse_15',
-                                     'pegleg': '70f2db465277b60d80e4bcbf347be565b6f81a05-opensuse_15'
+                                     'armada': 'd5ab6a05c4fbd0884b7cbc4169708bed1d12dfab-opensuse_15',
+                                     'shipyard': 'f42e85d7cedb0a22c2f90f53ad4902cc4a62d9a9-opensuse_15',
+                                     'airflow': 'f42e85d7cedb0a22c2f90f53ad4902cc4a62d9a9-opensuse_15',
+                                     'deckhand': '070124b578ee95ed1da5cae0a82b825bceb373e0-opensuse_15',
+                                     'pegleg': '5ef28bf804f18f732b5352ad34e10375de2beb5e-opensuse_15'
                                    }
                                    %}
                                    {% endif %}
