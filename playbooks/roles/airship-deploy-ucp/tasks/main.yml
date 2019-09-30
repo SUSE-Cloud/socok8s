@@ -254,8 +254,6 @@
     - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/.kube
     - kubectl cp ~/.kube/config {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/.kube/config
     - kubectl cp  {{ upstream_repos_clone_folder }}/airship/treasuremap/{{ socok8s_site_name }}-ucp.yaml {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada
-    - kubectl exec {{ armada_pod_name }} -n ucp -- mkdir -p /armada/airship-components
-    - kubectl cp {{ upstream_repos_clone_folder }}/openstack/openstack-helm-infra {{ ucp_namespace_name }}/{{ armada_pod_name }}:/armada/airship-components/
   tags:
     - install
     - skip_ansible_lint
