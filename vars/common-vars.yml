@@ -142,8 +142,8 @@ helm_delete_timeout: 900
 # the remainder will be used as computer hosts
 airship_ucp_control_workers: 2
 
-# Location of the kubeconfig file, fetched from velum UI (CaaSP3) or copied from cluster setup dir (CaaSP4)
-kubeconfig_file_path: "{{ socok8s_deploy_config_location }}/kubeconfig"
+# Location of the kubeconfig file, copied from cluster setup dir (CaaSP4)
+kubeconfig_file_path: "{{ socok8s_workspace }}/kubeconfig"
 
 # enable resource limiting for openstack pods
 openstack_helm_pod_resources_enabled:
