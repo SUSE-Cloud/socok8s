@@ -29,6 +29,16 @@ data:
     enabled: {{ run_tests }}
     timeout: {{ test_timeout }}
   values:
+    # disable monitoring stuff as we are not using it currently
+    manifests:
+      monitoring:
+        prometheus:
+          configmap_bin: false
+          deployment_exporter: false
+          service_exporter: false
+          job_user_create: false
+          secret_etc: false
+          network_policy_exporter: false
     pod:
       resources:
         enabled: {{ openstack_helm_pod_resources_enabled['mariadb'] }}
