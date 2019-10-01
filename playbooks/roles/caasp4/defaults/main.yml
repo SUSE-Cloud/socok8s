@@ -26,6 +26,13 @@ skuba_ci_terraform_libvirt_image_uri: "http://download.suse.de/install/SLE-15-SP
 skuba_ci_terraform_libvirt_image_username: "sles"
 # the password to log into the image
 skuba_ci_terraform_libvirt_image_password: "linux"
+# Amount for RAM for the master nodes
+skuba_ci_terraform_libvirt_master_memory: 4096
+# Amount for RAM for the worker nodes
+skuba_ci_terraform_libvirt_worker_memory: 12288
+# Amount for RAM for the loadbalancer node
+skuba_ci_terraform_libvirt_lb_memory: 2048
+
 
 ############################################################################
 # skuba terraform common variables
