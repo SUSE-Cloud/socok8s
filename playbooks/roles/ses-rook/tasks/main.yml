@@ -103,6 +103,13 @@
   retries: 10
   delay: 45
 
+- name: Wait for OSD pods to appear
+  command: "kubectl get pods -n rook-ceph -l app=rook-ceph-osd"
+  register: _rook_ceph_osd_pods
+  until: "'Running' in _rook_ceph_osd_pods.stdout"
+  retries: 4
+  delay: 30
+
 - name: Set up SES for OpenStack
   import_tasks: setup_for_openstack.yml
   vars:
