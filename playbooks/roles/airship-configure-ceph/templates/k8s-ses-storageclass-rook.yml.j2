@@ -2,7 +2,7 @@
 apiVersion: ceph.rook.io/v1
 kind: CephBlockPool
 metadata:
-  name: {{ suse_airship_deploy_storage.pool }}
+  name: {{ suse_deploy_storage.pool }}
   namespace: rook-ceph
 spec:
   failureDomain: host
@@ -15,7 +15,7 @@ metadata:
    name: general
 provisioner: ceph.rook.io/block
 parameters:
-  blockPool: {{ suse_airship_deploy_storage.pool }}
+  blockPool: {{ suse_deploy_storage.pool }}
   clusterNamespace: rook-ceph
   fstype: xfs
 reclaimPolicy: Delete

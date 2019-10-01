@@ -3,7 +3,7 @@ storage: rbd
 conf:
   ceph:
     enabled: true
-    monitors: {{ ','.join(suse_osh_deploy_ceph_mons) }}
+    monitors: {{ ','.join(suse_deploy_ceph_mons) }}
     admin_keyring: {{ ceph_admin_keyring_key }}
   glance:
     glance_store:

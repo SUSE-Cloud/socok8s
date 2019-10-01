@@ -28,7 +28,7 @@ data:
     conf:
       ceph:
         enabled: true
-        monitors: {{ ','.join(suse_airship_deploy_ceph_mons) }}
+        monitors: {{ ','.join(suse_deploy_ceph_mons) }}
         admin_keyring: {{ ceph_admin_keyring_b64key | b64decode }}
         cinder:
           user: {{ ses_cluster_configuration.cinder.rbd_store_user }}

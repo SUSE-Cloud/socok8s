@@ -1,2 +1,21 @@
 ---
 radosgw_keystone: False
+
+suse_deploy_storage:
+  adminId: admin
+  adminSecretName: pvc-ceph-conf-combined-storageclass
+  adminSecretNamespace: "{{ ceph_namespace_name }} "
+  pool: "{{ airship_ses_pools_prefix | default('') }}rbd"
+  userId: admin
+  userSecretName: pvc-ceph-client-key
+  openstackUserSecretNamespace: "{{ openstack_namespace_name }}"
+  ucpUserSecretNamespace: "{{ ucp_namespace_name }}"
+  glance:
+    user: admin
+    pool: images
+  cinder:
+    user: admin
+    pool: cinder
+  cinder_backup:
+    user: admin
+    pool: backups

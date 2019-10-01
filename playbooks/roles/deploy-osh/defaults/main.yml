@@ -26,24 +26,6 @@ suse_osh_openstackclient_packages:
 
 suse_osh_deploy_require_ha: True
 
-suse_osh_deploy_storage:
-  adminId: admin
-  adminSecretName: pvc-ceph-conf-combined-storageclass
-  adminSecretNamespace: openstack
-  pool: "{{ airship_ses_pools_prefix | default('') }}rbd"
-  userId: admin
-  userSecretName: pvc-ceph-client-key
-  userSecretNamespace: openstack
-  glance:
-    user: admin
-    pool: images
-  cinder:
-    user: admin
-    pool: cinder
-  cinder_backup:
-    user: admin
-    pool: backups
-
 # Example SES secrets per pool.
 # This should be appearing only in your user variables.
 #suse_ses_cinder_pool_key:
