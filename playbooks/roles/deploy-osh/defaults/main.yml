@@ -18,7 +18,6 @@ suse_osh_deploy_packages:
   - python-selinux
   - ceph-common
   - nfs-utils
-  - bridge-utils
 
 suse_osh_openstackclient_packages:
   - python3-openstackclient
