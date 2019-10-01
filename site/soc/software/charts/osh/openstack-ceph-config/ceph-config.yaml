@@ -53,6 +53,8 @@ data:
       job_namespace_client_key: false
       storageclass_cephfs: false
       storageclass_rbd: false
+      # provisioner tests will fail because we have disabled the configmap_bin job above
+      helm_tests: false
     pod:
       resources:
         enabled: {{ openstack_helm_pod_resources_enabled['ceph'] }}
