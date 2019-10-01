@@ -273,7 +273,8 @@ pipeline {
                 }
             }
             script {
-                if (params.hold_instance_for_debug == true) {
+                // For delaying the teardown of running job, create /tmp/${env.SOCOK8S_ENVNAME}.hold_instance file manually on the jenkins worker
+                if (fileExists("/tmp/${env.SOCOK8S_ENVNAME}.hold_instance") || params.hold_instance_for_debug == true) {
                      try {
                         echo "You can reach this node by connecting to its floating IP as root user, with the default password of your image."
                         timeout(time: 3, unit: 'HOURS') {
