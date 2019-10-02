@@ -3,6 +3,17 @@ data:
   charts:
     # versions are managed in treasuremap global/software/config/versions.yaml
     # we should only override here when there is a specific version we want to freeze
+    ucp:
+      keystone:
+        location: https://opendev.org/openstack/openstack-helm
+        reference: edb93bd96c2bbc3d40f7f4d37d3137aba1d4b572
+        subpath: keystone
+        type: git
+      keystone-htk:
+        location: https://opendev.org/openstack/openstack-helm-infra
+        reference: db855bcd61983be80f8cf24386d1edc81f83ae6c
+        subpath: helm-toolkit
+        type: git
     osh:
       keystone:
         location: https://opendev.org/openstack/openstack-helm

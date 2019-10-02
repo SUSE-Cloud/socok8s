@@ -28,6 +28,17 @@ data:
     timeout: {{ test_timeout }}
   values:
     pod:
+      probes:
+        api:
+          api:
+            # bump probe timeout to 30s to avoid ingress removing the pods from the pool when they take long to respond
+            # default upstream is 5s
+            readiness:
+              params:
+                timeoutSeconds: 30
+            liveness:
+              params:
+                timeoutSeconds: 30
       replicas:
         api: 1
       security_context:
