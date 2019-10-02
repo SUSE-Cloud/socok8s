@@ -14,8 +14,10 @@ socok8s_registry_cert: "{{ socok8s_workspace }}/certs/domain.crt"
 socok8s_registry_certkey: "{{ socok8s_workspace }}/certs/domain.key"
 socok8s_libvirtuuid: "{{ socok8s_workspace }}/libvirt.uuid"
 suse_osh_registry_location: "docker.io"
-suse_openstack_image_version: "rocky-opensuse_15"
-suse_infra_image_version: "latest-opensuse_15"
+suse_openstack_image_version: "rocky-opensuse_15-20190924"
+suse_infra_image_version: "opensuse_15-20190710"
+# NOTE(jhesketh): for M2 the libvirt image tag is different to the rest of the infra images
+suse_infra_libvirt_image_version: "opensuse_15-20190903"
 suse_osh_openstack_release: "rocky"
 
 obs_mirror: "{{ lookup('env','SOCOK8S_OPENSUSE_MIRROR') | default('https://download.opensuse.org', true) }}"
