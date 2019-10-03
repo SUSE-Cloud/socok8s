@@ -22,6 +22,12 @@ metadata:
         path: .pods.osh.rabbitmq.server.min
       dest:
         path: .values.pod.replicas.server
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.rabbitmq.storage_class
+      dest:
+        path: .values.volume.class_name
 data:
   test:
     enabled: {{ run_tests }}
