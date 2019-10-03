@@ -1,6 +1,0 @@
----
-- name: Import SES configs to deployer
-  become: yes
-  include_role:
-    name: common-ses
-    tasks_from: ses_config
