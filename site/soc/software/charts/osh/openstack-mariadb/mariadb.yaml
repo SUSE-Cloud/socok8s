@@ -35,7 +35,9 @@ data:
       replicas:
         server: 1
     volume:
+      class_name: local-path
       size: {{ db_volume_size }}
       backup:
         size: {{ db_volume_size }}
+        class_name: local-path
 ...

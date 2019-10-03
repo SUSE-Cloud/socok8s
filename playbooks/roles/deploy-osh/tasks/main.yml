@@ -101,6 +101,13 @@
   tags:
     - install
 
+- name: Install local path provisioner
+  include_role:
+    name: common-deployer
+    tasks_from: local-provisioner
+  tags:
+    - install
+
 - name: Build infra charts
   make:
     chdir: /opt/openstack/openstack-helm-infra
