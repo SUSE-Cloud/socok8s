@@ -11,7 +11,7 @@ set -o nounset
 echo "Workspace is ${SOCOK8S_WORKSPACE} - Environment is ${SOCOK8S_ENVNAME}"
 
 DEV_SCRIPTS_PATH="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
-TERRAFORM_CONTAINER="registry.suse.de/home/jevrard/branches/suse/templates/images/sle-15-sp1/containers/soc10-clients:latest"
+TERRAFORM_CONTAINER="registry.suse.de/home/jevrard/caasp-container-images/containers/soc10-clients:latest"
 export IMAGE_USERNAME=${IMAGE_USERNAME:-sles}
 export LIBVIRT_DEFAULT_URI=${LIBVIRT_DEFAULT_URI:-qemu+tcp://192.168.102.196:16509/system}
 
