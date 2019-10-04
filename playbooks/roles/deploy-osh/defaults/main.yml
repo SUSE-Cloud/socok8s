@@ -25,7 +25,7 @@ suse_osh_deploy_require_ha: True
 # included in all the places).
 # For a more surgical per component approach, use service overrides, like
 # suse_osh_deploy_cinder_yaml_overrides for cinder for example.
-suse_osh_image_version: "ocata"
+suse_osh_image_version: "rocky"
 
 # Default overrides
 suse_osh_deploy_barbican_yaml_overrides: {}
