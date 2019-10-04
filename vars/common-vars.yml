@@ -16,7 +16,7 @@ socok8s_libvirtuuid: "{{ socok8s_workspace }}/libvirt.uuid"
 suse_osh_registry_location: "docker.io"
 suse_openstack_image_version: "rocky-opensuse_15"
 suse_infra_image_version: "latest-opensuse_15"
-suse_osh_openstack_release: "rocky"
+suse_openstack_release: "rocky"
 
 obs_mirror: "{{ lookup('env','SOCOK8S_OPENSUSE_MIRROR') | default('https://download.opensuse.org', true) }}"
 ibs_mirror: http://ibs-mirror.prv.suse.net/ibs
