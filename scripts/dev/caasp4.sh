@@ -12,13 +12,14 @@ echo "Workspace is ${SOCOK8S_WORKSPACE} - Environment is ${SOCOK8S_ENVNAME}"
 
 DEV_SCRIPTS_PATH="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 TERRAFORM_CONTAINER="registry.suse.de/home/jevrard/caasp-container-images/containers/soc10-clients:latest"
+podman_cmd="sudo -E podman"
 export IMAGE_USERNAME=${IMAGE_USERNAME:-sles}
 export LIBVIRT_DEFAULT_URI=${LIBVIRT_DEFAULT_URI:-qemu+tcp://192.168.102.196:16509/system}
 
 function finish {
-  if podman ps -a --format '{{ .Names }}' | grep terraform-${SOCOK8S_ENVNAME} > /dev/null; then
-      podman stop terraform-${SOCOK8S_ENVNAME} > /dev/null || true
-      podman rm terraform-${SOCOK8S_ENVNAME} -f > /dev/null || true
+  if $podman_cmd ps -a --format '{{ .Names }}' | grep terraform-${SOCOK8S_ENVNAME} > /dev/null; then
+      $podman_cmd stop terraform-${SOCOK8S_ENVNAME} > /dev/null || true
+      $podman_cmd rm terraform-${SOCOK8S_ENVNAME} -f > /dev/null || true
   fi
 }
 
@@ -31,7 +32,7 @@ ACTION=${1:-deploy}
 PROVIDER=${DEPLOYMENT_MECHANISM:-openstack}
 
 echo "Fetching latest terraform container"
-podman pull $TERRAFORM_CONTAINER
+$podman_cmd pull $TERRAFORM_CONTAINER
 
 # Generate terraform config file
 ################################
@@ -58,8 +59,8 @@ rm -f ${SOCOK8S_WORKSPACE}/ssh_keys.csv
 ###########################################
 
 trap finish INT TERM EXIT
-if ! podman ps --format '{{ .Names }}' | grep terraform-${SOCOK8S_ENVNAME} > /dev/null; then
-    containerid=$(podman run -it -d --name terraform-${SOCOK8S_ENVNAME} \
+if ! $podman_cmd ps --format '{{ .Names }}' | grep terraform-${SOCOK8S_ENVNAME} > /dev/null; then
+    containerid=$($podman_cmd run -it -d --name terraform-${SOCOK8S_ENVNAME} \
         -v ${SSH_AUTH_SOCK}:/ssh_auth_sock \
         -v ${SOCOK8S_WORKSPACE}:/workdir \
         ${USER_ARGS:-} \
@@ -84,7 +85,7 @@ if [[ "${PROVIDER}" == "openstack" ]]; then
     for filepath in ~/.config/openstack/* /etc/openstack/*; do
         if [[ -f $filepath ]]; then
             fname=$(basename $filepath)
-            podman cp $filepath terraform-${SOCOK8S_ENVNAME}:/root/.config/openstack/$fname;
+            $podman_cmd cp $filepath terraform-${SOCOK8S_ENVNAME}:/root/.config/openstack/$fname;
         fi
     done
 elif [[ "${PROVIDER}" == "libvirt" ]]; then
@@ -99,8 +100,8 @@ elif [[ "${PROVIDER}" == "libvirt" ]]; then
 fi
 
 # Now copy and run the terraformcmds script
-podman cp ${DEV_SCRIPTS_PATH}/terraforming-${ACTION}.sh terraform-${SOCOK8S_ENVNAME}:/workdir/tf/terraformcmds.sh
-podman exec -it -w /workdir/tf/ terraform-${SOCOK8S_ENVNAME} /workdir/tf/terraformcmds.sh
+$podman_cmd cp ${DEV_SCRIPTS_PATH}/terraforming-${ACTION}.sh terraform-${SOCOK8S_ENVNAME}:/workdir/tf/terraformcmds.sh
+$podman_cmd exec -it -w /workdir/tf/ terraform-${SOCOK8S_ENVNAME} /workdir/tf/terraformcmds.sh
 
 # Extra hacks for openstack until handled by terraform
 if [[ "${PROVIDER}" == "openstack" ]] && [[ "${ACTION}" == "deploy" ]] ; then
