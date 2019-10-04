@@ -1,4 +1,11 @@
 ---
+- name: Load common variables
+  include_vars: "{{ item }}"
+  loop:
+    - "{{ playbook_dir }}/roles/common-deployer/defaults/main.yml"
+  tags:
+    - always
+
 - name: Add zypper extra repositories
   become: yes
   zypper_repository:
@@ -12,7 +19,7 @@
 - name: Install system packages
   become: yes
   package:
-    name: "{{ suse_airship_deploy_packages }}"
+    name: "{{ suse_deployer_packages }}"
     state: present
   register: install_packages
   until: install_packages is success
@@ -24,7 +31,7 @@
 - name: Install OpenStack client packages
   become: yes
   package:
-    name: "{{ suse_airship_openstackclient_packages }}"
+    name: "{{ suse_openstackclient_packages }}"
     state: present
   retries: 5
   delay: 2

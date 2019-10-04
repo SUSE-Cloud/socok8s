@@ -1,0 +1,23 @@
+---
+
+suse_deployer_packages:
+  - autoconf
+  - ca-certificates
+  - curl
+  - docker
+  - gcc
+  - git-core # for download of local-provisioner
+  - jq
+  - make
+  - nmap
+  - python3-cmd2
+  - python3-devel
+  - python3-pip
+  - python3-setuptools
+  - python3-virtualenv
+  - uuid-runtime
+
+suse_openstackclient_packages:
+  - python3-barbicanclient
+  - python3-heatclient
+  - python3-openstackclient

@@ -6,6 +6,7 @@
     - "{{ playbook_dir }}/../vars/common-vars.yml"
     - "{{ playbook_dir }}/../vars/manifest.yml"
     - "{{ playbook_dir }}/roles/common-ses/defaults/main.yml"
+    - "{{ playbook_dir }}/roles/common-deployer/defaults/main.yml"
   tags:
     - always
 
@@ -43,7 +44,7 @@
 
 - name: Install system packages
   package:
-    name: "{{ suse_osh_deploy_packages }}"
+    name: "{{ suse_deployer_packages }}"
     state: present
   register: install_packages
   until: install_packages is success
@@ -165,7 +166,7 @@
 
 - name: Install OpenStack client packages
   package:
-    name: "{{ suse_osh_openstackclient_packages }}"
+    name: "{{ suse_openstackclient_packages }}"
     state: present
   retries: 5
   delay: 2

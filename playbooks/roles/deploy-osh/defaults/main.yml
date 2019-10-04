@@ -4,25 +4,6 @@
 base_env_vars:
   OSH_INFRA_PATH: /opt/openstack/openstack-helm-infra
 
-suse_osh_deploy_packages:
-  - python3-setuptools
-  - python3-virtualenv
-  - python3-pip
-  - python3-devel
-  - autoconf
-  - git-core
-  - gcc
-  - make
-  - jq
-  - curl #after this line these are the packages required for osh deploy itself
-  - python-selinux
-  - ceph-common
-  - nfs-utils
-
-suse_osh_openstackclient_packages:
-  - python3-openstackclient
-  - python3-barbicanclient
-
 suse_osh_deploy_require_ha: True
 
 # Example SES secrets per pool.
