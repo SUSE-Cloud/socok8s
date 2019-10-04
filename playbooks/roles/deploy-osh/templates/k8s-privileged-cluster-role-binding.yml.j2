@@ -5,51 +5,51 @@ metadata:
   name: PrivilegedRoleBinding
 roleRef:
   kind: ClusterRole
-  name: {{ suse_osh_deploy_privileged_cluster_role }}
+  name: {{ suse_privileged_cluster_role }}
   apiGroup: rbac.authorization.k8s.io
 subjects:
 - kind: ServiceAccount
   name: cinder-volume
-  namespace: openstack
+  namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
   name: cinder-backup
-  namespace: openstack
+  namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
   name: nova-novncproxy
-  namespace: openstack
+  namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
   name: openvswitch-vswitchd
-  namespace: openstack
+  namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
   name: libvirt
-  namespace: openstack
+  namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
   name: neutron-dhcp-agent
-  namespace: openstack
+  namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
   name: neutron-l3-agent
-  namespace: openstack
+  namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
   name: neutron-metadata-agent
-  namespace: openstack
+  namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
   name: nova-compute
-  namespace: openstack
+  namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
   name: neutron-ovs-agent
-  namespace: openstack
+  namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
   name: openvswitch-db
-  namespace: openstack
+  namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
   name: ingress-kube-system-ingress
   namespace: kube-system
 - kind: ServiceAccount
   name: ingress-openstack-ingress
-  namespace: openstack
+  namespace: {{ openstack_namespace_name }}
 - kind: ServiceAccount
   name: ingress-ceph-ingress
-  namespace: ceph
+  namespace: {{ ceph_namespace_name }}
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -72,4 +72,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: mariadb-mariadb
-  namespace: openstack
+  namespace: {{ openstack_namespace_name }}

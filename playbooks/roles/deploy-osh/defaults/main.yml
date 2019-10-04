@@ -12,9 +12,6 @@ suse_osh_deploy_require_ha: True
 #suse_ses_cinder_backup_pool_key:
 #suse_ses_glance_pool_key:
 
-# ClusterRole to allow privileged containers
-suse_osh_deploy_privileged_cluster_role: suse:caasp:psp:privileged
-
 # These variables were created to provide a way for deployers to
 # override the default registry, for example to point to a local
 # registry. This change will apply to all the charts value files by

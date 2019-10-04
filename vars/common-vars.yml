@@ -18,6 +18,10 @@ suse_openstack_image_version: "rocky-opensuse_15"
 suse_infra_image_version: "latest-opensuse_15"
 suse_openstack_release: "rocky"
 
+# ClusterRole to allow privileged containers
+suse_privileged_cluster_role: suse:caasp:psp:privileged
+
+
 obs_mirror: "{{ lookup('env','SOCOK8S_OPENSUSE_MIRROR') | default('https://download.opensuse.org', true) }}"
 ibs_mirror: http://ibs-mirror.prv.suse.net/ibs
 dist_mirror: http://ibs-mirror.prv.suse.net/dist
