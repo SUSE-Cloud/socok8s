@@ -196,3 +196,4 @@ data:
         prometheus_rabbitmq_exporter:
           min: 1
           max: 2
+        storage_class: local-path

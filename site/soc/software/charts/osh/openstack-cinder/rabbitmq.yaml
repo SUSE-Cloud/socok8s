@@ -15,6 +15,13 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/PodScaleProfile/v1
+        name: pod-scale-profile
+        path: .pods.osh.rabbitmq.storage_class
+      dest:
+        path: .values.volume.class_name
 data:
   wait:
     timeout: {{ openstack_helm_deploy_timeout }}
