@@ -6,6 +6,7 @@
     - "{{ playbook_dir }}/../vars/common-vars.yml"
     - "{{ playbook_dir }}/../vars/manifest.yml"
     - "{{ playbook_dir }}/roles/common-ses/defaults/main.yml"
+    - "{{ playbook_dir }}/roles/common-deployer/defaults/main.yml"
   tags:
     - always
 
@@ -43,7 +44,7 @@
 
 - name: Install system packages
   package:
-    name: "{{ suse_osh_deploy_packages }}"
+    name: "{{ suse_deployer_packages }}"
     state: present
   register: install_packages
   until: install_packages is success
@@ -165,7 +166,7 @@
 
 - name: Install OpenStack client packages
   package:
-    name: "{{ suse_osh_openstackclient_packages }}"
+    name: "{{ suse_openstackclient_packages }}"
     state: present
   retries: 5
   delay: 2
@@ -326,7 +327,7 @@
   vars:
     _component_runcommand: "./tools/deployment/multinode/100-glance.sh"
     _component_run_env:
-      OSH_OPENSTACK_RELEASE: "{{ suse_osh_openstack_release }}"
+      OSH_OPENSTACK_RELEASE: "{{ suse_openstack_release }}"
       OSH_EXTRA_HELM_ARGS_GLANCE: >
         --values=./glance/values_overrides/rocky-opensuse_15.yaml
         --values=/tmp/socok8s-susedefaults-glance.yaml
@@ -414,7 +415,7 @@
         --values=/tmp/socok8s-susedefaults-neutron.yaml
         --values=/tmp/socok8s-useroverrides-neutron.yaml
         {{ lookup('env', 'OSH_EXTRA_HELM_ARGS_NEUTRON') | default('', True) }}
-      OSH_OPENSTACK_RELEASE: "{{ suse_osh_openstack_release }}"
+      OSH_OPENSTACK_RELEASE: "{{ suse_openstack_release }}"
       OSH_TEST_TIMEOUT: 1400
       OSH_EXTRA_HELM_ARGS_NOVA: >
         --values=./nova/values_overrides/opensuse_15.yaml
