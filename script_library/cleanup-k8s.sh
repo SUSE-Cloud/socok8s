@@ -41,8 +41,9 @@ for NS in openstack ceph docker-registry; do
     done
 done
 
+# ignore pv's for ucp if they still exist (kubectl get pv -n does not filter for namespace unfortunatelly)
 for NS in openstack ceph docker-registry; do
-    for pv in $(kubectl get pv -n $NS | awk ' NR > 1 { print $1 ; }'); do
+    for pv in $(kubectl get pv -o jsonpath="{.items[?(@.spec.claimRef.namespace!=\"ucp\")].metadata.name}"); do
         kubectl delete pv $pv -n $NS || true;
     done
 done
