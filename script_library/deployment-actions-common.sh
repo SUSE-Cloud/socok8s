@@ -12,6 +12,11 @@ function build_images(){
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-build_images.yml -e "build_osh_images=yes"
 }
 
+function configure_ccp_deployer() {
+    echo "Configure CCP deployer node"
+    run_ansible ${socok8s_absolute_dir}/playbooks/generic-configure_ccp_deployer.yml
+}
+
 function setup_caasp_workers_for_openstack(){
     echo "Ensuring caasp workers can be used for openstack"
     run_ansible ${socok8s_absolute_dir}/playbooks/generic-setup_caasp_workers_for_openstack.yml

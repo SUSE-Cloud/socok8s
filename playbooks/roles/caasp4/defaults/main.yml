@@ -21,20 +21,22 @@ skuba_ci_terraform_openstack_image_password: "linux"
 ############################################################################
 # A image that is use for libvirt. That image is used to deploy
 # CaaSP 4 with the skuba ci terraforms
-skuba_ci_terraform_libvirt_image_uri: "http://download.suse.de/install/SLE-15-SP1-JeOS-GMC/SLES15-SP1-JeOS.x86_64-15.1-OpenStack-Cloud-GMC.qcow2"
+skuba_ci_terraform_libvirt_image_uri: "http://download.suse.de/install/SLE-15-SP1-JeOS-GM/SLES15-SP1-JeOS.x86_64-15.1-OpenStack-Cloud-GM.qcow2"
 # the username to log into the image
 skuba_ci_terraform_libvirt_image_username: "sles"
 # the password to log into the image
 skuba_ci_terraform_libvirt_image_password: "linux"
+# Amount for RAM for the master nodes
+skuba_ci_terraform_libvirt_master_memory: 4096
+# Amount for RAM for the worker nodes
+skuba_ci_terraform_libvirt_worker_memory: 12288
+# Amount for RAM for the loadbalancer node
+skuba_ci_terraform_libvirt_lb_memory: 2048
+
 
 ############################################################################
 # skuba terraform common variables
 ############################################################################
-# Download mirror to use for internal IBS repositories
-skuba_ci_terraform_ibs_mirror_uri: "http://download.suse.de/ibs"
-# Download mirror to use for "official" products and updates (can e.g. point
-# to a local rmt mirror)
-skuba_ci_terraform_rmt_mirror_uri: "http://download.suse.de/ibs"
 # number of master nodes
 skuba_ci_terraform_master_count: 1
 # number of worker nodes

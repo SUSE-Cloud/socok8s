@@ -24,9 +24,12 @@ function deploy_caasp(){
     run_ansible ${socok8s_absolute_dir}/playbooks/kvm-deploy_caasp.yml
     echo "CaaSP 4 deployed successfully on libvirt"
 }
+
 function deploy_ccp_deployer() {
-    echo "This is not supported yet. Please create a node with Leap15/SLE15 manually"
+    echo "Using Terraform deployed LB node for CCP deployer node"
+    run_ansible ${socok8s_absolute_dir}/playbooks/kvm-deploy_ccp_deployer.yml
 }
+
 function enroll_caasp_workers() {
     echo "This is not supported yet. If you used kubic-automation, you can re-use the work done in openstack for enrollment."
 }

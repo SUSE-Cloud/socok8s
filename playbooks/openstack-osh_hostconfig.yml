@@ -1,5 +1,6 @@
 ---
 - hosts: soc-deployer
+  become: yes
   gather_facts: no
   tasks:
     - name: Ensure all the common vars are loaded

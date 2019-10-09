@@ -30,8 +30,6 @@
     image_uri: "{{ skuba_ci_terraform_libvirt_image_uri }}"
     image_username: "{{ skuba_ci_terraform_libvirt_image_username }}"
     image_password: "{{ skuba_ci_terraform_libvirt_image_password }}"
-    ibs_mirror_uri: "{{ skuba_ci_terraform_ibs_mirror_uri }}"
-    rmt_mirror_uri: "{{ skuba_ci_terraform_rmt_mirror_uri }}"
     stack_name: "{{ socok8s_envname }}-caasp4"
     master_count: "{{ skuba_ci_terraform_master_count }}"
     worker_count: "{{ skuba_ci_terraform_worker_count }}"
