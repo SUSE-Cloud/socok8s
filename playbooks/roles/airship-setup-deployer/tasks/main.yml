@@ -125,3 +125,12 @@
   template:
     src: clouds.yml.j2
     dest: /etc/openstack/clouds.yaml
+
+- name: Save Shipyard env variables to ~/.airshiprc
+  blockinfile:
+    path: "{{ ansible_user_dir }}/.airshiprc"
+    create: yes
+    mode: "0600"
+    block: |
+      export SHIPYARD_IMAGE="{{ suse_airship_registry_location }}/airshipit/shipyard:{{ suse_airship_components_image_tag['shipyard'] }}"
+      export OS_SHIPYARD_PASSWORD="{{ lookup('password', secrets_location + '/ucp_shipyard_keystone_password ' + password_opts) }}"
