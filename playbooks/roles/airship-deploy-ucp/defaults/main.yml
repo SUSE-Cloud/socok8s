@@ -1,8 +1,0 @@
----
-airship_pegleg_image: "{{ suse_airship_registry_location }}/airshipit/pegleg:{{ suse_airship_components_image_tag['pegleg'] }}"
-run_tests: "{{ lookup('env', 'SOCOK8S_RUN_CONTAINER_TESTS') | default('True',  True) | bool }}"
-test_timeout: 2700
-neutron_external_interface: ""
-neutron_tunnel_device: null
-ucp_pod_deploy_retries: 40
-ucp_pod_ready_retries: 40

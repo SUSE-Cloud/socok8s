@@ -1,2 +1,0 @@
-# variable to identify caasp specific package repositories
-caasp_pkgs_repo_version: "CAASP40-{{ ansible_distribution }}-{{ ansible_distribution_version | replace('.', '') }}"
