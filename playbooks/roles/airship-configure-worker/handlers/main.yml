@@ -1,8 +1,0 @@
----
-- name: Reload apparmor profile
-  command: "apparmor_parser -r /etc/apparmor.d/{{ item.item }}"
-  become: yes
-  when: item.changed
-  loop: "{{ apparmor_copy.results | flatten(levels=1) }}"
-  loop_control:
-    label: "{{ item.item }}"

@@ -1,3 +1,0 @@
----
-# ClusterRole to allow privileged containers
-suse_airship_deploy_privileged_cluster_role: suse:caasp:psp:privileged

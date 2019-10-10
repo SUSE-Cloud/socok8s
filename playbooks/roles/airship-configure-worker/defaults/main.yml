@@ -1,4 +1,0 @@
----
-suse_cp_node_create_subvolume: false
-apparmor_profiles:
-  - usr.sbin.dnsmasq

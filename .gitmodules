@@ -1,6 +1,0 @@
-[submodule "submodules/SUSE-Cloud/automation"]
-	path = submodules/SUSE-Cloud/automation
-	url = https://github.com/SUSE-Cloud/automation.git
-[submodule "submodules/openstack-helm-infra"]
-	path = submodules/openstack-helm-infra
-	url = https://github.com/openstack/openstack-helm-infra.git

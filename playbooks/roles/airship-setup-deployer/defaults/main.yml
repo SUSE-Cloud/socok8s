@@ -1,9 +1,0 @@
----
-# defaults file for suse-airship-deploy
-
-# IP on the external network
-ext_vip: null
-
-# extra repositories that will be added. key should be the repo name,
-# value the repo url
-zypper_extra_repos: {}
